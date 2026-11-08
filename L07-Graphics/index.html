@@ -1,0 +1,2628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 Graphics Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+pre.pickable .ln { cursor: pointer; }
+pre.pickable .ln:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+pre .ln.pick { background: color-mix(in srgb, var(--mark) 16%, transparent); }
+pre .ln.hit { background: color-mix(in srgb, var(--ok) 22%, transparent); box-shadow: inset 3px 0 var(--ok); }
+pre .ln.miss { background: color-mix(in srgb, var(--mark) 22%, transparent); box-shadow: inset 3px 0 var(--mark); }
+pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
+.bug-x { font-size: .9rem; border-left: 3px solid var(--line); padding: var(--s1) var(--s3); }
+.bug-x.hit { border-color: var(--ok); } .bug-x.miss { border-color: var(--mark); }
+.res-ok { color: var(--ok); font-weight: 600; } .res-bad { color: var(--bad); font-weight: 600; }
+
+/* L13: Swing component mock-ups (inside .win, always light) */
+.tree-view { background: #fff; padding: .4rem .3rem; font: 13px system-ui, "Segoe UI", sans-serif; color: #1c2328; min-height: 6rem; overflow-x: auto; }
+.tv-row { display: flex; align-items: center; white-space: nowrap; line-height: 1.6; }
+.tv-guide { font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace; color: #8b98a0; white-space: pre; }
+.tv-tog { width: 1.1rem; flex: none; border: 0; background: none; padding: 0; font-size: .72rem; color: #3c4a52; cursor: pointer; }
+.tv-tog.none { visibility: hidden; }
+.tv-ico { width: 16px; height: 14px; margin-right: .3rem; flex: none; }
+.tv-lbl { padding: 0 .3rem; border-radius: 2px; cursor: pointer; border: 1px solid transparent; }
+.tv-lbl.sel { background: #b8cfe5; border-color: #6d8fb5; }
+.tv-lbl.fresh { background: #fff2b3; }
+.tv-hline { border-top: 1px solid #8b98a0; margin: .1rem 0; }
+.sp-frame { display: flex; flex-direction: column; height: 18rem; background: var(--win-bg); }
+.sp { display: flex; flex: 1; min-height: 0; min-width: 0; }
+.sp.vert { flex-direction: column; }
+#sp2 { height: 100%; }
+.sp-a, .sp-b { overflow: auto; background: #fff; min-width: 0; min-height: 0; }
+.sp-a { flex: none; }
+.sp-b { flex: 1; }
+.sp-div { flex: none; background: #d5dde1; border: 1px solid #a9b4ba; display: flex; gap: 3px; cursor: col-resize; touch-action: none; }
+.sp:not(.vert) > .sp-div { flex-direction: column; align-items: center; padding-top: 3px; }
+.sp.vert > .sp-div { flex-direction: row; align-items: center; padding-left: 3px; cursor: row-resize; }
+.sp-div:focus-visible { outline: 2px solid #2a6ebb; }
+.sp-arrow { font-size: 9px; line-height: 1; padding: 1px; border: 0; background: none; color: #24323a; cursor: pointer; }
+.jlist { list-style: none; margin: 0; padding: 2px 0; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jlist li { padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+.jlist li.sel { background: #b8cfe5; }
+.pic { display: grid; place-items: center; }
+.ok-cyan { background: #00ffff; border: 1px solid #6b7b82; font: 600 13px system-ui, sans-serif; padding: .35rem; color: #1c2328; cursor: pointer; }
+.jtp { display: flex; flex-direction: column; height: 13rem; background: var(--win-bg); font: 12px system-ui, sans-serif; color: #1c2328; padding: 4px; }
+.jtp.pos-BOTTOM { flex-direction: column-reverse; }
+.jtp.pos-LEFT { flex-direction: row; }
+.jtp.pos-RIGHT { flex-direction: row-reverse; }
+.jtp-tabs { display: flex; flex-wrap: wrap; gap: 2px; min-width: 0; }
+.jtp.pos-LEFT .jtp-tabs, .jtp.pos-RIGHT .jtp-tabs { flex-direction: column; flex-wrap: nowrap; overflow: auto; max-width: 45%; }
+.jtp.scroll:not(.pos-LEFT):not(.pos-RIGHT) .jtp-tabs { flex-wrap: nowrap; overflow-x: auto; }
+.jtp-tab { border: 1px solid #9aa7ad; background: #dfe5e8; padding: 2px 9px; cursor: pointer; white-space: nowrap; font: inherit; color: inherit; }
+.jtp-tab.sel { background: #fff; font-weight: 600; }
+.jtp-page { flex: 1; border: 1px solid #9aa7ad; background: #eceff1; min-height: 0; min-width: 0; overflow: auto; }
+.jtp-empty { padding: .5rem; color: #7a868c; }
+.bl3 { display: grid; grid-template: auto 1fr auto / auto 1fr auto; height: 100%; gap: 2px; padding: 2px; }
+.bl3 .jbtn { font-weight: 600; }
+.tl-frame { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto; height: 14rem; background: var(--win-bg); }
+.tl-frame.drop { outline: 2px dashed #2a6ebb; outline-offset: -4px; }
+.tl-frame[data-dock="NORTH"] > .tl-bar { grid-area: 1 / 1 / 2 / 4; }
+.tl-frame[data-dock="SOUTH"] > .tl-bar { grid-area: 3 / 1 / 4 / 4; }
+.tl-frame[data-dock="WEST"] > .tl-bar { grid-area: 1 / 1 / 4 / 2; }
+.tl-frame[data-dock="EAST"] > .tl-bar { grid-area: 1 / 3 / 4 / 4; }
+.tl-center { grid-area: 2 / 2 / 3 / 3; background: #fff; margin: 4px; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tl-bar { display: flex; align-items: center; gap: 2px; padding: 2px; background: #e3e8eb; border: 1px solid #b6c0c5; }
+.tl-bar.vertical { flex-direction: column; }
+.tl-grip { width: 9px; align-self: stretch; min-height: 1.6rem; background-image: radial-gradient(#7d8a91 1px, transparent 1.3px); background-size: 4px 4px; cursor: grab; touch-action: none; }
+.tl-bar.vertical .tl-grip { width: auto; min-height: 9px; height: 9px; min-width: 1.6rem; }
+.tl-btn { min-width: 1.9rem; height: 1.9rem; border: 1px solid transparent; background: none; border-radius: 3px; cursor: pointer; font: 14px system-ui, sans-serif; color: #24323a; padding: 0 .35rem; }
+.tl-btn:hover:not(:disabled) { border-color: #8f9ba1; background: #f4f6f7; }
+.tl-btn:disabled { color: #a9b2b7; cursor: default; }
+.tl-sep { width: 1px; align-self: stretch; background: #9aa7ad; margin: 2px 4px; }
+.tl-bar.vertical .tl-sep { width: auto; height: 1px; margin: 4px 2px; }
+.tl-floatwin { max-width: 16rem; }
+.pp-area { position: relative; background: #fff; min-height: 9rem; padding: .2rem; outline: none; }
+.pp-area:focus-visible { outline: 2px solid #2a6ebb; }
+.jpopup { position: absolute; z-index: 5; background: #f4f6f7; border: 1px solid #8f9ba1; box-shadow: 2px 2px 6px rgba(0, 0, 0, .25); padding: 2px 0; min-width: 8rem; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jpopup button { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; text-align: left; border: 0; background: none; padding: 3px 12px; font: inherit; color: inherit; cursor: pointer; }
+.jpopup button:hover:not(:disabled), .jpopup button:focus-visible { background: #b8cfe5; outline: none; }
+.jpopup button:disabled { color: #a9b2b7; cursor: default; }
+.jpopup hr { border: 0; border-top: 1px solid #b6c0c5; margin: 2px 0; }
+.jpopup kbd { font: 11px system-ui, sans-serif; color: #56676f; }
+.ac-frame { background: var(--win-bg); outline: none; position: relative; }
+.ac-frame:focus-visible { outline: 2px solid #2a6ebb; }
+.ac-menubar { position: relative; background: #e3e8eb; border-bottom: 1px solid #b6c0c5; padding: 1px 2px; }
+.ac-menu { border: 0; background: none; padding: 2px 8px; font: 12px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.ac-menu[aria-expanded="true"] { background: #b8cfe5; }
+.ac-drop { top: 100%; left: 2px; }
+.ac-area { position: relative; background: #fff; margin: 4px; min-height: 7rem; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tv-row { align-items: stretch; }
+.tv-row > .tv-tog, .tv-row > .tv-ico, .tv-row > .tv-lbl { align-self: center; }
+.tv-g { display: inline-block; width: 16px; flex: none; }
+.tv-g.pipe { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat; }
+.tv-g.tee { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+.tv-g.elbow { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 50% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+
+/* L14 MDI: desktop pane, internal frames, card deck */
+.dsk { position: relative; height: 20rem; background: #5d7d8f; overflow: hidden; }
+.jif { position: absolute; display: flex; flex-direction: column; background: #eceff1; border: 1px solid #44525a; box-shadow: 2px 3px 8px rgba(0, 0, 0, .35); }
+.jif-bar { display: flex; align-items: center; gap: 3px; padding: 2px 4px; background: #c5ced3; font: 600 12px system-ui, sans-serif; color: #1c2328; cursor: move; user-select: none; touch-action: none; }
+.jif.sel { border-color: #1d4f8a; }
+.jif.sel .jif-bar { background: #8fb3d9; }
+.jif-bar span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jif-bar button { width: 18px; height: 16px; padding: 0; font: 11px/1 system-ui, sans-serif; border: 1px solid #6b7b82; background: #f4f6f7; color: #1c2328; cursor: pointer; flex: none; }
+.jif textarea { flex: 1; resize: none; border: 0; border-top: 1px solid #9aa7ad; font: 12px ui-monospace, Menlo, Consolas, monospace; padding: 4px; background: #fff; color: #1c2328; min-height: 0; width: 100%; }
+.jif-rs { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 55%, #6b7b82 55%, #6b7b82 62%, transparent 62%, transparent 78%, #6b7b82 78%, #6b7b82 85%, transparent 85%); }
+.jif-icon { position: absolute; bottom: 4px; display: flex; align-items: center; gap: 4px; width: 8.5rem; padding: 2px 4px; background: #c5ced3; border: 1px solid #44525a; font: 600 11px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.jif-icon span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dsk-outline { position: absolute; border: 2px dashed #fff; pointer-events: none; }
+.cards { background: var(--win-bg); padding: .6rem; font: 13px system-ui, sans-serif; color: #1c2328; }
+.card-page { background: #fff; border: 1px solid #b6c0c5; padding: .7rem; min-height: 9rem; display: grid; gap: .4rem; align-content: start; }
+.card-page h4 { font: 600 14px system-ui, sans-serif; }
+.card-page .tag { font: 11px ui-monospace, monospace; color: #7a868c; }
+.ways-host { position: relative; background: var(--win-bg); color: #1c2328; font: 12px system-ui, sans-serif; min-height: 15rem; padding: .5rem; color-scheme: light; }
+.ways-host pre { margin: 0; white-space: pre-wrap; font: 12px ui-monospace, monospace; }
+.dlg-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .28); display: grid; place-items: center; }
+
+/* Threads: lanes, progress bar, frozen window */
+.lanes { display: grid; gap: 4px; font: 12px var(--f-mono); }
+.lane { display: grid; grid-template-columns: minmax(0, 9.5rem) 7.5rem minmax(0, 1fr); gap: .5rem; align-items: center; }
+.lane > b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lane .st { font-size: 11px; padding: 1px 6px; border-radius: 99px; border: 1px solid var(--line); text-align: center; color: var(--muted); }
+.lane .st.RUNNABLE { color: var(--ok); border-color: var(--ok); }
+.lane .st.TIMED_WAITING, .lane .st.WAITING { color: var(--c-num); border-color: var(--c-num); }
+.lane .st.TERMINATED { color: var(--bad); border-color: var(--bad); }
+.lane .ticks { display: flex; gap: 2px; overflow: hidden; min-width: 0; justify-content: flex-end; }
+.tick { width: 1.15rem; height: 1.15rem; border-radius: 3px; display: grid; place-items: center; font-size: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
+@media (max-width: 520px) { .lane { grid-template-columns: minmax(0, 1fr) 7rem; } .lane .ticks { grid-column: 1 / -1; justify-content: flex-start; } }
+.jprog { position: relative; height: 18px; border: 1px solid #6b7b82; background: #fff; border-radius: 2px; overflow: hidden; }
+.jprog i { position: absolute; top: 0; bottom: 0; left: 0; background: #5b8fc7; }
+.jprog span { position: absolute; inset: 0; display: grid; place-items: center; font: 600 11px system-ui, sans-serif; color: #1c2328; }
+.jprog.ind i { width: 30% !important; animation: jprog-ind 1.2s linear infinite; }
+@keyframes jprog-ind { from { left: -30%; } to { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .jprog.ind i { animation: none; width: 100% !important; opacity: .45; } }
+.win.frozen .win-body { filter: grayscale(.7) brightness(.9); }
+.win .win-bar .nr { color: #b0261c; font-weight: 600; }
+.win-body .row { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+.win-body textarea { width: 100%; min-height: 4.5rem; font: 12px ui-monospace, monospace; border: 1px solid #9aa7ad; background: #fff; color: #1c2328; padding: 4px; resize: none; }
+.verdict { font: 600 .8rem var(--f-body); padding: .1rem .5rem; border-radius: 99px; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.jbtn:disabled { color: #9aa4a8; cursor: default; }
+
+/* Your lab answers */
+.mine { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ok); font-weight: 600; }
+.slide.answer { border-left: 3px solid var(--ok); padding-left: var(--s4); }
+.xpl { display: grid; gap: var(--s3); margin: 0; }
+.xpl > div { display: grid; gap: var(--s1); min-width: 0; }
+.xpl dt { min-width: 0; }
+.xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
+.xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L7 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 7 + Lab 6</p>
+  <h1>Graphics</h1>
+  <p class="lede">Drawing on a JPanel with paintComponent: the Graphics methods, Graphics2D shapes, colours, gradients, textures, strokes, transformations and a Timer animation. Every slide of <em>Lecture 7 – Graphics</em> (33 slides) in order, then Lab 6 (Mouse Events &amp; Graphics) with a playable Tic-Tac-Toe and its full solution. The drawing playground runs real <code>g.drawLine(...)</code>-style code, so you can edit the slide examples and see the result.</p>
+  <div class="legend">
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="mine">Your answer</span> your own lab code, exactly as in your zip</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<!-- ============ 1 ============ -->
+<section class="sec" id="canvas" data-title="Drawing on a JPanel">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–4</p>
+    <div class="sec-head-row"><h2>Drawing on a JPanel</h2><label class="done"><input type="checkbox" id="done-canvas"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>To draw, make your own class that <code>extends JPanel</code> and override <code>paintComponent(Graphics g)</code>. Java calls that method whenever the panel needs drawing (first shown, resized, uncovered…). Start it with <code>super.paintComponent(g)</code> so the background is cleared. Never call paintComponent yourself; call <code>repaint()</code> and Java will redraw soon. The origin (0, 0) is the <b>top-left</b> corner, and y grows <b>downward</b>.</div></aside>
+
+  <div class="slide"><p class="divider">Graphics <span class="sn">1</span></p></div>
+
+  <div class="slide">
+    <h3>Display Drawing <span class="sn">2</span></h3>
+    <ul class="pts">
+      <li>To display graphics we use panels as canvases</li>
+      <li>There are cases when you need a custom component.
+        <ul><li>Usually this is when you want to paint custom 2-D graphics.</li><li>We often call a custom painted component a <em>canvas</em>.</li></ul>
+      </li>
+      <li>To do so, write a class that extends <code>JPanel</code>.
+        <ul><li>Override method <code>paintComponent</code> to tell Java how to draw it:</li></ul>
+        <div class="code" style="margin-top:.3rem"><pre class="java">public void paintComponent(Graphics g)</pre></div>
+        <ul><li>Some programmers extend <code>JComponent</code>.</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>A drawing canvas <span class="sn">3</span></h3>
+    <ul class="pts">
+      <li>Coordinate system: (0, 0) at top-left, x-axis increases rightward, y-axis <b><em>downward.</em></b></li>
+      <li>Component's surface is <em>transparent</em> unless drawn on.</li>
+      <li><code>JComponent</code>'s <code>paintComponent</code> does important things that we don't want to lose. (e.g. paints the component's background)
+        <ul><li>So call the method <code>super.paintComponent</code> first thing.</li></ul>
+      </li>
+    </ul>
+    <div class="code"><pre class="java">public void paintComponent(Graphics g) {
+    <b>super.paintComponent(g);</b>
+    ...
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>A drawing canvas <span class="sn">4</span></h3>
+    <ul class="pts">
+      <li>It is important never to call paintComponent directly in order to initiate a redrawing.</li>
+      <li>To do that, one calls the repaint()-method of the panel. This is done.
+        <ul><li>to avoid conflicts between redrawing and other operations of the runtime system.</li></ul>
+      </li>
+      <li>A call to repaint does not immediately repaint a component.
+        <ul><li>it tells the runtime system that one would like the component to be redrawn.</li><li>The system calls paintComponent after other pending actions have been completed</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <details class="orig" data-pages="1-4"></details>
+  <div class="quiz" data-quiz="canvas"></div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="sec" id="methods" data-title="Graphics methods and first examples">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 5–10</p>
+    <div class="sec-head-row"><h2>Graphics methods and first examples</h2><label class="done"><input type="checkbox" id="done-methods"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Almost every shape method takes <code>(x, y, width, height)</code> where (x, y) is the <b>top-left corner of the bounding box</b>. <code>draw…</code> draws the outline, <code>fill…</code> fills it. Ovals are drawn inside that box. The odd one out is <code>drawString(text, x, y)</code>: there y is the text's <b>bottom</b> (its baseline). <code>setColor</code> stays in effect until you change it again.</div></aside>
+
+  <div class="slide">
+    <h3>Graphics methods <span class="sn">5</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it draws</th></tr></thead>
+        <tbody>
+          <tr><td><code>drawLine(int xstart, int ystart, int xend, int yend)</code></td><td>draws a line segment between the points with coordinates (xstart, ystart) and (xend, yend).</td></tr>
+          <tr><td><code>drawRect(int xleft, int ytop, int width, int height)</code></td><td>draws the contour of an axes-aligned rectangle. The upper left corner of the rectangle is at (xleft, ytop). It is width pixels wide and height pixels tall</td></tr>
+          <tr><td><code>drawOval(int xleft, int ytop, int width, int height)</code></td><td>draws the contour of an ellipse. The axes of the ellipse are parallel to the coordinate axes. The upper left corner of the bounding rectangle of the ellipse is at (xleft, ytop) and is called the reference point. The horizontal axis of the ellipse has length width, the vertical one height.</td></tr>
+          <tr><td><code>drawString(String text, int xleft, int ybottom)</code></td><td>draws the string text. The lower left corner of the bounding rectangle of the text is at (xleft, ybottom). This is the reference point.</td></tr>
+          <tr><td><code>fillRect(int xleft, int ytop, int width, int height)</code></td><td>draws a filled rectangle using the current colour, otherwise like drawRect.</td></tr>
+          <tr><td><code>fillOval(int xleft, int ytop, int width, int height)</code></td><td>draws a filled ellipse using the current colour, otherwise like drawOval</td></tr>
+          <tr><td><code>setColor(Color col)</code></td><td>sets the colour of the drawing to col. This colour is used until the setColor command is used again.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Example <span class="sn">6–7</span></h3>
+    <div class="code"><span class="code-label">SimpleGraphicsPanel.java</span><pre class="java">import java.awt.*;
+import javax.swing.JPanel;
+public class SimpleGraphicsPanel extends JPanel
+{
+   public SimpleGraphicsPanel()
+   {
+      this.setBackground(Color.white);
+      this.setPreferredSize(new Dimension(300,300));
+   }
+
+   public void paintComponent(Graphics g)
+   {
+      super.paintComponent(g);
+      g.setColor(Color.black);
+      g.drawLine(10,10,100,100);
+      g.setColor(Color.red);
+      g.drawLine(10,100,100,10);
+      g.setColor(Color.green);
+      g.drawOval(120,60,70,40);
+      g.setColor(Color.yellow);
+      g.fillOval(230,150,30,30);
+      g.setColor(Color.red);
+      g.fillOval(245,150,30,30);
+      g.setColor(Color.black);
+      g.fillOval(238,160,30,30);
+      g.setColor(Color.cyan);
+      g.fillOval(10,120,100,60);
+      g.setColor(this.getBackground());
+      g.fillOval(50,140,100,60);
+      g.setColor(Color.blue);
+      g.drawString("Swing is nice.",100,200);
+   }
+}</pre></div>
+    <div class="fig-row">
+      <div class="code" style="flex:1 1 16rem"><span class="code-label">SimpleGraphicsFrame.java</span><pre class="java">import java.awt.BorderLayout;
+public class SimpleGraphicsFrame extends SimpleFrame
+{
+   public SimpleGraphicsFrame()
+   {
+      this.setTitle("Simple Graphics");
+      SimpleGraphicsPanel SGP = new SimpleGraphicsPanel();
+      this.getContentPane().add(SGP,BorderLayout.CENTER);
+      pack();
+   }
+}</pre></div>
+      <div class="code" style="flex:1 1 16rem"><span class="code-label">SimpleGraphicsDriver.java</span><pre class="java">public class SimpleGraphicsDriver
+{
+   public SimpleGraphicsDriver()
+   {
+      SimpleGraphicsFrame SGF = new SimpleGraphicsFrame();
+      SGF.showIt();
+   }
+   public static void main(String[] args)
+   {
+      SimpleGraphicsDriver sgt = new SimpleGraphicsDriver();
+   }
+}</pre></div>
+    </div>
+    <aside class="note"><b>Guide note</b><span>Run this panel in the drawing playground below (it's the first preset). The cyan oval looks like a crescent because a background-coloured oval is drawn over part of it. <code>pack()</code> sizes the frame to fit the panel's preferred size (300 × 300).</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Finding the screen parameters <span class="sn">8</span></h3>
+    <div class="code"><pre class="java">Toolkit tk = Toolkit.getDefaultToolkit();
+Dimension screenDim = tk.getScreenSize();
+int screenHeight = screenDim.height;
+int screenWidth = screenDim.width;
+int pixPerInch = tk.getScreenResolution();</pre></div>
+    <aside class="note"><b>Guide note</b><span>Useful for centring a window yourself: <code>frame.setLocation((screenWidth - frame.getWidth()) / 2, (screenHeight - frame.getHeight()) / 2);</code> (or simply <code>frame.setLocationRelativeTo(null)</code>).</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Example 2 <span class="sn">9–10</span></h3>
+    <div class="code"><span class="code-label">ResizePanel.java</span><pre class="java">import java.awt.Color;
+import java.awt.Graphics;
+import javax.swing.JPanel;
+
+public class ResizePanel extends JPanel{
+
+   public ResizePanel(){
+      this.setBackground(Color.yellow);
+   }
+
+   public void paintComponent(Graphics g)
+   {
+      super.paintComponent(g);
+      // get the current dimensions of the panel
+      int currentWidth = this.getWidth();
+      int currentHeight = this.getHeight();
+
+      // take a third of the current dimensions
+      int wThird = currentWidth/3;
+      int hThird = currentHeight/3;
+
+      //set color to black
+      g.setColor(Color.black);
+      // and draw the rectangle
+      g.fillRect(wThird,hThird,wThird,hThird);
+   }
+}</pre></div>
+    <div class="code"><span class="code-label">ResizeFrame.java and ResizeDriver.java</span><pre class="java">import SimpleFrame.SimpleFrame;
+
+public class ResizeFrame extends SimpleFrame{
+
+   public ResizeFrame(){
+      ResizePanel rp = new ResizePanel();
+      this.setSize(500,300);
+
+      this.getContentPane().add(rp);
+
+   }
+
+}
+
+public class ResizeDriver
+{
+   public static void main(String[] args){
+      ResizeFrame rf = new ResizeFrame();
+      rf.showIt("ResizeFrame");
+   }
+}</pre></div>
+    <div class="demo" id="rz">
+      <div class="demo-head"><h3>Try it: resize the panel</h3><span class="added">Added</span></div>
+      <div class="ctrl"><label for="rzW">width <input type="range" id="rzW" min="90" max="500" value="300"></label><label for="rzH">height <input type="range" id="rzH" min="60" max="300" value="180"></label></div>
+      <div style="overflow-x:auto"><canvas id="rzC" width="300" height="180" style="display:block;border:1px solid #9aa7ad"></canvas></div>
+      <p class="expl" id="rzNote" style="margin:0"></p>
+    </div>
+    <p>Because the rectangle is computed from <code>getWidth()</code> and <code>getHeight()</code> every time paintComponent runs, it stays in the middle third however the window is resized.</p>
+  </div>
+
+  <details class="orig" data-pages="5-10"></details>
+  <div class="quiz" data-quiz="methods"></div>
+</section>
+
+<!-- ============ playground ============ -->
+<section class="sec" id="play" data-title="Drawing playground">
+  <div class="sec-head">
+    <p class="eyebrow">Added · interactive</p>
+    <div class="sec-head-row"><h2>Drawing playground</h2><label class="done"><input type="checkbox" id="done-play"> Studied</label></div>
+  </div>
+  <p class="lede">Write the body of <code>paintComponent</code> and press Run (or edit and wait). It understands the Graphics and Graphics2D calls from this lecture: <code>setColor</code>, <code>drawLine</code>, <code>drawRect</code>, <code>fillRect</code>, <code>drawOval</code>, <code>fillOval</code>, <code>drawArc</code>, <code>fillArc</code>, <code>drawString</code>, <code>setFont</code>, <code>drawPolygon</code>/<code>fillPolygon</code> with <code>int[]</code> arrays, and on g2: <code>draw</code>/<code>fill</code> with <code>Rectangle2D</code>, <code>Ellipse2D</code>, <code>Line2D</code>, <code>RoundRectangle2D</code>, <code>setPaint</code>, <code>GradientPaint</code>, <code>setStroke(new BasicStroke(...))</code>, <code>translate</code>, <code>rotate</code>, <code>scale</code>. Hover the canvas to read coordinates.</p>
+  <div class="demo">
+    <div class="ctrl">
+      <label for="gpPreset">Load example
+        <select id="gpPreset">
+          <option value="simple">Slide 6: SimpleGraphicsPanel</option>
+          <option value="shapes">Slide 31: Drawing Shapes</option>
+          <option value="transform">Slide 29: Transformations</option>
+          <option value="stroke">Slide 32: Stroke &amp; Paint</option>
+          <option value="ex3">Slide 20: Example 3</option>
+          <option value="gradient">Slide 26: GradientPaint</option>
+          <option value="house">My drawing: a house</option>
+        </select>
+      </label>
+      <button class="btn solid" type="button" id="gpRun">Run</button>
+      <label><input type="checkbox" id="gpGrid" checked> grid</label>
+    </div>
+    <div class="fig-row">
+      <div style="flex:1 1 18rem;min-width:0;display:grid;gap:.4rem">
+        <label for="gpCode" class="code-label" style="margin:0">public void paintComponent(Graphics g) { super.paintComponent(g); Graphics2D g2 = (Graphics2D) g; …</label>
+        <textarea id="gpCode" spellcheck="false" rows="16" style="font:13px/1.5 var(--f-mono);padding:.6rem;border:1px solid var(--line);border-radius:6px;background:var(--code-bg);color:var(--ink);resize:vertical;min-width:0;width:100%"></textarea>
+        <p class="expl" id="gpErr" style="margin:0;color:var(--bad)"></p>
+      </div>
+      <div style="flex:0 1 auto;min-width:0;display:grid;gap:.3rem;justify-items:start">
+        <div style="overflow-x:auto;max-width:100%"><canvas id="gpC" width="420" height="320" style="display:block;border:1px solid #9aa7ad;background:#fff;cursor:crosshair"></canvas></div>
+        <span class="code-label" id="gpXY" style="margin:0">x = –, y = –</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="sec" id="g2d" data-title="Graphics2D and shapes">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 11–15</p>
+    <div class="sec-head-row"><h2>Graphics2D and shapes</h2><label class="done"><input type="checkbox" id="done-g2d"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>The <code>g</code> you receive is really a <code>Graphics2D</code>, the richer version. Cast it once: <code>Graphics2D g2 = (Graphics2D) g;</code>. Then you can make shape <em>objects</em> (<code>new Ellipse2D.Double(x, y, w, h)</code>…) and pass them to <code>g2.draw(shape)</code> or <code>g2.fill(shape)</code>. Shapes are useful because they can answer questions, like <code>shape.contains(x, y)</code> ("did the click land inside me?").</div></aside>
+
+  <div class="slide">
+    <h3>Graphics2D <span class="sn">11</span></h3>
+    <ul class="pts">
+      <li>The <code>Graphics</code> object <code>g</code> passed to <code>paintComponent</code> is a "graphical context" object to draw on the component.
+        <ul><li>The actual object passed in is a <code>Graphics2D</code> (can cast).</li></ul>
+        <div class="code" style="margin-top:.3rem"><pre class="java">Graphics2D g2 = (Graphics2D) g;</pre></div>
+      </li>
+      <li><code>Graphics2D</code> is a subclass of <code>Graphics</code> that adds new features, new shapes, matrix transformations, color gradients, etc.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Graphics2D methods <span class="sn">12</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>method name</th><th>description</th></tr></thead>
+        <tbody>
+          <tr><td><code>draw(<b>Shape</b>)</code></td><td>draws the outline of a given shape object <em>(replaces drawRect, etc.)</em></td></tr>
+          <tr><td><code>fill(<b>Shape</b>)</code></td><td>draws the outline and interior of a given shape object</td></tr>
+          <tr><td><code>getPaint()</code>, <code>setPaint(<b>Paint</b>)</code></td><td>returns or sets the current paint used for drawing (<code>Color</code> is one kind of <code>Paint</code>, but there are others)</td></tr>
+          <tr><td><code>getStroke()</code>, <code>setStroke(<b>Stroke</b>)</code></td><td>returns or sets the current line stroke style used for drawing (can be thin/thick, solid/dashed/dotted, etc.)</td></tr>
+          <tr><td><code>rotate(<b>angle</b>)</code></td><td>rotates any future drawn shapes by the given angle (radians)</td></tr>
+          <tr><td><code>scale(<b>sx, sy</b>)</code></td><td>resizes any future drawn shapes by the given x/y factors</td></tr>
+          <tr><td><code>translate(<b>dx, dy</b>)</code></td><td>moves any future drawn shapes by the given x/y amounts</td></tr>
+          <tr><td><code>setRenderingHint(<b>key, value</b>)</code></td><td>sets "rendering hints" such as anti-aliasing and smoothing</td></tr>
+          <tr><td><code>shear(<b>shx, shy</b>)</code></td><td>gives a slanted perspective to future drawn shapes</td></tr>
+          <tr><td><code>transform(<b>t</b>)</code></td><td>adds a transformation that will be applied to all shapes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Shapes (java.awt.geom) <span class="sn">13</span></h3>
+    <div class="fig-row">
+      <ul class="pts" style="flex:2 1 18rem">
+        <li><code>Arc2D.Double(<b>x, y, w, h, start, extent, type</b>)</code><br>An arc, which is a portion of an ellipse.</li>
+        <li><code>Ellipse2D.Double(<b>x, y, w, h</b>)</code></li>
+        <li><code>Line2D.Double(<b>x1, y1, x2, y2</b>)</code><br><code>Line2D.Double(<b>p1, p2</b>)</code><br>A line between two points.</li>
+        <li><code>Rectangle2D.Double(<b>x, y, w, h</b>)</code></li>
+        <li><code>RoundRectangle2D.Double(<b>x, y, w, h, arcx, arcy</b>)</code></li>
+        <li><code>GeneralPath()</code><br>A customizable polygon.</li>
+      </ul>
+      <figure style="flex:0 1 8rem"><div class="plate"><img src="img/s13_shapes.png" width="140" alt="Pictures of an arc, an ellipse, a line, a rectangle overlapping a dashed rounded rectangle, and an hourglass-shaped polygon"></div><figcaption>Arc, ellipse, line, rectangle and rounded rectangle, general path.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Methods of all shapes <span class="sn">14</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>method name</th><th>description</th></tr></thead>
+        <tbody>
+          <tr><td><code>contains(<b>x, y</b>)</code><br><code>contains(<b>point</b>)</code><br><code>contains(<b>rectangle</b>)</code></td><td>whether the given point is inside the bounds of this shape</td></tr>
+          <tr><td><code>getBounds()</code></td><td>a rectangle representing the bounding box around this shape</td></tr>
+          <tr><td><code>getCenterX/Y()</code><br><code>getMinX/Y()</code><br><code>getMaxX/Y()</code></td><td>various corner or center coordinates within the shape</td></tr>
+          <tr><td><code>intersects(<b>x,y,w,h</b>)</code><br><code>intersects(<b>rectangle</b>)</code></td><td>whether this shape touches the given rectangular region</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Drawing with objects <span class="sn">15</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">public class MyCanvas extends JComponent {
+    public MyCanvas() {
+        this.setBackground(Color.WHITE);
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        <b>Shape shape = new Ellipse2D.Double(10, 10, 20, 50);</b>
+        g2.setPaint(Color.BLUE);
+        <b>g2.fill(shape);</b>
+    }
+}</pre></div>
+      <figure style="flex:0 1 9rem"><div class="plate"><img src="img/s15_blue_ellipse.png" width="150" alt="A blue tall ellipse near the top-left of a white box"></div><figcaption>A 20 × 50 blue ellipse at (10, 10).</figcaption></figure>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="11-15"></details>
+  <div class="quiz" data-quiz="g2d"></div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="sec" id="paint" data-title="Colours, paints, strokes, repaint">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 16–19</p>
+    <div class="sec-head-row"><h2>Colours, paints, strokes, repaint</h2><label class="done"><input type="checkbox" id="done-paint"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A <b>Paint</b> is "what fills the shape": a plain <code>Color</code>, a <code>GradientPaint</code> (fades from one colour at point 1 to another at point 2) or a <code>TexturePaint</code> (repeats an image). A <b>Stroke</b> is "the pen": its width, line ends (caps), corners (joins) and dash pattern. Anti-aliasing smooths jagged edges.</div></aside>
+
+  <div class="slide">
+    <h3>Colors and paints <span class="sn">16</span></h3>
+    <ul class="pts">
+      <li><code><b>Color</b></code> (a simple single-colored paint)
+        <ul><li><code>public Color(int r, int g, int b)</code></li><li><code>public Color(int r, int g, int b, int alpha)</code>
+          <ul><li>a partially-transparent color (range 0-255, 0=transparent)</li></ul></li></ul>
+      </li>
+      <li><code><b>GradientPaint</b></code> (a smooth transition between 2 colors)
+        <ul><li><code>public GradientPaint(float x1, float y1, Color color1, float x2, float y2, Color color2)</code></li></ul>
+      </li>
+      <li><code>java.awt.TexturePaint</code><br>(use an image as a "paint" background)</li>
+    </ul>
+    <figure><div class="plate"><img src="img/s16_paints.png" width="420" loading="lazy" alt="GradientPaint: an ellipse fading from white at P1 to blue at P2. TexturePaint: a pattern image of white dots on purple, a small rectangle defining repetition frequency, and a large rectangle filled with the repeating texture"></div><figcaption>GradientPaint from P1 (white) to P2 (blue); TexturePaint: pattern image + repetition rectangle → large filled rectangle.</figcaption></figure>
+    <div class="demo" id="col">
+      <div class="demo-head"><h3>Try it: new Color(r, g, b, alpha)</h3><span class="added">Added</span></div>
+      <div class="ctrl">
+        <label for="cR">r <input type="range" id="cR" min="0" max="255" value="29"></label>
+        <label for="cG">g <input type="range" id="cG" min="0" max="255" value="95"></label>
+        <label for="cB">b <input type="range" id="cB" min="0" max="255" value="110"></label>
+        <label for="cA">alpha <input type="range" id="cA" min="0" max="255" value="255"></label>
+      </div>
+      <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap">
+        <div style="width:120px;height:60px;border:1px solid #9aa7ad;background:repeating-conic-gradient(#ccc 0 25%, #fff 0 50%) 0 0/16px 16px;position:relative"><div id="cSw" style="position:absolute;inset:0"></div></div>
+        <code id="cCode"></code>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Strokes (pen styles) <span class="sn">17</span></h3>
+    <div class="fig-row">
+      <div style="flex:2 1 18rem;min-width:0;display:grid;gap:.4rem">
+        <p><code>Graphics2D</code></p>
+        <ul class="pts"><li><code>public void <b>setStroke</b>(Stroke s)</code><br>Sets type of drawing pen (color, width, style) that will be used by this <code>Graphics2D</code>.</li></ul>
+        <p><code><b>BasicStroke</b></code><br><em>A pen stroke for drawing outlines.</em></p>
+        <ul class="pts">
+          <li><code>public BasicStroke(float width)</code></li>
+          <li><code>public BasicStroke(float width, int cap, int join)</code></li>
+          <li><code>public BasicStroke(float width, int cap, int join, float miterlimit, float[] dash, float dash_phase)</code>
+            <ul><li><code>cap</code> can be: <code>CAP_BUTT</code>, <code>CAP_ROUND</code>, <code>CAP_SQUARE</code></li><li><code>join</code> can be: <code>JOIN_BEVEL</code>, <code>JOIN_MITER</code>, <code>JOIN_ROUND</code></li></ul>
+          </li>
+        </ul>
+      </div>
+      <figure style="flex:1 1 12rem"><div class="plate"><img src="img/s17_strokes.png" width="260" loading="lazy" alt="Three joins (JOIN_BEVEL flat corner, JOIN_MITER pointed corner, JOIN_ROUND rounded corner) and three caps (CAP_BUTT ends flush, CAP_SQUARE extends square, CAP_ROUND rounded ends)"></div><figcaption>Joins shape the corners; caps shape the line ends.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Repainting <span class="sn">18</span></h3>
+    <ul class="pts">
+      <li>Most canvases are drawing the state of fields, a model, etc.
+        <ul>
+          <li>When the state updates, you must tell the canvas to re-draw itself.</li>
+          <li>But you can't call its <code>paintComponent</code> method, because you don't have the <code>Graphics g</code> to pass.</li>
+          <li>The proper way is to call <code>repaint</code> on the canvas instead:</li>
+        </ul>
+        <div class="code" style="margin-top:.3rem"><pre class="java">public void <b>repaint</b>()</pre></div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Anti-aliasing <span class="sn">19</span></h3>
+    <div class="fig-row">
+      <div style="flex:2 1 18rem;min-width:0;display:grid;gap:.4rem">
+        <ul class="pts">
+          <li>Onscreen text and shapes can have jagged edges, or <em>aliases</em>. These can be removed by smoothing, or <em>anti-aliasing</em>, the component.
+            <ul><li><code>public void setRenderingHint(key, value)</code></li><li>Example:</li></ul>
+          </li>
+        </ul>
+        <div class="code"><pre class="java">g2.setRenderingHint(
+        RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON);</pre></div>
+      </div>
+      <figure style="flex:1 1 10rem"><div class="plate"><img src="img/s19_aliasing.png" width="200" loading="lazy" alt="A zoomed-in screenshot showing jagged, staircase pixels along a red curve and a blue letter"></div><figcaption>Zoomed in: the staircase "jaggies" that anti-aliasing smooths.</figcaption></figure>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="16-19"></details>
+  <div class="quiz" data-quiz="paint"></div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="sec" id="examples" data-title="Examples 3–8: shapes, text, images, textures">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 20–26</p>
+    <div class="sec-head-row"><h2>Examples 3–8: shapes, text, images, textures</h2><label class="done"><input type="checkbox" id="done-examples"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Six short paintComponent bodies, each showing one feature: shape objects and a polygon path, a custom font, drawing an image file, a <code>BufferedImage</code> (an off-screen picture you draw into) used as a repeating texture, an image file used as a texture, and a gradient. A <code>Path2D</code> is a pen path: <code>moveTo</code> lifts the pen to a point, <code>lineTo</code> draws to the next, <code>closePath</code> joins back to the start.</div></aside>
+
+  <div class="slide">
+    <h3>Example 3 <span class="sn">20</span></h3>
+    <div class="code"><pre class="java">import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Path2D;
+import javax.swing.JPanel;
+
+public class DrawingPanel extends JPanel {
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Draw a rectangle
+        Rectangle2D rect = new Rectangle2D.Double(100, 100, 200, 100);
+        g2d.draw(rect);
+
+        // Draw an oval
+        Ellipse2D oval = new Ellipse2D.Double(400, 100, 200, 100);
+        g2d.draw(oval);
+
+        // Draw a polygon
+        Path2D polygon = new Path2D.Double();
+        polygon.moveTo(200, 300);
+        polygon.lineTo(300, 400);
+        polygon.lineTo(100, 400);
+        polygon.closePath();
+        g2d.draw(polygon);
+    }
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Example 4 <span class="sn">21</span></h3>
+    <div class="code"><pre class="java">import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class DrawingPanel extends JPanel {
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Set font and color
+        g2d.setFont(new Font("Arial", Font.BOLD, 24));
+        g2d.setColor(Color.RED);
+
+        // Draw a string
+        g2d.drawString("Hello, Java 2D Graphics!", 200, 50);
+    }
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Example 5 <span class="sn">22</span></h3>
+    <div class="code"><pre class="java">import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+
+public class DrawingPanel extends JPanel {
+
+    private Image image;
+
+    public DrawingPanel() {
+        try {
+            image = ImageIO.read(new File("path/to/your/image.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Draw an image
+        if (image != null) {
+            g2d.drawImage(image, 300, 200, this);
+        }
+    }
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span>The image is loaded <em>once</em> in the constructor, not inside paintComponent (which can run many times a second). <code>ImageIO.read</code> can fail, so it sits in a try/catch, and paintComponent checks <code>image != null</code>.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Creating images <span class="sn">23</span></h3>
+    <div class="code"><pre class="java">// import java.awt.image.*;</pre></div>
+    <p><code>BufferedImage</code><br><em>A blank graphic image buffer surface onto which you can draw</em></p>
+    <ul class="pts">
+      <li><code>public BufferedImage(int w, int h, int type)</code>
+        <ul><li>where <code>type</code> is a constant such as <code>BufferedImage.TYPE_INT_ARGB</code></li></ul></li>
+      <li><code>public Graphics getGraphics()</code>
+        <ul><li>returns a graphical pen for "drawing on" this image</li></ul></li>
+      <li>you can draw a <code>BufferedImage</code> onto the screen from within the <code>paintComponent</code> method of your canvas:
+        <ul><li><code>g.drawImage(<b>BufferedImage</b>, x, y, this);</code></li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Example 6 <span class="sn">24</span></h3>
+    <div class="code"><pre class="java">import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class DrawingPanel extends JPanel {
+
+   @Override
+   protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      Graphics2D g2 = (Graphics2D) g;
+
+      // Create a buffered image texture patch of size 5x5
+      BufferedImage bi = new BufferedImage(5, 5,
+                                           BufferedImage.TYPE_INT_RGB);
+      Graphics2D big = bi.createGraphics();
+      // Render into the BufferedImage graphics to create the texture
+      big.setColor(Color.green);
+      big.fillRect(0,0,5,5);
+      big.setColor(Color.lightGray);
+      big.fillOval(0,0,5,5);
+
+      // Create a texture paint from the buffered image
+      Rectangle r = new Rectangle(0,0,5,5);
+      TexturePaint tp = new TexturePaint(bi,r,TexturePaint.NEAREST_NEIGHBOR);
+
+      // Add the texture paint to the graphics context.
+      g2.setPaint(tp);
+
+      // Create and render a rectangle filled with the texture.
+      g2.fillRect(0,0,200,200);
+   }</pre></div>
+    <aside class="note"><b>Guide note</b><span>Examples 6–8 need more imports than the slides list: <code>javax.swing.JPanel</code>, <code>java.awt.*</code> (for Rectangle, TexturePaint, GradientPaint), <code>java.awt.image.BufferedImage</code>, <code>java.awt.geom.Rectangle2D</code>, <code>javax.imageio.ImageIO</code> and <code>java.io.File</code>. The 4-argument TexturePaint constructor with <code>NEAREST_NEIGHBOR</code> isn't in standard Java; use <code>new TexturePaint(bi, r)</code>.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Example 7 <span class="sn">25</span></h3>
+    <div class="code"><pre class="java">import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class DrawingPanel extends JPanel {
+
+   @Override
+   protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      Graphics2D g2 = (Graphics2D) g;
+
+      //Create a BufferedImage object from image file
+      BufferedImage image = ImageIO.read(new File("java.png"));
+
+      //Create image area doubled in width
+      Rectangle2D.Float imageArea = new Rectangle2D.Float(0, 0, image.getWidth() * 2, image.getHeight());
+      //Create texture brush from the image
+      TexturePaint paint = new TexturePaint(image, imageArea);
+
+      //Create rectangle
+      Rectangle2D.Float shape = new Rectangle2D.Float(0, 0, 200, 100);
+
+      //Set this texture brush as current paint
+      g2.setPaint(paint);
+      //Fill rectangle
+      g2.fill(shape);</pre></div>
+    <aside class="note"><b>Guide note</b><span><code>ImageIO.read</code> throws <code>IOException</code>, so this needs a try/catch (and, as in Example 5, it's better to load the file once in the constructor). The slide's quote before <code>java.png</code> is a curly quote, which the compiler rejects; type a straight <code>"</code>.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Example 8 <span class="sn">26</span></h3>
+    <div class="code"><pre class="java">import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class DrawingPanel extends JPanel {
+
+   @Override
+   protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      Graphics2D g2 = (Graphics2D) g;
+
+      GradientPaint gp = new GradientPaint(50.0f, 50.0f, Color.blue
+                                           50.0f, 250.0f, Color.green);
+      g2.setPaint(gp);
+      g2.fillRect(50, 50, 200, 200); }</pre></div>
+    <aside class="note"><b>Guide note</b><span>A comma is missing after <code>Color.blue</code>; it should read <code>Color.blue, 50.0f, 250.0f, Color.green</code>. The gradient runs top (blue, y = 50) to bottom (green, y = 250). It's a preset in the playground.</span></aside>
+  </div>
+
+  <details class="orig" data-pages="20-26"></details>
+  <div class="quiz" data-quiz="examples"></div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class="sec" id="anim" data-title="Animation, transforms, shapes, strokes">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 27–33</p>
+    <div class="sec-head-row"><h2>Animation, transforms, shapes, strokes</h2><label class="done"><input type="checkbox" id="done-anim"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div><b>Animation</b> = change a field, call <code>repaint()</code>, repeat. A <code>javax.swing.Timer</code> does the repeating: every <em>n</em> milliseconds it calls <code>actionPerformed</code>, where you move the ball and repaint. <b>Transforms</b> (<code>translate</code>, <code>rotate</code>, <code>scale</code>) move the whole coordinate system, and they <em>add up</em>: each one applies on top of the previous ones to everything drawn after it.</div></aside>
+
+  <div class="slide">
+    <h3>Moving ball <span class="sn">27–28</span></h3>
+    <div class="code"><pre class="java">import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+class MovingBall extends JPanel implements ActionListener {
+   private int x = 50;
+   private int dx = 2;
+   private Timer timer;
+
+   public MovingBall() {
+      timer = new Timer(10, this);
+      timer.start();
+   }
+
+   @Override
+   protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      g.setColor(Color.RED);
+      g.fillOval(x, 50, 30, 30);
+   }
+
+   @Override
+   public void actionPerformed(ActionEvent e) {
+      x += dx;
+      if (x &gt; getWidth() - 30 || x &lt; 0) dx = -dx;
+      repaint();
+   }}
+
+public class AnimationExample {
+   public static void main(String[] args) {
+      JFrame frame = new JFrame("Ball Animation");
+      frame.setSize(400, 200);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+      frame.add(new MovingBall());
+      frame.setVisible(true);
+   }
+}</pre></div>
+    <div class="fig-row">
+      <figure style="flex:1 1 12rem"><div class="plate"><img src="img/s27_ball_a.png" width="250" loading="lazy" alt="Red ball near the left of a grey panel"></div></figure>
+      <figure style="flex:1 1 12rem"><div class="plate"><img src="img/s27_ball_b.png" width="250" loading="lazy" alt="Red ball at the right edge of the panel"></div></figure>
+    </div>
+    <div class="demo" id="ball">
+      <div class="demo-head"><h3>Try it: the Timer animation</h3><span class="added">Added</span></div>
+      <div class="ctrl">
+        <button class="btn solid" type="button" id="bStart">timer.stop()</button>
+        <label for="bDelay">new Timer(<input type="number" id="bDelay" min="5" max="500" value="10" style="width:4.5rem">, this)</label>
+        <label for="bDx">dx = <input type="number" id="bDx" min="1" max="20" value="2" style="width:3.5rem"></label>
+      </div>
+      <div style="overflow-x:auto"><canvas id="bC" width="400" height="130" style="display:block;border:1px solid #9aa7ad;background:#eeeeee"></canvas></div>
+      <p class="expl" id="bInfo" style="margin:0"></p>
+    </div>
+    <aside class="note"><b>Guide note</b><span>Use <code>javax.swing.Timer</code> (it runs actionPerformed on the GUI thread). <code>java.util.Timer</code> is a different class; with <code>import javax.swing.*</code> and <code>java.util.*</code> together, the name clashes.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Transformations <span class="sn">29–30</span></h3>
+    <div class="code"><pre class="java">import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class TransformExample extends JPanel {
+   @Override
+   protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      Graphics2D g2 = (Graphics2D) g;
+      Rectangle2D rect = new Rectangle2D.Double(50, 50, 100, 50);
+      g2.setPaint(Color.GRAY);
+      g2.draw(rect);
+      g2.translate(150, 0);
+      g2.setPaint(Color.BLUE);
+      g2.draw(rect);
+      g2.rotate(Math.toRadians(45), 100, 75);
+      g2.setPaint(Color.RED);
+      g2.draw(rect);
+      g2.scale(1.5, 1.5);
+      g2.setPaint(Color.GREEN);
+      g2.draw(rect);   }
+
+   public static void main(String[] args) {
+      JFrame frame = new JFrame("Transformations");
+      frame.setSize(400, 250);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.add(new TransformExample());
+      frame.setVisible(true);
+   }
+}</pre></div>
+    <figure><div class="plate"><img src="img/s29_transform.png" width="433" loading="lazy" alt="Transformations window: a grey rectangle on the left, a blue rectangle shifted right, a red rectangle rotated 45 degrees around the blue one's centre, and a larger green rotated rectangle"></div><figcaption>Grey (original) → blue (translated 150 right) → red (also rotated 45° around (100, 75)) → green (also scaled 1.5×).</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <h3>Drawing Shapes <span class="sn">31</span></h3>
+    <div class="code"><pre class="java">import javax.swing.*;import java.awt.*;
+class ShapePanel extends JPanel {
+   @Override
+   protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      g.drawLine(50, 50, 200, 50);
+      g.drawRect(50, 70, 100, 50);
+      g.fillRect(160, 70, 100, 50);
+      g.drawOval(50, 130, 100, 50);
+      g.fillOval(160, 130, 100, 50);
+      g.drawArc(50, 190, 100, 100, 0, 180);
+      int[] xPoints = {50, 100, 150};
+      int[] yPoints = {300, 200, 300};
+      g.fillPolygon(xPoints, yPoints, 3);
+   }}
+
+public class ShapeExample {
+   public static void main(String[] args) {
+      JFrame frame = new JFrame("Drawing Shapes");
+      frame.setSize(400, 400);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.add(new ShapePanel());
+      frame.setVisible(true);
+   }
+}</pre></div>
+    <figure><div class="plate"><img src="img/s31_shapes.png" width="300" loading="lazy" alt="Drawing Shapes window: a line, an outlined and a filled rectangle, an outlined and a filled oval, a half-circle arc and a filled triangle"></div><figcaption><code>drawArc(…, 0, 180)</code> draws the top half of a circle: angles start at 3 o'clock and go anticlockwise.</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <h3>Stroke &amp; Paint <span class="sn">32–33</span></h3>
+    <div class="code"><pre class="java">import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class StrokePaintExample extends JPanel {
+   @Override
+   protected void paintComponent(Graphics g) {
+      super.paintComponent(g);
+      Graphics2D g2 = (Graphics2D) g;
+
+      Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT,
+            BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+      g2.setStroke(dashed);
+      g2.setPaint(Color.MAGENTA);
+      g2.draw(new Rectangle2D.Double(40, 40, 150, 100));
+
+      GradientPaint gradient = new GradientPaint(250, 40, Color.RED, 400, 140,
+            Color.YELLOW);
+      g2.setPaint(gradient);
+      g2.fill(new Ellipse2D.Double(250, 40, 150, 100));
+   }
+
+   public static void main(String[] args) {
+      JFrame frame = new JFrame("Stroke &amp; Paint");
+      frame.setSize(450, 200);
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.add(new StrokePaintExample());
+      frame.setVisible(true);
+   }
+}</pre></div>
+    <figure><div class="plate"><img src="img/s32_stroke_paint.png" width="435" loading="lazy" alt="Stroke &amp; Paint window: a magenta dashed rectangle on the left and an ellipse filled with a red-to-yellow gradient on the right"></div><figcaption><code>new float[]{9}</code> is the dash pattern: 9 px drawn, 9 px gap.</figcaption></figure>
+  </div>
+
+  <details class="orig" data-pages="27-33"></details>
+  <div class="quiz" data-quiz="anim"></div>
+</section>
+
+<!-- ============ 7 Lab 6 ============ -->
+<section class="sec" id="lab6" data-title="Lab 6: Mouse Events & Graphics">
+  <div class="sec-head">
+    <p class="eyebrow">CS254 Visual Programming Lab · November 2025 · Alshihan, Dima</p>
+    <div class="sec-head-row"><h2>Lab 6: Mouse Events &amp; Graphics</h2><label class="done"><input type="checkbox" id="done-lab6"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Lab 6 sums up Lectures 6 and 7, then asks for a Tic-Tac-Toe game. The trick: keep the board in a <code>char[3][3]</code> array (the model). The mouse listener turns a click position into a row and column (<code>row = y / cellHeight</code>, <code>col = x / cellWidth</code>), updates the array and calls <code>repaint()</code>. <code>paintComponent</code> only reads the array and draws it.</div></aside>
+
+  <div class="slide">
+    <h3>Mouse Events</h3>
+    <p><b>A Mouse Event</b> occurs when the user interacts with a component using the mouse (clicking, moving, dragging).</p>
+    <ul class="pts"><li>Class: MouseEvent → The object contains information about the mouse action that triggered the listener.</li></ul>
+    <h4>Useful MouseEvent Methods</h4>
+    <ul class="pts">
+      <li><code>int getX()</code>, <code>int getY()</code> → Returns the x- and y-coordinates of the event (in pixels) relative to the component.</li>
+      <li><code>Point getPoint()</code> → Returns the event location as a Point object.</li>
+      <li><code>isLeftMouseButton()</code>, <code>isMiddleMouseButton()</code>, <code>isRightMouseButton()</code> → Indicates the mouse button used.</li>
+      <li><code>int getClickCount()</code> → Returns how many times the mouse was clicked (single-click, double-click, etc.).</li>
+    </ul>
+    <h4>Mouse Listeners</h4>
+    <ul class="pts">
+      <li>A mouse listener is attached to a component to detect and respond to user mouse actions.</li>
+      <li>It performs actions when the user clicks, moves, drags, or scrolls the mouse over the component.</li>
+      <li>Mouse Listener Interfaces in AWT:
+        <ul><li>MouseListener: mouseClicked, mouseEntered, mouseExited, mousePressed, mouseReleased</li><li>MouseMotionListener: mouseMoved, mouseDragged</li><li>MouseWheelListener: Handles mouse wheel scrolling events.</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Graphics in Java Swing</h3>
+    <p>A <b>JPanel</b> is commonly used for drawing graphics.</p>
+    <ul class="pts">
+      <li>To create custom drawings, define a class that extends <b>JPanel</b> and override the <b>paintComponent()</b> method.</li>
+      <li><b>Coordinate System:</b>
+        <ul><li>The origin (0, 0) is located at the top-left corner of the panel.</li><li>The x-axis increases to the right.</li><li>The y-axis increases downward.</li></ul>
+      </li>
+      <li><b>Common Graphics Drawing Methods</b><br>These methods belong to the Graphics class and allow you to draw basic shapes:
+        <ul>
+          <li><code>drawLine(int xstart, int ystart, int xend, int yend)</code></li>
+          <li><code>drawRect(int xleft, int ytop, int width, int height)</code></li>
+          <li><code>drawString(String text, int xleft, int ybottom)</code></li>
+          <li><code>fillRect(int xleft, int ytop, int width, int height)</code></li>
+          <li><code>fillOval(int xleft, int ytop, int width, int height)</code></li>
+          <li><code>setColor(Color col)</code></li>
+        </ul>
+      </li>
+      <li><b>Graphics2D</b> is a more powerful subclass of Graphics. It provides advanced drawing features such as transformations, strokes, and rendering hints.</li>
+      <li><b>Drawing with Shape Classes</b>: Using Graphics2D, you can draw shapes from the java.awt.geom package, such as: Arc2D, Ellipse2D, Line2D, Rectangle2D, RoundRectangle2D, ..</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Task</h3>
+    <p>Create a basic <b>Tic-Tac-Toe game</b> in Java using Swing.</p>
+    <ol class="pts">
+      <li>The game board is a 3×3 grid, drawn using rectangles.</li>
+      <li>The user plays 'X', and the computer plays 'O'.</li>
+      <li>The player always starts.</li>
+      <li>When the player clicks a cell:
+        <ol type="a"><li>Draw X immediately in that cell.</li><li>Then the computer chooses a random empty cell and draws O.</li></ol>
+      </li>
+      <li>The game ends when:
+        <ol type="a"><li>A player gets three in a row (horizontal, vertical, or diagonal), or</li><li>The board becomes full (draw).</li></ol>
+      </li>
+      <li>Include a Reset button to restart the game at any time.</li>
+      <li>Use the following Swing/AWT components and classes in your implementation:
+        <ol type="a"><li>JPanel, Graphics2D, MouseListener,</li><li>Drawing methods like drawLine, drawRect, drawOval, etc.</li><li>repaint () for updating the board.</li></ol>
+      </li>
+    </ol>
+    <p><b>The expected design of the application</b></p>
+    <div class="fig-row">
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/lab6_empty.png" width="180" loading="lazy" alt="Tic Tac Toe window: empty 3 by 3 grid with a Reset Game button"></div><figcaption>Start.</figcaption></figure>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/lab6_playing.png" width="180" loading="lazy" alt="Tic Tac Toe board with two Xs and two Os"></div><figcaption>Playing.</figcaption></figure>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/lab6_win.png" width="180" loading="lazy" alt="Tic Tac Toe board with a Message dialog: Player X Wins!"></div><figcaption>"Player X Wins!"</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="demo" id="ttt">
+    <div class="demo-head"><h3>Try it: play the Lab 6 game</h3><span class="added">Added</span></div>
+    <div class="win" style="width:min(100%,19rem)"><div class="win-bar"><span>Tic Tac Toe</span><i>–□×</i></div>
+      <canvas id="tC" width="300" height="300" style="display:block;width:100%;height:auto;background:#fff;cursor:pointer" aria-label="Tic Tac Toe board. Click a cell to play X."></canvas>
+      <button type="button" class="jbtn" id="tReset" style="width:100%;border-radius:0">Reset Game</button>
+    </div>
+    <p class="expl" id="tMsg" aria-live="polite" style="margin:0">Your move: click a cell.</p>
+  </div>
+
+  <div class="slide answer" id="lab6-answer">
+    <p class="mine">Your answer · lab6.zip</p>
+    <h3>Your Lab 6 answer</h3>
+    <p>Project <code>Lab6</code> holds four separate programs. Each has its own <code>main</code>, so run each one with right-click → <b>Run File</b> (<kbd>Shift</kbd>+<kbd>F6</kbd>). <kbd>F6</kbd> runs the project's main class, <code>com.mycompany.lab6.Lab6</code> (the ball). The code is exactly as in your zip.</p>
+    <div class="tbl-wrap"><table><thead><tr><th>Program</th><th>Files</th><th>Run</th></tr></thead><tbody><tr><td>Tic-Tac-Toe (the lab task)</td><td><code>TicTacToe.java</code> (no package line: it sits directly in <code>src/main/java</code>)</td><td>Run File on TicTacToe.java</td></tr><tr><td>Bouncing ball</td><td><code>Lab6.java</code> + <code>Moveclass.java</code></td><td><kbd>F6</kbd>, or Run File on Lab6.java</td></tr><tr><td>Shapes</td><td><code>Simpleshape.java</code> + <code>Shape.java</code></td><td>Run File on Simpleshape.java</td></tr><tr><td>Hexagon</td><td><code>Sixsides.java</code> + <code>hexagon.java</code></td><td>Run File on Sixsides.java</td></tr></tbody></table></div>
+    <h4>1. Tic-Tac-Toe</h4>
+    <div class="code"><span class="code-label">TicTacToe.java</span><pre class="java">import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class TicTacToe {
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -&gt; new GameFrame());
+    }
+}
+
+class GameFrame extends JFrame {
+
+    public GameFrame() {
+        setTitle("Tic-Tac-Toe");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        GamePanel panel = new GamePanel();
+        JButton resetButton = new JButton("Reset");
+
+        resetButton.addActionListener(e -&gt; panel.resetGame());
+
+        add(panel, BorderLayout.CENTER);
+        add(resetButton, BorderLayout.SOUTH);
+
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+}
+
+class GamePanel extends JPanel implements MouseListener {
+
+    private char[][] board = new char[3][3]; // 'X', 'O', or '\0'
+    private boolean playerTurn = true;
+    private boolean gameOver = false;
+
+    private final int CELL_SIZE = 120;
+    private final Random rand = new Random();
+
+    public GamePanel() {
+        setPreferredSize(new Dimension(3 * CELL_SIZE, 3 * CELL_SIZE));
+        addMouseListener(this);
+        resetGame();
+    }
+
+    public void resetGame() {
+        for (int r = 0; r &lt; 3; r++)
+            for (int c = 0; c &lt; 3; c++)
+                board[r][c] = '\0';
+
+        playerTurn = true;
+        gameOver = false;
+        repaint();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        // Draw grid
+        g2d.setStroke(new BasicStroke(3));
+        for (int i = 1; i &lt; 3; i++) {
+            g2d.drawLine(i * CELL_SIZE, 0, i * CELL_SIZE, 3 * CELL_SIZE);
+            g2d.drawLine(0, i * CELL_SIZE, 3 * CELL_SIZE, i * CELL_SIZE);
+        }
+
+        // Draw X and O
+        for (int r = 0; r &lt; 3; r++) {
+            for (int c = 0; c &lt; 3; c++) {
+                int x = c * CELL_SIZE;
+                int y = r * CELL_SIZE;
+
+                if (board[r][c] == 'X') {
+                    g2d.drawLine(x + 20, y + 20, x + CELL_SIZE - 20, y + CELL_SIZE - 20);
+                    g2d.drawLine(x + CELL_SIZE - 20, y + 20, x + 20, y + CELL_SIZE - 20);
+                } else if (board[r][c] == 'O') {
+                    g2d.drawOval(x + 20, y + 20, CELL_SIZE - 40, CELL_SIZE - 40);
+                }
+            }
+        }
+
+        // Display game status
+        g2d.setColor(Color.RED);
+        g2d.setFont(new Font("Arial", Font.BOLD, 24));
+        if (gameOver) {
+            String msg = getWinner() == 'X' ? "Player Wins!"
+                     : getWinner() == 'O' ? "Computer Wins!"
+                     : "Draw!";
+            g2d.drawString(msg, 10, getHeight() - 10);
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (gameOver || !playerTurn) return;
+
+        int row = e.getY() / CELL_SIZE;
+        int col = e.getX() / CELL_SIZE;
+
+        if (row &lt; 0 || col &lt; 0 || row &gt; 2 || col &gt; 2) return;
+
+        if (board[row][col] == '\0') {
+            board[row][col] = 'X';
+            repaint();
+
+            if (checkGameOver()) return;
+
+            playerTurn = false;
+            computerMove();
+        }
+    }
+
+    private void computerMove() {
+        if (gameOver) return;
+
+        // Choose random empty cell
+        ArrayList&lt;int[]&gt; emptyCells = new ArrayList&lt;&gt;();
+        for (int r = 0; r &lt; 3; r++)
+            for (int c = 0; c &lt; 3; c++)
+                if (board[r][c] == '\0')
+                    emptyCells.add(new int[]{r, c});
+
+        if (emptyCells.isEmpty()) return;
+
+        int[] choice = emptyCells.get(rand.nextInt(emptyCells.size()));
+        board[choice[0]][choice[1]] = 'O';
+
+        repaint();
+
+        if (checkGameOver()) return;
+
+        playerTurn = true;
+    }
+
+    private boolean checkGameOver() {
+        if (getWinner() != '\0' || isBoardFull()) {
+            gameOver = true;
+            repaint();
+            return true;
+        }
+        return false;
+    }
+
+    private char getWinner() {
+        // Rows, columns, diagonals
+        for (int i = 0; i &lt; 3; i++) {
+            if (board[i][0] != '\0' &amp;&amp;
+                board[i][0] == board[i][1] &amp;&amp;
+                board[i][1] == board[i][2])
+                return board[i][0];
+
+            if (board[0][i] != '\0' &amp;&amp;
+                board[0][i] == board[1][i] &amp;&amp;
+                board[1][i] == board[2][i])
+                return board[0][i];
+        }
+
+        if (board[0][0] != '\0' &amp;&amp;
+            board[0][0] == board[1][1] &amp;&amp;
+            board[1][1] == board[2][2])
+            return board[0][0];
+
+        if (board[0][2] != '\0' &amp;&amp;
+            board[0][2] == board[1][1] &amp;&amp;
+            board[1][1] == board[2][0])
+            return board[0][2];
+
+        return '\0'; // No winner
+    }
+
+    private boolean isBoardFull() {
+        for (int r = 0; r &lt; 3; r++)
+            for (int c = 0; c &lt; 3; c++)
+                if (board[r][c] == '\0')
+                    return false;
+        return true;
+    }
+
+    // Unused MouseListener methods
+    public void mousePressed(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
+}</pre></div>
+    <figure><div class="plate"><img src="img/answer_lab6_tictactoe.png" width="360" loading="lazy" alt="Your Tic-Tac-Toe window after one move: a 3 by 3 grid with an X in the centre cell and the computer&#x27;s O in the middle-left cell, and a Reset button at the bottom."></div><figcaption>Your Tic-Tac-Toe, run as it is, after clicking the centre cell: X in the centre, then the computer's random O.</figcaption></figure>
+    <dl class="xpl">
+<div><dt><pre class="java">public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -&gt; new GameFrame());
+}</pre></dt><dd>Builds the window on Swing's event thread (Lecture 14 explains why). <code>() -&gt; new GameFrame()</code> is a <b>lambda</b>: a short way to write a <code>Runnable</code> whose <code>run()</code> does that one thing.</dd></div>
+<div><dt><pre class="java">class GameFrame extends JFrame {</pre></dt><dd>A second class in the same file. That's allowed as long as only one class is <code>public</code> and that one is named like the file.</dd></div>
+<div><dt><pre class="java">setTitle("Tic-Tac-Toe");
+setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+GamePanel panel = new GamePanel();
+JButton resetButton = new JButton("Reset");
+resetButton.addActionListener(e -&gt; panel.resetGame());</pre></dt><dd>Title, close behaviour, the board panel and the Reset button. The listener is a lambda too: on click it calls <code>panel.resetGame()</code>.</dd></div>
+<div><dt><pre class="java">add(panel, BorderLayout.CENTER);
+add(resetButton, BorderLayout.SOUTH);
+pack();
+setLocationRelativeTo(null);
+setVisible(true);</pre></dt><dd>Board in the middle, button at the bottom. <code>pack()</code> sizes the window to fit what's inside (the 360 × 360 board plus the button) instead of a fixed <code>setSize</code>. <code>setLocationRelativeTo(null)</code> centres it on the screen.</dd></div>
+<div><dt><pre class="java">class GamePanel extends JPanel implements MouseListener {</pre></dt><dd>The board is a <code>JPanel</code> that draws itself and is also its own mouse listener.</dd></div>
+<div><dt><pre class="java">private char[][] board = new char[3][3]; // 'X', 'O', or '\0'
+private boolean playerTurn = true;
+private boolean gameOver = false;
+private final int CELL_SIZE = 120;
+private final Random rand = new Random();</pre></dt><dd>The game's data (the model): a 3 × 3 array of <code>char</code>. <code>'\0'</code>, the "null character", means an empty cell. Two flags track whose turn it is and whether the game has ended. <code>final</code> makes <code>CELL_SIZE</code> a constant (each cell is 120 pixels). <code>Random</code> picks the computer's moves.</dd></div>
+<div><dt><pre class="java">public GamePanel() {
+    setPreferredSize(new Dimension(3 * CELL_SIZE, 3 * CELL_SIZE));
+    addMouseListener(this);
+    resetGame();
+}</pre></dt><dd>Asks for a 360 × 360 panel (which <code>pack()</code> uses), registers the panel itself as the mouse listener, and starts with an empty board.</dd></div>
+<div><dt><pre class="java">public void resetGame() {
+    for (int r = 0; r &lt; 3; r++)
+        for (int c = 0; c &lt; 3; c++)
+            board[r][c] = '\0';
+    playerTurn = true;
+    gameOver = false;
+    repaint();
+}</pre></dt><dd>Two nested loops visit all 9 cells and empty them, then the flags are reset. <code>repaint()</code> asks Swing to call <code>paintComponent</code> again so the screen matches the data.</dd></div>
+<div><dt><pre class="java">protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    Graphics2D g2d = (Graphics2D) g;
+    g2d.setStroke(new BasicStroke(3));</pre></dt><dd><code>super.paintComponent(g)</code> clears the panel first. The cast gives the extra Graphics2D methods; <code>setStroke(new BasicStroke(3))</code> makes lines 3 pixels thick.</dd></div>
+<div><dt><pre class="java">for (int i = 1; i &lt; 3; i++) {
+    g2d.drawLine(i * CELL_SIZE, 0, i * CELL_SIZE, 3 * CELL_SIZE);
+    g2d.drawLine(0, i * CELL_SIZE, 3 * CELL_SIZE, i * CELL_SIZE);
+}</pre></dt><dd>The grid: for i = 1 and 2, one vertical and one horizontal line at 120 and 240 pixels.</dd></div>
+<div><dt><pre class="java">if (board[r][c] == 'X') {
+    g2d.drawLine(x + 20, y + 20, x + CELL_SIZE - 20, y + CELL_SIZE - 20);
+    g2d.drawLine(x + CELL_SIZE - 20, y + 20, x + 20, y + CELL_SIZE - 20);
+} else if (board[r][c] == 'O') {
+    g2d.drawOval(x + 20, y + 20, CELL_SIZE - 40, CELL_SIZE - 40);
+}</pre></dt><dd>For every cell, <code>x</code> and <code>y</code> are its top-left corner. An X is two diagonal lines and an O is a circle, both kept 20 pixels away from the cell's edges.</dd></div>
+<div><dt><pre class="java">if (gameOver) {
+    String msg = getWinner() == 'X' ? "Player Wins!"
+             : getWinner() == 'O' ? "Computer Wins!"
+             : "Draw!";
+    g2d.drawString(msg, 10, getHeight() - 10);
+}</pre></dt><dd>When the game is over, a nested ternary picks the message, which is drawn in red, bold 24-point Arial near the bottom-left corner.</dd></div>
+<div><dt><pre class="java">int row = e.getY() / CELL_SIZE;
+int col = e.getX() / CELL_SIZE;</pre></dt><dd>Inside <code>mouseClicked</code>: turns the click position into a cell. Integer division drops the remainder, so y = 250 gives row 2. The method first ignores the click if the game is over or it isn't the player's turn, and then checks that the row and column are 0 to 2.</dd></div>
+<div><dt><pre class="java">if (board[row][col] == '\0') {
+    board[row][col] = 'X';
+    repaint();
+    if (checkGameOver()) return;
+    playerTurn = false;
+    computerMove();
+}</pre></dt><dd>Only an empty cell can be taken. X goes in, the board is redrawn, and if that move didn't end the game the computer plays.</dd></div>
+<div><dt><pre class="java">ArrayList&lt;int[]&gt; emptyCells = new ArrayList&lt;&gt;();
+...
+int[] choice = emptyCells.get(rand.nextInt(emptyCells.size()));
+board[choice[0]][choice[1]] = 'O';</pre></dt><dd><code>computerMove</code> collects every empty cell as a small array <code>{row, col}</code>, picks one at random with <code>rand.nextInt(size)</code>, and puts an O there. Then it checks for the end of the game and gives the turn back.</dd></div>
+<div><dt><pre class="java">private boolean checkGameOver() {
+    if (getWinner() != '\0' || isBoardFull()) {</pre></dt><dd>The game ends when someone has three in a row or the board is full.</dd></div>
+<div><dt><pre class="java">private char getWinner() { ... }</pre></dt><dd>One loop checks row <code>i</code> and column <code>i</code> for three equal, non-empty cells; then the two diagonals are checked. It returns <code>'X'</code>, <code>'O'</code>, or <code>'\0'</code> for no winner.</dd></div>
+<div><dt><pre class="java">public void mousePressed(MouseEvent e) {}
+public void mouseReleased(MouseEvent e) {}
+public void mouseEntered(MouseEvent e) {}
+public void mouseExited(MouseEvent e) {}</pre></dt><dd>Implementing an interface means writing <em>all</em> its methods, so the four unused ones are left empty. Extending <code>MouseAdapter</code> instead would avoid them.</dd></div>
+</dl>
+    <aside class="note"><b>Compared with the task</b><span>Everything is there: X for the player, a random O for the computer, the player starts, wins and draws are detected, there's a Reset button, and it uses JPanel, Graphics2D, MouseListener, drawLine, drawOval and repaint(). The grid is drawn with lines rather than rectangles, and the winning message is "Player Wins!" where the handout's screenshot says "Player X Wins!".</span></aside>
+    <h4>2. Bouncing ball</h4>
+    <div class="code"><span class="code-label">Lab6.java</span><pre class="java">
+
+
+package com.mycompany.lab6;
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.*;
+
+
+public class Lab6  {
+
+    public static void main(String[] args) {
+      JFrame frame = new JFrame("Ball Animation");
+        frame.setSize(400, 200);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(new Moveclass());
+        frame.setVisible(true);
+        
+    }
+}</pre></div>
+    <div class="code"><span class="code-label">Moveclass.java</span><pre class="java">
+
+package com.mycompany.lab6;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Moveclass extends JPanel implements ActionListener {
+    private int x=50;
+    private int y=10;
+    private Timer timer;
+    
+    Moveclass(){
+    timer=new Timer(1000,this);
+    timer.start();
+    }
+
+   @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.RED);
+        g.fillOval(50, x, 30, 30);
+    }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        x += y;
+        if (x &gt; getHeight()- 30 || x &lt; 0) y = -y;
+        repaint();
+    }
+    
+}</pre></div>
+    <figure><div class="plate"><img src="img/answer_lab6_ball.png" width="400" loading="lazy" alt="The Ball Animation window: a red ball on a grey background."></div><figcaption>Your ball program, a few seconds after starting.</figcaption></figure>
+    <dl class="xpl">
+<div><dt><pre class="java">JFrame frame = new JFrame("Ball Animation");
+frame.setSize(400, 200);
+...
+frame.add(new Moveclass());</pre></dt><dd><code>Lab6</code>'s main: a 400 × 200 window that holds one <code>Moveclass</code> panel. (<code>import java.util.*;</code> isn't used.)</dd></div>
+<div><dt><pre class="java">public class Moveclass extends JPanel implements ActionListener {
+    private int x=50;
+    private int y=10;
+    private Timer timer;</pre></dt><dd>A panel that is also an ActionListener, so a Timer can call it. Despite the names, <code>x</code> is the ball's <em>vertical</em> position and <code>y</code> is how far it moves each step.</dd></div>
+<div><dt><pre class="java">Moveclass(){
+    timer=new Timer(1000,this);
+    timer.start();
+}</pre></dt><dd>A <code>javax.swing.Timer</code> calls <code>actionPerformed</code> every 1000 ms (once a second), on Swing's event thread. <code>this</code> is the listener.</dd></div>
+<div><dt><pre class="java">g.setColor(Color.RED);
+g.fillOval(50, x, 30, 30);</pre></dt><dd>A red ball 30 pixels wide. The left edge stays at 50 and the top edge is <code>x</code>, so the ball moves up and down.</dd></div>
+<div><dt><pre class="java">x += y;
+if (x &gt; getHeight()- 30 || x &lt; 0) y = -y;
+repaint();</pre></dt><dd>Each tick moves the ball 10 pixels. When it passes the bottom (panel height minus the ball's size) or the top, the step changes sign and the ball bounces. <code>repaint()</code> redraws it. With one tick per second the ball jumps rather than glides; <code>new Timer(20, this)</code> makes it smooth.</dd></div>
+</dl>
+    <h4>3. Shapes</h4>
+    <div class="code"><span class="code-label">Simpleshape.java</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package com.mycompany.lab6;
+
+import javax.swing.*;
+
+/**
+ *
+ * @author Student
+ */
+public class Simpleshape {
+
+    
+    public static void main(String[] args) {
+     JFrame frame=new JFrame("Shapes");
+     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     
+     Shape panel=new Shape();
+     frame.add(panel);
+     
+     frame.setSize(500,500);
+     frame.setVisible(true);
+    }
+    
+}</pre></div>
+    <div class="code"><span class="code-label">Shape.java</span><pre class="java">
+
+package com.mycompany.lab6;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
+import java.awt.geom.*;
+
+
+public class Shape extends JPanel {
+    
+     @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+           
+        Rectangle2D rect= new Rectangle2D.Double(50,50,100,100);
+        g2d.draw(rect);
+       Ellipse2D oval = new Ellipse2D.Double(100, 100, 100, 100);
+        g2d.draw(oval);
+        Line2D line=new Line2D.Double(1, 1, 50, 50);
+        g2d.draw(line);
+        
+        RoundRectangle2D round=new RoundRectangle2D.Double(200, 200, 200, 100, 50 , 50);
+        g2d.draw(round);
+        
+        Arc2D arc3=new Arc2D.Double(200, 50, 100, 100, 90, 270, Arc2D.PIE);
+        g2d.draw(arc3);
+        g2d.drawPolygon(new int[] {10, 20, 30}, new int[] {100, 20, 100}, 3);
+        
+           
+    }
+    
+}</pre></div>
+    <figure><div class="plate"><img src="img/answer_lab6_shapes.png" width="500" loading="lazy" alt="The Shapes window: a square, an overlapping circle, a diagonal line in the top-left corner, a three-quarter pie shape, a rounded rectangle and a thin triangle."></div><figcaption>Your Shapes program.</figcaption></figure>
+    <dl class="xpl">
+<div><dt><pre class="java">JFrame frame=new JFrame("Shapes");
+...
+Shape panel=new Shape();
+frame.add(panel);
+frame.setSize(500,500);</pre></dt><dd><code>Simpleshape</code>'s main: a 500 × 500 window showing one <code>Shape</code> panel.</dd></div>
+<div><dt><pre class="java">public class Shape extends JPanel {</pre></dt><dd>Note that <code>java.awt</code> also has a <code>Shape</code> (an interface). Inside this package the name means your class, because a class in the same package wins over a <code>.*</code> import, so it compiles. A name like <code>ShapesPanel</code> avoids the confusion.</dd></div>
+<div><dt><pre class="java">Rectangle2D rect= new Rectangle2D.Double(50,50,100,100);
+g2d.draw(rect);</pre></dt><dd>Graphics2D shape objects from <code>java.awt.geom</code>: create the shape, then <code>g2d.draw(...)</code> its outline. This is a 100 × 100 square with its corner at (50, 50).</dd></div>
+<div><dt><pre class="java">Ellipse2D oval = new Ellipse2D.Double(100, 100, 100, 100);</pre></dt><dd>A circle inside the 100 × 100 box at (100, 100), overlapping the square.</dd></div>
+<div><dt><pre class="java">Line2D line=new Line2D.Double(1, 1, 50, 50);</pre></dt><dd>A line from (1, 1) to (50, 50).</dd></div>
+<div><dt><pre class="java">RoundRectangle2D round=new RoundRectangle2D.Double(200, 200, 200, 100, 50 , 50);</pre></dt><dd>A 200 × 100 rectangle with rounded corners; the last two numbers are the width and height of the corner curves.</dd></div>
+<div><dt><pre class="java">Arc2D arc3=new Arc2D.Double(200, 50, 100, 100, 90, 270, Arc2D.PIE);</pre></dt><dd>Part of a circle: start at 90° (straight up), sweep 270° anticlockwise. <code>Arc2D.PIE</code> joins the ends to the centre, giving a pie with a quarter missing.</dd></div>
+<div><dt><pre class="java">g2d.drawPolygon(new int[] {10, 20, 30}, new int[] {100, 20, 100}, 3);</pre></dt><dd>A polygon from an array of x values and an array of y values: points (10, 100), (20, 20), (30, 100), a tall thin triangle.</dd></div>
+</dl>
+    <h4>4. Hexagon</h4>
+    <div class="code"><span class="code-label">Sixsides.java</span><pre class="java">
+
+package com.mycompany.lab6;
+
+import javax.swing.JFrame;
+
+
+
+public class Sixsides  {
+  
+    
+    
+    public static void main(String[] args) {
+       JFrame frame=new JFrame("Shapes");
+     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     
+     hexagon panel=new hexagon();
+     frame.add(panel);
+     
+     frame.setSize(500,500);
+     frame.setVisible(true);
+        
+    }
+    
+}</pre></div>
+    <div class="code"><span class="code-label">hexagon.java</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.lab6;
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.Line2D;
+/**
+ *
+ * @author Student
+ */
+public class hexagon extends JPanel {
+    @Override
+    protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    Graphics2D g2d=(Graphics2D)g;
+    Line2D line1=new Line2D.Double(300, 300, 350,300);
+    Line2D line2=new Line2D.Double(350, 300, 400, 350);
+    Line2D line3=new Line2D.Double(400, 350, 350, 400);
+    Line2D line4=new Line2D.Double(350, 400, 300, 400);
+    Line2D line5=new Line2D.Double(300, 400, 250, 350);
+    Line2D line6=new Line2D.Double(250, 350, 300, 300);
+    g2d.draw(line1);
+    g2d.draw(line2);
+    g2d.draw(line3);
+    g2d.draw(line4);
+    g2d.draw(line5);
+    g2d.draw(line6);
+    
+    
+    
+}}</pre></div>
+    <figure><div class="plate"><img src="img/answer_lab6_hexagon.png" width="500" loading="lazy" alt="A window with a hexagon drawn in the lower right part."></div><figcaption>Your Hexagon program.</figcaption></figure>
+    <dl class="xpl">
+<div><dt><pre class="java">hexagon panel=new hexagon();
+frame.add(panel);</pre></dt><dd><code>Sixsides</code>'s main is the same as Simpleshape's, but shows a <code>hexagon</code> panel. Java's convention is a capital first letter for class names (<code>Hexagon</code>), but lowercase works.</dd></div>
+<div><dt><pre class="java">Line2D line1=new Line2D.Double(300, 300, 350,300);
+...
+Line2D line6=new Line2D.Double(250, 350, 300, 300);</pre></dt><dd>Six lines, each starting where the previous one ends: (300,300) → (350,300) → (400,350) → (350,400) → (300,400) → (250,350) → back to (300,300). That closes the hexagon. <code>g2d.drawPolygon</code> with six points would draw the same shape in one call.</dd></div>
+</dl>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · Full solution</p>
+    <details class="orig solid">
+      <summary>Show TicTacToe.java</summary>
+      <div class="drawer-body">
+        <div class="code"><span class="code-label">TicTacToe.java</span><pre class="java">import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class TicTacToe extends JFrame {
+
+    private final BoardPanel board = new BoardPanel();
+
+    public TicTacToe() {
+        super("Tic Tac Toe");
+        setLayout(new BorderLayout());
+        add(board, BorderLayout.CENTER);
+
+        JButton reset = new JButton("Reset Game");
+        reset.addActionListener(e -&gt; board.reset());
+        add(reset, BorderLayout.SOUTH);
+
+        setSize(320, 370);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    // ---------- the board: model + drawing + mouse ----------
+    private class BoardPanel extends JPanel implements MouseListener {
+        private char[][] cells = new char[3][3];   // ' ', 'X' or 'O'
+        private boolean gameOver = false;
+        private final Random random = new Random();
+
+        BoardPanel() {
+            setBackground(Color.WHITE);
+            addMouseListener(this);
+            reset();
+        }
+
+        void reset() {
+            for (int r = 0; r &lt; 3; r++)
+                for (int c = 0; c &lt; 3; c++)
+                    cells[r][c] = ' ';
+            gameOver = false;
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                RenderingHints.VALUE_ANTIALIAS_ON);
+            int cw = getWidth() / 3, ch = getHeight() / 3;
+
+            g2.setColor(Color.BLACK);
+            for (int r = 0; r &lt; 3; r++)
+                for (int c = 0; c &lt; 3; c++)
+                    g2.drawRect(c * cw, r * ch, cw, ch);          // the grid
+
+            g2.setStroke(new BasicStroke(4));
+            for (int r = 0; r &lt; 3; r++) {
+                for (int c = 0; c &lt; 3; c++) {
+                    int x = c * cw + cw / 4, y = r * ch + ch / 4;
+                    int w = cw / 2, h = ch / 2;
+                    if (cells[r][c] == 'X') {
+                        g2.drawLine(x, y, x + w, y + h);
+                        g2.drawLine(x + w, y, x, y + h);
+                    } else if (cells[r][c] == 'O') {
+                        g2.drawOval(x, y, w, h);
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (gameOver) return;
+            int col = e.getX() / (getWidth() / 3);
+            int row = e.getY() / (getHeight() / 3);
+            if (row &gt; 2 || col &gt; 2 || cells[row][col] != ' ') return;   // taken
+
+            cells[row][col] = 'X';                 // player
+            repaint();
+            if (finished('X')) return;
+
+            computerMove();                        // computer
+            repaint();
+            finished('O');
+        }
+
+        private void computerMove() {
+            ArrayList&lt;Point&gt; empty = new ArrayList&lt;&gt;();
+            for (int r = 0; r &lt; 3; r++)
+                for (int c = 0; c &lt; 3; c++)
+                    if (cells[r][c] == ' ') empty.add(new Point(c, r));
+            Point p = empty.get(random.nextInt(empty.size()));
+            cells[p.y][p.x] = 'O';
+        }
+
+        // true if the game ended (win or draw); shows the message
+        private boolean finished(char who) {
+            if (wins(who)) {
+                gameOver = true;
+                paintImmediately(0, 0, getWidth(), getHeight());
+                JOptionPane.showMessageDialog(this, "Player " + who + " Wins!");
+                return true;
+            }
+            if (isFull()) {
+                gameOver = true;
+                paintImmediately(0, 0, getWidth(), getHeight());
+                JOptionPane.showMessageDialog(this, "It's a draw!");
+                return true;
+            }
+            return false;
+        }
+
+        private boolean wins(char p) {
+            for (int i = 0; i &lt; 3; i++) {
+                if (cells[i][0] == p &amp;&amp; cells[i][1] == p &amp;&amp; cells[i][2] == p) return true; // row
+                if (cells[0][i] == p &amp;&amp; cells[1][i] == p &amp;&amp; cells[2][i] == p) return true; // column
+            }
+            return (cells[0][0] == p &amp;&amp; cells[1][1] == p &amp;&amp; cells[2][2] == p)            // diagonals
+                || (cells[0][2] == p &amp;&amp; cells[1][1] == p &amp;&amp; cells[2][0] == p);
+        }
+
+        private boolean isFull() {
+            for (char[] row : cells)
+                for (char c : row)
+                    if (c == ' ') return false;
+            return true;
+        }
+
+        public void mousePressed(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+    }
+
+    public static void main(String[] args) {
+        new TicTacToe();
+    }
+}</pre></div>
+        <ul class="pts" style="font-size:.92rem">
+          <li><b>Model vs view</b>: <code>cells</code> holds the game; <code>paintComponent</code> only draws it (MVC from Lecture 8).</li>
+          <li><b>Click → cell</b>: integer division <code>e.getX() / (getWidth() / 3)</code> gives 0, 1 or 2.</li>
+          <li><b><code>paintImmediately</code></b> draws the final move <em>before</em> the dialog opens; a plain <code>repaint()</code> would only draw after the dialog closes.</li>
+          <li>The X's and O's are drawn with <code>drawLine</code> and <code>drawOval</code>, and the grid with <code>drawRect</code>, as the task asks.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <details class="orig" data-imgs="img/slides/lab-1.jpg|Lab 6, page 1;img/slides/lab-2.jpg|Lab 6, page 2" data-label="Original lab pages (2)"></details>
+  <div class="quiz" data-quiz="lab6"></div>
+</section>
+
+<!-- ============ flashcards ============ -->
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 7 + Lab 6</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it. Each answer names the slide it comes from.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 7 – Graphics</em> (CS254, 33 slides) and <em>CS254 Lab 6: Mouse Events &amp; Graphics</em> (Alshihan, Dima, November 2025). Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l7-done", "quizzes": {"canvas": [{"q": "Which method do you override to draw on a JPanel?", "o": ["paintComponent(Graphics g)", "paint()", "draw(Graphics g)", "repaint()"], "a": 0, "e": "Slide 2."}, {"q": "Where is (0, 0) on a panel?", "o": ["Top-left; y grows downward", "Bottom-left; y grows upward", "The centre", "Top-right"], "a": 0, "e": "Slide 3."}, {"q": "Why call <code>super.paintComponent(g)<\/code> first?", "o": ["It paints the background and does other important work", "It's required to compile", "It sets the colour to black", "It starts the timer"], "a": 0, "e": "Slide 3."}, {"q": "How do you ask Java to redraw a panel after its data changes?", "o": ["Call repaint()", "Call paintComponent(g) directly", "Call setVisible(true) again", "Create a new panel"], "a": 0, "e": "Slides 4 and 18."}], "methods": [{"q": "In <code>drawOval(120, 60, 70, 40)<\/code>, what is (120, 60)?", "o": ["The top-left corner of the bounding rectangle", "The centre of the oval", "The radius", "The bottom-right corner"], "a": 0, "e": "Slide 5: the reference point."}, {"q": "In <code>drawString(text, x, y)<\/code>, y is…", "o": ["the bottom (baseline) of the text", "the top of the text", "the text height", "the centre line"], "a": 0, "e": "Slide 5."}, {"q": "How long does <code>setColor<\/code> stay in effect?", "o": ["Until setColor is called again", "For one drawing call", "Until repaint()", "Forever, it can't change"], "a": 0, "e": "Slide 5."}, {"q": "Why does ResizePanel's rectangle stay centred when the window is resized?", "o": ["It computes its size from getWidth()/getHeight() each time it paints", "It uses BorderLayout.CENTER", "It's a JLabel", "It calls setBounds"], "a": 0, "e": "Slide 9."}], "g2d": [{"q": "How do you get a Graphics2D from paintComponent's parameter?", "o": ["Graphics2D g2 = (Graphics2D) g;", "new Graphics2D(g)", "g.to2D()", "getGraphics2D()"], "a": 0, "e": "Slide 11: cast it."}, {"q": "Which Graphics2D method draws the outline of a Shape object?", "o": ["draw(Shape)", "fill(Shape)", "drawShape()", "paint(Shape)"], "a": 0, "e": "Slide 12."}, {"q": "Which shape method tells you if a click at (x, y) landed inside?", "o": ["contains(x, y)", "intersects(x, y)", "getBounds()", "getCenterX()"], "a": 0, "e": "Slide 14."}, {"q": "Which package holds Rectangle2D, Ellipse2D and Line2D?", "o": ["java.awt.geom", "javax.swing", "java.awt.event", "java.io"], "a": 0, "e": "Slide 13."}], "paint": [{"q": "<code>new Color(255, 0, 0, 0)<\/code> is…", "o": ["fully transparent red", "solid red", "black", "an error"], "a": 0, "e": "Slide 16: alpha 0 = transparent."}, {"q": "Which class gives a smooth transition between two colours?", "o": ["GradientPaint", "TexturePaint", "BasicStroke", "Color"], "a": 0, "e": "Slide 16."}, {"q": "Which BasicStroke option controls how line ends look?", "o": ["cap (CAP_BUTT, CAP_ROUND, CAP_SQUARE)", "join", "dash", "miterlimit"], "a": 0, "e": "Slide 17."}, {"q": "What does anti-aliasing do?", "o": ["Smooths jagged edges", "Makes drawing faster", "Removes colours", "Rotates shapes"], "a": 0, "e": "Slide 19."}], "examples": [{"q": "In Example 3, what does <code>polygon.closePath()<\/code> do?", "o": ["Draws a line back to the starting point", "Deletes the polygon", "Fills the polygon", "Moves the pen without drawing"], "a": 0, "e": "Slide 20."}, {"q": "Where should an image file be loaded (Example 5)?", "o": ["Once, in the constructor", "Inside paintComponent every time", "In main only", "In repaint()"], "a": 0, "e": "Slide 22 loads it in the constructor."}, {"q": "A BufferedImage is…", "o": ["a blank image you can draw on off-screen", "a button with an image", "a layout manager", "an image file format"], "a": 0, "e": "Slide 23."}, {"q": "What's wrong with Example 8 as printed?", "o": ["A comma is missing after Color.blue", "GradientPaint doesn't exist", "fillRect needs 5 arguments", "Nothing"], "a": 0, "e": "Slide 26."}], "anim": [{"q": "In MovingBall, what calls actionPerformed every 10 ms?", "o": ["The javax.swing.Timer", "repaint()", "paintComponent", "main"], "a": 0, "e": "Slide 27: new Timer(10, this)."}, {"q": "What makes the ball bounce back?", "o": ["dx = -dx when x passes an edge", "x = 0", "timer.stop()", "repaint()"], "a": 0, "e": "Slide 27."}, {"q": "In TransformExample, the green rectangle is affected by which transforms?", "o": ["translate, rotate and scale", "only scale", "only rotate", "none"], "a": 0, "e": "Slide 29: transforms accumulate."}, {"q": "<code>g.drawArc(50, 190, 100, 100, 0, 180)<\/code> draws…", "o": ["the top half of a circle", "the bottom half", "a full circle", "a quarter circle"], "a": 0, "e": "Slide 31: angles start at 3 o'clock and go anticlockwise."}, {"q": "<code>new float[]{9}<\/code> in a BasicStroke means…", "o": ["9 px dash, 9 px gap", "width 9", "9 dashes total", "a 9° rotation"], "a": 0, "e": "Slide 32."}], "lab6": [{"q": "In Tic-Tac-Toe on a 300 px board, a click at x = 210 is in which column?", "o": ["2 (210 / 100)", "1", "0", "3"], "a": 0, "e": "col = x / (width / 3), integer division."}, {"q": "Where should the board state live?", "o": ["In a char[3][3] array; paintComponent just draws it", "Inside paintComponent's local variables", "In the JFrame title", "In the mouse listener's parameters"], "a": 0, "e": "Model vs view."}, {"q": "Which method must you call after changing the board array?", "o": ["repaint()", "paintComponent(g)", "validate()", "pack()"], "a": 0, "e": "Lab 6 task item 7c."}]}, "flashcards": [["Custom drawing", "Extend JPanel, override paintComponent(Graphics g), call super.paintComponent(g) first.", "Slides 2–3"], ["Coordinate system", "(0, 0) top-left; x right, y down.", "Slide 3"], ["repaint()", "Asks Java to redraw soon. Never call paintComponent yourself.", "Slides 4, 18"], ["drawLine", "drawLine(x1, y1, x2, y2).", "Slide 5"], ["drawRect / fillRect", "(xleft, ytop, width, height). draw = outline, fill = filled.", "Slide 5"], ["drawOval / fillOval", "Ellipse inside the bounding box (xleft, ytop, width, height).", "Slide 5"], ["drawString", "drawString(text, xleft, ybottom): y is the baseline.", "Slide 5"], ["Screen size", "Toolkit.getDefaultToolkit().getScreenSize() → Dimension.", "Slide 8"], ["Graphics2D", "Graphics2D g2 = (Graphics2D) g; adds shapes, paints, strokes, transforms.", "Slide 11"], ["draw(Shape) / fill(Shape)", "Draw an outline or fill a shape object like new Ellipse2D.Double(x, y, w, h).", "Slides 12, 15"], ["Shape methods", "contains(x, y), getBounds(), getCenterX(), intersects(…).", "Slide 14"], ["Paints", "Color(r, g, b[, alpha]), GradientPaint(x1, y1, c1, x2, y2, c2), TexturePaint.", "Slide 16"], ["BasicStroke", "BasicStroke(width[, cap, join, miterlimit, dash[], phase]). CAP_BUTT/ROUND/SQUARE; JOIN_BEVEL/MITER/ROUND.", "Slide 17"], ["Anti-aliasing", "g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON).", "Slide 19"], ["Path2D", "moveTo, lineTo, closePath: build any polygon.", "Slide 20"], ["BufferedImage", "Off-screen image: new BufferedImage(w, h, type); draw with g.drawImage(img, x, y, this).", "Slide 23"], ["Animation", "javax.swing.Timer(delayMs, listener): in actionPerformed update a field and repaint().", "Slides 27–28"], ["Transforms", "translate, rotate(radians[, x, y]), scale. They accumulate for everything drawn after.", "Slides 12, 29"], ["drawArc", "drawArc(x, y, w, h, startAngle, arcAngle): degrees, from 3 o'clock, anticlockwise.", "Slide 31"], ["fillPolygon", "fillPolygon(int[] xs, int[] ys, n).", "Slide 31"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ===================== tiny Java2D interpreter =====================
+  var JCOL = {
+    black: [0, 0, 0], white: [255, 255, 255], red: [255, 0, 0], green: [0, 255, 0], blue: [0, 0, 255], yellow: [255, 255, 0],
+    cyan: [0, 255, 255], magenta: [255, 0, 255], orange: [255, 200, 0], pink: [255, 175, 175], gray: [128, 128, 128],
+    lightgray: [192, 192, 192], light_gray: [192, 192, 192], darkgray: [64, 64, 64], dark_gray: [64, 64, 64]
+  };
+  var CONST = {
+    "Font.PLAIN": 0, "Font.BOLD": 1, "Font.ITALIC": 2,
+    "BasicStroke.CAP_BUTT": 0, "BasicStroke.CAP_ROUND": 1, "BasicStroke.CAP_SQUARE": 2,
+    "BasicStroke.JOIN_MITER": 0, "BasicStroke.JOIN_ROUND": 1, "BasicStroke.JOIN_BEVEL": 2,
+    "Arc2D.OPEN": 0, "Arc2D.CHORD": 1, "Arc2D.PIE": 2, "Math.PI": Math.PI,
+    "RenderingHints.KEY_ANTIALIASING": 0, "RenderingHints.VALUE_ANTIALIAS_ON": 0, "RenderingHints.VALUE_ANTIALIAS_OFF": 0
+  };
+  function color(r, g, b, a) { return { kind: "color", css: "rgba(" + r + "," + g + "," + b + "," + (a == null ? 1 : a / 255) + ")" }; }
+
+  function tokenize(s) {
+    var t = [], i = 0, m;
+    var re = /\s+|(\d+\.?\d*(?:[eE][-+]?\d+)?[fFdDL]?|\.\d+[fFdD]?)|("(?:\\.|[^"\\])*")|('(?:\\.|[^'\\])')|([A-Za-z_]\w*)|(.)/g;
+    while ((m = re.exec(s))) {
+      if (m[1]) t.push({ t: "num", v: parseFloat(m[1]) });
+      else if (m[2]) t.push({ t: "str", v: JSON.parse(m[2].replace(/\\'/g, "'")) });
+      else if (m[3]) t.push({ t: "num", v: m[3].charCodeAt(1) });
+      else if (m[4]) t.push({ t: "id", v: m[4] });
+      else if (m[5]) t.push({ t: "p", v: m[5] });
+    }
+    return t;
+  }
+
+  function Interp(ctx, W, H) {
+    var env = {}, gNames = { g: 1, g2: 1, g2d: 1, big: 0 };
+    var state = { paint: color(0, 0, 0), font: "12px sans-serif" };
+    function applyPaint() {
+      var p = state.paint, s;
+      if (p.kind === "color") s = p.css;
+      else if (p.kind === "grad") { s = ctx.createLinearGradient(p.x1, p.y1, p.x2, p.y2); s.addColorStop(0, p.c1.css); s.addColorStop(1, p.c2.css); }
+      ctx.fillStyle = s; ctx.strokeStyle = s;
+    }
+    applyPaint(); ctx.lineWidth = 1; ctx.font = state.font; ctx.textBaseline = "alphabetic";
+
+    function construct(type, args) {
+      var T = type.replace(/^java\.awt\.(geom\.)?/, "");
+      switch (T) {
+        case "Color": return color(args[0], args[1], args[2], args[3]);
+        case "Font": {
+          var fam = String(args[0]), st = args[1] | 0, sz = args[2];
+          var map = { serif: "serif", sansserif: "sans-serif", dialog: "sans-serif", monospaced: "monospace" };
+          var css = map[fam.toLowerCase().replace(/\s/g, "")] || ('"' + fam + '", sans-serif');
+          return { kind: "font", css: (st & 2 ? "italic " : "") + (st & 1 ? "bold " : "") + sz + "px " + css };
+        }
+        case "BasicStroke": return { kind: "stroke", w: args[0] == null ? 1 : args[0], cap: args[1] == null ? 2 : args[1], join: args[2] == null ? 0 : args[2], dash: args[4] || null, phase: args[5] || 0 };
+        case "GradientPaint": return { kind: "grad", x1: args[0], y1: args[1], c1: args[2], x2: args[3], y2: args[4], c2: args[5] };
+        case "Rectangle": case "Rectangle2D.Double": case "Rectangle2D.Float": return { kind: "rect", x: args[0], y: args[1], w: args[2], h: args[3] };
+        case "Ellipse2D.Double": case "Ellipse2D.Float": return { kind: "ellipse", x: args[0], y: args[1], w: args[2], h: args[3] };
+        case "Line2D.Double": case "Line2D.Float": return { kind: "line", x1: args[0], y1: args[1], x2: args[2], y2: args[3] };
+        case "RoundRectangle2D.Double": case "RoundRectangle2D.Float": return { kind: "rrect", x: args[0], y: args[1], w: args[2], h: args[3], aw: args[4], ah: args[5] };
+        case "Arc2D.Double": case "Arc2D.Float": return { kind: "arc", x: args[0], y: args[1], w: args[2], h: args[3], s: args[4], e: args[5], type: args[6] | 0 };
+        case "Path2D.Double": case "Path2D.Float": case "GeneralPath": return { kind: "path", ops: [] };
+        case "Dimension": return { kind: "dim", w: args[0], h: args[1] };
+        case "Point": return { kind: "point", x: args[0], y: args[1] };
+      }
+      throw new Error("new " + type + "(...) isn't supported in this playground");
+    }
+
+    // ---- expression parser ----
+    function Parser(toks) { this.k = toks; this.i = 0; }
+    Parser.prototype.peek = function (o) { return this.k[this.i + (o || 0)]; };
+    Parser.prototype.eat = function (v) { var x = this.k[this.i]; if (!x || (v && x.v !== v)) throw new Error("expected '" + v + "'" + (x ? " but found '" + x.v + "'" : "")); this.i++; return x; };
+    Parser.prototype.is = function (v, o) { var x = this.peek(o); return x && x.v === v && x.t !== "str"; };
+    Parser.prototype.expr = function () {
+      var l = this.term();
+      while (this.is("+") || this.is("-")) { var op = this.eat().v, r = this.term(); l = op === "+" ? (typeof l === "string" || typeof r === "string" ? String(l) + String(r) : l + r) : l - r; }
+      return l;
+    };
+    Parser.prototype.term = function () {
+      var l = this.unary();
+      while (this.is("*") || this.is("/") || this.is("%")) { var op = this.eat().v, r = this.unary(); l = op === "*" ? l * r : op === "/" ? (Number.isInteger(l) && Number.isInteger(r) ? Math.trunc(l / r) : l / r) : l % r; }
+      return l;
+    };
+    Parser.prototype.unary = function () { if (this.is("-")) { this.eat(); return -this.unary(); } return this.primary(); };
+    Parser.prototype.args = function () {
+      var a = []; this.eat("(");
+      if (!this.is(")")) { a.push(this.expr()); while (this.is(",")) { this.eat(); a.push(this.expr()); } }
+      this.eat(")"); return a;
+    };
+    Parser.prototype.list = function () {
+      var a = []; this.eat("{");
+      if (!this.is("}")) { a.push(this.expr()); while (this.is(",")) { this.eat(); a.push(this.expr()); } }
+      this.eat("}"); return a;
+    };
+    Parser.prototype.primary = function () {
+      var x = this.peek();
+      if (!x) throw new Error("unexpected end of statement");
+      if (x.t === "num" || x.t === "str") { this.i++; return x.v; }
+      if (this.is("{")) return this.list();
+      if (this.is("(")) {
+        var n1 = this.peek(1), n2 = this.peek(2);
+        if (n1 && n1.t === "id" && n2 && n2.v === ")" && /^[A-Z]|^(int|float|double|long)$/.test(n1.v)) { this.i += 3; return this.unary(); }  // cast
+        this.eat("("); var v = this.expr(); this.eat(")"); return v;
+      }
+      if (x.t === "id" && x.v === "new") {
+        this.i++;
+        var type = this.eat().v; while (this.is(".")) { this.eat(); type += "." + this.eat().v; }
+        if (this.is("[")) { this.eat("["); this.eat("]"); return this.list(); }
+        if (this.is("<")) { while (!this.is(">")) this.i++; this.eat(">"); }
+        return construct(type, this.args());
+      }
+      if (x.t === "id") {
+        var name = this.eat().v;
+        while (this.is(".") && this.peek(1) && this.peek(1).t === "id" && !this.is("(", 2)) { this.eat("."); name += "." + this.eat().v; }
+        if (this.is(".") && this.is("(", 2)) { this.eat("."); var meth = this.eat().v; return call(name, meth, this.args()); }
+        if (this.is("(")) return call("this", name, this.args());
+        return resolve(name);
+      }
+      throw new Error("didn't understand '" + x.v + "'");
+    };
+    function resolve(name) {
+      if (name in CONST) return CONST[name];
+      var m = /^Color\.(\w+)$/.exec(name);
+      if (m) { var c = JCOL[m[1].toLowerCase()]; if (c) return color(c[0], c[1], c[2]); throw new Error(name + " is not a colour"); }
+      if (name === "true") return true; if (name === "false") return false; if (name === "null") return null;
+      if (name in env) return env[name];
+      throw new Error("unknown name '" + name + "'");
+    }
+    function shapePath(s) {
+      ctx.beginPath();
+      if (s.kind === "rect") ctx.rect(s.x, s.y, s.w, s.h);
+      else if (s.kind === "ellipse") ctx.ellipse(s.x + s.w / 2, s.y + s.h / 2, Math.abs(s.w / 2), Math.abs(s.h / 2), 0, 0, Math.PI * 2);
+      else if (s.kind === "line") { ctx.moveTo(s.x1, s.y1); ctx.lineTo(s.x2, s.y2); }
+      else if (s.kind === "rrect") { if (ctx.roundRect) ctx.roundRect(s.x, s.y, s.w, s.h, [s.aw / 2]); else ctx.rect(s.x, s.y, s.w, s.h); }
+      else if (s.kind === "arc") arcPath(s.x, s.y, s.w, s.h, s.s, s.e, s.type === 2, s.type === 1);
+      else if (s.kind === "path") s.ops.forEach(function (o) { ctx[o[0]].apply(ctx, o.slice(1)); });
+      else throw new Error("can't draw that object");
+    }
+    function arcPath(x, y, w, h, start, ext, pie, chord) {
+      var cx = x + w / 2, cy = y + h / 2;
+      if (pie) ctx.moveTo(cx, cy);
+      ctx.ellipse(cx, cy, Math.abs(w / 2), Math.abs(h / 2), 0, -start * Math.PI / 180, -(start + ext) * Math.PI / 180, ext > 0);
+      if (pie || chord) ctx.closePath();
+    }
+    function off() { return ctx.lineWidth % 2 === 1 ? 0.5 : 0; }
+    function call(obj, meth, a) {
+      if (obj === "Math") { if (meth === "toRadians") return a[0] * Math.PI / 180; if (Math[meth]) return Math[meth].apply(Math, a); }
+      if ((obj === "this" || obj === "super") && (meth === "getWidth")) return W;
+      if ((obj === "this" || obj === "super") && (meth === "getHeight")) return H;
+      if ((obj === "this" || obj === "super") && meth === "getBackground") return color(255, 255, 255);
+      if (obj === "super" && meth === "paintComponent") return;
+      if (obj === "this" || obj === "super") { if (/^set/.test(meth)) return; }
+      var target = env[obj];
+      if (target && target.kind === "path") {
+        var map = { moveTo: "moveTo", lineTo: "lineTo", closePath: "closePath", quadTo: "quadraticCurveTo", curveTo: "bezierCurveTo" };
+        if (!map[meth]) throw new Error("Path2D." + meth + " isn't supported");
+        target.ops.push([map[meth]].concat(a)); return;
+      }
+      if (target && /^get(Width|Height)$/.test(meth) && target.kind) return meth === "getWidth" ? target.w : target.h;
+      if (!(obj in gNames)) throw new Error("'" + obj + "' is not a Graphics object here; use g, g2 or g2d");
+      var o = off();
+      switch (meth) {
+        case "setColor": case "setPaint": state.paint = a[0]; applyPaint(); return;
+        case "drawLine": ctx.beginPath(); ctx.moveTo(a[0] + o, a[1] + o); ctx.lineTo(a[2] + o, a[3] + o); ctx.stroke(); return;
+        case "drawRect": ctx.strokeRect(a[0] + o, a[1] + o, a[2], a[3]); return;
+        case "fillRect": ctx.fillRect(a[0], a[1], a[2], a[3]); return;
+        case "clearRect": ctx.clearRect(a[0], a[1], a[2], a[3]); return;
+        case "drawOval": ctx.beginPath(); ctx.ellipse(a[0] + a[2] / 2 + o, a[1] + a[3] / 2 + o, Math.abs(a[2] / 2), Math.abs(a[3] / 2), 0, 0, Math.PI * 2); ctx.stroke(); return;
+        case "fillOval": ctx.beginPath(); ctx.ellipse(a[0] + a[2] / 2, a[1] + a[3] / 2, Math.abs(a[2] / 2), Math.abs(a[3] / 2), 0, 0, Math.PI * 2); ctx.fill(); return;
+        case "drawArc": ctx.beginPath(); arcPath(a[0] + o, a[1] + o, a[2], a[3], a[4], a[5], false, false); ctx.stroke(); return;
+        case "fillArc": ctx.beginPath(); arcPath(a[0], a[1], a[2], a[3], a[4], a[5], true, false); ctx.fill(); return;
+        case "drawRoundRect": case "fillRoundRect":
+          ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(a[0], a[1], a[2], a[3], [a[4] / 2]); else ctx.rect(a[0], a[1], a[2], a[3]);
+          meth === "fillRoundRect" ? ctx.fill() : ctx.stroke(); return;
+        case "drawPolygon": case "fillPolygon": case "drawPolyline": {
+          var xs = a[0], ys = a[1], n = a[2]; if (!Array.isArray(xs) || !Array.isArray(ys)) throw new Error(meth + " needs two int[] arrays and a count");
+          ctx.beginPath(); for (var i = 0; i < n; i++) (i ? ctx.lineTo : ctx.moveTo).call(ctx, xs[i] + (meth === "fillPolygon" ? 0 : o), ys[i] + (meth === "fillPolygon" ? 0 : o));
+          if (meth !== "drawPolyline") ctx.closePath(); meth === "fillPolygon" ? ctx.fill() : ctx.stroke(); return;
+        }
+        case "drawString": ctx.fillText(String(a[0]), a[1], a[2]); return;
+        case "setFont": state.font = a[0].css; ctx.font = state.font; return;
+        case "setStroke": {
+          var s = a[0]; ctx.lineWidth = s.w; ctx.lineCap = ["butt", "round", "square"][s.cap]; ctx.lineJoin = ["miter", "round", "bevel"][s.join];
+          ctx.setLineDash(s.dash ? (s.dash.length === 1 ? [s.dash[0], s.dash[0]] : s.dash) : []); ctx.lineDashOffset = s.phase || 0; return;
+        }
+        case "draw": shapePath(a[0]); ctx.stroke(); return;
+        case "fill": shapePath(a[0]); ctx.fill(); return;
+        case "translate": ctx.translate(a[0], a[1]); return;
+        case "rotate": if (a.length === 3) { ctx.translate(a[1], a[2]); ctx.rotate(a[0]); ctx.translate(-a[1], -a[2]); } else ctx.rotate(a[0]); return;
+        case "scale": ctx.scale(a[0], a[1]); return;
+        case "shear": ctx.transform(1, a[1], a[0], 1, 0, 0); return;
+        case "setRenderingHint": case "setBackground": return;
+        case "drawImage": throw new Error("drawImage needs an image file, which the playground can't load");
+      }
+      throw new Error(obj + "." + meth + "(...) isn't supported in this playground");
+    }
+    this.run = function (src) {
+      src = src.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/\/\/[^\n]*/g, "").replace(/@Override/g, "");
+      // split on ; outside strings/brackets
+      var stmts = [], cur = "", depth = 0, inStr = false, line = 1, startLine = 1;
+      for (var i = 0; i < src.length; i++) {
+        var ch = src[i];
+        if (ch === "\n") line++;
+        if (inStr) { cur += ch; if (ch === "\\") { cur += src[++i]; } else if (ch === '"') inStr = false; continue; }
+        if (ch === '"') { inStr = true; cur += ch; continue; }
+        if (ch === "(" || ch === "{" && depth > 0) depth++;
+        if (ch === ")" || ch === "}" && depth > 0) depth--;
+        if (ch === "{" && depth === 0 && /=\s*$/.test(cur)) { depth++; cur += ch; continue; }
+        if (ch === ";" && depth === 0) { stmts.push([cur, startLine]); cur = ""; startLine = line; continue; }
+        if (!cur.trim()) startLine = line;
+        cur += ch;
+      }
+      if (cur.trim().replace(/[{}]/g, "").trim()) stmts.push([cur, startLine]);
+      stmts.forEach(function (sl) {
+        var s = sl[0].replace(/^[\s{}]+/, "").replace(/\s+$/, "");
+        if (!s) return;
+        try {
+          var m = /^(?:final\s+)?([A-Za-z_][\w.]*(?:<[^>]*>)?(?:\[\])?)\s+([A-Za-z_]\w*)\s*=\s*([\s\S]+)$/.exec(s);
+          if (m && m[1] !== "return") {
+            var rhs = m[3].trim();
+            if (/^\(\s*Graphics2D\s*\)\s*\w+$/.test(rhs) || /^\w+\.create(Graphics)?\(\)$/.test(rhs)) { gNames[m[2]] = 1; return; }
+            var p = new Parser(tokenize(rhs)); env[m[2]] = p.expr();
+            if (p.i < p.k.length) throw new Error("didn't understand '" + p.k[p.i].v + "'");
+            return;
+          }
+          var q = new Parser(tokenize(s)); q.expr();
+          if (q.i < q.k.length) throw new Error("didn't understand '" + q.k[q.i].v + "'");
+        } catch (e) { e.message = "Line " + sl[1] + ": " + e.message; throw e; }
+      });
+    };
+  }
+
+  // ===================== playground =====================
+  var PRE = {
+    simple: 'g.setColor(Color.black);\ng.drawLine(10,10,100,100);\ng.setColor(Color.red);\ng.drawLine(10,100,100,10);\ng.setColor(Color.green);\ng.drawOval(120,60,70,40);\ng.setColor(Color.yellow);\ng.fillOval(230,150,30,30);\ng.setColor(Color.red);\ng.fillOval(245,150,30,30);\ng.setColor(Color.black);\ng.fillOval(238,160,30,30);\ng.setColor(Color.cyan);\ng.fillOval(10,120,100,60);\ng.setColor(this.getBackground());\ng.fillOval(50,140,100,60);\ng.setColor(Color.blue);\ng.drawString("Swing is nice.",100,200);',
+    shapes: 'g.drawLine(50, 50, 200, 50);\ng.drawRect(50, 70, 100, 50);\ng.fillRect(160, 70, 100, 50);\ng.drawOval(50, 130, 100, 50);\ng.fillOval(160, 130, 100, 50);\ng.drawArc(50, 190, 100, 100, 0, 180);\nint[] xPoints = {50, 100, 150};\nint[] yPoints = {300, 200, 300};\ng.fillPolygon(xPoints, yPoints, 3);',
+    transform: 'Rectangle2D rect = new Rectangle2D.Double(50, 50, 100, 50);\ng2.setPaint(Color.GRAY);\ng2.draw(rect);\ng2.translate(150, 0);\ng2.setPaint(Color.BLUE);\ng2.draw(rect);\ng2.rotate(Math.toRadians(45), 100, 75);\ng2.setPaint(Color.RED);\ng2.draw(rect);\ng2.scale(1.5, 1.5);\ng2.setPaint(Color.GREEN);\ng2.draw(rect);',
+    stroke: 'Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT,\n      BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);\ng2.setStroke(dashed);\ng2.setPaint(Color.MAGENTA);\ng2.draw(new Rectangle2D.Double(40, 40, 150, 100));\n\nGradientPaint gradient = new GradientPaint(250, 40, Color.RED, 400, 140,\n      Color.YELLOW);\ng2.setPaint(gradient);\ng2.fill(new Ellipse2D.Double(250, 40, 150, 100));',
+    ex3: '// Example 3 is drawn for a 700 x 450 panel; scale it to fit\ng2d.scale(0.6, 0.6);\n\nRectangle2D rect = new Rectangle2D.Double(100, 100, 200, 100);\ng2d.draw(rect);\n\nEllipse2D oval = new Ellipse2D.Double(400, 100, 200, 100);\ng2d.draw(oval);\n\nPath2D polygon = new Path2D.Double();\npolygon.moveTo(200, 300);\npolygon.lineTo(300, 400);\npolygon.lineTo(100, 400);\npolygon.closePath();\ng2d.draw(polygon);',
+    gradient: 'GradientPaint gp = new GradientPaint(50.0f, 50.0f, Color.blue,\n                                     50.0f, 250.0f, Color.green);\ng2.setPaint(gp);\ng2.fillRect(50, 50, 200, 200);',
+    house: '// walls\ng.setColor(new Color(240, 220, 180));\ng.fillRect(120, 140, 180, 130);\ng.setColor(Color.black);\ng.drawRect(120, 140, 180, 130);\n\n// roof (a filled triangle)\nint[] rx = {100, 210, 320};\nint[] ry = {140, 60, 140};\ng.setColor(new Color(170, 40, 40));\ng.fillPolygon(rx, ry, 3);\n\n// door and window\ng.setColor(new Color(110, 70, 30));\ng.fillRect(190, 200, 40, 70);\ng.setColor(Color.cyan);\ng.fillRect(140, 165, 35, 35);\ng.setColor(Color.black);\ng.drawRect(140, 165, 35, 35);\n\n// sun\ng.setColor(Color.orange);\ng.fillOval(330, 30, 50, 50);\n\ng.setColor(Color.black);\ng.setFont(new Font("Serif", Font.BOLD, 18));\ng.drawString("My house", 160, 300);'
+  };
+  (function () {
+    var cv = $("gpC"), ctx = cv.getContext("2d"), ta = $("gpCode"), err = $("gpErr"), t = null;
+    function grid() {
+      if (!$("gpGrid").checked) return;
+      ctx.save(); ctx.strokeStyle = "rgba(29,95,110,.13)"; ctx.lineWidth = 1; ctx.fillStyle = "rgba(29,95,110,.55)"; ctx.font = "9px monospace";
+      for (var x = 0; x <= cv.width; x += 50) { ctx.beginPath(); ctx.moveTo(x + .5, 0); ctx.lineTo(x + .5, cv.height); ctx.stroke(); if (x) ctx.fillText(x, x + 2, 9); }
+      for (var y = 0; y <= cv.height; y += 50) { ctx.beginPath(); ctx.moveTo(0, y + .5); ctx.lineTo(cv.width, y + .5); ctx.stroke(); if (y) ctx.fillText(y, 2, y - 2); }
+      ctx.fillText("(0,0)", 2, 9);
+      ctx.restore();
+    }
+    function run() {
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.setLineDash([]); ctx.lineCap = "butt"; ctx.lineJoin = "miter";
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height); grid();
+      ctx.save();
+      try { new Interp(ctx, cv.width, cv.height).run(ta.value); err.textContent = ""; }
+      catch (e) { err.textContent = e.message; }
+      ctx.restore();
+    }
+    $("gpPreset").addEventListener("change", function () { ta.value = PRE[this.value]; run(); });
+    $("gpRun").addEventListener("click", run);
+    $("gpGrid").addEventListener("change", run);
+    ta.addEventListener("input", function () { clearTimeout(t); t = setTimeout(run, 400); });
+    cv.addEventListener("mousemove", function (e) {
+      var r = cv.getBoundingClientRect(); $("gpXY").textContent = "x = " + Math.round((e.clientX - r.left) * cv.width / r.width) + ", y = " + Math.round((e.clientY - r.top) * cv.height / r.height);
+    });
+    cv.addEventListener("mouseleave", function () { $("gpXY").textContent = "x = –, y = –"; });
+    ta.value = PRE.simple; run();
+  })();
+
+  // ===================== resize panel =====================
+  (function () {
+    var cv = $("rzC"), ctx = cv.getContext("2d");
+    function draw() {
+      var w = +$("rzW").value, h = +$("rzH").value; cv.width = w; cv.height = h;
+      ctx.fillStyle = "#ffff00"; ctx.fillRect(0, 0, w, h);
+      var wT = Math.trunc(w / 3), hT = Math.trunc(h / 3);
+      ctx.fillStyle = "#000"; ctx.fillRect(wT, hT, wT, hT);
+      $("rzNote").textContent = "getWidth() = " + w + ", getHeight() = " + h + " → g.fillRect(" + wT + ", " + hT + ", " + wT + ", " + hT + ")";
+    }
+    $("rzW").addEventListener("input", draw); $("rzH").addEventListener("input", draw); draw();
+  })();
+
+  // ===================== colour =====================
+  (function () {
+    function upd() {
+      var r = $("cR").value, g = $("cG").value, b = $("cB").value, a = $("cA").value;
+      $("cSw").style.background = "rgba(" + r + "," + g + "," + b + "," + a / 255 + ")";
+      $("cCode").textContent = "new Color(" + r + ", " + g + ", " + b + (a == 255 ? "" : ", " + a) + ")" + (a == 0 ? "   // fully transparent" : a < 255 ? "   // partly transparent" : "");
+    }
+    ["cR", "cG", "cB", "cA"].forEach(function (id) { $(id).addEventListener("input", upd); }); upd();
+  })();
+
+  // ===================== moving ball =====================
+  (function () {
+    var cv = $("bC"), ctx = cv.getContext("2d"), x = 50, dx = 2, timer = null, ticks = 0;
+    function paint() {
+      ctx.fillStyle = "#eeeeee"; ctx.fillRect(0, 0, cv.width, cv.height);
+      ctx.fillStyle = "#ff0000"; ctx.beginPath(); ctx.ellipse(x + 15, 65, 15, 15, 0, 0, Math.PI * 2); ctx.fill();
+      $("bInfo").textContent = "x = " + x + ", dx = " + dx + "   ·   actionPerformed called " + ticks + " times";
+    }
+    function tick() {
+      x += dx; ticks++;
+      if (x > cv.width - 30 || x < 0) dx = -dx;
+      paint();
+    }
+    function start() { stop(); var d = Math.max(5, +$("bDelay").value || 10); timer = setInterval(tick, d); $("bStart").textContent = "timer.stop()"; }
+    function stop() { if (timer) clearInterval(timer); timer = null; $("bStart").textContent = "timer.start()"; }
+    $("bStart").addEventListener("click", function () { timer ? stop() : start(); });
+    $("bDelay").addEventListener("change", function () { if (timer) start(); });
+    $("bDx").addEventListener("change", function () { var v = Math.max(1, Math.min(20, +this.value || 2)); dx = dx < 0 ? -v : v; });
+    paint();
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) start(); else stop();
+  })();
+
+  // ===================== tic tac toe =====================
+  (function () {
+    var cv = $("tC"), ctx = cv.getContext("2d"), cells, over, msg = $("tMsg"), banner = null;
+    function reset() { cells = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]; over = false; banner = null; msg.textContent = "Your move: click a cell."; paint(); }
+    function paint() {
+      var W = cv.width, H = cv.height, cw = W / 3, ch = H / 3;
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = "#000"; ctx.lineWidth = 1;
+      for (var r = 0; r < 3; r++) for (var c = 0; c < 3; c++) ctx.strokeRect(c * cw + .5, r * ch + .5, cw, ch);
+      ctx.lineWidth = 4;
+      for (r = 0; r < 3; r++) for (c = 0; c < 3; c++) {
+        var x = c * cw + cw / 4, y = r * ch + ch / 4, w = cw / 2, h = ch / 2;
+        if (cells[r][c] === "X") { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + w, y + h); ctx.moveTo(x + w, y); ctx.lineTo(x, y + h); ctx.stroke(); }
+        else if (cells[r][c] === "O") { ctx.beginPath(); ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2); ctx.stroke(); }
+      }
+      if (banner) {
+        ctx.fillStyle = "rgba(236,239,241,.97)"; ctx.strokeStyle = "#8f9ba1"; ctx.lineWidth = 1;
+        ctx.fillRect(30, 110, 240, 80); ctx.strokeRect(30.5, 110.5, 240, 80);
+        ctx.fillStyle = "#1c2328"; ctx.font = "12px sans-serif"; ctx.fillText("Message", 40, 127);
+        ctx.font = "bold 16px sans-serif"; ctx.fillText(banner, 50, 165);
+      }
+    }
+    function wins(p) {
+      for (var i = 0; i < 3; i++) {
+        if (cells[i][0] === p && cells[i][1] === p && cells[i][2] === p) return true;
+        if (cells[0][i] === p && cells[1][i] === p && cells[2][i] === p) return true;
+      }
+      return (cells[0][0] === p && cells[1][1] === p && cells[2][2] === p) || (cells[0][2] === p && cells[1][1] === p && cells[2][0] === p);
+    }
+    function full() { return cells.every(function (r) { return r.every(function (c) { return c !== " "; }); }); }
+    function finished(p) {
+      if (wins(p)) { over = true; banner = "Player " + p + " Wins!"; msg.textContent = banner + " Press Reset Game to play again."; return true; }
+      if (full()) { over = true; banner = "It's a draw!"; msg.textContent = "It's a draw! Press Reset Game to play again."; return true; }
+      return false;
+    }
+    cv.addEventListener("click", function (e) {
+      if (over) return;
+      var r = cv.getBoundingClientRect();
+      var col = Math.floor((e.clientX - r.left) / (r.width / 3)), row = Math.floor((e.clientY - r.top) / (r.height / 3));
+      if (row > 2 || col > 2 || cells[row][col] !== " ") { msg.textContent = "That cell is taken. Pick an empty one."; return; }
+      cells[row][col] = "X"; msg.textContent = "You played row " + row + ", col " + col + ".";
+      if (!finished("X")) {
+        var empty = []; for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) if (cells[i][j] === " ") empty.push([i, j]);
+        var p = empty[Math.floor(Math.random() * empty.length)]; cells[p[0]][p[1]] = "O";
+        msg.textContent += " Computer played row " + p[0] + ", col " + p[1] + ".";
+        finished("O");
+      }
+      paint();
+    });
+    $("tReset").addEventListener("click", reset);
+    reset();
+  })();
+})();
+
+</script>
+</body>
+</html>

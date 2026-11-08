@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 Tables Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L10 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 10</p>
+  <h1>Tables</h1>
+  <p class="lede">JTable and its models: building a table from arrays, the table interfaces and classes, renderers, editors, TableModelListener, and writing your own AbstractTableModel. Every slide of <em>Lecture 10 – Tables</em> (17 slides) in order, with all three examples typed out and running live: the static table, the 30 × 30 multiplication table, and the editable order table whose totals update as you type.</p>
+  <div class="legend">
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<section class="sec" id="jtable" data-title="JTable basics">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–4</p>
+    <div class="sec-head-row"><h2>JTable basics</h2><label class="done"><input type="checkbox" id="done-jtable"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A <code>JTable</code> shows a grid. The quickest way: give it an <code>Object[][]</code> of rows and an <code>Object[]</code> of column names. Always wrap it in a <code>JScrollPane</code>, or the column headings won't show. Behind the scenes the table asks a <b>model</b> for every cell, the same MVC idea as Lecture 8. Tables are <em>column-oriented</em>: keep one type of data per column.</div></aside>
+
+  <div class="slide"><p class="divider">Tables <span class="sn">1</span></p></div>
+
+  <div class="slide">
+    <h3>Tables <span class="sn">2</span></h3>
+    <p>Tables are used to display data with a two-dimensional structure</p>
+    <ul class="pts">
+      <li><code>JTable</code> is used to visualize tables. As for lists, a model is internally used to handle the data.
+        <ul><li>If the data are complex or change while the program is running, it advisable to explicitly define such a table model.</li><li>A table consists of cells arranged in a rectangular grid. It is possible to add headings to every column</li></ul></li>
+      <li><code>JTables</code> are column-oriented.
+        <ul><li>This means that there is support for the manipulation of columns (for example swapping two columns or rendering the column content) but only limited support for row manipulation.</li><li>When designing a table one should therefore try to arrange the data in such a way that a column contains data of the same type (strings, integers, images, etc.).</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Tables <span class="sn">3</span></h3>
+    <div class="code"><pre class="java">JTable(Object[][] content,Object[] columnNames)</pre></div>
+    <ul class="pts">
+      <li>The data are organized in a two-dimensional array <code>content[][]</code>.
+        <ul><li>It is interpreted as an array consisting of the rows, i.e. <code>content[i][]</code> is the one dimensional array containing the entries of the ith row of the table. In a second,</li></ul></li>
+      <li>one-dimensional array <code>columnNames</code> the headers of the columns are passed.
+        <ul><li>The rows and the array with the column names all have to have the same length</li></ul></li>
+      <li>Note that the arrays are of type Object.</li>
+      <li>If 'non-standard' types are used, one has to ensure that the program knows how to render them by supplying a user defined renderer.</li>
+      <li>This is done by implementing the interface <code>TableCellRenderer</code>.</li>
+      <li>By default, <code>JTable</code> uses a <code>DefaultTableCellRenderer</code> which can display the 'standard' types such as strings, images and boolean values. For most purposes this is sufficient.</li>
+      <li><code>setAutoResizeMode(JTable.AUTO_RESIZE_OFF)</code>
+        <ul><li>To switch the automatic width adjustment off</li></ul></li>
+      <li><code>setPreferredScrollableViewportSize(Dimension size)</code> sets the preferred size of the viewport for this table.</li>
+      <li><code>void setFillsViewportHeight(boolean fillsViewportHeight)</code> sets whether or not this table is always made large enough to fill the height of an enclosing viewport. If the preferred height of the table is smaller than the viewport, then the table will be stretched to fill the viewport. In other words, this ensures the table is never smaller than the viewport. The default for this property is false.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>JTable <span class="sn">4</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>int getSelectedColumn()</code></td><td>Returns the index of the first selected column, -1 if no column is selected.</td></tr>
+          <tr><td><code>int getSelectedColumnCount()</code></td><td>Returns the number of selected columns.</td></tr>
+          <tr><td><code>int[] getSelectedColumns()</code></td><td>Returns the indices of all selected columns.</td></tr>
+          <tr><td><code>int getSelectedRow()</code></td><td>Returns the index of the first selected row, -1 if no row is selected.</td></tr>
+          <tr><td><code>int getSelectedRowCount()</code></td><td>Returns the number of selected rows.</td></tr>
+          <tr><td><code>int[] getSelectedRows()</code></td><td>Returns the indices of all selected rows.</td></tr>
+          <tr><td><code>void addColumn(TableColumn aColumn)</code></td><td>Appends aColumn to the end of the array of columns held by this JTable's column model.</td></tr>
+          <tr><td><code>int getRowCount()</code></td><td>Returns the number of rows that can be shown in the JTable, given unlimited space.</td></tr>
+          <tr><td><code>TableModel getModel()</code></td><td>Returns the TableModel that provides the data displayed by this JTable.</td></tr>
+          <tr><td><code>TableColumnModel getColumnModel()</code></td><td>Returns the TableColumnModel that contains all column information of this table.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="1-4"></details>
+  <div class="quiz" data-quiz="jtable"></div>
+</section>
+
+<section class="sec" id="api" data-title="Table interfaces and classes">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 5–11</p>
+    <div class="sec-head-row"><h2>Table interfaces and classes</h2><label class="done"><input type="checkbox" id="done-api"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A JTable is split into helpers, each with one job:<ul><li><b>TableModel</b>: the data (how many rows and columns, what's in each cell).</li><li><b>TableColumnModel</b>: the columns as displayed (order, widths).</li><li><b>TableCellRenderer</b>: how a cell <em>looks</em> when you're not editing it.</li><li><b>TableCellEditor</b>: the component used while you <em>edit</em> a cell (text field, check box or combo box).</li><li><b>TableModelListener</b>: gets told when the model's data changes (the JTable itself is one).</li></ul>For each interface Swing provides a ready class: AbstractTableModel, DefaultTableModel, DefaultTableCellRenderer, DefaultCellEditor, DefaultTableColumnModel.</div></aside>
+
+  <div class="slide">
+    <h3>Table Interfaces <span class="sn">5</span></h3>
+    <ul class="pts">
+      <li><code>TableCellEditor</code>: This interface defines the method any object that would like to be an editor of values for components such as JListBox, JComboBox, JTree, or JTable needs to implement.</li>
+      <li><code>TableCellRenderer</code>: This interface defines the method required by any object that would like to be a renderer for cells in a JTable.</li>
+      <li><code>TableColumnModel</code>: Defines the requirements for a table column model object suitable for use with JTable.</li>
+      <li><code>TableModel</code>: The TableModel interface specifies the methods the JTable will use to interrogate a tabular data model.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Table Classes <span class="sn">6</span></h3>
+    <ul class="pts">
+      <li><code>AbstractTableModel</code> This abstract class provides default implementations for most of the methods in the <code>TableModel</code> interface.</li>
+      <li><code>DefaultTableModel</code> This is an implementation of <code>TableModel</code> that uses a Vector of Vectors to store the cell value objects.</li>
+      <li><code>DefaultTableCellRenderer</code> The standard class for rendering (displaying) individual cells in a <code>JTable</code>. Provides implementation for <code>TableCellRenderer</code> interface</li>
+      <li>Class <code>DefaultCellEditor</code> The default editor for table cells. Provides implementation for <code>TableCellEditor</code> interface. An object of <code>DefaultTableCellEditor</code> can be constructed using check box, combo box, or text field.
+        <ul><li>DefaultCellEditor(JCheckBox checkBox)</li><li>DefaultCellEditor(JComboBox comboBox)</li><li>DefaultCellEditor(JTextField textField)</li></ul></li>
+      <li><code>DefaultTableColumnModel</code> The standard column-handler for a <code>JTable</code>.</li>
+      <li><code>TableRowSorter</code> An implementation of <code>RowSorter</code> that provides sorting and filtering using a <code>TableModel</code>.</li>
+    </ul>
+    <p class="added">Added · DefaultTableModel and a combo-box editor in practice</p>
+    <div class="code"><pre class="java">DefaultTableModel model = new DefaultTableModel(new Object[] {"Name", "Dept", "Mark"}, 0);
+model.addRow(new Object[] {"Lina", "CS", 85});
+model.addRow(new Object[] {"Omar", "CE", 72});
+JTable table = new JTable(model);
+
+// edit the "Dept" column with a drop-down
+JComboBox&lt;String&gt; depts = new JComboBox&lt;&gt;(new String[] {"CS", "CE", "EE", "DMI"});
+table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(depts));
+
+table.setAutoCreateRowSorter(true);          // click a heading to sort (uses TableRowSorter)
+model.removeRow(table.getSelectedRow());     // delete the selected row (check it's not -1 first!)</pre></div>
+    <p style="font-size:.9rem;color:var(--muted)"><code>DefaultTableModel</code> is the easiest model when you need to add and remove rows at run time, which is common for database results in the final project.</p>
+  </div>
+
+  <div class="slide">
+    <h3>TableColumnModel Interface <span class="sn">7</span></h3>
+    <ul class="pts">
+      <li>Implemented by Class <code>DefaultTableColumnModel</code></li>
+      <li>Defines the requirements for a table column model object suitable for use with <code>JTable</code>.</li>
+    </ul>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>void addColumn(TableColumn aColumn)</code></td><td>Appends aColumn to the end of the tableColumns array.</td></tr>
+          <tr><td><code>void addColumnModelListener(TableColumnModelListener x)</code></td><td>Adds a listener for table column model events.</td></tr>
+          <tr><td><code>TableColumn getColumn(int columnIndex)</code></td><td>Returns the TableColumn object for the column at columnIndex.</td></tr>
+          <tr><td><code>int getColumnCount()</code></td><td>Returns the number of columns in the model.</td></tr>
+          <tr><td><code>int getColumnIndex(Object columnIdentifier)</code></td><td>Returns the index of the first column in the table whose identifier is equal to identifier, when compared using equals.</td></tr>
+          <tr><td><code>int getColumnIndexAtX(int xPosition)</code></td><td>Returns the index of the column that lies on the horizontal point, xPosition; or -1 if it lies outside the any of the column's bounds.</td></tr>
+          <tr><td><code>void removeColumn(TableColumn column)</code></td><td>Deletes the <code>TableColumn</code> column from the tableColumns array.</td></tr>
+          <tr><td><code>void moveColumn(int columnIndex, int newIndex)</code></td><td>Moves the column and its header at <code>columnIndex</code> to <code>newIndex</code>.</td></tr>
+          <tr><td><code>int getSelectedColumnCount()</code></td><td>Returns the number of selected columns.</td></tr>
+          <tr><td><code>int[] getSelectedColumns()</code></td><td>Returns an array of indicies of all selected columns.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>TableCellRenderer Interface <span class="sn">8</span></h3>
+    <div class="code"><pre class="java">Component getTableCellRendererComponent(JTable table,
+    Object value, boolean isSelected, boolean hasFocus, int row, int column)</pre></div>
+    <ul class="pts">
+      <li>Returns the component used for drawing the cell.</li>
+      <li>This method is used to configure the renderer appropriately before drawing.</li>
+    </ul>
+    <p><b>Parameters:</b></p>
+    <ul class="pts">
+      <li><code>table</code> - the JTable that is asking the renderer to draw; can be null</li>
+      <li><code>value</code> - the value of the cell to be rendered. It is up to the specific renderer to interpret and draw the value. For example, if value is the string "true", it could be rendered as a string or it could be rendered as a check box that is checked. null is a valid value</li>
+      <li><code>isSelected</code> - true if the cell is to be rendered with the selection highlighted; otherwise false</li>
+      <li><code>hasFocus</code> - if true, render cell appropriately. For example, put a special border on the cell, if the cell can be edited, render in the color used to indicate editing</li>
+      <li><code>row</code> - the row index of the cell being drawn. When drawing the header, the value of row is -1</li>
+      <li><code>column</code> - the column index of the cell being drawn</li>
+    </ul>
+    <p class="added">Added · A renderer that colours failing marks red</p>
+    <div class="code"><pre class="java">table.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
+    public Component getTableCellRendererComponent(JTable t, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+        Component c = super.getTableCellRendererComponent(t, value, isSelected, hasFocus, row, column);
+        int mark = (Integer) value;
+        c.setForeground(mark &lt; 50 ? Color.RED : Color.BLACK);
+        return c;
+    }
+});</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>TableCellEditor Interface <span class="sn">9</span></h3>
+    <div class="code"><pre class="java">Component getTableCellEditorComponent(JTable table,
+    Object value, boolean isSelected, int row, int column)</pre></div>
+    <ul class="pts"><li>Sets an initial value for the editor.</li><li>Returns the component for editing</li></ul>
+    <p><b>Parameters:</b></p>
+    <ul class="pts">
+      <li><code>table</code> - the JTable that is asking the editor to edit; can be null</li>
+      <li><code>value</code> - the value of the cell to be edited; it is up to the specific editor to interpret and draw the value. For example, if value is the string "true", it could be rendered as a string or it could be rendered as a check box that is checked. null is a valid value</li>
+      <li><code>isSelected</code> - true if the cell is to be rendered with highlighting</li>
+      <li><code>row</code> - the row of the cell being edited</li>
+      <li><code>column</code> - the column of the cell being edited</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>TableModelListener Interface <span class="sn">10–11</span></h3>
+    <ul class="pts">
+      <li><code>TableModelListener</code> defines the interface for an object that listens to changes in a <code>TableModel</code>.</li>
+      <li><code>void tableChanged(TableModelEvent e)</code>
+        <ul><li>This fine grain notification tells listeners the exact range of cells, rows, or columns that changed.</li></ul></li>
+      <li>Should be added into a <code>TableModel</code> or <code>AbstractTableModel</code> using the method:
+        <ul><li><code>void addTableModelListener(TableModelListener l)</code>
+          <ul><li>Adds a listener to the list that is notified each time a change to the data model occurs.</li></ul></li></ul></li>
+    </ul>
+    <h4>Class <code>TableModelEvent</code></h4>
+    <div class="fig-row">
+      <div class="tbl-wrap" style="flex:1 1 16rem">
+        <table>
+          <thead><tr><th colspan="2">Fields</th></tr></thead>
+          <tbody>
+            <tr><td><code>int ALL_COLUMNS</code></td><td>Specifies all columns in a row or rows.</td></tr>
+            <tr><td><code>int column</code></td><td></td></tr>
+            <tr><td><code>int DELETE</code></td><td>Identifies the removal of rows or columns.</td></tr>
+            <tr><td><code>int firstRow</code></td><td></td></tr>
+            <tr><td><code>int HEADER_ROW</code></td><td>Identifies the header row.</td></tr>
+            <tr><td><code>int INSERT</code></td><td>Identifies the addition of new rows or columns.</td></tr>
+            <tr><td><code>int lastRow</code></td><td></td></tr>
+            <tr><td><code>int type</code></td><td></td></tr>
+            <tr><td><code>int UPDATE</code></td><td>Identifies a change to existing data.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tbl-wrap" style="flex:1 1 16rem">
+        <table>
+          <thead><tr><th colspan="2">Methods</th></tr></thead>
+          <tbody>
+            <tr><td><code>int getColumn()</code></td><td>Returns the column for the event. If the return value is ALL_COLUMNS; it means every column in the specified rows changed.</td></tr>
+            <tr><td><code>int getFirstRow()</code></td><td>Returns the first row that changed. HEADER_ROW means the meta data, ie. names, types and order of the columns.</td></tr>
+            <tr><td><code>int getLastRow()</code></td><td>Returns the last row that changed.</td></tr>
+            <tr><td><code>int getType()</code></td><td>Returns the type of event - one of: INSERT, UPDATE and DELETE.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="5-11"></details>
+  <div class="quiz" data-quiz="api"></div>
+</section>
+
+<section class="sec" id="atm" data-title="AbstractTableModel">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 12–13</p>
+    <div class="sec-head-row"><h2>AbstractTableModel</h2><label class="done"><input type="checkbox" id="done-atm"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Write your own model by extending <code>AbstractTableModel</code>. You <b>must</b> answer three questions: how many rows (<code>getRowCount</code>), how many columns (<code>getColumnCount</code>), and what's in cell (r, c) (<code>getValueAt</code>). You <b>may</b> also give column names, column types, say which cells are editable, and store edits (<code>setValueAt</code>). After changing your data, call one of the <code>fireTable…</code> methods so the JTable repaints.</div></aside>
+
+  <div class="slide">
+    <h3>AbstractTableModel Class <span class="sn">12</span></h3>
+    <ul class="pts">
+      <li><code>AbstractTableModel</code> defined in the library <code>javax.swing.table</code>.</li>
+      <li>Class <code>AbstractTableModel</code> requires the implementation of the following abstract methods:
+        <ul>
+          <li><code>int getRowCount()</code><ul><li>has to be implemented to return the number of rows in the table.</li></ul></li>
+          <li><code>int getColumnCount()</code><ul><li>has to be implemented to return the number of columns in the table.</li></ul></li>
+          <li><code>Object getValueAt(int r, int c)</code><ul><li>has to be implemented to return the content of the table cell in column c of row r.</li></ul></li>
+        </ul></li>
+      <li><code>AbstractTableModel</code> contains some nonabstract methods one would often like to override:
+        <ul>
+          <li><code>String getColumnName(int c)</code><ul><li>returns the name of column c as a string. By default, an AbstractTableModel assigns the names A, B, C, . . . , Z, AA, AB, AC, . . . to the columns. Overriding getColumnName by your own implementation allows you to specify other names.</li></ul></li>
+          <li><code>Class getColumnClass(int c)</code><ul><li>returns the class of the objects in column c. By default, an AbstractTableModel returns class Object. One should override getColumn-Class(c) to return the correct class of the objects in column c. This way one ensures that the correct renderer is used to display the entries. As mentioned above, tables are column-oriented and in every column the objects should be of the same class. To determine the appropriate class for column c one can look at the entry in the first row: <code>getValueAt(0,c).getClass()</code>.</li></ul></li>
+          <li><code>boolean isCellEditable(int r, int c)</code><ul><li>the return value is true if the cell is editable and false otherwise. The default implementation returns false, i.e. the user cannot change the content of the cell. The programmer can override this method to make some cells editable by the user.</li></ul></li>
+          <li><code>void setValueAt(Object val, int r, int c)</code><ul><li>can be used to set the value of the cell in row r and column c to val. The default implementation has an empty body, i.e. it does not change the value of the cell. The programmer can override this method to change the values of editable cells.</li></ul></li>
+        </ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>AbstractTableModel Class <span class="sn">13</span></h3>
+    <ul class="pts">
+      <li><code>fireTableCellUpdated(int row, int column)</code> Notifies all listeners that the value of the cell at [row, column] has been updated.</li>
+      <li><code>fireTableDataChanged()</code> Notifies all listeners that all cell values in the table's rows may have changed</li>
+      <li><code>fireTableRowsDeleted(int firstRow, int lastRow)</code> Notifies all listeners that rows in the range [firstRow, lastRow], inclusive, have been deleted</li>
+      <li><code>fireTableRowsInserted(int firstRow, int lastRow)</code> Notifies all listeners that rows in the range [firstRow, lastRow], inclusive, have been inserted.</li>
+      <li><code>fireTableRowsUpdated(int firstRow, int lastRow)</code> Notifies all listeners that rows in the range [firstRow, lastRow], inclusive, have been updated</li>
+      <li><code>fireTableStructureChanged()</code> Notifies all listeners that the table's structure has changed.</li>
+    </ul>
+  </div>
+
+  <details class="orig" data-pages="12-13"></details>
+  <div class="quiz" data-quiz="atm"></div>
+</section>
+
+<section class="sec" id="examples" data-title="Three JTable examples, live">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 14–17</p>
+    <div class="sec-head-row"><h2>Three JTable examples, live</h2><label class="done"><input type="checkbox" id="done-examples"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Example 1 is the array shortcut. Example 2 computes every cell on the fly (no stored data at all: cell (r, c) is just r × c), which shows that a model doesn't have to hold data. Example 3 is a mini shop: only the Quantity column is editable, and Total and the SUM row are calculated from the other cells, so editing a quantity and calling <code>fireTableDataChanged()</code> updates them.</div></aside>
+
+  <div class="slide">
+    <h3>JTable example <span class="sn">14</span></h3>
+    <div class="code"><pre class="java">public class StaticTableFrame extends SimpleFrame
+{
+   private String[][] entries  = {{"Cell 0.0","Cell 0.1","Cell 0.2"},
+                                  {"Cell 1.0","Cell 1.1","Cell 1.2"}};
+   private String[] columnNames = {"Column 0","Column 1","Column 2"};
+
+   public StaticTableFrame()
+   {
+      JTable table = new JTable(entries,columnNames);
+      JScrollPane scrollpane = new JScrollPane(table);
+      this.getContentPane().add(scrollpane);
+   }
+
+   public static void main(String[] args)
+   {
+      StaticTableFrame STF = new StaticTableFrame();
+      STF.showIt("Static Table Frame");
+   }
+}</pre></div>
+    <div class="win" style="max-width:24rem"><div class="win-bar"><span>Static Table Frame</span><i>–□×</i></div><div id="t1"></div></div>
+    <p class="expl" id="t1Sel" style="margin:0">Click a cell: getSelectedRow() = -1, getSelectedColumn() = -1</p>
+  </div>
+
+  <div class="slide">
+    <h3>JTable example 2 <span class="sn">15</span></h3>
+    <div class="code"><span class="code-label">MultiplicationTableModel.java</span><pre class="java">import javax.swing.table.AbstractTableModel;
+
+public class MultiplicationTableModel extends AbstractTableModel {
+
+   private int noOfRows, noOfCols;
+
+   public MultiplicationTableModel(int r, int c) {
+      noOfRows = r;
+      noOfCols = c;
+   }
+
+   // Implementing the three abstract methods:
+   public int getColumnCount() {
+      return(noOfRows);
+   }
+
+   public Object getValueAt(int r,int c) {
+      return(new Integer(r*c));
+   }
+
+   public int getRowCount() {
+      return(noOfRows);
+   }
+
+   // Overriding some methods:
+   public Class getColumnClass(int c){
+      return( getValueAt(0,c).getClass() );
+   }
+
+   public String getColumnName(int c){
+      return("Col "+c);
+   }
+}</pre></div>
+    <div class="code"><span class="code-label">MultiplicationTableFrame.java</span><pre class="java">import SimpleFrame.SimpleFrame;
+import javax.swing.*;
+
+public class MultiplicationTableFrame extends SimpleFrame {
+
+   public MultiplicationTableFrame(int r, int c) {
+      MultiplicationTableModel multModel = new MultiplicationTableModel(r,c);
+      JTable multTable = new JTable(multModel);
+      multTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+      JScrollPane scrollPane = new JScrollPane(multTable);
+      this.setSize(350,250);
+      this.getContentPane().add(scrollPane);
+   }
+
+   public static void main(String[] args) {
+      MultiplicationTableFrame mtf30 =
+            new MultiplicationTableFrame(30,30);
+      mtf30.showIt("Multiplication Table");
+   }
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span><code>getColumnCount()</code> returns <code>noOfRows</code>; it should return <code>noOfCols</code>. You don't notice the bug with a 30 × 30 table. The slide's first line also has a capital "Import", which won't compile. <code>new Integer(r*c)</code> is deprecated in newer Java; <code>Integer.valueOf(r * c)</code> (or just <code>r * c</code>) does the same.</span></aside>
+    <div class="ctrl"><label for="mRows">rows <input type="number" id="mRows" min="1" max="40" value="30" style="width:4.5rem"></label><label for="mCols">cols <input type="number" id="mCols" min="1" max="40" value="30" style="width:4.5rem"></label><label><input type="checkbox" id="mBug"> keep the slide's bug (columns = noOfRows)</label></div>
+    <div class="win" style="max-width:100%"><div class="win-bar"><span>Multiplication Table</span><i>–□×</i></div><div id="t2" style="height:13rem;overflow:auto;background:#fff"></div></div>
+  </div>
+
+  <div class="slide">
+    <h3>JTable example 3 <span class="sn">16–17</span></h3>
+    <div class="code"><span class="code-label">OrderTableFrame.java</span><pre class="java">import SimpleFrame.SimpleFrame;
+import javax.swing.*;
+
+public class OrderTableFrame extends SimpleFrame
+{
+
+   public OrderTableFrame()
+   {
+      this.setSize(300,250);
+      OrderTableModel otmodel = new OrderTableModel();
+      JTable JTab = new JTable(otmodel);
+      JTab.setRowHeight(50);
+
+      JScrollPane SP = new JScrollPane(JTab);
+      this.getContentPane().add(SP);
+
+   }
+
+   public static void main(String[] args)
+   {
+      OrderTableFrame otframe = new OrderTableFrame();
+      otframe.showIt();
+   }
+}</pre></div>
+    <div class="code"><span class="code-label">OrderTableModel.java</span><pre class="java">import javax.swing.ImageIcon;
+import javax.swing.table.AbstractTableModel;
+
+public class OrderTableModel extends AbstractTableModel
+{
+   private String[] columnNames = {"Product","Picture","Price",
+                                   "Quantity","Total"};
+   private String[] products    = {"Circle","Triangle","Rectangle"};
+   private String[] imageName   = {"circ.png","tria.png","rect.png"};
+   private int[] quantities     = {0,0,0};
+   private double[] prices      = {10.00, 12.00, 12.50};
+   public boolean[] bv= {true,false,true};
+
+   public OrderTableModel()
+   {
+   }
+
+   public int getColumnCount()
+   {
+      return(columnNames.length);
+   }
+
+   public int getRowCount()
+   {
+      return(products.length+1);
+   }
+
+   public String getColumnName(int c) {
+      return(columnNames[c]);
+   }
+
+   public Class getColumnClass(int c) {
+      return getValueAt(0, c).getClass();
+   }
+
+   public Object getValueAt(int r, int c)
+   {
+      Object result = new Object();
+      if( r &lt; products.length) {
+         switch(c){
+            case 0: result = products[r]; break;
+            case 1: result = new ImageIcon(imageName[r]); break;
+            case 2: result = new Double(prices[r]); break;
+            case 3: result = new Integer(quantities[r]);   break;
+            case 4: int quantity = ((Integer)getValueAt(r,3)).intValue();
+                    double price = ((Double)getValueAt(r,2)).doubleValue();
+                    result = new Double(quantity * price); break;
+         }//switch
+      }
+      else{
+         switch(c){
+            case 0: result = new String("SUM"); break;
+            case 1: result = new Object();    break;
+            case 2: result = new Double(0.0); break;
+            case 3: result = new Integer(0); break;
+            case 4: double sum = 0.0;
+                    double ee;
+                    for (int i = 0; i &lt; products.length; i++) {
+                       sum += ((Double)getValueAt(i,4)).doubleValue();
+                    }
+                    result = new Double(sum); break;
+         }
+      }
+      return(result);
+   }
+
+   //cells in column 3 can be edited
+   public boolean isCellEditable(int r, int c) { return(c == 3);
+   }
+
+   public void setValueAt(Object obj, int r, int c)
+   {
+      if(c == 3){
+         quantities[r] = ((Integer)obj).intValue();
+      }
+      this.fireTableDataChanged();
+   }
+
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span>Because <code>getColumnClass</code> returns <code>ImageIcon</code> for column 1, the default renderer draws the picture instead of its name, and because column 3 is <code>Integer</code>, the editor only accepts whole numbers. The SUM row's Quantity cell is editable too, but <code>quantities[3]</code> doesn't exist, so typing there throws an ArrayIndexOutOfBoundsException. Use <code>return c == 3 &amp;&amp; r &lt; products.length;</code>.</span></aside>
+    <div class="demo" id="ot">
+      <div class="demo-head"><h3>Try it: the order table</h3><span class="added">Added</span></div>
+      <p class="expl" style="margin:0">Click a Quantity cell and type a number. Only column 3 is editable.</p>
+      <div class="win" style="max-width:28rem"><div class="win-bar"><span>OrderTableFrame</span><i>–□×</i></div><div id="t3" style="overflow-x:auto;background:#fff"></div></div>
+      <div class="log" id="otLog" style="height:6rem"></div>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="14-17"></details>
+  <div class="quiz" data-quiz="examples"></div>
+</section>
+
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 10</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 10 – Tables</em> (CS254, 17 slides). Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l10-done", "quizzes": {"jtable": [{"q": "In <code>new JTable(content, columnNames)<\/code>, <code>content[i]<\/code> is…", "o": ["row i", "column i", "the header", "cell i"], "a": 0, "e": "Slide 3."}, {"q": "Why put a JTable in a JScrollPane?", "o": ["So the column headers show and the table can scroll", "It's required to compile", "To make cells editable", "To sort rows"], "a": 0, "e": "Slide 14 and common practice."}, {"q": "What does <code>getSelectedRow()<\/code> return when nothing is selected?", "o": ["-1", "0", "null", "an exception"], "a": 0, "e": "Slide 4."}, {"q": "JTables are column-oriented, so each column should hold…", "o": ["data of one type", "one row", "only Strings", "a header only"], "a": 0, "e": "Slide 2."}, {"q": "Which call turns off automatic column-width adjustment?", "o": ["setAutoResizeMode(JTable.AUTO_RESIZE_OFF)", "setResizable(false)", "setFillsViewportHeight(false)", "setColumnWidth(0)"], "a": 0, "e": "Slide 3."}], "api": [{"q": "Which interface decides how a cell LOOKS when not being edited?", "o": ["TableCellRenderer", "TableCellEditor", "TableModel", "TableColumnModel"], "a": 0, "e": "Slides 5 and 8."}, {"q": "Which class stores cell values in a Vector of Vectors?", "o": ["DefaultTableModel", "AbstractTableModel", "DefaultTableColumnModel", "TableRowSorter"], "a": 0, "e": "Slide 6."}, {"q": "DefaultCellEditor can be built from…", "o": ["a JCheckBox, a JComboBox or a JTextField", "a JButton", "a JLabel", "a JPanel"], "a": 0, "e": "Slide 6."}, {"q": "Which TableModelEvent type means rows were added?", "o": ["INSERT", "UPDATE", "DELETE", "HEADER_ROW"], "a": 0, "e": "Slide 11."}, {"q": "Which class adds sorting and filtering?", "o": ["TableRowSorter", "DefaultTableCellRenderer", "TableColumn", "JScrollPane"], "a": 0, "e": "Slide 6."}], "atm": [{"q": "Which three methods MUST an AbstractTableModel subclass implement?", "o": ["getRowCount, getColumnCount, getValueAt", "getColumnName, getColumnClass, isCellEditable", "setValueAt, getValueAt, fireTableDataChanged", "addRow, removeRow, getRowCount"], "a": 0, "e": "Slide 12."}, {"q": "Default column names in AbstractTableModel are…", "o": ["A, B, C, …", "Col 0, Col 1, …", "1, 2, 3, …", "empty"], "a": 0, "e": "Slide 12."}, {"q": "By default, can the user edit cells of an AbstractTableModel?", "o": ["No, isCellEditable returns false", "Yes", "Only the first column", "Only numbers"], "a": 0, "e": "Slide 12."}, {"q": "After changing your model's data, you should call…", "o": ["a fireTable… method, like fireTableDataChanged()", "repaint() on the frame only", "new JTable(model)", "nothing"], "a": 0, "e": "Slide 13."}], "examples": [{"q": "In MultiplicationTableModel, what does getValueAt(4, 5) return?", "o": ["20", "9", "45", "\"Col 5\""], "a": 0, "e": "Slide 15: r * c."}, {"q": "What bug is in MultiplicationTableModel?", "o": ["getColumnCount returns noOfRows instead of noOfCols", "getValueAt adds instead of multiplying", "getRowCount is missing", "There is no bug"], "a": 0, "e": "Slide 15."}, {"q": "In OrderTableModel, which column can the user edit?", "o": ["Quantity (column 3)", "Price", "Total", "Product"], "a": 0, "e": "Slide 17: isCellEditable returns c == 3."}, {"q": "Why does the Picture column show images, not file names?", "o": ["getColumnClass returns ImageIcon, so the default renderer draws it", "setRowHeight(50)", "It uses a JLabel per cell", "Images are Strings"], "a": 0, "e": "Slides 16–17."}, {"q": "Why do Total and SUM update after editing a quantity?", "o": ["They're calculated in getValueAt, and setValueAt calls fireTableDataChanged()", "The table stores them", "The user retypes them", "JTable recalculates automatically without the model"], "a": 0, "e": "Slide 17."}]}, "flashcards": [["JTable(Object[][], Object[])", "Quick table: rows array + column names array (same lengths). Put it in a JScrollPane.", "Slide 3"], ["Column-oriented", "Columns are easy to manipulate; keep one data type per column.", "Slide 2"], ["Selection methods", "getSelectedRow(), getSelectedRows(), getSelectedColumn(), getSelectedColumns(); -1 if none.", "Slide 4"], ["TableModel", "Interface: the data the JTable asks for.", "Slide 5"], ["TableCellRenderer", "Draws a cell: getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).", "Slide 8"], ["TableCellEditor", "Component used while editing: getTableCellEditorComponent(table, value, isSelected, row, column).", "Slide 9"], ["DefaultCellEditor", "Ready editor built from a JCheckBox, JComboBox or JTextField.", "Slide 6"], ["DefaultTableModel", "Ready model (Vector of Vectors) with addRow, removeRow.", "Slide 6"], ["TableModelListener", "tableChanged(TableModelEvent e); added with model.addTableModelListener(l).", "Slide 10"], ["TableModelEvent", "getType(): INSERT, UPDATE, DELETE; getFirstRow(), getLastRow(), getColumn().", "Slide 11"], ["AbstractTableModel (must)", "getRowCount(), getColumnCount(), getValueAt(r, c).", "Slide 12"], ["AbstractTableModel (often override)", "getColumnName, getColumnClass, isCellEditable, setValueAt.", "Slide 12"], ["fireTable… methods", "fireTableCellUpdated, fireTableDataChanged, fireTableRowsDeleted/Inserted/Updated, fireTableStructureChanged.", "Slide 13"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle };
+})();
+
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = window.Guide.esc;
+  function logger(el) { return function (t, c) { var d = document.createElement("div"); d.textContent = t; if (c) d.style.color = c; el.appendChild(d); el.scrollTop = el.scrollHeight; }; }
+  var C = { ev: "#9fd3ff", ok: "#7fd3ad", warn: "#f0b071", bad: "#ff8f86", dim: "#9aa4a8" };
+  var TH = "text-transform:none;letter-spacing:0;background:#e3e8eb;border:1px solid #b6c0c5;padding:2px 6px;font:600 12px sans-serif;color:#1c2328;position:sticky;top:0;white-space:nowrap";
+  var TD = "border:1px solid #d3dadd;padding:2px 6px;font:12px sans-serif;color:#1c2328;white-space:nowrap";
+
+  // ---------- example 1 ----------
+  (function () {
+    var rows = [["Cell 0.0", "Cell 0.1", "Cell 0.2"], ["Cell 1.0", "Cell 1.1", "Cell 1.2"]], cols = ["Column 0", "Column 1", "Column 2"];
+    var sel = [-1, -1];
+    function draw() {
+      var h = '<table style="border-collapse:collapse;width:100%;background:#fff"><thead><tr>' + cols.map(function (c) { return '<th style="' + TH + '">' + c + "</th>"; }).join("") + "</tr></thead><tbody>";
+      rows.forEach(function (r, i) {
+        h += "<tr>" + r.map(function (v, j) { var on = i === sel[0]; return '<td data-r="' + i + '" data-c="' + j + '" style="' + TD + ";background:" + (on ? (j === sel[1] ? "#8fb3d9" : "#b8cfe5") : "#fff") + ';cursor:default">' + v + "</td>"; }).join("") + "</tr>";
+      });
+      $("t1").innerHTML = h + "</tbody></table>";
+      $("t1").querySelectorAll("td").forEach(function (td) { td.addEventListener("click", function () { sel = [+td.dataset.r, +td.dataset.c]; draw(); $("t1Sel").textContent = "getSelectedRow() = " + sel[0] + ", getSelectedColumn() = " + sel[1] + ', getValueAt(' + sel[0] + ", " + sel[1] + ') = "' + rows[sel[0]][sel[1]] + '"'; }); });
+    }
+    draw();
+  })();
+
+  // ---------- example 2 ----------
+  (function () {
+    function draw() {
+      var R = Math.max(1, Math.min(40, +$("mRows").value || 1)), Cc = Math.max(1, Math.min(40, +$("mCols").value || 1));
+      var cols = $("mBug").checked ? R : Cc;
+      var h = '<table style="border-collapse:collapse;background:#fff"><thead><tr>';
+      for (var c = 0; c < cols; c++) h += '<th style="' + TH + ';min-width:3.2rem">Col ' + c + "</th>";
+      h += "</tr></thead><tbody>";
+      for (var r = 0; r < R; r++) { h += "<tr>"; for (c = 0; c < cols; c++) h += '<td style="' + TD + ';text-align:right">' + r * c + "</td>"; h += "</tr>"; }
+      $("t2").innerHTML = h + "</tbody></table>";
+    }
+    ["mRows", "mCols", "mBug"].forEach(function (id) { $(id).addEventListener("input", draw); $(id).addEventListener("change", draw); });
+    draw();
+  })();
+
+  // ---------- example 3 ----------
+  (function () {
+    var products = ["Circle", "Triangle", "Rectangle"], quantities = [0, 0, 0], prices = [10.00, 12.00, 12.50], out = logger($("otLog"));
+    var cols = ["Product", "Picture", "Price", "Quantity", "Total"];
+    function icon(i) {
+      var s = ['<circle cx="20" cy="20" r="15" fill="#2a6ebb"/>', '<polygon points="20,5 36,34 4,34" fill="#d17a00"/>', '<rect x="5" y="10" width="30" height="20" fill="#2f8f4e"/>'][i];
+      return '<svg width="40" height="40" viewBox="0 0 40 40" role="img" aria-label="' + products[i] + ' picture">' + s + "</svg>";
+    }
+    function val(r, c) {
+      if (r < products.length) return [products[r], "icon", prices[r], quantities[r], quantities[r] * prices[r]][c];
+      if (c === 0) return "SUM"; if (c === 1) return ""; if (c === 2) return 0.0; if (c === 3) return 0;
+      var s = 0; for (var i = 0; i < products.length; i++) s += quantities[i] * prices[i]; return s;
+    }
+    function fmt(c, v) { return (c === 2 || c === 4) ? v.toFixed(1) : v; }
+    function draw() {
+      var h = '<table style="border-collapse:collapse;width:100%;background:#fff"><thead><tr>' + cols.map(function (c) { return '<th style="' + TH + '">' + c + "</th>"; }).join("") + "</tr></thead><tbody>";
+      for (var r = 0; r <= products.length; r++) {
+        h += '<tr style="height:50px">';
+        for (var c = 0; c < 5; c++) {
+          var v = val(r, c), right = c >= 2;
+          var cell = c === 1 ? (r < 3 ? icon(r) : "") : (c === 3 && r < 3 ? '<input type="text" inputmode="numeric" data-r="' + r + '" value="' + v + '" aria-label="Quantity of ' + products[r] + '" style="width:4rem;text-align:right;font:12px sans-serif;border:1px solid #9aa7ad;padding:1px 3px;background:#fffbe6;color:#1c2328">' : esc(String(fmt(c, v))));
+          h += '<td style="' + TD + ";text-align:" + (right ? "right" : "left") + (r === 3 ? ";font-weight:600" : "") + '">' + cell + "</td>";
+        }
+        h += "</tr>";
+      }
+      $("t3").innerHTML = h + "</tbody></table>";
+      $("t3").querySelectorAll("input").forEach(function (inp) {
+        inp.addEventListener("change", function () {
+          var r = +inp.dataset.r, t = inp.value.trim();
+          if (!/^-?\d+$/.test(t)) { out('editor rejects "' + t + '": column class is Integer (red border in Swing)', C.bad); inp.value = quantities[r]; return; }
+          out("setValueAt(" + t + ", " + r + ", 3) → quantities[" + r + "] = " + t, C.ev);
+          quantities[r] = parseInt(t, 10);
+          out("fireTableDataChanged() → JTable calls getValueAt again → Total and SUM recomputed", C.ok);
+          draw();
+          var next = $("t3").querySelector('input[data-r="' + Math.min(2, r + 1) + '"]'); if (next && r < 2) next.focus();
+        });
+      });
+    }
+    draw();
+    out("isCellEditable(r, c) returns c == 3, so only Quantity can be edited", C.dim);
+  })();
+})();
+
+</script>
+</body>
+</html>

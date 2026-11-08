@@ -1,0 +1,2455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 Other Events Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+pre.pickable .ln { cursor: pointer; }
+pre.pickable .ln:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+pre .ln.pick { background: color-mix(in srgb, var(--mark) 16%, transparent); }
+pre .ln.hit { background: color-mix(in srgb, var(--ok) 22%, transparent); box-shadow: inset 3px 0 var(--ok); }
+pre .ln.miss { background: color-mix(in srgb, var(--mark) 22%, transparent); box-shadow: inset 3px 0 var(--mark); }
+pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
+.bug-x { font-size: .9rem; border-left: 3px solid var(--line); padding: var(--s1) var(--s3); }
+.bug-x.hit { border-color: var(--ok); } .bug-x.miss { border-color: var(--mark); }
+.res-ok { color: var(--ok); font-weight: 600; } .res-bad { color: var(--bad); font-weight: 600; }
+
+/* L13: Swing component mock-ups (inside .win, always light) */
+.tree-view { background: #fff; padding: .4rem .3rem; font: 13px system-ui, "Segoe UI", sans-serif; color: #1c2328; min-height: 6rem; overflow-x: auto; }
+.tv-row { display: flex; align-items: center; white-space: nowrap; line-height: 1.6; }
+.tv-guide { font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace; color: #8b98a0; white-space: pre; }
+.tv-tog { width: 1.1rem; flex: none; border: 0; background: none; padding: 0; font-size: .72rem; color: #3c4a52; cursor: pointer; }
+.tv-tog.none { visibility: hidden; }
+.tv-ico { width: 16px; height: 14px; margin-right: .3rem; flex: none; }
+.tv-lbl { padding: 0 .3rem; border-radius: 2px; cursor: pointer; border: 1px solid transparent; }
+.tv-lbl.sel { background: #b8cfe5; border-color: #6d8fb5; }
+.tv-lbl.fresh { background: #fff2b3; }
+.tv-hline { border-top: 1px solid #8b98a0; margin: .1rem 0; }
+.sp-frame { display: flex; flex-direction: column; height: 18rem; background: var(--win-bg); }
+.sp { display: flex; flex: 1; min-height: 0; min-width: 0; }
+.sp.vert { flex-direction: column; }
+#sp2 { height: 100%; }
+.sp-a, .sp-b { overflow: auto; background: #fff; min-width: 0; min-height: 0; }
+.sp-a { flex: none; }
+.sp-b { flex: 1; }
+.sp-div { flex: none; background: #d5dde1; border: 1px solid #a9b4ba; display: flex; gap: 3px; cursor: col-resize; touch-action: none; }
+.sp:not(.vert) > .sp-div { flex-direction: column; align-items: center; padding-top: 3px; }
+.sp.vert > .sp-div { flex-direction: row; align-items: center; padding-left: 3px; cursor: row-resize; }
+.sp-div:focus-visible { outline: 2px solid #2a6ebb; }
+.sp-arrow { font-size: 9px; line-height: 1; padding: 1px; border: 0; background: none; color: #24323a; cursor: pointer; }
+.jlist { list-style: none; margin: 0; padding: 2px 0; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jlist li { padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+.jlist li.sel { background: #b8cfe5; }
+.pic { display: grid; place-items: center; }
+.ok-cyan { background: #00ffff; border: 1px solid #6b7b82; font: 600 13px system-ui, sans-serif; padding: .35rem; color: #1c2328; cursor: pointer; }
+.jtp { display: flex; flex-direction: column; height: 13rem; background: var(--win-bg); font: 12px system-ui, sans-serif; color: #1c2328; padding: 4px; }
+.jtp.pos-BOTTOM { flex-direction: column-reverse; }
+.jtp.pos-LEFT { flex-direction: row; }
+.jtp.pos-RIGHT { flex-direction: row-reverse; }
+.jtp-tabs { display: flex; flex-wrap: wrap; gap: 2px; min-width: 0; }
+.jtp.pos-LEFT .jtp-tabs, .jtp.pos-RIGHT .jtp-tabs { flex-direction: column; flex-wrap: nowrap; overflow: auto; max-width: 45%; }
+.jtp.scroll:not(.pos-LEFT):not(.pos-RIGHT) .jtp-tabs { flex-wrap: nowrap; overflow-x: auto; }
+.jtp-tab { border: 1px solid #9aa7ad; background: #dfe5e8; padding: 2px 9px; cursor: pointer; white-space: nowrap; font: inherit; color: inherit; }
+.jtp-tab.sel { background: #fff; font-weight: 600; }
+.jtp-page { flex: 1; border: 1px solid #9aa7ad; background: #eceff1; min-height: 0; min-width: 0; overflow: auto; }
+.jtp-empty { padding: .5rem; color: #7a868c; }
+.bl3 { display: grid; grid-template: auto 1fr auto / auto 1fr auto; height: 100%; gap: 2px; padding: 2px; }
+.bl3 .jbtn { font-weight: 600; }
+.tl-frame { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto; height: 14rem; background: var(--win-bg); }
+.tl-frame.drop { outline: 2px dashed #2a6ebb; outline-offset: -4px; }
+.tl-frame[data-dock="NORTH"] > .tl-bar { grid-area: 1 / 1 / 2 / 4; }
+.tl-frame[data-dock="SOUTH"] > .tl-bar { grid-area: 3 / 1 / 4 / 4; }
+.tl-frame[data-dock="WEST"] > .tl-bar { grid-area: 1 / 1 / 4 / 2; }
+.tl-frame[data-dock="EAST"] > .tl-bar { grid-area: 1 / 3 / 4 / 4; }
+.tl-center { grid-area: 2 / 2 / 3 / 3; background: #fff; margin: 4px; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tl-bar { display: flex; align-items: center; gap: 2px; padding: 2px; background: #e3e8eb; border: 1px solid #b6c0c5; }
+.tl-bar.vertical { flex-direction: column; }
+.tl-grip { width: 9px; align-self: stretch; min-height: 1.6rem; background-image: radial-gradient(#7d8a91 1px, transparent 1.3px); background-size: 4px 4px; cursor: grab; touch-action: none; }
+.tl-bar.vertical .tl-grip { width: auto; min-height: 9px; height: 9px; min-width: 1.6rem; }
+.tl-btn { min-width: 1.9rem; height: 1.9rem; border: 1px solid transparent; background: none; border-radius: 3px; cursor: pointer; font: 14px system-ui, sans-serif; color: #24323a; padding: 0 .35rem; }
+.tl-btn:hover:not(:disabled) { border-color: #8f9ba1; background: #f4f6f7; }
+.tl-btn:disabled { color: #a9b2b7; cursor: default; }
+.tl-sep { width: 1px; align-self: stretch; background: #9aa7ad; margin: 2px 4px; }
+.tl-bar.vertical .tl-sep { width: auto; height: 1px; margin: 4px 2px; }
+.tl-floatwin { max-width: 16rem; }
+.pp-area { position: relative; background: #fff; min-height: 9rem; padding: .2rem; outline: none; }
+.pp-area:focus-visible { outline: 2px solid #2a6ebb; }
+.jpopup { position: absolute; z-index: 5; background: #f4f6f7; border: 1px solid #8f9ba1; box-shadow: 2px 2px 6px rgba(0, 0, 0, .25); padding: 2px 0; min-width: 8rem; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jpopup button { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; text-align: left; border: 0; background: none; padding: 3px 12px; font: inherit; color: inherit; cursor: pointer; }
+.jpopup button:hover:not(:disabled), .jpopup button:focus-visible { background: #b8cfe5; outline: none; }
+.jpopup button:disabled { color: #a9b2b7; cursor: default; }
+.jpopup hr { border: 0; border-top: 1px solid #b6c0c5; margin: 2px 0; }
+.jpopup kbd { font: 11px system-ui, sans-serif; color: #56676f; }
+.ac-frame { background: var(--win-bg); outline: none; position: relative; }
+.ac-frame:focus-visible { outline: 2px solid #2a6ebb; }
+.ac-menubar { position: relative; background: #e3e8eb; border-bottom: 1px solid #b6c0c5; padding: 1px 2px; }
+.ac-menu { border: 0; background: none; padding: 2px 8px; font: 12px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.ac-menu[aria-expanded="true"] { background: #b8cfe5; }
+.ac-drop { top: 100%; left: 2px; }
+.ac-area { position: relative; background: #fff; margin: 4px; min-height: 7rem; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tv-row { align-items: stretch; }
+.tv-row > .tv-tog, .tv-row > .tv-ico, .tv-row > .tv-lbl { align-self: center; }
+.tv-g { display: inline-block; width: 16px; flex: none; }
+.tv-g.pipe { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat; }
+.tv-g.tee { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+.tv-g.elbow { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 50% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+
+/* L14 MDI: desktop pane, internal frames, card deck */
+.dsk { position: relative; height: 20rem; background: #5d7d8f; overflow: hidden; }
+.jif { position: absolute; display: flex; flex-direction: column; background: #eceff1; border: 1px solid #44525a; box-shadow: 2px 3px 8px rgba(0, 0, 0, .35); }
+.jif-bar { display: flex; align-items: center; gap: 3px; padding: 2px 4px; background: #c5ced3; font: 600 12px system-ui, sans-serif; color: #1c2328; cursor: move; user-select: none; touch-action: none; }
+.jif.sel { border-color: #1d4f8a; }
+.jif.sel .jif-bar { background: #8fb3d9; }
+.jif-bar span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jif-bar button { width: 18px; height: 16px; padding: 0; font: 11px/1 system-ui, sans-serif; border: 1px solid #6b7b82; background: #f4f6f7; color: #1c2328; cursor: pointer; flex: none; }
+.jif textarea { flex: 1; resize: none; border: 0; border-top: 1px solid #9aa7ad; font: 12px ui-monospace, Menlo, Consolas, monospace; padding: 4px; background: #fff; color: #1c2328; min-height: 0; width: 100%; }
+.jif-rs { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 55%, #6b7b82 55%, #6b7b82 62%, transparent 62%, transparent 78%, #6b7b82 78%, #6b7b82 85%, transparent 85%); }
+.jif-icon { position: absolute; bottom: 4px; display: flex; align-items: center; gap: 4px; width: 8.5rem; padding: 2px 4px; background: #c5ced3; border: 1px solid #44525a; font: 600 11px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.jif-icon span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dsk-outline { position: absolute; border: 2px dashed #fff; pointer-events: none; }
+.cards { background: var(--win-bg); padding: .6rem; font: 13px system-ui, sans-serif; color: #1c2328; }
+.card-page { background: #fff; border: 1px solid #b6c0c5; padding: .7rem; min-height: 9rem; display: grid; gap: .4rem; align-content: start; }
+.card-page h4 { font: 600 14px system-ui, sans-serif; }
+.card-page .tag { font: 11px ui-monospace, monospace; color: #7a868c; }
+.ways-host { position: relative; background: var(--win-bg); color: #1c2328; font: 12px system-ui, sans-serif; min-height: 15rem; padding: .5rem; color-scheme: light; }
+.ways-host pre { margin: 0; white-space: pre-wrap; font: 12px ui-monospace, monospace; }
+.dlg-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .28); display: grid; place-items: center; }
+
+/* Threads: lanes, progress bar, frozen window */
+.lanes { display: grid; gap: 4px; font: 12px var(--f-mono); }
+.lane { display: grid; grid-template-columns: minmax(0, 9.5rem) 7.5rem minmax(0, 1fr); gap: .5rem; align-items: center; }
+.lane > b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lane .st { font-size: 11px; padding: 1px 6px; border-radius: 99px; border: 1px solid var(--line); text-align: center; color: var(--muted); }
+.lane .st.RUNNABLE { color: var(--ok); border-color: var(--ok); }
+.lane .st.TIMED_WAITING, .lane .st.WAITING { color: var(--c-num); border-color: var(--c-num); }
+.lane .st.TERMINATED { color: var(--bad); border-color: var(--bad); }
+.lane .ticks { display: flex; gap: 2px; overflow: hidden; min-width: 0; justify-content: flex-end; }
+.tick { width: 1.15rem; height: 1.15rem; border-radius: 3px; display: grid; place-items: center; font-size: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
+@media (max-width: 520px) { .lane { grid-template-columns: minmax(0, 1fr) 7rem; } .lane .ticks { grid-column: 1 / -1; justify-content: flex-start; } }
+.jprog { position: relative; height: 18px; border: 1px solid #6b7b82; background: #fff; border-radius: 2px; overflow: hidden; }
+.jprog i { position: absolute; top: 0; bottom: 0; left: 0; background: #5b8fc7; }
+.jprog span { position: absolute; inset: 0; display: grid; place-items: center; font: 600 11px system-ui, sans-serif; color: #1c2328; }
+.jprog.ind i { width: 30% !important; animation: jprog-ind 1.2s linear infinite; }
+@keyframes jprog-ind { from { left: -30%; } to { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .jprog.ind i { animation: none; width: 100% !important; opacity: .45; } }
+.win.frozen .win-body { filter: grayscale(.7) brightness(.9); }
+.win .win-bar .nr { color: #b0261c; font-weight: 600; }
+.win-body .row { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+.win-body textarea { width: 100%; min-height: 4.5rem; font: 12px ui-monospace, monospace; border: 1px solid #9aa7ad; background: #fff; color: #1c2328; padding: 4px; resize: none; }
+.verdict { font: 600 .8rem var(--f-body); padding: .1rem .5rem; border-radius: 99px; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.jbtn:disabled { color: #9aa4a8; cursor: default; }
+
+/* Your lab answers */
+.mine { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ok); font-weight: 600; }
+.slide.answer { border-left: 3px solid var(--ok); padding-left: var(--s4); }
+.xpl { display: grid; gap: var(--s3); margin: 0; }
+.xpl > div { display: grid; gap: var(--s1); min-width: 0; }
+.xpl dt { min-width: 0; }
+.xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
+.xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L5 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 5 + Lab 5</p>
+  <h1>Other Events</h1>
+  <p class="lede">Window, key, focus, component, list-selection, document, item and change events, plus adapters. Every slide of <em>Lecture 5 – Other Events</em> (33 slides) in order, then the Lab 5 code (every listener in one form) explained line by line. Live testers let you press keys, move focus and toggle items to see exactly which methods fire.</p>
+  <div class="legend">
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="mine">Your answer</span> your own lab code, exactly as in your zip</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<!-- ============ 0 overview ============ -->
+<section class="sec" id="cheat" data-title="All listeners at a glance">
+  <div class="sec-head">
+    <p class="eyebrow">Added · one table for the whole lecture</p>
+    <div class="sec-head-row"><h2>All listeners at a glance</h2><label class="done"><input type="checkbox" id="done-cheat"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Every event type follows the same pattern from Lecture 4: an <code>XxxEvent</code> object, an <code>XxxListener</code> interface, and an <code>addXxxListener</code> method on the component. Only the method names inside the interface change. When an interface has several methods and you need just one, extend the matching <code>XxxAdapter</code> class instead. Filter the table by package if you like.</div></aside>
+  <div class="chips" role="group" aria-label="Filter by package" data-filter-for="lsTable">
+    <button class="chip" aria-pressed="true" data-f="all">All</button>
+    <button class="chip" aria-pressed="false" data-f="awt">java.awt.event</button>
+    <button class="chip" aria-pressed="false" data-f="swing">javax.swing.event</button>
+    <button class="chip" aria-pressed="false" data-f="adapter">Has an adapter</button>
+  </div>
+  <div class="tbl-wrap">
+    <table id="lsTable">
+      <thead><tr><th>Listener</th><th>Method(s) you write</th><th>Register with</th><th>Typical source</th><th>Adapter</th><th>Slides</th></tr></thead>
+      <tbody>
+        <tr data-on="awt"><td class="mod">ActionListener</td><td><code>actionPerformed</code></td><td><code>addActionListener</code></td><td>JButton, JTextField, JMenuItem</td><td>–</td><td>L4</td></tr>
+        <tr data-on="awt adapter"><td class="mod">WindowListener</td><td><code>windowOpened</code>, <code>windowClosing</code>, <code>windowClosed</code>, <code>windowIconified</code>, <code>windowDeiconified</code>, <code>windowActivated</code>, <code>windowDeactivated</code></td><td><code>addWindowListener</code></td><td>JFrame, JDialog, JWindow</td><td>WindowAdapter</td><td>2–12</td></tr>
+        <tr data-on="awt adapter"><td class="mod">KeyListener</td><td><code>keyPressed</code>, <code>keyReleased</code>, <code>keyTyped</code></td><td><code>addKeyListener</code></td><td>JTextField, JTextArea, JFrame</td><td>KeyAdapter</td><td>13–21</td></tr>
+        <tr data-on="awt adapter"><td class="mod">FocusListener</td><td><code>focusGained</code>, <code>focusLost</code></td><td><code>addFocusListener</code></td><td>text fields, any focusable component</td><td>FocusAdapter</td><td>22–23</td></tr>
+        <tr data-on="awt adapter"><td class="mod">ComponentListener</td><td><code>componentHidden</code>, <code>componentMoved</code>, <code>componentResized</code>, <code>componentShown</code></td><td><code>addComponentListener</code></td><td>any component</td><td>ComponentAdapter</td><td>24</td></tr>
+        <tr data-on="swing"><td class="mod">ListSelectionListener</td><td><code>valueChanged</code></td><td><code>addListSelectionListener</code></td><td>JList</td><td>–</td><td>25–28</td></tr>
+        <tr data-on="swing"><td class="mod">DocumentListener</td><td><code>insertUpdate</code>, <code>removeUpdate</code>, <code>changedUpdate</code></td><td><code>getDocument().addDocumentListener</code></td><td>JTextField, JTextArea</td><td>(see note)</td><td>29–30</td></tr>
+        <tr data-on="awt"><td class="mod">ItemListener</td><td><code>itemStateChanged</code></td><td><code>addItemListener</code></td><td>JCheckBox, JComboBox</td><td>–</td><td>31–32</td></tr>
+        <tr data-on="swing"><td class="mod">ChangeListener</td><td><code>stateChanged</code></td><td><code>addChangeListener</code></td><td>JSlider, JSpinner, JTabbedPane</td><td>–</td><td>33</td></tr>
+        <tr data-on="awt adapter"><td class="mod">MouseListener</td><td><code>mouseClicked</code>, <code>mousePressed</code>, <code>mouseReleased</code>, <code>mouseEntered</code>, <code>mouseExited</code></td><td><code>addMouseListener</code></td><td>any component</td><td>MouseAdapter</td><td>L6, Lab 5</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 1 window ============ -->
+<section class="sec" id="window" data-title="Window events and adapters">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–12</p>
+    <div class="sec-head-row"><h2>Window events and adapters</h2><label class="done"><input type="checkbox" id="done-window"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A <code>WindowListener</code> hears everything that happens to a window: opened, minimised, restored, focused, unfocused, closing, closed. It has <b>seven</b> methods, and an interface forces you to write all seven. <code>WindowAdapter</code> is a ready-made class with all seven left empty, so you extend it and override only the ones you care about. Most common use: <code>windowClosing</code> to ask "Are you sure?" before the program exits.</div></aside>
+
+  <div class="slide">
+    <h3>Other Events <span class="sn">1</span></h3>
+    <p style="font-size:.85rem;color:var(--muted)">Slides adapted from slides of Marty Stepp based on materials by M. Ernst, S. Reges, D. Notkin, R. Mercer, Wikipedia — <a href="http://www.cs.washington.edu/331/" target="_blank" rel="noopener">http://www.cs.washington.edu/331/</a><br>And Bob Myers Florida State University — <a href="https://www.cs.fsu.edu/~myers/cgs3416/" target="_blank" rel="noopener">https://www.cs.fsu.edu/~myers/cgs3416/</a></p>
+  </div>
+
+  <div class="slide">
+    <h3>Key Events and Window Events <span class="sn">2</span></h3>
+    <div class="fig-row">
+      <div style="flex:1 1 14rem;display:grid;gap:var(--s2)">
+        <h4>Key Events</h4>
+        <p>Triggered when a user interacts with the keyboard.</p>
+        <ul class="pts"><li><b>Source</b>: JTextField, JTextArea</li><li><b>Event Class</b>: KeyEvent</li><li><b>Listener Interface</b>: KeyListener</li></ul>
+      </div>
+      <div style="flex:1 1 14rem;display:grid;gap:var(--s2)">
+        <h4>Window Events</h4>
+        <p>Triggered when a window is opened, closed, minimized, etc.</p>
+        <ul class="pts"><li><b>Source</b>: JFrame</li><li><b>Event Class</b>: WindowEvent</li><li><b>Listener Interface</b>: WindowListener, WindowAdapter</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Window Event in Java <span class="sn">3</span></h3>
+    <p><b>WindowListener:</b></p>
+    <p>The interface defines methods to handle various window-related events, such as window opening, closing, activation, deactivation, and more.</p>
+  </div>
+
+  <div class="slide">
+    <h3>1. Windows Events <span class="sn">4</span></h3>
+    <p>Windows events in Java are triggered when a user interacts with a window, such as opening, closing, minimizing, or resizing a window. These events are handled using the <b>WindowListener</b> interface.</p>
+    <ol class="pts">
+      <li><b>windowOpened(WindowEvent e):</b> Invoked when the window is first opened or displayed.</li>
+      <li><b>windowClosing(WindowEvent e):</b> Triggered when the user attempts to close the window.</li>
+      <li><b>windowClosed(WindowEvent e):</b> Sent after the window has been closed.</li>
+      <li>windowIconified(WindowEvent e): Occurs when the window is minimized.</li>
+      <li><b>windowDeiconified(WindowEvent e):</b> Triggered when the window is restored from a minimized state.</li>
+      <li><b>windowActivated(WindowEvent e):</b> Fired when the window receives focus and becomes active.</li>
+      <li><b>windowDeactivated(WindowEvent e):</b> Sent when the window loses focus and becomes inactive.</li>
+    </ol>
+  </div>
+
+  <div class="slide">
+    <h3>WindowAdapter <span class="sn">5</span></h3>
+    <p><b>WindowAdapter:</b><br>It is an abstract class that implements the WindowListener interface. It provides default empty implementations for all the methods of the WindowListener interface. We can extend WindowAdapter and override only the methods you need, making it convenient for handling specific window events without implementing all the methods.</p>
+    <p><b>Registering Window Listeners</b><br>To handle window events, you need to register a WindowListener or a subclass of WindowAdapter to a window component (usually a JFrame, JDialog, or JWindow). You can do this using the addWindowListener(WindowListener l) method.</p>
+    <div class="code"><pre class="java">frame.addWindowListener(new WindowAdapter() {
+    // Override window event methods as needed
+});</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Handling Window Events in Java <span class="sn">6</span></h3>
+    <p>To handle window events in Java, you need to implement the WindowListener or WindowAdapter interface. The WindowAdapter class provides default empty implementations for all methods of the WindowListener interface, allowing us to override only the methods relevant to your application.</p>
+    <aside class="note"><b>Guide note</b><span>Strictly, you <em>implement</em> WindowListener (an interface) but <em>extend</em> WindowAdapter (a class).</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Difference Between Java Listener and Java Adapter in Event Handling <span class="sn">7</span></h3>
+    <p>In Java's event handling mechanism, both <b>listeners</b> and <b>adapters</b> are used to respond to user interactions such as button clicks, mouse movements, and keyboard events. However, they have different roles and usage.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Listener</th><th>Adapter</th></tr></thead>
+        <tbody>
+          <tr><td><b>Definition</b></td><td>An interface with multiple abstract methods that must be implemented by the class using the listener.</td><td>A convenience class that provides default (empty) implementations of listener interface methods.</td></tr>
+          <tr><td><b>Implementation</b></td><td>A class implementing a listener interface must override <b>all</b> of its methods, even if only one method is needed.</td><td>A class can extend the adapter and override <b>only the required methods</b>, avoiding unnecessary boilerplate code.</td></tr>
+          <tr><td><b>Usage</b></td><td>Used when all or most methods of an event listener interface need to be implemented.</td><td>Used when only a few methods of an event listener interface need to be implemented.</td></tr>
+          <tr><td><b>Flexibility</b></td><td>Less flexible as it requires implementing all methods.</td><td>More flexible because it provides default implementations for unused methods.</td></tr>
+          <tr><td><b>Example Interfaces</b></td><td><code>MouseListener</code>, <code>KeyListener</code>, <code>FocusListener</code></td><td><code>MouseAdapter</code>, <code>KeyAdapter</code>, <code>FocusAdapter</code></td></tr>
+          <tr><td><b>Inheritance Requirement</b></td><td>A class implementing a listener interface can extend any other class (as Java supports multiple interface implementation).</td><td>Since Java does not support multiple inheritance, a class extending an adapter class <b>cannot</b> extend another class.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Window events <span class="sn">8</span></h3>
+    <div class="code"><pre class="java">public interface <b>WindowListener</b> {
+    //Invoked when the Window is set to be the active Window.
+    public void <b>windowActivated</b>(WindowEvent event);
+    //Invoked when a window has been closed as a result of calling dispose on the Window.
+    public void <b>windowClosed</b>(WindowEvent event);
+    //Invoked when the user attempts to close the Window from the Window's system menu.
+    public void <b>windowClosing</b>(WindowEvent event);
+    //Invoked when a Window is no longer the active Window.
+    public void <b>windowDeactivated</b>(WindowEvent event);
+    //Invoked when a Window is changed from a minimized to a normal state.
+    public void <b>windowDeiconified</b>(WindowEvent event);
+    //Invoked when a Window is changed from a normal to a minimized state.
+    public void <b>windowIconified</b>(WindowEvent event);
+    //Invoked the first time a Window is made visible.
+    public void <b>windowOpened</b>(WindowEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>A <code>JFrame</code> object has this method:
+        <ul><li><code>public void addWindowListener(WindowListener wl)</code></li></ul>
+      </li>
+      <li>The abstract class <code>WindowAdapter</code> implements all <code>WindowListener</code> methods with empty bodies.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Exercise: all window events <span class="sn">9</span></h3>
+    <p>Write a Java Swing program that demonstrates the use of <b>WindowListener</b> to handle various window events such as opening, closing, minimizing, and restoring a window.</p>
+    <p><b>Instructions:</b></p>
+    <ol class="pts">
+      <li>Create a <b>JFrame</b> with the title "All Window Events Example".</li>
+      <li>Set the frame size to <b>400x300 pixels</b>.</li>
+      <li>Use <b>WindowListener</b> to detect and respond to the following events:
+        <ol>
+          <li><b>windowOpened</b> → Print "Window Opened" when the window appears.</li>
+          <li><b>windowClosing</b> → Ask the user for confirmation before closing the window.</li>
+          <li><b>windowClosed</b> → Print "Window Closed" after the window is closed.</li>
+          <li><b>windowIconified</b> → Print "Window Minimized" when minimized.</li>
+          <li><b>windowDeiconified</b> → Print "Window Restored" when restored.</li>
+          <li><b>windowActivated</b> → Print "Window Activated" when the window gains focus.</li>
+          <li><b>windowDeactivated</b> → Print "Window Deactivated" when the window loses focus.</li>
+        </ol>
+      </li>
+    </ol>
+    <details class="orig solid">
+      <summary>Added · Show a solution</summary>
+      <div class="drawer-body">
+        <div class="code"><span class="code-label">AllWindowEvents.java</span><pre class="java">import javax.swing.*;
+import java.awt.event.*;
+
+public class AllWindowEvents extends JFrame implements WindowListener {
+
+    public AllWindowEvents() {
+        super("All Window Events Example");
+        setSize(400, 300);
+        // we decide ourselves in windowClosing, so don't close automatically
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(this);
+        setVisible(true);
+    }
+
+    public void windowOpened(WindowEvent e)      { System.out.println("Window Opened"); }
+    public void windowClosed(WindowEvent e)      { System.out.println("Window Closed"); System.exit(0); }
+    public void windowIconified(WindowEvent e)   { System.out.println("Window Minimized"); }
+    public void windowDeiconified(WindowEvent e) { System.out.println("Window Restored"); }
+    public void windowActivated(WindowEvent e)   { System.out.println("Window Activated"); }
+    public void windowDeactivated(WindowEvent e) { System.out.println("Window Deactivated"); }
+
+    public void windowClosing(WindowEvent e) {
+        int choice = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to close?", "Confirm", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            dispose();          // closes the window, which then fires windowClosed
+        }
+    }
+
+    public static void main(String[] args) {
+        new AllWindowEvents();
+    }
+}</pre></div>
+        <p style="font-size:.9rem;color:var(--muted)">All seven methods are written because the class <em>implements</em> WindowListener. <code>dispose()</code> is used instead of <code>EXIT_ON_CLOSE</code> so that <code>windowClosed</code> actually runs; with EXIT_ON_CLOSE the program ends before windowClosed is called.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="slide">
+    <h3>Difference Between windowClosing and windowClosed <span class="sn">10</span></h3>
+    <p>Both <code>windowClosing()</code> and <code>windowClosed()</code> belong to the <b>WindowListener</b> interface, but they handle different stages of closing a window.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Triggered When…</th><th>Can Prevent Window from Closing?</th><th>Common Use Cases</th></tr></thead>
+        <tbody>
+          <tr><td><code>windowClosing(WindowEvent e)</code></td><td>The user clicks the <b>close (X) button</b> or calls dispose().</td><td><b>Yes</b> – You can show a confirmation dialog or cancel the close action.</td><td>Asking for user confirmation before closing.</td></tr>
+          <tr><td><code>windowClosed(WindowEvent e)</code></td><td>The window has <b>completely closed and resources are released</b>.</td><td><b>No</b> – The window is already closed when this event fires.</td><td>Logging, saving state, or cleanup operations.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="note"><b>Guide note</b><span>Clicking X fires <code>windowClosing</code>. Calling <code>dispose()</code> from code fires only <code>windowClosed</code>.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Difference Between windowDeiconified() and windowActivated() <span class="sn">11</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Triggered When…</th><th>What Happens?</th><th>Example Scenario</th></tr></thead>
+        <tbody>
+          <tr><td><code>windowDeiconified(WindowEvent e)</code></td><td>The window is <b>restored</b> after being minimized.</td><td>The window reappears from the taskbar.</td><td>Clicking the <b>minimized window</b> on the taskbar.</td></tr>
+          <tr><td><code>windowActivated(WindowEvent e)</code></td><td>The window <b>gains focus</b> (becomes the active window).</td><td>The window comes to the foreground and starts receiving input.</td><td>Clicking on the window or switching to it using <code>Alt+Tab</code>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Difference Between windowIconified and windowDeactivated <span class="sn">12</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Triggered When…</th><th>What Happens?</th><th>Example Scenario</th></tr></thead>
+        <tbody>
+          <tr><td><code>windowIconified(WindowEvent e)</code></td><td>The window is <b>minimized</b> (sent to the taskbar).</td><td>The window is <b>minimized</b> and disappears from the screen but stays in the taskbar.</td><td>Clicking the <b>Minimize</b> (<code>_</code>) button or programmatically calling <code>setState(JFrame.ICONIFIED)</code>.</td></tr>
+          <tr><td><code>windowDeactivated(WindowEvent e)</code></td><td>The window <b>loses focus</b> (another window becomes active).</td><td>The window <b>loses focus</b> and is no longer the active window. It can no longer receive input until it's activated again.</td><td>Clicking on a different window or switching to another program.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="demo" id="win">
+    <div class="demo-head"><h3>Try it: which window methods fire?</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">This shows the typical sequence on Windows; the exact order can differ slightly between operating systems. Note that minimising also deactivates the window, and restoring also activates it.</p>
+    <div class="ctrl">
+      <button class="btn" type="button" data-w="open">setVisible(true)</button>
+      <button class="btn" type="button" data-w="min">Minimize _</button>
+      <button class="btn" type="button" data-w="restore">Click taskbar icon</button>
+      <button class="btn" type="button" data-w="other">Click another window</button>
+      <button class="btn" type="button" data-w="back">Click this window</button>
+      <button class="btn" type="button" data-w="close">Click X</button>
+    </div>
+    <div class="ctrl"><label for="winOp">default close operation
+      <select id="winOp"><option value="EXIT_ON_CLOSE">EXIT_ON_CLOSE</option><option value="DISPOSE_ON_CLOSE">DISPOSE_ON_CLOSE</option><option value="HIDE_ON_CLOSE">HIDE_ON_CLOSE</option><option value="DO_NOTHING_ON_CLOSE">DO_NOTHING_ON_CLOSE</option></select></label>
+      <span id="winState" class="chip" aria-live="polite"></span></div>
+    <div class="log" id="winLog"></div>
+  </div>
+
+  <details class="orig" data-pages="1-12"></details>
+  <div class="quiz" data-quiz="window"></div>
+</section>
+
+<!-- ============ 2 key ============ -->
+<section class="sec" id="key" data-title="Key events">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 13–21</p>
+    <div class="sec-head-row"><h2>Key events</h2><label class="done"><input type="checkbox" id="done-key"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Each key stroke can fire up to three methods: <code>keyPressed</code> (key goes down), <code>keyTyped</code> (a <em>character</em> was produced) and <code>keyReleased</code> (key comes up). Shift, Ctrl and arrow keys fire pressed/released but <b>not</b> typed, because they don't produce a character. Use <code>getKeyCode()</code> + <code>KeyEvent.VK_…</code> constants in pressed/released, and <code>getKeyChar()</code> in typed. Try it in the box below the slides.</div></aside>
+
+  <div class="slide">
+    <h3>KeyListener interface <span class="sn">13</span></h3>
+    <div class="code"><pre class="java">public interface <b>KeyListener</b> {
+    public void <b>keyPressed</b>(KeyEvent event);
+    public void <b>keyReleased</b>(KeyEvent event);
+    public void <b>keyTyped</b>(KeyEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>Many AWT/Swing components have this method:
+        <ul><li><code>public void addKeyListener(KeyListener kl)</code></li></ul>
+      </li>
+      <li>The abstract class <code>KeyAdapter</code> implements all <code>KeyListener</code> methods with empty bodies.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Java KeyListener Interface <span class="sn">14</span></h3>
+    <p>The <b>Java KeyListener is notified whenever you change the state of key</b>. It is notified against KeyEvent. The KeyListener interface is found in java.awt.event package, and it has three methods.</p>
+    <h4>Methods of KeyListener interface</h4>
+    <p>The signature of 3 methods found in KeyListener interface are given below:</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Sr. no.</th><th>Method name</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>1.</td><td><code>public abstract void keyPressed (KeyEvent e);</code></td><td>It is invoked when a key has been pressed.</td></tr>
+          <tr><td>2.</td><td><code>public abstract void keyReleased (KeyEvent e);</code></td><td>It is invoked when a key has been released.</td></tr>
+          <tr><td>3.</td><td><code>public abstract void keyTyped (KeyEvent e);</code></td><td>It is invoked when a key has been typed.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>KeyEvent objects <span class="sn">15</span></h3>
+    <div class="code"><pre class="java">// what key code was pressed?
+public static int VK_A, VK_B, ..., VK_Z,
+    VK_0, ... VK_9,
+    VK_F1, ... VK_F10,
+    VK_UP, VK_LEFT, ...,
+    VK_TAB, VK_SPACE, VK_ENTER, ...
+    (one for almost every key)
+
+// Were any modifier keys held down?
+public static int SHIFT_DOWN_MASK, CTRL_DOWN_MASK,
+    ALT_DOWN_MASK, etc.
+
+public char getKeyChar()
+public int getKeyCode()       // use VK_* with this
+public Object getSource()
+public int getModifiersEx()   // use *_MASK with this</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>The difference between keyTyped() and keyPressed() <span class="sn">16–17</span></h3>
+    <ul class="pts">
+      <li><b>keyPressed(KeyEvent e)</b>:
+        <ul>
+          <li>Fires when a key is <b>pressed down</b> on the keyboard.</li>
+          <li>It captures the <b>physical action of pressing</b> a key, regardless of whether the key is a character or a non-character key (like shift, ctrl, or function keys).</li>
+          <li>You can get the <b>key code</b> using e.getKeyCode().</li>
+          <li><b>Example:</b> This method is triggered when you press a key, such as the "A" key or the "Shift" key.</li>
+        </ul>
+        <div class="code" style="margin-top:.3rem"><pre class="java">public void keyPressed(KeyEvent e) {
+    System.out.println("Key Pressed: " + e.getKeyChar()); }</pre></div>
+      </li>
+      <li><b>keyTyped(KeyEvent e)</b>:
+        <ul>
+          <li>Fires when a key is <b>typed</b>, which is generally when the key has been <b>pressed and released</b>.</li>
+          <li>This method only deals with <b>characters</b> (letters, digits, symbols) and ignores non-character keys (e.g., Shift, Ctrl).</li>
+          <li>You can get the <b>character typed</b> using e.getKeyChar().</li>
+          <li><b>Example:</b> This method is triggered when you type a character key, like "A", "1", or "!".</li>
+        </ul>
+        <div class="code" style="margin-top:.3rem"><pre class="java">public void keyTyped(KeyEvent e) { System.out.println("Key Typed: " +
+    e.getKeyChar()); }</pre></div>
+      </li>
+    </ul>
+    <p><b>Key Differences:</b></p>
+    <ul class="pts">
+      <li><b>Timing</b>: keyPressed() is triggered when the key is pressed, whereas keyTyped() is triggered when the key is typed (press + release).</li>
+      <li><b>Event Type</b>: keyPressed() works for all keys (character and non-character), while keyTyped() only works for character keys.</li>
+      <li><b>Usage</b>: keyPressed() is useful when you need to detect any key press, while keyTyped() is specifically used when handling character input.</li>
+    </ul>
+    <aside class="note"><b>Guide note</b><span>In practice Java fires <code>keyTyped</code> right after <code>keyPressed</code>, before the key is released. The order is pressed → typed → released.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Key event example <span class="sn">18</span></h3>
+    <div class="code"><pre class="java">public class PacManKeyListener <b>extends KeyAdapter</b> {
+    public void <b>keyPressed</b>(KeyEvent event) {
+        char keyChar = event.getKeyChar();
+        int keyCode = event.getKeyCode();
+
+        if (keyCode == <b>KeyEvent.VK_RIGHT</b>) {
+            pacman.setX(pacman.getX() + 1);
+        } else if (keyChar == 'Q') {
+            quit();
+        }
+    }
+}
+
+// elsewhere,
+myJFrame.<b>addKeyListener</b>(new PacKeyListener());</pre></div>
+    <aside class="note"><b>Guide note</b><span>The class is <code>PacManKeyListener</code> but the last line creates <code>PacKeyListener</code>; use one name. Because it extends <code>KeyAdapter</code>, only <code>keyPressed</code> needs writing.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Key event example 2 <span class="sn">19–20</span></h3>
+    <div class="code"><pre class="java">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class KeyDemo extends JFrame implements KeyListener {
+   private String line1 = "", line2 = "", line3 = "";
+   private JTextArea textArea;
+
+   // set up GUI
+   public KeyDemo() {
+      super( "Demonstrating Keystroke Events" );
+
+      // set up JTextArea
+      textArea = new JTextArea( 10, 15 );
+      textArea.setText( "Press any key on the keyboard..." );
+      textArea.setEnabled( false );
+      textArea.setDisabledTextColor( Color.BLACK );
+      getContentPane().add( textArea );
+
+      addKeyListener( this );   // allow frame to process Key events
+
+      setSize( 350, 100 );
+      setVisible( true );
+   } // end KeyDemo constructor
+
+   // handle press of any action key
+   public void keyPressed( KeyEvent event )
+   {
+      line1 = "Key pressed: " + event.getKeyText( event.getKeyCode() );
+      setLines2and3( event );
+   }
+
+   // handle release of any key
+   public void keyReleased( KeyEvent event )
+   {
+      line1 = "Key released: " + event.getKeyText( event.getKeyCode() );
+      setLines2and3( event );
+   }
+
+   // handle press of any non-action key
+   public void keyTyped( KeyEvent event )
+   {
+      line1 = "Key typed: " + event.getKeyChar();
+      setLines2and3( event );
+   }
+
+   // set second and third lines of output
+   private void setLines2and3( KeyEvent event )
+   {
+      line2 = "This key is " + ( event.isActionKey() ? "" : "not " ) + "an action key";
+
+      String temp = InputEvent.getModifiersExText( event.getModifiersEx() );
+
+      line3 = "Modifier keys pressed: " + ( temp.equals( "" ) ? "none" : temp );
+
+      textArea.setText( line1 + "\n" + line2 + "\n" + line3 + "\n" );
+   }
+
+   public static void main( String args[] )
+   {
+      KeyDemo application = new KeyDemo();
+      application.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+   }
+
+} // end class KeyDemo</pre></div>
+    <aside class="note"><b>Guide note</b><span>The text area is <em>disabled</em> so it can't take the keyboard focus; the frame keeps it and receives the key events. An <b>action key</b> is one that doesn't produce a character (arrows, F1–F12, Home…). The key-event tester below prints exactly these three lines.</span></aside>
+  </div>
+
+  <div class="demo" id="kt">
+    <div class="demo-head"><h3>Try it: key-event tester (KeyDemo)</h3><span class="added">Added</span></div>
+    <label for="ktIn" class="expl">Click here and press any keys: letters, Shift, arrows, Ctrl+C…</label>
+    <input id="ktIn" type="text" autocomplete="off" placeholder="Press any key on the keyboard..." style="font:inherit;padding:.5rem .7rem;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)">
+    <pre class="console" id="ktOut" style="min-height:4.5rem">Key pressed: –
+This key is – an action key
+Modifier keys pressed: none</pre>
+    <div class="log" id="ktLog"></div>
+  </div>
+
+  <div class="slide">
+    <h3>Exercise: KeyListener only on the JTextArea <span class="sn">21</span></h3>
+    <p>In this application, you will work with the following controls:</p>
+    <ul class="pts">
+      <li><b>JLabel</b>: Displays text instructions.</li>
+      <li><b>JTextArea</b>: A large text field where users can type.</li>
+      <li><b>JTextField</b>: A smaller input field for text.</li>
+      <li><b>JCheckBox</b>: A checkbox for agreement.</li>
+    </ul>
+    <p>Your task is to <b>apply the KeyListener only to the JTextArea</b> to capture key events such as key press, key release, and key typing. The JTextField and JCheckBox should remain unaffected by the KeyListener.</p>
+    <figure><div class="plate"><img src="img/s21_key_other_controls.png" width="300" loading="lazy" alt="KeyListener Example with Other Controls: label Type something in the text area:, a large text area, a small text field and a check box I agree to the terms and conditions"></div></figure>
+    <details class="orig solid">
+      <summary>Added · Show a solution</summary>
+      <div class="drawer-body">
+        <div class="code"><span class="code-label">KeyListenerOtherControls.java</span><pre class="java">import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class KeyListenerOtherControls {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("KeyListener Example with Other Controls");
+        frame.setLayout(new FlowLayout());
+
+        JLabel label = new JLabel("Type something in the text area:");
+        JTextArea textArea = new JTextArea(8, 25);
+        JTextField textField = new JTextField(15);
+        JCheckBox checkBox = new JCheckBox("I agree to the terms and conditions");
+
+        // only the text area gets the listener
+        textArea.addKeyListener(new KeyListener() {
+            public void keyPressed(KeyEvent e) {
+                System.out.println("Key Pressed: " + KeyEvent.getKeyText(e.getKeyCode()));
+            }
+            public void keyReleased(KeyEvent e) {
+                System.out.println("Key Released: " + KeyEvent.getKeyText(e.getKeyCode()));
+            }
+            public void keyTyped(KeyEvent e) {
+                System.out.println("Key Typed: " + e.getKeyChar());
+            }
+        });
+
+        frame.add(label);
+        frame.add(new JScrollPane(textArea));
+        frame.add(textField);
+        frame.add(checkBox);
+
+        frame.setSize(350, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+        <p style="font-size:.9rem;color:var(--muted)">Typing in the text field prints nothing, because no listener is registered on it.</p>
+      </div>
+    </details>
+  </div>
+
+  <details class="orig" data-pages="13-21"></details>
+  <div class="quiz" data-quiz="key"></div>
+</section>
+
+<!-- ============ 3 focus / component ============ -->
+<section class="sec" id="focus" data-title="Focus and component events">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 22–24</p>
+    <div class="sec-head-row"><h2>Focus and component events</h2><label class="done"><input type="checkbox" id="done-focus"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div><b>Focus</b> is "where the keyboard is pointing". When you click into a text field it <em>gains</em> focus; when you click elsewhere it <em>loses</em> it. Use it to highlight the active field or to validate a field when the user leaves it. <b>Component events</b> fire when a component is resized, moved, shown or hidden.</div></aside>
+
+  <div class="slide">
+    <h3>Focus events <span class="sn">22</span></h3>
+    <div class="code"><pre class="java">public interface <b>FocusListener</b> {
+    public void <b>focusGained</b>(FocusEvent event);
+    public void <b>focusLost</b>(FocusEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li><b>focus</b>: The current target of keyboard input.
+        <ul><li>A <em>focus event</em> occurs when the keyboard cursor enters or exits a component, signifying the start/end of typing on that control.</li></ul>
+      </li>
+      <li>Many AWT/Swing components have this method:
+        <ul><li><code>public void addFocusListener(FocusListener kl)</code></li></ul>
+      </li>
+      <li>The abstract class <code>FocusAdapter</code> implements all <code>FocusListener</code> methods with empty bodies.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Focus Event example <span class="sn">23</span></h3>
+    <div class="code"><pre class="java">import java.awt.*;
+import java.awt.event.*;
+class TextFieldFocusEvent extends Frame implements FocusListener
+{
+    TextField t1,t2;
+
+    public TextFieldFocusEvent()
+    {
+        createAndShowGUI();
+    }
+
+    private void createAndShowGUI()
+    {
+        setTitle("FocusListener for TextField");
+        setLayout(new FlowLayout());
+
+        // Create 2 textfields
+        t1=new TextField(20);
+        t2=new TextField(20);
+
+        // Add them
+        add(t1);
+        add(t2);
+
+        // Add FocusListeners
+        t1.addFocusListener(this);
+        t2.addFocusListener(this);
+
+        setSize(400,400);
+        setVisible(true);
+    }
+
+    public void focusGained(FocusEvent fe)
+    {
+        // Get what textfield got focus
+        TextField t=(TextField)fe.getSource();
+        t.setBackground(Color.LIGHT_GRAY);
+    }
+
+    public void focusLost(FocusEvent fe)
+    {
+        // Get what textfield lost focus
+        TextField t=(TextField)fe.getSource();
+        t.setBackground(Color.WHITE);
+    }
+
+    public static void main(String args[])
+    {
+        new TextFieldFocusEvent();
+    }
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span>This example uses AWT (<code>Frame</code>, <code>TextField</code>, no J). The Swing version is the same with <code>JFrame</code> and <code>JTextField</code>. <code>(TextField) fe.getSource()</code> is a <em>cast</em>: getSource() returns an Object, so you tell Java it's really a TextField.</span></aside>
+  </div>
+
+  <div class="demo" id="fd">
+    <div class="demo-head"><h3>Try it: focusGained / focusLost</h3><span class="added">Added</span></div>
+    <div class="win" style="max-width:24rem"><div class="win-bar"><span>FocusListener for TextField</span><i>–□×</i></div>
+      <div class="win-body" style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <label class="sr" for="fd1">t1</label><input id="fd1" type="text" placeholder="t1" style="flex:1 1 8rem;min-width:0;font:inherit;border:1px solid #8f9ba1;padding:.15rem .3rem;background:#fff;color:#1c2328">
+        <label class="sr" for="fd2">t2</label><input id="fd2" type="text" placeholder="t2" style="flex:1 1 8rem;min-width:0;font:inherit;border:1px solid #8f9ba1;padding:.15rem .3rem;background:#fff;color:#1c2328">
+      </div>
+    </div>
+    <div class="log" id="fdLog" style="height:6rem"></div>
+  </div>
+
+  <div class="slide">
+    <h3>Component events <span class="sn">24</span></h3>
+    <div class="code"><pre class="java">public interface <b>ComponentListener</b> {
+    public void <b>componentHidden</b>(ComponentEvent event);
+    public void <b>componentMoved</b>(ComponentEvent event);
+    public void <b>componentResized</b>(ComponentEvent event);
+    public void <b>componentShown</b>(ComponentEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>These events occur when a layout manager reshapes a component or when it is set to be visible or invisible.</li>
+      <li>Many AWT/Swing components have this method:
+        <ul><li><code>public void addComponentListener(ComponentListener cl)</code></li></ul>
+      </li>
+      <li>The abstract class <code>ComponentAdapter</code> implements all <code>ComponentListener</code> methods with empty bodies.</li>
+    </ul>
+    <p class="added">Added · Example</p>
+    <div class="code"><pre class="java">frame.addComponentListener(new ComponentAdapter() {
+    public void componentResized(ComponentEvent e) {
+        frame.setTitle("Size: " + frame.getWidth() + " x " + frame.getHeight());
+    }
+});</pre></div>
+  </div>
+
+  <details class="orig" data-pages="22-24"></details>
+  <div class="quiz" data-quiz="focus"></div>
+</section>
+
+<!-- ============ 4 list selection ============ -->
+<section class="sec" id="listsel" data-title="JList selection events">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 25–28</p>
+    <div class="sec-head-row"><h2>JList selection events</h2><label class="done"><input type="checkbox" id="done-listsel"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A JList doesn't fire ActionEvents. It fires a <code>ListSelectionEvent</code> whenever the selection changes, and you handle it in <code>valueChanged</code>. One click can fire several events in a row while the selection is "adjusting", so wrap your code in <code>if (!e.getValueIsAdjusting())</code> to run it once, on the final value.</div></aside>
+
+  <div class="slide">
+    <h3>JList select event <span class="sn">25</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 18rem"><pre class="java">public interface <b>ListSelectionListener</b> {
+    public void <b>valueChanged</b>(ListSelectionEvent event);
+}</pre></div>
+      <figure style="flex:0 1 7rem"><div class="plate"><img src="img/s25_jlist.png" width="109" alt="JList with January, February, March (selected), April"></div></figure>
+    </div>
+    <ul class="pts">
+      <li>These events occur when a user changes the element(s) selected within a <code>JList</code>.</li>
+      <li>The <code>JList</code> component has this method:
+        <ul><li><code>public void addListSelectionListener(ListSelectionListener lsl)</code></li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>ListSelectionListener Interface <span class="sn">26</span></h3>
+    <ul class="pts">
+      <li><code><b>public void</b> valueChanged(ListSelectionEvent evt)</code></li>
+      <li>This method is automatically called by the runtime system every time the selection is changed. It is not executed if the selection is unchanged, for example if the user clicks in an item that is already selected</li>
+      <li>The body of this method has to contain the code that should be executed in response to the selection.</li>
+    </ul>
+    <h4>ListSelectionEvent</h4>
+    <ul class="pts">
+      <li><code>getFirstIndex()</code> returns the position of the first (top-most) entry, the selection mode of which might have changed (from selected to non-selected or vice versa). 'Might' refers to the fact that the section state might be the same as before. For example if entries 5 to 8 were selected and the user now selects 5 to 10 then the first selected index remains unchanged. Which entries are selected can be found by using method <code>getSelectedIndices</code> of class JList.</li>
+      <li><code>getLastIndex()</code> returns the position of the last (bottom-most) entry, the selection mode of which might have changed. See also <code>getFirstIndex()</code>.</li>
+      <li><code>getIsAdjusting</code> – changing the selection in a list triggers a series of actions, each of which generates a list selection event. For example previously selected entries become unselected before new ones become selected. Usually, one would prefer this series of events to be completed before the application reacts to the change. For such a rapid series of events all but the last one return true as a result of <code>getIsAdjusting</code>. Only the last one returns false as a result of <code>getIsAdjusting</code>. This can be used to wait for the end of the series of adjustments before taking further action.</li>
+      <li>At the moment, <code>ListSelectionEvent</code> supports only the selection modes <code>SINGLE_SELECTION</code> and <code>SINGLE_INTERVAL_SELECTION</code>.</li>
+    </ul>
+    <aside class="note"><b>Guide note</b><span>The real method name is <code>getValueIsAdjusting()</code>, as the code on slide 28 uses.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>JList example <span class="sn">27–28</span></h3>
+    <div class="code"><pre class="java">import SimpleFrame.SimpleFrame;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+public class ListTransferFrame extends SimpleFrame
+{
+   private JList leftList, rightList;
+   private DefaultListModel rightListModel;
+   JButton transferButton;
+   String[] entries = {"Schleswig-Holstein", "Niedersachsen", "Hamburg",
+                       "Bremen", "Mecklenburg-Vorpommern", "Brandenburg", "Berlin",
+                       "Nordrhein-Westfalen","Hessen","Sachsen-Anhalt",
+                       "Rheinland-Pfalz","Thüringen","Sachsen","Saarland",
+                       "Bayern","Baden-Württemberg"};
+
+   public ListTransferFrame()
+   {
+      this.setSize(400,300);
+      leftList = new JList(entries);
+      rightListModel = new DefaultListModel();
+      rightList = new JList(rightListModel);
+      leftList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      TransferListener selLis = new TransferListener();
+      leftList.addListSelectionListener(selLis);
+      JPanel listPanel = new JPanel();
+      listPanel.setLayout(new GridLayout(1,2));
+      JScrollPane leftScrollPane = new JScrollPane(leftList);
+      JScrollPane rightScrollPane = new JScrollPane(rightList);
+      listPanel.add(leftScrollPane);
+      listPanel.add(rightScrollPane);
+      this.getContentPane().add(listPanel,BorderLayout.CENTER);
+   }
+
+   public static void main(String[] args)
+   {
+      ListTransferFrame LLF = new ListTransferFrame();
+      LLF.showIt("List Transfer Frame");
+   }
+
+   //Listener as internal class
+   class TransferListener implements ListSelectionListener{
+      public TransferListener(){}
+
+      public void valueChanged(ListSelectionEvent evt){
+         if(!evt.getValueIsAdjusting())
+         {
+            String sel = (String)leftList.getSelectedValue();
+            if(rightListModel.contains(sel))
+            {
+               rightListModel.removeElement(sel);
+            }
+            else
+            {
+               rightListModel.addElement(sel);
+            }//ifelse
+         }//if
+      }//valueChanged
+   }//internal class
+}</pre></div>
+    <figure><div class="plate"><img src="img/s28_list_transfer.png" width="325" loading="lazy" alt="List Transfer Frame: left list of the 16 German states with Thüringen selected; right list contains Brandenburg, Nordrhein-Westfalen, Niedersachsen, Hamburg, Rheinland-Pfalz, Hessen"></div><figcaption>Selecting a state on the left adds it to the right list; selecting it again removes it.</figcaption></figure>
+    <aside class="note"><b>Guide note</b><span>On the slide "Thüringen" and "Baden-Württemberg" print as garbled characters (an encoding problem); they're fixed above. The slide's first line reads "Import SimpleFrame.SimpleFrame;" with a capital I, which won't compile. <code>SimpleFrame</code> is the course helper class from Lecture 2.</span></aside>
+  </div>
+
+  <div class="demo" id="lt">
+    <div class="demo-head"><h3>Try it: ListTransferFrame</h3><span class="added">Added</span></div>
+    <div class="win" style="max-width:26rem"><div class="win-bar"><span>List Transfer Frame</span><i>–□×</i></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#9aa7ad">
+        <div id="ltLeft" role="listbox" aria-label="States" style="background:#fff;height:10rem;overflow:auto"></div>
+        <div id="ltRight" role="listbox" aria-label="Chosen states" style="background:#fff;height:10rem;overflow:auto"></div>
+      </div>
+    </div>
+    <div class="log" id="ltLog" style="height:6rem"></div>
+  </div>
+
+  <details class="orig" data-pages="25-28"></details>
+  <div class="quiz" data-quiz="listsel"></div>
+</section>
+
+<!-- ============ 5 document / item / change ============ -->
+<section class="sec" id="more" data-title="Document, item and change events">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 29–33</p>
+    <div class="sec-head-row"><h2>Document, item and change events</h2><label class="done"><input type="checkbox" id="done-more"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div><ul><li><b>DocumentListener</b>: runs on <em>every</em> change to a text field's text (typing, deleting, pasting), not just on Enter. Good for live character counters or live validation.</li><li><b>ItemListener</b>: runs when a check box or combo-box item becomes selected or deselected. <code>getStateChange()</code> tells you which.</li><li><b>ChangeListener</b>: runs when a slider, spinner or tabbed pane changes value.</li></ul></div></aside>
+
+  <div class="slide">
+    <h3>Document events <span class="sn">29</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 18rem"><pre class="java">public interface <b>DocumentListener</b> {
+    public void <b>changedUpdate</b>(DocumentEvent event);
+    public void <b>insertUpdate</b>(DocumentEvent event);
+    public void <b>removeUpdate</b>(DocumentEvent event);
+}</pre></div>
+      <figure style="flex:0 1 6rem"><div class="plate"><img src="img/s29_document.png" width="80" alt="An icon of a stack of documents"></div></figure>
+    </div>
+    <ul class="pts">
+      <li>These events occur when the contents of a text component (e.g. <code>JTextField</code> or <code>JTextArea</code>) change.</li>
+      <li>Such components have this method:
+        <ul><li><code>public Document getDocument()</code></li></ul>
+      </li>
+      <li>And a <code>Document</code> object has this method:
+        <ul><li><code>public void addDocumentListener(DocumentListener cl)</code></li></ul>
+      </li>
+      <li>And yes, there is a <code>DocumentAdapter</code>.</li>
+    </ul>
+    <aside class="note"><b>Guide note</b><span>Standard Java has no <code>DocumentAdapter</code> class (the slide's joke comes from the original source). You write all three methods, usually leaving <code>changedUpdate</code> empty.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Document events <span class="sn">30</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Triggered When</th><th>Common for</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><code>insertUpdate</code></td><td><b>Text is inserted</b> into the document</td><td>Plain and styled documents</td><td>Called when characters are added.</td></tr>
+          <tr><td><code>removeUpdate</code></td><td><b>Text is removed</b> from the document</td><td>Plain and styled documents</td><td>Called when characters are deleted.</td></tr>
+          <tr><td><code>changedUpdate</code></td><td><b>Attributes or styles change</b> (but not text content)</td><td><b>Styled documents only</b> (<code>JTextPane</code>, <code>JEditorPane</code>)</td><td><em>Never called</em> for <code>PlainDocument</code> used in <code>JTextField</code> or <code>JTextArea</code>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="added">Added · Example: a live character counter</p>
+    <div class="code"><pre class="java">JTextField field = new JTextField(20);
+JLabel counter = new JLabel("0 characters");
+
+field.getDocument().addDocumentListener(new DocumentListener() {
+    public void insertUpdate(DocumentEvent e)  { update(); }
+    public void removeUpdate(DocumentEvent e)  { update(); }
+    public void changedUpdate(DocumentEvent e) { }          // never called for a JTextField
+    private void update() {
+        counter.setText(field.getText().length() + " characters");
+    }
+});</pre></div>
+  </div>
+
+  <div class="demo" id="dd">
+    <div class="demo-head"><h3>Try it: DocumentListener vs ActionListener</h3><span class="added">Added</span></div>
+    <label for="ddIn" class="expl">Type, delete, paste, then press Enter.</label>
+    <input id="ddIn" type="text" autocomplete="off" style="font:inherit;padding:.4rem .6rem;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)">
+    <div class="log" id="ddLog" style="height:7rem"></div>
+  </div>
+
+  <div class="slide">
+    <h3>Item events <span class="sn">31–32</span></h3>
+    <div class="code"><pre class="java">public interface <b>ItemListener</b> {
+    public void <b>itemStateChanged</b>(ItemEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>These events occur when an item has been selected or deselected by the user.
+        <ul><li><code>public void addItemListener(ItemListener il)</code></li></ul>
+      </li>
+      <li>Used with <code>JCheckBox</code>, <code>JComboBox</code>.</li>
+    </ul>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Member</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>Object</code></td><td><code>getItem()</code></td><td>Returns the item affected by the event.</td></tr>
+          <tr><td><code>int</code></td><td><code>getStateChange()</code></td><td>Returns the type of state change (selected or deselected).</td></tr>
+          <tr><td><code>object</code></td><td><code>getSource()</code></td><td>Returns the object on which the event occurred</td></tr>
+          <tr><td><code>static int</code></td><td><code>DESELECTED</code></td><td>This state-change-value indicates that a selected item was deselected.</td></tr>
+          <tr><td><code>static int</code></td><td><code>SELECTED</code></td><td>This state-change value indicates that an item was selected.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="note"><b>Guide note</b><span>Changing a JComboBox fires <b>two</b> ItemEvents: DESELECTED for the old item, then SELECTED for the new one. That's why the Lab 5 code checks <code>e.getStateChange() == ItemEvent.SELECTED</code>.</span></aside>
+  </div>
+
+  <div class="demo" id="it">
+    <div class="demo-head"><h3>Try it: ItemEvents from a check box and a combo box</h3><span class="added">Added</span></div>
+    <div class="ctrl">
+      <label><input type="checkbox" id="itCb"> Subscribe</label>
+      <label for="itCombo">Country <select id="itCombo"><option>Jordan</option><option>Qatar</option><option>Oman</option><option>Palestine</option><option>UK</option></select></label>
+    </div>
+    <div class="log" id="itLog" style="height:7rem"></div>
+  </div>
+
+  <div class="slide">
+    <h3>Change events <span class="sn">33</span></h3>
+    <div class="code"><pre class="java">public interface <b>ChangeListener</b> {
+    public void <b>stateChanged</b>(ChangeEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>These events occur when some kind of state of a given component changes. Not used by all components, but essential for some.</li>
+      <li><code>JSpinner</code>, <code>JSlider</code>, <code>JTabbedPane</code>, <code>JColorChooser</code>, <code>JViewPort</code>, and other components have this method:
+        <ul><li><code>public void addChangeListener(ChangeListener cl)</code></li></ul>
+      </li>
+    </ul>
+    <div class="fig-row" style="align-items:center">
+      <figure><div class="plate"><img src="img/s33_spinner.png" width="67" loading="lazy" alt="A JSpinner showing 10"></div><figcaption>JSpinner</figcaption></figure>
+      <figure><div class="plate"><img src="img/s33_slider.png" width="250" loading="lazy" alt="A JSlider labelled Frames Per Second from 0 to 30"></div><figcaption>JSlider</figcaption></figure>
+      <figure><div class="plate"><img src="img/s33_tabs.png" width="384" loading="lazy" alt="A JTabbedPane with tabs System, Audio, Networking, Video, Help"></div><figcaption>JTabbedPane</figcaption></figure>
+    </div>
+    <p class="added">Added · Example (as in Lab 7: a slider updating a label)</p>
+    <div class="code"><pre class="java">JSlider slider = new JSlider(0, 50, 25);
+JLabel label = new JLabel("midterm exam mark: 25");
+slider.addChangeListener(new ChangeListener() {
+    public void stateChanged(ChangeEvent e) {
+        label.setText("midterm exam mark: " + slider.getValue());
+    }
+});</pre></div>
+    <div class="demo" style="margin-top:.25rem">
+      <div class="ctrl"><label for="chSl">JSlider <input type="range" id="chSl" min="0" max="50" value="25"></label><span id="chLbl">midterm exam mark: 25</span></div>
+      <div class="log" id="chLog" style="height:4.5rem"></div>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="29-33"></details>
+  <div class="quiz" data-quiz="more"></div>
+</section>
+
+<!-- ============ 6 Lab 5 ============ -->
+<section class="sec" id="lab5" data-title="Lab 5: all listeners explained">
+  <div class="sec-head">
+    <p class="eyebrow">Lab 5 · project file "Lab 5 all listenert.txt" (Dima Alshihan)</p>
+    <div class="sec-head-row"><h2>Lab 5: Event Listeners, explained</h2><label class="done"><input type="checkbox" id="done-lab5"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>The Lab 5 file takes the Register form and attaches a different listener to almost every component, so you see each kind once:
+    <ul>
+      <li><b>KeyListener</b> on the username field: blocks <code>@</code> and <code>#</code>.</li>
+      <li><b>ListSelectionListener</b> on the Department list: colours the list.</li>
+      <li><b>ItemListener</b> on the Country combo box: colours the "Register" title.</li>
+      <li><b>ActionListener</b> on Sign Up (validate and show info) and Cancel (clear).</li>
+      <li><b>MouseListener</b> (via MouseAdapter) on Cancel: turns red on hover.</li>
+      <li><b>WindowListener</b> (via WindowAdapter) on the frame: asks before exiting and prints window events.</li>
+    </ul>
+  The file ends with the word "Explain", so every block is explained below.</div></aside>
+
+  <div class="slide">
+    <h3>The full code</h3>
+    <div class="code"><span class="code-label">SignUp.java (Lab 5)</span><pre class="java">import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyListener;
+import java.awt.event.*;
+
+
+/**
+ *
+ * @author Dima.Alshihan
+ * Lab 5: Event Listeners(ActionListener , KeyListener, MouseListener, ItemListener
+ *                        ContainerListener, WindowListener , ListListener   )
+ */
+public class SignUp {
+
+
+    public static void main(String[] args) {
+        // Create frame
+        JFrame frame = new JFrame("Register Form");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 500);
+        frame.setLayout(new BorderLayout(10, 10));
+
+        // ===== Top Panel =====
+        JPanel topPanel = new JPanel();
+        JLabel titleLabel = new JLabel("Register");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        topPanel.add(titleLabel);
+        frame.add(topPanel, BorderLayout.NORTH);
+
+        // ===== Center Panel =====
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new GridLayout(7, 2, 10, 10));
+
+        // Username
+        JLabel userLabel = new JLabel("Username:");
+        JTextField userText = new JTextField();
+
+
+// KeyListener on JTextField
+        userText.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char typed = e.getKeyChar();
+                if(typed=='#'||typed=='@'){
+                    e.consume();
+                    JOptionPane.showMessageDialog(frame,
+                    "Error! '@' and '#' are invlaid characters!","Invalid charcater",
+                    JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) { }
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+        });
+
+        // Password
+        JLabel passLabel = new JLabel("Password:");
+        JPasswordField passField = new JPasswordField();
+
+        // Confirm Password
+        JLabel confirmLabel = new JLabel("Confirm Password:");
+        JPasswordField confirmField = new JPasswordField();
+
+        // Gender
+        JLabel genderLabel = new JLabel("Gender:");
+        JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JRadioButton maleButton = new JRadioButton("Male");
+        JRadioButton femaleButton = new JRadioButton("Female");
+        ButtonGroup genderGroup = new ButtonGroup();
+        genderGroup.add(maleButton);
+        genderGroup.add(femaleButton);
+        genderPanel.add(maleButton);
+        genderPanel.add(femaleButton);
+
+
+        // Department
+        JLabel deptLabel = new JLabel("Department:");
+        String[] departments = {"CS", "DMI", "CE", "EE"};
+        JList&lt;String&gt; deptList = new JList&lt;&gt;(departments);
+        deptList.setVisibleRowCount(2);
+        deptList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane deptScroll = new JScrollPane(deptList);
+
+  // ListListener on JList
+        deptList.addListSelectionListener((e) -&gt; {
+            String Selected = deptList.getSelectedValue();
+            switch (Selected) {
+                case "CS":
+                    deptList.setBackground(Color.red);
+                    break;
+                    case "CE":
+                    deptList.setBackground(Color.blue);
+                    break;
+                    case "EE":
+                    deptList.setBackground(Color.yellow);
+
+
+            }
+        });
+
+        // Country
+        JLabel countryLabel = new JLabel("Country:");
+        String[] countries = {"Jordan", "Qatar", "Oman", "Palestine", "UK"};
+        JComboBox&lt;String&gt; countryCombo = new JComboBox&lt;&gt;(countries);
+
+
+
+ // ItemListener on JComboBox to change titleLabel color
+    countryCombo.addItemListener(new ItemListener() {
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            String selectedCountry = (String) countryCombo.getSelectedItem();
+
+            switch (selectedCountry) {
+                case "Jordan":
+                    titleLabel.setForeground(Color.RED);
+                    break;
+                case "Qatar":
+                    titleLabel.setForeground(Color.MAGENTA);
+                    break;
+                case "Oman":
+                    titleLabel.setForeground(Color.GREEN.darker());
+                    break;
+                case "Palestine":
+                    titleLabel.setForeground(Color.BLACK);
+                    break;
+                case "UK":
+                    titleLabel.setForeground(Color.BLUE);
+                    break;
+                default:
+                    titleLabel.setForeground(Color.BLACK);
+            }
+        }
+    }
+});
+
+
+
+        // ===== Bottom Panel =====
+        JPanel bottomPanel = new JPanel(new FlowLayout());
+        JButton signUpButton = new JButton("Sign Up");
+        JButton cancelButton = new JButton("Cancel");
+        bottomPanel.add(signUpButton);
+        bottomPanel.add(cancelButton);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
+
+
+
+
+        // Policy Agreement
+        JCheckBox policyCheck = new JCheckBox("Read the policy and agree");
+
+        // Add components to center panel
+        centerPanel.add(userLabel);
+        centerPanel.add(userText);
+        centerPanel.add(passLabel);
+        centerPanel.add(passField);
+        centerPanel.add(confirmLabel);
+        centerPanel.add(confirmField);
+        centerPanel.add(genderLabel);
+        centerPanel.add(genderPanel);
+        centerPanel.add(deptLabel);
+        centerPanel.add(deptScroll);
+        centerPanel.add(countryLabel);
+        centerPanel.add(countryCombo);
+        centerPanel.add(new JLabel());
+        centerPanel.add(policyCheck);
+
+        frame.add(centerPanel, BorderLayout.CENTER);
+
+
+
+        // ===== Action Listeners =====
+        // Sign Up button - Show info
+        signUpButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String username = userText.getText().trim();
+
+                String password = new String(passField.getPassword());
+                String confirmPassword = new String(confirmField.getPassword());
+
+                String gender = maleButton.isSelected() ? "Male" :
+                                (femaleButton.isSelected() ? "Female" : "Not Selected");
+                String department = deptList.getSelectedValue() == null ?
+                                    "Not Selected" : deptList.getSelectedValue();
+                String country = (String) countryCombo.getSelectedItem();
+                boolean agreed = policyCheck.isSelected();
+
+                if (!password.equals(confirmPassword)) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!agreed) {
+                    JOptionPane.showMessageDialog(frame,
+                            "You must agree to the policy before signing up.",
+                            "Warning", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                // Display information in a dialog
+                String message = "Username: " + username +
+                                 "\nGender: " + gender +
+                                 "\nDepartment: " + department +
+                                 "\nCountry: " + country +
+                                 "\nPolicy Agreed: " + (agreed ? "Yes" : "No");
+                JOptionPane.showMessageDialog(frame, message, "Registration Info", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+
+        // Cancel button - Clear all fields
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                userText.setText("");
+                passField.setText("");
+                confirmField.setText("");
+                genderGroup.clearSelection();
+                deptList.clearSelection();
+                countryCombo.setSelectedIndex(0);
+                policyCheck.setSelected(false);
+            }
+        });
+
+
+//MouseListener on Button
+        cancelButton.addMouseListener(new MouseAdapter (){
+        Color originalColor = cancelButton.getBackground();
+
+        @Override
+        public void mouseEntered(MouseEvent e){
+        cancelButton.setBackground(Color.RED);
+        }
+        @Override
+        public void mouseExited(MouseEvent e) {
+        cancelButton.setBackground(originalColor);
+        }
+    });
+
+// WindowListener on JFrame
+frame.addWindowListener(new WindowAdapter() {
+    @Override
+    public void windowOpened(WindowEvent e) {
+        System.out.println("Window opened!");
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        int choice = JOptionPane.showConfirmDialog(
+                frame,
+                "Are you sure you want to exit?",
+                "Exit Confirmation",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (choice == JOptionPane.YES_OPTION) {
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            System.out.println("Window closing...");
+        } else {
+            frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        }
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        System.out.println("Window closed!");
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        System.out.println("Window minimized!");
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        System.out.println("Window restored!");
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        System.out.println("Window activated!");
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        System.out.println("Window deactivated!");
+    }
+});
+
+
+// Final setup
+        frame.setVisible(true);
+    }
+
+}</pre></div>
+    <p style="font-size:.85rem;color:var(--muted)">Some long runs of blank lines from the original file are shortened here; no code is changed.</p>
+  </div>
+
+  <div class="slide">
+    <h3>Explained, block by block</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Block</th><th>What it does and why</th></tr></thead>
+        <tbody>
+          <tr><td><b>Frame + panels</b></td><td>Same recipe as Labs 3–4: BorderLayout frame, bold 24 pt "Register" title in NORTH, a <code>GridLayout(7, 2, 10, 10)</code> panel in CENTER (7 rows: username, password, confirm, gender, department, country, policy), buttons in SOUTH.</td></tr>
+          <tr><td><b>KeyListener</b> on <code>userText</code></td><td>Written as an anonymous class, so all three methods must appear (two are empty). In <code>keyTyped</code>, <code>e.getKeyChar()</code> gives the character. If it is <code>#</code> or <code>@</code>, <code>e.consume()</code> <b>cancels the key</b> so the character never reaches the field, then an error dialog explains why. A <code>KeyAdapter</code> would have needed only <code>keyTyped</code>.</td></tr>
+          <tr><td><b>ListSelectionListener</b> on <code>deptList</code></td><td>Written as a <b>lambda</b>: <code>(e) -&gt; { … }</code> is a short way to write an object of an interface that has exactly one method (here <code>valueChanged</code>). A <code>switch</code> on the selected String sets the list's background: CS red, CE blue, EE yellow (DMI has no case, so the colour stays).</td></tr>
+          <tr><td><b>ItemListener</b> on <code>countryCombo</code></td><td>Each change fires DESELECTED (old item) then SELECTED (new item). <code>if (e.getStateChange() == ItemEvent.SELECTED)</code> reacts only once. The switch recolours the title: Jordan red, Qatar magenta, Oman dark green (<code>Color.GREEN.darker()</code>), Palestine black, UK blue.</td></tr>
+          <tr><td><b>ActionListener</b> on Sign Up</td><td>Reads every field. The ternary <code>a ? b : c</code> picks "Male", "Female" or "Not Selected". Two checks with <code>return</code>: passwords must match (ERROR_MESSAGE), policy must be ticked (WARNING_MESSAGE). Otherwise it shows a "Registration Info" dialog.</td></tr>
+          <tr><td><b>ActionListener</b> on Cancel</td><td>Resets everything: <code>setText("")</code> on the text fields, <code>clearSelection()</code> on the ButtonGroup and the list, <code>setSelectedIndex(0)</code> on the combo, <code>setSelected(false)</code> on the check box.</td></tr>
+          <tr><td><b>MouseAdapter</b> on Cancel</td><td>Only two of MouseListener's five methods are needed, so it extends <code>MouseAdapter</code>. It saves the original colour in a field of the anonymous class, turns the button red on <code>mouseEntered</code> and restores it on <code>mouseExited</code>. (Mouse events are Lecture 6.)</td></tr>
+          <tr><td><b>WindowAdapter</b> on the frame</td><td><code>windowClosing</code> asks "Are you sure you want to exit?". Swing runs your <code>windowClosing</code> <em>first</em> and then applies the default close operation, so switching it to <code>EXIT_ON_CLOSE</code> (Yes) or <code>DO_NOTHING_ON_CLOSE</code> (No) inside the listener decides what happens next. The other methods print to the console.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Things to watch out for in this code</h3>
+    <ul class="pts">
+      <li><b>Cancel can crash the program.</b> <code>deptList.clearSelection()</code> fires <code>valueChanged</code>; then <code>getSelectedValue()</code> is <code>null</code>, and <code>switch (null)</code> throws a <code>NullPointerException</code>. Fix: start the lambda with <code>if (Selected == null) return;</code></li>
+      <li><b>"Window closed!" never prints</b> when the user picks Yes: with <code>EXIT_ON_CLOSE</code> the program ends before <code>windowClosed</code> is called (same point as slide 10).</li>
+      <li><b>No empty-field check</b>: Sign Up accepts an empty username. Lab 4's validation adds that.</li>
+      <li>The comment lists <code>ContainerListener</code>, but no ContainerListener is used in the file.</li>
+      <li>Typos in the message: "invlaid" and "charcater".</li>
+    </ul>
+    <div class="code"><span class="code-label">Added · Safer list listener</span><pre class="java">deptList.addListSelectionListener(e -&gt; {
+    if (e.getValueIsAdjusting()) return;          // wait for the final selection
+    String selected = deptList.getSelectedValue();
+    if (selected == null) return;                 // nothing selected (e.g. after Cancel)
+    switch (selected) {
+        case "CS": deptList.setBackground(Color.RED);    break;
+        case "CE": deptList.setBackground(Color.BLUE);   break;
+        case "EE": deptList.setBackground(Color.YELLOW); break;
+        default:   deptList.setBackground(Color.WHITE);
+    }
+});</pre></div>
+  </div>
+
+  <div class="demo" id="l5">
+    <div class="demo-head"><h3>Try it: the Lab 5 form's listeners</h3><span class="added">Added</span></div>
+    <div class="win" style="max-width:28rem"><div class="win-bar"><span>Register Form</span><i>–□×</i></div>
+      <div class="win-body" style="display:grid;gap:.4rem">
+        <div id="l5Title" style="text-align:center;font:700 1.4rem Arial,sans-serif;color:#000">Register</div>
+        <div style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:.35rem .6rem;align-items:center">
+          <label for="l5User">Username:</label><input id="l5User" type="text" autocomplete="off" style="font:inherit;border:1px solid #8f9ba1;padding:.1rem .3rem;min-width:0;background:#fff;color:#1c2328">
+          <span>Department:</span><div id="l5Dept" role="listbox" aria-label="Department" style="border:1px solid #8f9ba1;background:#fff;height:2.6rem;overflow:auto"></div>
+          <label for="l5Country">Country:</label><select id="l5Country"><option>Jordan</option><option>Qatar</option><option>Oman</option><option>Palestine</option><option>UK</option></select>
+        </div>
+        <div style="display:flex;gap:.4rem;justify-content:center"><button type="button" class="jbtn" id="l5Sign">Sign Up</button><button type="button" class="jbtn" id="l5Cancel">Cancel</button></div>
+      </div>
+    </div>
+    <div class="log" id="l5Log" style="height:7rem"></div>
+  </div>
+
+  <div class="slide answer" id="lab5-answer">
+    <p class="mine">Your answer · Lab5.zip</p>
+    <h3>Your Lab 5 answer</h3>
+    <p>Your Lab 4 form (<code>Signup</code>, package <code>com.mycompany.signup</code>) with four more kinds of listener: an <code>ActionListener</code> on the Country combo box, a <code>WindowListener</code>, a <code>KeyListener</code> and two <code>MouseListener</code>s. The layout is unchanged, so the window looks the same as Lab 4. The code is exactly as in your zip.</p>
+    <div class="code"><span class="code-label">Signup.java</span><pre class="java">package com.mycompany.signup;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+
+public class Signup {
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Register Form.");
+
+        JPanel panelnorth = new JPanel();
+        JPanel panelgrid = new JPanel(new GridLayout(7, 2));
+        JPanel genderpanel = new JPanel();
+        JPanel panelsouth = new JPanel();
+        JPanel paneldep = new JPanel();
+        JPanel panelcount = new JPanel();
+        
+        JLabel label1 = new JLabel("Register");
+        JLabel label2 = new JLabel("Username");
+        JLabel label3 = new JLabel("Password");
+        JLabel label4 = new JLabel("Confirm Password");
+        JLabel label5 = new JLabel("Gender");
+        JLabel label6 = new JLabel("Department");
+        JLabel label7 = new JLabel("Country");
+        JLabel label8 = new JLabel("Address");
+        
+        JTextField field = new JTextField();
+        JTextField address = new JTextField();
+        field.setSize(50, 50);
+        address.setSize(50,50);
+        
+        JPasswordField password = new JPasswordField();
+        JPasswordField confirmpassword = new JPasswordField();
+        password.setSize(50,50);
+        confirmpassword.setSize(50,50);
+        
+        JRadioButton male = new JRadioButton("Male");
+        JRadioButton female = new JRadioButton("Female");
+        ButtonGroup gender = new ButtonGroup();
+        gender.add(male);
+        gender.add(female);
+        
+        JCheckBox checkbox = new JCheckBox("Read the policy and agree");
+        
+        JButton button1 = new JButton("Sign up");
+        JButton button2 = new JButton("Cancel");
+        
+        DefaultListModel&lt;String&gt; dep = new DefaultListModel&lt;&gt;();
+        
+        DefaultComboBoxModel&lt;String&gt; count = new DefaultComboBoxModel&lt;&gt;();
+
+        dep.addElement("CS");
+        dep.addElement("DMI");
+        dep.addElement("CE");
+        dep.addElement("EE");
+        JList&lt;String&gt; department = new JList&lt;&gt;(dep);
+        department.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        JScrollPane scrollpane = new JScrollPane(department);
+        scrollpane.setPreferredSize(new Dimension(100, 20));
+        
+        count.addElement("Jordan");
+        count.addElement("Oman");
+        count.addElement("Palestine");
+        count.addElement("UK");
+        
+        JComboBox&lt;String&gt; country = new JComboBox&lt;&gt;(count);
+        
+        country.addActionListener(new ActionListener(){
+            
+            public void actionPerformed(ActionEvent e) {
+                int s= country.getSelectedIndex();
+                if(s==1){
+                country.setBackground(Color.red);
+                }
+                else if(s==2){
+                    country.setBackground(Color.blue);
+                }
+                else if(s==2){
+                    country.setBackground(Color.pink);
+                }
+                else {
+                    country.setBackground(Color.yellow);
+                }
+            }
+        
+        
+        });
+        
+        
+
+        button1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String name = field.getText();
+                String Address = address.getText();
+                String Password=new String(password.getPassword());
+                String CPassword=new String(confirmpassword.getPassword());
+                String Gender = male.isSelected() ? "Male" : female.isSelected() ? "Female" : "notselected";
+                String Department = (String) department.getSelectedValue();
+                String countryname = (String) country.getSelectedItem();
+                String agreed;
+
+                
+                if (checkbox.isSelected()) {
+                    agreed = "Yes";
+                } else {
+                    agreed = "No";
+                }
+
+                if ( Password.equals(CPassword) &amp;&amp; !Password.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "UserName:" + name + "\n"
+                            + "Password: Pass \n" + "Address:" + Address + "\n"
+                            + "Gender:" + Gender + "\n" + "Department" + Department + "\n"
+                            + "Country:" + countryname + "\n" + "Agreed to Policy:" + agreed);
+                } else {
+                    JOptionPane.showMessageDialog(null, "The Password doesn't match the Confirm password", "Wrong Password", JOptionPane.INFORMATION_MESSAGE );
+                }
+
+            }
+        });
+
+        button2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Cleared");
+                field.setText("");
+                password.setText("");
+                confirmpassword.setText("");
+                address.setText("");
+            }
+        });
+
+        genderpanel.add(male);
+        genderpanel.add(female);
+        panelnorth.add(label1);
+        panelgrid.add(label2);
+        panelgrid.add(field);
+        panelgrid.add(label3);
+        panelgrid.add(password);
+        panelgrid.add(label4);
+        panelgrid.add(confirmpassword);
+        panelgrid.add(label8);
+        panelgrid.add(address);
+        panelgrid.add(label5);
+        panelgrid.add(genderpanel);
+        paneldep.add(label6);
+        paneldep.add(scrollpane);
+        panelcount.add(label7);
+        panelcount.add(country);
+        panelgrid.add(paneldep);
+        panelgrid.add(panelcount);
+        panelgrid.add(checkbox);
+        panelsouth.add(button1);
+        panelsouth.add(button2);
+
+        frame.add(panelnorth, BorderLayout.NORTH);
+        frame.add(panelsouth, BorderLayout.SOUTH);
+        frame.add(panelgrid, BorderLayout.CENTER);
+        
+        frame.addWindowListener(new WindowAdapter(){
+        public void windowClosing(WindowEvent e){
+        int result=JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Quit?",  JOptionPane.INFORMATION_MESSAGE );
+        if(result == JOptionPane.YES_OPTION){
+        System.exit(0);
+        }
+        }
+        });
+        
+        field.addKeyListener(new KeyAdapter(){
+            
+            public void keyPressed(KeyEvent e){
+                char keychar =e.getKeyChar();
+                
+            if(keychar=='@'|| keychar=='#'){
+                JOptionPane.showMessageDialog(null, "You are not allowed to use @ or #", "Not allowed characters", JOptionPane.ERROR_MESSAGE);
+                field.setText("");
+            }
+            
+            }
+            
+        });
+        
+        button1.addMouseListener(new MouseAdapter(){
+        public void mouseEntered(MouseEvent e){
+        button1.setBackground(Color.blue);
+        }
+        
+        public void mouseExited(MouseEvent e){
+        button1.setBackground(Color.white);
+        }
+            
+        });
+        
+        button2.addMouseListener(new MouseAdapter(){
+        public void mouseEntered(MouseEvent e){
+        button2.setBackground(Color.green);
+        }
+        
+        public void mouseExited(MouseEvent e){
+        button2.setBackground(Color.white);
+        }
+            
+        });
+        
+        
+        
+        
+        
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setSize(500, 400);
+
+    }
+}</pre></div>
+    <figure><div class="plate"><img src="img/answer_lab5.png" width="500" loading="lazy" alt="The Register Form window from your Lab 5 code, the same layout as Lab 4: text fields, Gender radio buttons, Department list, Country combo box, policy check box, Sign up and Cancel buttons."></div><figcaption>Your Lab 5 code, run as it is.</figcaption></figure>
+    <h4>Explained (what's new since Lab 4)</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">address.setSize(50,50);
+password.setSize(50,50);
+confirmpassword.setSize(50,50);</pre></dt><dd>Like <code>field.setSize</code> in Lab 3, these have no effect: the GridLayout sizes every field to fill its cell.</dd></div>
+<div><dt><pre class="java">country.addActionListener(new ActionListener(){
+    public void actionPerformed(ActionEvent e) {
+        int s= country.getSelectedIndex();
+        ...</pre></dt><dd>A combo box fires an <code>ActionEvent</code> whenever the selection changes. <code>getSelectedIndex()</code> gives the position of the chosen country: 0 Jordan, 1 Oman, 2 Palestine, 3 UK.</dd></div>
+<div><dt><pre class="java">if(s==1){
+    country.setBackground(Color.red);
+}
+else if(s==2){
+    country.setBackground(Color.blue);
+}
+else if(s==2){
+    country.setBackground(Color.pink);
+}
+else {
+    country.setBackground(Color.yellow);
+}</pre></dt><dd>Colours the combo box. I ran it: Jordan → yellow, Oman → red, Palestine → blue, UK → yellow. The pink branch can never run, because the second <code>else if(s==2)</code> repeats the first condition; it was probably meant to be <code>s==3</code> (UK).</dd></div>
+<div><dt><pre class="java">if ( Password.equals(CPassword) &amp;&amp; !Password.isEmpty()) {</pre></dt><dd>New in Lab 5: <code>&amp;&amp; !Password.isEmpty()</code> also requires the password not to be empty, so an empty form no longer passes.</dd></div>
+<div><dt><pre class="java">JOptionPane.showMessageDialog(null, "The Password doesn't match the Confirm password", "Wrong Password", JOptionPane.INFORMATION_MESSAGE );</pre></dt><dd>The 4-argument version: parent, message, <b>title</b>, <b>icon type</b>. The dialog is titled "Wrong Password" with the information icon. The same message also appears when both passwords are empty.</dd></div>
+<div><dt><pre class="java">frame.addWindowListener(new WindowAdapter(){
+    public void windowClosing(WindowEvent e){
+        ...
+    }
+});</pre></dt><dd><code>WindowAdapter</code> is a class with empty versions of all seven <code>WindowListener</code> methods, so you override only the one you need. <code>windowClosing</code> runs when the user clicks ×.</dd></div>
+<div><dt><pre class="java">int result=JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Quit?",  JOptionPane.INFORMATION_MESSAGE );
+if(result == JOptionPane.YES_OPTION){
+    System.exit(0);
+}</pre></dt><dd><code>showConfirmDialog</code> asks a question and returns which button was clicked; on Yes, <code>System.exit(0)</code> ends the program. In this 4-argument version the last argument is the <b>option type</b> (which buttons to show), not the icon. <code>INFORMATION_MESSAGE</code> has the value 1, the same as <code>YES_NO_CANCEL_OPTION</code>, so the dialog shows Yes, No and Cancel. For just Yes and No, write <code>JOptionPane.YES_NO_OPTION</code>.</dd></div>
+<div><dt><pre class="java">frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);</pre></dt><dd>× does nothing by itself now, so the window closes only if <code>windowClosing</code> calls <code>System.exit</code>. With <code>EXIT_ON_CLOSE</code> it would close whatever the user answered.</dd></div>
+<div><dt><pre class="java">field.addKeyListener(new KeyAdapter(){
+    public void keyPressed(KeyEvent e){
+        char keychar =e.getKeyChar();
+        ...</pre></dt><dd><code>KeyAdapter</code> works like <code>WindowAdapter</code>: override only <code>keyPressed</code>, which runs every time a key goes down in the username field. <code>getKeyChar()</code> gives the character of that key.</dd></div>
+<div><dt><pre class="java">if(keychar=='@'|| keychar=='#'){
+    JOptionPane.showMessageDialog(null, "You are not allowed to use @ or #", "Not allowed characters", JOptionPane.ERROR_MESSAGE);
+    field.setText("");
+}</pre></dt><dd>If the key is <code>@</code> or <code>#</code> (a <code>char</code>, so single quotes; <code>||</code> means "or"), it shows an error dialog with the red icon and empties the field. I tested typing <code>ab@</code>: the dialog appeared and the field ended up empty, so the whole username is cleared, not just the bad character.</dd></div>
+<div><dt><pre class="java">button1.addMouseListener(new MouseAdapter(){
+    public void mouseEntered(MouseEvent e){
+        button1.setBackground(Color.blue);
+    }
+    public void mouseExited(MouseEvent e){
+        button1.setBackground(Color.white);
+    }
+});</pre></dt><dd>Hover effect: <code>mouseEntered</code> runs when the pointer moves onto the button, <code>mouseExited</code> when it leaves. Sign up turns blue, Cancel (the second listener) turns green, and both go white when the mouse leaves. <code>MouseAdapter</code> means you write only these two of MouseListener's five methods.</dd></div>
+</dl>
+    <aside class="note"><b>Compared with the instructor's Lab 5 file above</b><span>Both use KeyListener, ActionListener, MouseListener and WindowListener. The instructor's file also has a ListSelectionListener on the Department list and an ItemListener on the Country box; yours reacts to the Country box with an ActionListener instead, and has no list listener.</span></aside>
+  </div>
+
+  <div class="quiz" data-quiz="lab5"></div>
+</section>
+
+<!-- ============ flashcards ============ -->
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 5 + Lab 5</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it. Each answer names the slide it comes from.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 5 – Other Events</em> (CS254, 33 slides) and the project file <em>Lab 5 all listenert.txt</em>. Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l5-done", "quizzes": {"window": [{"q": "Which window method can stop the window from closing (e.g. ask \"Are you sure?\")?", "o": ["windowClosing", "windowClosed", "windowDeactivated", "windowIconified"], "a": 0, "e": "Slide 10."}, {"q": "How many methods does WindowListener have?", "o": ["7", "3", "5", "1"], "a": 0, "e": "Slides 4 and 8."}, {"q": "Why use WindowAdapter instead of WindowListener?", "o": ["You only override the methods you need", "It's faster", "It works on JButton too", "It has more methods"], "a": 0, "e": "Slides 5 and 7."}, {"q": "A class extends WindowAdapter. Can it also extend JFrame?", "o": ["No, Java allows only one superclass", "Yes", "Only if JFrame is abstract", "Only with implements"], "a": 0, "e": "Slide 7: a class extending an adapter cannot extend another class."}, {"q": "Clicking the Minimize button fires…", "o": ["windowIconified", "windowDeiconified", "windowClosed", "windowOpened"], "a": 0, "e": "Slide 12."}, {"q": "Switching to the window with Alt+Tab fires…", "o": ["windowActivated", "windowDeiconified", "windowOpened", "windowClosing"], "a": 0, "e": "Slide 11."}], "key": [{"q": "Pressing and releasing Shift alone fires…", "o": ["keyPressed and keyReleased only", "keyTyped only", "all three", "nothing"], "a": 0, "e": "Slides 16–17: keyTyped only fires for character keys."}, {"q": "Which method is best for detecting the right-arrow key?", "o": ["keyPressed with getKeyCode() == KeyEvent.VK_RIGHT", "keyTyped with getKeyChar() == '→'", "actionPerformed", "focusGained"], "a": 0, "e": "Slides 15 and 18."}, {"q": "Which abstract class implements KeyListener with empty bodies?", "o": ["KeyAdapter", "KeyEvent", "InputEvent", "KeyStroke"], "a": 0, "e": "Slide 13."}, {"q": "In KeyDemo, why is the text area disabled?", "o": ["So the frame keeps the keyboard focus and receives the key events", "To hide it", "Text areas can't show key info otherwise", "To make it bold"], "a": 0, "e": "Slide 19: addKeyListener(this) is on the frame."}, {"q": "Which method tells you if Ctrl or Shift was held?", "o": ["getModifiersEx()", "getKeyChar()", "isActionKey()", "getSource()"], "a": 0, "e": "Slide 15: use *_MASK with it."}], "focus": [{"q": "Focus is…", "o": ["the current target of keyboard input", "the window size", "the selected list item", "the mouse position"], "a": 0, "e": "Slide 22."}, {"q": "In the focus example, what happens to a text field when it gains focus?", "o": ["Its background becomes LIGHT_GRAY", "Its text is cleared", "It becomes disabled", "It turns red"], "a": 0, "e": "Slide 23."}, {"q": "When does a ComponentEvent occur?", "o": ["When a component is resized, moved, shown or hidden", "When a key is pressed", "When text changes", "When a list selection changes"], "a": 0, "e": "Slide 24."}], "listsel": [{"q": "Which method do you write in a ListSelectionListener?", "o": ["valueChanged", "actionPerformed", "itemStateChanged", "stateChanged"], "a": 0, "e": "Slide 25."}, {"q": "Why check <code>!evt.getValueIsAdjusting()<\/code>?", "o": ["To react once, after the series of selection changes finishes", "To check if the list is editable", "To prevent a crash on empty lists", "To allow multiple selection"], "a": 0, "e": "Slide 26."}, {"q": "Is valueChanged called if the user clicks an item that's already selected?", "o": ["No", "Yes, every click", "Only with SINGLE_SELECTION", "Only on double-click"], "a": 0, "e": "Slide 26."}, {"q": "In ListTransferFrame, selecting a state already in the right list…", "o": ["removes it from the right list", "adds it twice", "does nothing", "clears both lists"], "a": 0, "e": "Slide 28: contains → removeElement, else addElement."}], "more": [{"q": "Which DocumentListener method is never called for a JTextField?", "o": ["changedUpdate", "insertUpdate", "removeUpdate", "All are called"], "a": 0, "e": "Slide 30."}, {"q": "How do you attach a DocumentListener to a JTextField?", "o": ["field.getDocument().addDocumentListener(...)", "field.addDocumentListener(...)", "field.addActionListener(...)", "new Document(field)"], "a": 0, "e": "Slide 29."}, {"q": "ItemListener is used with…", "o": ["JCheckBox and JComboBox", "JFrame", "JTextArea", "JLabel"], "a": 0, "e": "Slide 31."}, {"q": "Which method tells you whether an item was selected or deselected?", "o": ["getStateChange()", "getItem()", "getSource()", "isAdjusting()"], "a": 0, "e": "Slide 32: compare with ItemEvent.SELECTED / DESELECTED."}, {"q": "Which listener does a JSlider use?", "o": ["ChangeListener", "ActionListener", "ItemListener", "DocumentListener"], "a": 0, "e": "Slide 33."}], "lab5": [{"q": "In Lab 5, what does <code>e.consume()<\/code> in keyTyped do?", "o": ["Stops the typed character from reaching the text field", "Clears the field", "Closes the window", "Selects all text"], "a": 0, "e": "It cancels the key event, so @ and # never appear."}, {"q": "<code>(e) -&gt; { ... }<\/code> passed to addListSelectionListener is a…", "o": ["lambda expression", "generic type", "anonymous array", "constructor"], "a": 0, "e": "A short way to create an object of a one-method interface."}, {"q": "Why does the country ItemListener check <code>ItemEvent.SELECTED<\/code>?", "o": ["A combo-box change fires DESELECTED then SELECTED; this reacts once", "SELECTED is the only event a combo fires", "To ignore keyboard input", "To check the policy box"], "a": 0, "e": "Slide 32 and the Lab 5 code."}, {"q": "Why can Cancel crash the Lab 5 program?", "o": ["clearSelection() fires valueChanged with a null selection, and switch(null) throws NullPointerException", "Cancel has no listener", "The frame closes", "The password field is null"], "a": 0, "e": "Add if (Selected == null) return; at the start of the lambda."}]}, "flashcards": [["Adapter class", "Implements a listener interface with empty methods, so you override only what you need: WindowAdapter, KeyAdapter, FocusAdapter, MouseAdapter, ComponentAdapter.", "Slides 5, 7"], ["Listener vs Adapter", "Listener: interface, implement ALL methods, can still extend another class. Adapter: class, override only needed methods, uses up your one superclass.", "Slide 7"], ["WindowListener (7)", "windowOpened, windowClosing, windowClosed, windowIconified, windowDeiconified, windowActivated, windowDeactivated.", "Slides 4, 8"], ["windowClosing vs windowClosed", "Closing: user clicks X; you can cancel. Closed: already closed and released; for cleanup.", "Slide 10"], ["windowDeiconified vs windowActivated", "Deiconified: restored from minimised. Activated: gains focus (click or Alt+Tab).", "Slide 11"], ["windowIconified vs windowDeactivated", "Iconified: minimised to the taskbar. Deactivated: loses focus to another window.", "Slide 12"], ["KeyListener (3)", "keyPressed, keyReleased, keyTyped. Register with addKeyListener.", "Slides 13–14"], ["keyPressed vs keyTyped", "Pressed: any key, use getKeyCode() + VK_*. Typed: character keys only, use getKeyChar().", "Slides 16–17"], ["VK_ constants", "KeyEvent.VK_A … VK_Z, VK_0 … VK_9, VK_F1 …, VK_UP, VK_LEFT, VK_TAB, VK_SPACE, VK_ENTER.", "Slide 15"], ["Modifier masks", "SHIFT_DOWN_MASK, CTRL_DOWN_MASK, ALT_DOWN_MASK, used with getModifiersEx().", "Slide 15"], ["Action key", "A key that produces no character: arrows, F-keys, Home, End… isActionKey() returns true.", "Slide 20"], ["FocusListener", "focusGained, focusLost. Focus = current target of keyboard input.", "Slide 22"], ["ComponentListener", "componentHidden, componentMoved, componentResized, componentShown.", "Slide 24"], ["ListSelectionListener", "valueChanged(ListSelectionEvent). Check !getValueIsAdjusting() to react once.", "Slides 25–26"], ["DocumentListener", "insertUpdate, removeUpdate, changedUpdate (styled docs only). Via getDocument().addDocumentListener.", "Slides 29–30"], ["ItemListener", "itemStateChanged(ItemEvent). getStateChange() == ItemEvent.SELECTED or DESELECTED. JCheckBox, JComboBox.", "Slides 31–32"], ["ChangeListener", "stateChanged(ChangeEvent). JSlider, JSpinner, JTabbedPane, JColorChooser.", "Slide 33"], ["e.consume()", "Cancels a key event so the character never reaches the component.", "Lab 5"], ["Lambda listener", "deptList.addListSelectionListener(e -> { … }); works for any one-method listener interface.", "Lab 5"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  function logger(el) {
+    return function (t, color) { var d = document.createElement("div"); d.textContent = t; if (color) d.style.color = color; el.appendChild(d); el.scrollTop = el.scrollHeight; };
+  }
+  var C = { ev: "#9fd3ff", ok: "#7fd3ad", warn: "#f0b071", dim: "#9aa4a8", bad: "#ff8f86" };
+
+  // ---------- window simulator ----------
+  (function () {
+    var out = logger($("winLog")), st = "hidden", stEl = $("winState");
+    var labels = { hidden: "not visible yet", active: "visible · active", inactive: "visible · not active", min: "minimised", closed: "closed", gone: "program ended" };
+    function show() { stEl.textContent = labels[st]; }
+    function ev(n) { out(n + "(WindowEvent e)", C.ev); }
+    var acts = {
+      open: function () { if (st !== "hidden") return out("// already visible", C.dim); out("frame.setVisible(true);", C.dim); ev("windowActivated"); ev("windowOpened"); st = "active"; },
+      min: function () { if (st !== "active" && st !== "inactive") return out("// window is not on screen", C.dim); ev("windowIconified"); if (st === "active") ev("windowDeactivated"); st = "min"; },
+      restore: function () { if (st !== "min") return out("// window is not minimised", C.dim); ev("windowDeiconified"); ev("windowActivated"); st = "active"; },
+      other: function () { if (st !== "active") return out("// window is not the active window", C.dim); ev("windowDeactivated"); st = "inactive"; },
+      back: function () { if (st !== "inactive") return out("// window is not on screen or already active", C.dim); ev("windowActivated"); st = "active"; },
+      close: function () {
+        if (st !== "active" && st !== "inactive") return out("// window is not on screen", C.dim);
+        ev("windowClosing");
+        var op = $("winOp").value;
+        if (op === "EXIT_ON_CLOSE") { out("EXIT_ON_CLOSE → System.exit(0): program ends, windowClosed never runs", C.warn); st = "gone"; }
+        else if (op === "DISPOSE_ON_CLOSE") { if (st === "active") ev("windowDeactivated"); ev("windowClosed"); out("window disposed", C.ok); st = "closed"; }
+        else if (op === "HIDE_ON_CLOSE") { if (st === "active") ev("windowDeactivated"); out("HIDE_ON_CLOSE → window hidden, program still running, no windowClosed", C.warn); st = "closed"; }
+        else { out("DO_NOTHING_ON_CLOSE → nothing else happens; your windowClosing code decides", C.warn); }
+      }
+    };
+    document.querySelectorAll("#win [data-w]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (st === "gone" || st === "closed") { $("winLog").innerHTML = ""; out("// new run", C.dim); st = "hidden"; }
+        acts[b.dataset.w](); show();
+      });
+    });
+    out("frame.addWindowListener(new WindowAdapter() { … all 7 methods print … });", C.dim);
+    show();
+  })();
+
+  // ---------- key tester ----------
+  (function () {
+    var inp = $("ktIn"), outPre = $("ktOut"), out = logger($("ktLog"));
+    var ACTION = /^(Arrow|F\d|Home|End|Page|Insert|CapsLock|NumLock|ScrollLock|PrintScreen|Pause|ContextMenu)/;
+    var TEXT = { " ": "Space", Enter: "Enter", Backspace: "Backspace", Tab: "Tab", Escape: "Escape", Delete: "Delete", Shift: "Shift", Control: "Ctrl", Alt: "Alt", Meta: "Meta",
+      ArrowUp: "Up", ArrowDown: "Down", ArrowLeft: "Left", ArrowRight: "Right", CapsLock: "Caps Lock", PageUp: "Page Up", PageDown: "Page Down", Home: "Home", End: "End", Insert: "Insert" };
+    var VK = { " ": "VK_SPACE", Enter: "VK_ENTER", Backspace: "VK_BACK_SPACE", Tab: "VK_TAB", Escape: "VK_ESCAPE", Delete: "VK_DELETE", Shift: "VK_SHIFT", Control: "VK_CONTROL", Alt: "VK_ALT", Meta: "VK_META",
+      ArrowUp: "VK_UP", ArrowDown: "VK_DOWN", ArrowLeft: "VK_LEFT", ArrowRight: "VK_RIGHT", CapsLock: "VK_CAPS_LOCK", PageUp: "VK_PAGE_UP", PageDown: "VK_PAGE_DOWN", Home: "VK_HOME", End: "VK_END", Insert: "VK_INSERT" };
+    function keyText(e) {
+      if (TEXT[e.key]) return TEXT[e.key];
+      if (/^F\d+$/.test(e.key)) return e.key;
+      if (/^Key[A-Z]$/.test(e.code)) return e.code.slice(3);
+      if (/^Digit\d$/.test(e.code)) return e.code.slice(5);
+      return e.key.length === 1 ? e.key.toUpperCase() : e.key;
+    }
+    function vk(e) {
+      if (VK[e.key]) return VK[e.key];
+      if (/^F\d+$/.test(e.key)) return "VK_" + e.key;
+      if (/^Key[A-Z]$/.test(e.code)) return "VK_" + e.code.slice(3);
+      if (/^Digit\d$/.test(e.code)) return "VK_" + e.code.slice(5);
+      return "VK_" + (e.code || e.key).toUpperCase();
+    }
+    function mods(e) { var m = []; if (e.metaKey) m.push("Meta"); if (e.ctrlKey) m.push("Ctrl"); if (e.altKey) m.push("Alt"); if (e.shiftKey) m.push("Shift"); return m.join("+"); }
+    function lines(first, e) {
+      var action = ACTION.test(e.key);
+      var m = mods(e);
+      outPre.textContent = first + "\nThis key is " + (action ? "" : "not ") + "an action key\nModifier keys pressed: " + (m || "none");
+    }
+    function typedChar(e) {
+      if (e.ctrlKey || e.metaKey) return null;
+      if (e.key.length === 1) return e.key;
+      if (e.key === "Enter") return "\\n";
+      if (e.key === "Backspace") return "\\b";
+      if (e.key === "Tab") return "\\t";
+      if (e.key === "Escape") return "ESC";
+      return null;
+    }
+    inp.addEventListener("keydown", function (e) {
+      if (e.key === "Tab") e.preventDefault();
+      out("keyPressed   getKeyCode() = KeyEvent." + vk(e) + "   getKeyText = \"" + keyText(e) + "\"", C.ev);
+      lines("Key pressed: " + keyText(e), e);
+      var t = typedChar(e);
+      if (t !== null) { out("keyTyped     getKeyChar() = '" + t + "'", C.ok); lines("Key typed: " + t, e); }
+    });
+    inp.addEventListener("keyup", function (e) {
+      out("keyReleased  getKeyCode() = KeyEvent." + vk(e), C.dim);
+      lines("Key released: " + keyText(e), e);
+      if (inp.value.length > 40) inp.value = "";
+    });
+  })();
+
+  // ---------- focus ----------
+  (function () {
+    var out = logger($("fdLog"));
+    ["fd1", "fd2"].forEach(function (id, i) {
+      var f = $(id), name = "t" + (i + 1);
+      f.addEventListener("focus", function () { f.style.background = "#d3d3d3"; out("focusGained → " + name + ".setBackground(Color.LIGHT_GRAY)", C.ev); });
+      f.addEventListener("blur", function () { f.style.background = "#fff"; out("focusLost   → " + name + ".setBackground(Color.WHITE)", C.dim); });
+    });
+    out("// click t1, then t2, then outside the window", C.dim);
+  })();
+
+  // ---------- list transfer ----------
+  (function () {
+    var states = ["Schleswig-Holstein", "Niedersachsen", "Hamburg", "Bremen", "Mecklenburg-Vorpommern", "Brandenburg", "Berlin", "Nordrhein-Westfalen", "Hessen", "Sachsen-Anhalt", "Rheinland-Pfalz", "Thüringen", "Sachsen", "Saarland", "Bayern", "Baden-Württemberg"];
+    var right = [], sel = -1, out = logger($("ltLog"));
+    function row(t, on) { var d = document.createElement("div"); d.textContent = t; d.setAttribute("role", "option"); d.setAttribute("aria-selected", on); Object.assign(d.style, { padding: "1px 6px", cursor: "default", background: on ? "#b8cfe5" : "transparent", color: "#1c2328", fontSize: ".85rem" }); return d; }
+    function draw() {
+      var L = $("ltLeft"), R = $("ltRight"); L.innerHTML = ""; R.innerHTML = "";
+      states.forEach(function (s, i) {
+        var d = row(s, i === sel);
+        d.addEventListener("click", function () {
+          if (i === sel) { out("// clicked the already-selected item → valueChanged NOT called", C.dim); return; }
+          sel = i;
+          out("valueChanged  (getValueIsAdjusting() == true, ignored)", C.dim);
+          out("valueChanged  (getValueIsAdjusting() == false)", C.ev);
+          if (right.indexOf(s) > -1) { right.splice(right.indexOf(s), 1); out('  rightListModel.removeElement("' + s + '")', C.warn); }
+          else { right.push(s); out('  rightListModel.addElement("' + s + '")', C.ok); }
+          draw();
+        });
+        L.appendChild(d);
+      });
+      right.forEach(function (s) { R.appendChild(row(s, false)); });
+    }
+    draw();
+  })();
+
+  // ---------- document ----------
+  (function () {
+    var inp = $("ddIn"), out = logger($("ddLog")), prev = "";
+    inp.addEventListener("input", function () {
+      var now = inp.value, a = 0;
+      while (a < prev.length && a < now.length && prev[a] === now[a]) a++;
+      var b = 0;
+      while (b < prev.length - a && b < now.length - a && prev[prev.length - 1 - b] === now[now.length - 1 - b]) b++;
+      var removed = prev.length - a - b, inserted = now.length - a - b;
+      if (removed > 0) out("removeUpdate  offset=" + a + " length=" + removed, C.warn);
+      if (inserted > 0) out("insertUpdate  offset=" + a + " length=" + inserted + '  "' + now.substr(a, inserted) + '"', C.ok);
+      prev = now;
+    });
+    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); out('actionPerformed  getActionCommand() = "' + inp.value + '"', C.ev); } });
+    out("// changedUpdate never fires for a JTextField (PlainDocument)", C.dim);
+  })();
+
+  // ---------- item ----------
+  (function () {
+    var out = logger($("itLog")), combo = $("itCombo"), last = combo.value;
+    $("itCb").addEventListener("change", function () {
+      out("itemStateChanged  source=checkBox  getStateChange()=" + (this.checked ? "ItemEvent.SELECTED" : "ItemEvent.DESELECTED"), this.checked ? C.ok : C.warn);
+    });
+    combo.addEventListener("change", function () {
+      out('itemStateChanged  source=comboBox  getItem()="' + last + '"  DESELECTED', C.warn);
+      out('itemStateChanged  source=comboBox  getItem()="' + combo.value + '"  SELECTED', C.ok);
+      last = combo.value;
+    });
+  })();
+
+  // ---------- change ----------
+  (function () {
+    var out = logger($("chLog")), sl = $("chSl"), t = null;
+    sl.addEventListener("input", function () {
+      $("chLbl").textContent = "midterm exam mark: " + sl.value;
+      clearTimeout(t); t = setTimeout(function () { out("stateChanged  slider.getValue() = " + sl.value, C.ev); }, 60);
+    });
+  })();
+
+  // ---------- Lab 5 form ----------
+  (function () {
+    var out = logger($("l5Log")), user = $("l5User"), dept = $("l5Dept"), country = $("l5Country"), title = $("l5Title"), cancel = $("l5Cancel");
+    var depts = ["CS", "DMI", "CE", "EE"], sel = -1, bg = "#fff";
+    var COL = { CS: "#ff0000", CE: "#0000ff", EE: "#ffff00" };
+    function draw() {
+      dept.innerHTML = ""; dept.style.background = bg;
+      depts.forEach(function (d, i) {
+        var r = document.createElement("div"); r.textContent = d; r.setAttribute("role", "option"); r.setAttribute("aria-selected", i === sel);
+        Object.assign(r.style, { padding: "0 6px", cursor: "default", background: i === sel ? "rgba(120,150,190,.65)" : "transparent", color: bg === "#0000ff" ? "#fff" : "#1c2328" });
+        r.addEventListener("click", function () {
+          if (i === sel) return;
+          sel = i; out('valueChanged → getSelectedValue() = "' + d + '"', C.ev);
+          if (COL[d]) { bg = COL[d]; out("  deptList.setBackground(Color." + ({ CS: "red", CE: "blue", EE: "yellow" })[d] + ")", C.ok); }
+          else out('  no case for "' + d + '" → background unchanged', C.dim);
+          draw();
+        });
+        dept.appendChild(r);
+      });
+    }
+    user.addEventListener("beforeinput", function (e) {
+      if (e.data && /[@#]/.test(e.data)) {
+        e.preventDefault();
+        out("keyTyped '" + e.data.match(/[@#]/)[0] + "' → e.consume(); ERROR dialog: \"'@' and '#' are invlaid characters!\"", C.bad);
+      }
+    });
+    var TCOL = { Jordan: ["#ff0000", "RED"], Qatar: ["#ff00ff", "MAGENTA"], Oman: ["#00b200", "GREEN.darker()"], Palestine: ["#000000", "BLACK"], UK: ["#0000ff", "BLUE"] };
+    var lastC = country.value;
+    country.addEventListener("change", function () {
+      out('itemStateChanged DESELECTED "' + lastC + '" → ignored', C.dim);
+      var c = TCOL[country.value]; title.style.color = c[0];
+      out('itemStateChanged SELECTED "' + country.value + '" → titleLabel.setForeground(Color.' + c[1] + ")", C.ok);
+      lastC = country.value;
+    });
+    cancel.addEventListener("mouseenter", function () { cancel.style.background = "#ff0000"; out("mouseEntered → cancelButton.setBackground(Color.RED)", C.ev); });
+    cancel.addEventListener("mouseleave", function () { cancel.style.background = ""; out("mouseExited  → back to originalColor", C.dim); });
+    cancel.addEventListener("click", function () {
+      user.value = "";
+      out("actionPerformed (Cancel) → clear all fields", C.ev);
+      if (country.selectedIndex !== 0) {
+        country.selectedIndex = 0; title.style.color = TCOL.Jordan[0];
+        out('  countryCombo.setSelectedIndex(0) → itemStateChanged SELECTED "Jordan" → title RED', C.ok);
+        lastC = "Jordan";
+      }
+      if (sel > -1) {
+        sel = -1; draw();
+        out("deptList.clearSelection() → valueChanged → getSelectedValue() == null", C.warn);
+        out("switch (null) → java.lang.NullPointerException  (the bug; see the fix above)", C.bad);
+      }
+    });
+    $("l5Sign").addEventListener("click", function () {
+      out("actionPerformed (Sign Up) → Registration Info: Username: " + (user.value || "") + " · Department: " + (sel > -1 ? depts[sel] : "Not Selected") + " · Country: " + country.value, C.ok);
+    });
+    draw();
+    out("// type @ in Username, pick a department and a country, hover and click Cancel", C.dim);
+  })();
+})();
+
+</script>
+</body>
+</html>

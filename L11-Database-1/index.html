@@ -1,0 +1,1701 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 JDBC Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L11 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 11</p>
+  <h1>Database, Part 1: JDBC</h1>
+  <p class="lede">How a Java program talks to a database: the JDBC components, the eight basic steps, loading a driver, opening and closing a connection, Statements, <code>executeQuery</code> vs <code>executeUpdate</code>, reading a ResultSet, and metadata. Every slide of <em>Lecture 11 – Database – part 1</em> (21 slides) in order with all of its code, plus a real SQL database running inside this page so you can create the slides' <code>Catalog</code> table, insert into it, query it and walk a ResultSet cursor row by row.</p>
+  <div class="legend">
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<section class="sec" id="intro" data-title="What JDBC is">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–3</p>
+    <div class="sec-head-row"><h2>What JDBC is</h2><label class="done"><input type="checkbox" id="done-intro"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Your Java program can't speak "MySQL" or "Oracle" directly. <b>JDBC</b> is the translator in the middle: you write SQL as ordinary Strings, JDBC carries it to the database and brings the answer back. Think of a phone call:<ul><li><b>DriverManager</b> is the operator who finds the right phone line (the <b>driver</b>) for the number you dial (the URL).</li><li>The <b>Connection</b> is the open call.</li><li>A <b>Statement</b> is a sentence you say (one SQL command).</li><li>The <b>ResultSet</b> is the answer, which you read one row at a time.</li></ul></div></aside>
+
+  <div class="slide">
+    <p class="divider">JDBC <span class="sn">1</span></p>
+    <p style="font-size:.85rem;color:var(--muted)">The slides adapted from different resources including:</p>
+    <ul class="pts" style="font-size:.85rem;color:var(--muted)">
+      <li>Hitha Paulson, Assistant Professor, Dept. of Computer Science LF College, Guruvayoor</li>
+      <li>MET CS 667: 9. JDBC, Servlets, JSP Zlateva</li>
+      <li>Sanjay Goel</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>JDBC <span class="sn">2</span></h3>
+    <ul class="pts">
+      <li>JDBC (Java Database Connectivity) is an interface between Java and Database</li>
+      <li>JDBC receives queries from a Java Application program and communicate with Database</li>
+      <li>All the communications are in the form of SQL commands</li>
+      <li>JDBC is reponsible for
+        <ul><li>Open a Connection</li><li>Communicate with database</li><li>Execute SQL statements</li><li>Retrive query results</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>JDBC - Conceptual Components <span class="sn">3</span></h3>
+    <ul class="pts">
+      <li><b>Driver Manager:</b> Loads database drivers and manages connections between the application and the driver</li>
+      <li><b>Driver:</b> Translates API calls into operations for specific database</li>
+      <li><b>Connection:</b> Session between application and data source</li>
+      <li><b>Statement:</b> SQL statement to perform query or update</li>
+      <li><b>Metadata:</b> Information about returned data, database, &amp; driver</li>
+      <li><b>Result Set:</b> Logical set of columns and rows of data returned by executing a statement</li>
+    </ul>
+    <figure><div class="plate"><img src="img/s3_components.png" width="640" loading="lazy" alt="Diagram: DriverManager creates Connection, Connection creates Statement, Statement creates Result Set. Connection has an arrow labelled Established Link to DB. Statement goes through the Driver, which talks to the Database in both directions, and the Driver produces the Result Set."></div><figcaption>DriverManager —creates→ Connection —creates→ Statement —creates→ Result Set. The Connection is the established link to the DB; the Statement goes through the Driver, which talks to the Database and fills the Result Set.</figcaption></figure>
+  </div>
+
+  <div class="demo" id="chainDemo">
+    <div class="demo-head"><h3>Try it: click each component</h3><span class="added">Added</span></div>
+    <div class="chain" id="chain" role="group" aria-label="JDBC components">
+      <button type="button" data-k="dm">DriverManager</button><span class="arr">creates →</span>
+      <button type="button" data-k="con">Connection</button><span class="arr">creates →</span>
+      <button type="button" data-k="st">Statement</button><span class="arr">creates →</span>
+      <button type="button" data-k="rs">ResultSet</button>
+      <span class="arr" style="flex-basis:100%;height:0"></span>
+      <button type="button" data-k="drv">Driver</button><span class="arr">↔</span>
+      <button type="button" data-k="db">Database</button><span class="arr">·</span>
+      <button type="button" data-k="md">Metadata</button>
+    </div>
+    <div class="chain-info" id="chainInfo" aria-live="polite"><span class="expl">Pick a component to see what it is, which Java type it is, and the line of code that makes it.</span></div>
+  </div>
+
+  <details class="orig" data-pages="1-3"></details>
+  <div class="quiz" data-quiz="intro"></div>
+</section>
+
+<section class="sec" id="steps" data-title="The eight basic steps">
+  <div class="sec-head">
+    <p class="eyebrow">Slide 4</p>
+    <div class="sec-head-row"><h2>The eight basic steps</h2><label class="done"><input type="checkbox" id="done-steps"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Every JDBC program follows the same recipe. Memorise it as: <b>import → load driver → URL → connect → statement → execute → read rows → close</b>. The step-through below runs a complete program against the little database inside this page, one step at a time.</div></aside>
+
+  <div class="slide">
+    <h3>JDBC - Basic Steps <span class="sn">4</span></h3>
+    <ol class="pts">
+      <li>Import the necessary classes</li>
+      <li>Load the JDBC driver</li>
+      <li>Identify the data source (Define the Connection URL)</li>
+      <li>Establish the Connection</li>
+      <li>Create a Statement Object</li>
+      <li>Execute query string using Statement Object</li>
+      <li>Retrieve data from the returned ResultSet Object</li>
+      <li>Close ResultSet &amp; Statement &amp; Connection Object in order</li>
+    </ol>
+  </div>
+
+  <div class="demo" id="stepDemo">
+    <div class="demo-head"><h3>Try it: run the eight steps</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">A complete program (MySQL style). Press <b>Next step</b>: the lines for that step light up, the components that take part light up, and the console shows what happens. Steps 6 and 7 really run the query on this page's database.</p>
+    <div class="ctrl">
+      <button class="btn" id="stPrev" type="button">Previous</button>
+      <button class="btn solid" id="stNext" type="button">Next step</button>
+      <button class="btn" id="stReset" type="button">Start again</button>
+      <span id="stLabel" style="font-weight:600"></span>
+    </div>
+    <div class="chain" id="stChain" aria-hidden="true">
+      <button type="button" tabindex="-1" data-k="dm">DriverManager</button><span class="arr">→</span>
+      <button type="button" tabindex="-1" data-k="con">Connection</button><span class="arr">→</span>
+      <button type="button" tabindex="-1" data-k="st">Statement</button><span class="arr">→</span>
+      <button type="button" tabindex="-1" data-k="rs">ResultSet</button><span class="arr">·</span>
+      <button type="button" tabindex="-1" data-k="drv">Driver</button><span class="arr">↔</span>
+      <button type="button" tabindex="-1" data-k="db">Database</button>
+    </div>
+    <div class="chain-info" id="stInfo" aria-live="polite"></div>
+    <div class="code"><span class="code-label">JdbcSteps.java</span><pre class="java" id="stCode">// 1. Import the necessary classes
+import java.sql.*;
+
+public class JdbcSteps {
+   public static void main(String[] args) {
+      Connection conn = null;
+      Statement stmt = null;
+      ResultSet rs = null;
+      try {
+         // 2. Load the JDBC driver
+         Class.forName("com.mysql.cj.jdbc.Driver");
+         // 3. Identify the data source (define the connection URL)
+         String url = "jdbc:mysql://localhost:3306/university";
+         // 4. Establish the connection
+         conn = DriverManager.getConnection(url, "root", "password");
+         // 5. Create a Statement object
+         stmt = conn.createStatement();
+         // 6. Execute the query string using the Statement object
+         rs = stmt.executeQuery("SELECT id, name, grade FROM students");
+         // 7. Retrieve data from the returned ResultSet object
+         while (rs.next()) {
+            System.out.println(rs.getInt("id") + "  " + rs.getString("name") + "  " + rs.getInt("grade"));
+         }
+      } catch (ClassNotFoundException e) {
+         System.out.println("Driver not found: " + e.getMessage());
+      } catch (SQLException e) {
+         System.out.println("Database error: " + e.getMessage());
+      } finally {
+         // 8. Close ResultSet, Statement and Connection, in that order
+         try {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+            if (conn != null) conn.close();
+         } catch (SQLException e) {
+            e.printStackTrace();
+         }
+      }
+   }
+}</pre></div>
+    <div class="win" id="stGridWin" hidden><div class="win-bar"><span>ResultSet rs</span><i>–□×</i></div><div class="grid-out" id="stGrid"></div></div>
+    <div class="log wrap" id="stLog" style="height:8rem" aria-label="Console output"></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>For the final project in NetBeans: download the driver JAR for your database (for MySQL, <em>MySQL Connector/J</em>), then right-click the project's <b>Libraries</b> → <b>Add JAR/Folder</b> (Ant projects), or add the dependency to <code>pom.xml</code> (Maven projects). Without the JAR, step 2 throws <code>ClassNotFoundException</code>. Since JDBC 4.0 (Java 6), a driver JAR on the class path registers itself, so step 2 is optional today, but it's what the slides and exams expect.</span></aside>
+
+  <details class="orig" data-pages="4"></details>
+</section>
+
+<section class="sec" id="driver" data-title="DriverManager and the driver">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 5–7</p>
+    <div class="sec-head-row"><h2>DriverManager and the driver</h2><label class="done"><input type="checkbox" id="done-driver"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Each database brand ships its own <b>driver</b>: a JAR file with a class that knows how to talk to that database. <code>Class.forName("…Driver")</code> loads that class by name; loading it makes the driver register itself with <b>DriverManager</b>. Later, when you ask DriverManager for a connection, it asks each registered driver "can you handle this URL?" and the first one that says yes opens the connection. You never write <code>new DriverManager()</code>: everything on it is <code>static</code>.</div></aside>
+
+  <div class="slide">
+    <h3>JDBC - Driver Manager <span class="sn">5</span></h3>
+    <ul class="pts">
+      <li>DriverManager provides a common access layer on top of different database drivers
+        <ul><li>Responsible for managing the JDBC drivers available to an application</li><li>Hands out connections to the client code</li></ul></li>
+      <li>Maintains reference to each driver
+        <ul><li>Checks with each driver to determine if it can handle the specified URL</li><li>The first suitable driver located is used to create a connection</li></ul></li>
+      <li>DriverManager class can not be instantiated
+        <ul><li>All methods of DriverManager are static</li><li>Constructor is private</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Load and Register Driver <span class="sn">6</span></h3>
+    <div class="code"><pre class="java">Class.forName("Driver ClassName");</pre></div>
+    <p>e.g.,</p>
+    <div class="code"><pre class="java">1 Class.forName("sun.jdbc.odbc.JdbcOdbcDriver")
+2 Class.forName("com.mysql.jdbc.Driver");</pre></div>
+    <p><b>Note:</b> Calling the Class.forName automatically creates an instance of a driver and registers it with the DriverManager, so you don't need to create an instance of the class</p>
+  </div>
+
+  <div class="slide">
+    <h3>JDBC Driver <span class="sn">7</span></h3>
+    <ul class="pts">
+      <li>Loading: class.forName()</li>
+      <li>Using forName(String) from java.lang.Class instructs the JVM to find, load and link the class identified by the String<br>e.g</li>
+    </ul>
+    <div class="code"><pre class="java">try {
+    Class.forName("COM.cloudscape.core.JDBCDriver");
+}
+catch (ClassNotFoundException e) {
+    System.out.println("Driver not found");
+    e.printStackTrace();
+}</pre></div>
+    <ul class="pts">
+      <li>At run time the class loader locates the driver class and loads it
+        <ul><li>All static initializations during this loading</li><li>Note that the name of the driver is a literal string thus the driver does not need to be present at compile time</li></ul></li>
+    </ul>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>The slides write the class names with curly quotes (“ ”); Java only accepts straight quotes <code>"</code>, so type them yourself rather than copying from the PDF. Example 1 on slide 6 is missing its semicolon. <code>sun.jdbc.odbc.JdbcOdbcDriver</code> (the JDBC-ODBC bridge for MS Access) was <b>removed in Java 8</b>, and <code>com.mysql.jdbc.Driver</code> is the old Connector/J 5 name; current MySQL drivers use <code>com.mysql.cj.jdbc.Driver</code>. "Cloudscape" is the old name of Apache Derby (Java DB).</span></aside>
+
+  <details class="orig" data-pages="5-7"></details>
+  <div class="quiz" data-quiz="driver"></div>
+</section>
+
+<section class="sec" id="connect" data-title="Opening a connection">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 8–10</p>
+    <div class="sec-head-row"><h2>Opening a connection</h2><label class="done"><input type="checkbox" id="done-connect"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div><code>DriverManager.getConnection(url, user, password)</code> dials the database. The <b>URL</b> always starts with <code>jdbc:</code>, then names the driver type, then says where the database is. If the driver class can't be found you get a <code>ClassNotFoundException</code>; if anything goes wrong talking to the database (server off, wrong password, unknown database) you get an <code>SQLException</code>. That's why the examples have two <code>catch</code> blocks.</div></aside>
+
+  <div class="slide">
+    <h3>Establish Connection <span class="sn">8</span></h3>
+    <div class="code"><pre class="java">Connection conn = DriverManager.getConnection("URL");
+Connection conn = DriverManager.getConnection(url, username, password);</pre></div>
+    <ul class="pts">
+      <li>The drivers loaded recognizes, the JDBC URL in DriverManager.getConnection, that driver establishes a connection to the DBMS specified in the JDBC URL.</li>
+      <li>The DriverManager class,manages all of the details of establishing the connection</li>
+      <li>The connection returned by the method DriverManager.getConnection is an open connection you can use to create JDBC statements that pass your SQL statements to the DBMS.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Connection - Creation <span class="sn">9</span></h3>
+    <ul class="pts">
+      <li>Required to communicate with a database via JDBC</li>
+      <li>Three separate methods:</li>
+    </ul>
+    <div class="code"><pre class="java">public static Connection getConnection(String url)
+public static Connection getConnection(String url, Properties info)
+public static Connection getConnection(String url, String user, String password)</pre></div>
+    <ul class="pts"><li>Code Example (Access)</li></ul>
+    <div class="code"><pre class="java">try {// Load the driver class
+      System.out.println("Loading Class driver");
+      Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+      // Define the data source for the driver
+      String sourceURL = "jdbc:odbc:music";
+      // Create a connection through the DriverManager class
+      System.out.println("Getting Connection");
+      Connection databaseConnection = DriverManager.getConnection(sourceURL);
+      }
+catch (ClassNotFoundException cnfe) {
+         System.err.println(cnfe); }
+catch (SQLException sqle) {
+        System.err.println(sqle);}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Connection – Creation (cont.) <span class="sn">10</span></h3>
+    <ul class="pts"><li>Code Example (Oracle)</li></ul>
+    <div class="code"><pre class="java">try {
+   Class.forName("oracle.jdbc.driver.OracleDriver");
+   String sourceURL = "jdbc:oracle:thin:@hostname:1521:databasename";
+   String user = "myUserName";
+   String password = "password";
+   Connection databaseConnection=DriverManager.getConnection(sourceURL,user,
+password );
+   System.out.println("Connected Connection"); }
+catch (ClassNotFoundException cnfe) {
+   System.err.println(cnfe); }
+catch (SQLException sqle) {
+   System.err.println(sqle);}</pre></div>
+    <p style="font-size:.9rem;color:var(--muted)">In <code>jdbc:odbc:music</code>, <code>music</code> is an ODBC data source name set up in Windows. In <code>jdbc:oracle:thin:@hostname:1521:databasename</code>, <code>thin</code> is Oracle's pure-Java driver, <code>1521</code> is Oracle's default port and <code>databasename</code> is the database's SID.</p>
+  </div>
+
+  <div class="demo" id="urlDemo">
+    <div class="demo-head"><h3>Try it: build a connection and test it</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">Pick a database, fill in the details, and see the exact driver class, URL and code. Then untick a box and press <b>Run</b> to see which <code>catch</code> block fires.</p>
+    <div class="ctrl">
+      <label>Database <select id="cbDb"></select></label>
+      <label>Host <input type="text" id="cbHost" value="localhost" size="10"></label>
+      <label>Port <input type="number" id="cbPort" value="3306" style="width:5.5rem"></label>
+      <label>Database name <input type="text" id="cbName" value="university" size="10"></label>
+      <label>User <input type="text" id="cbUser" value="root" size="8"></label>
+      <label>Password <input type="text" id="cbPass" value="password" size="8"></label>
+    </div>
+    <div class="code"><pre class="java" id="cbCode"></pre></div>
+    <p class="expl" id="cbNote" style="margin:0"></p>
+    <div class="ctrl">
+      <label><input type="checkbox" id="cbJar" checked> Driver JAR added to the project</label>
+      <label><input type="checkbox" id="cbUp" checked> <span id="cbUpLbl">Database server is running</span></label>
+      <label><input type="checkbox" id="cbPw" checked> User name and password are right</label>
+      <label><input type="checkbox" id="cbExists" checked> The database exists</label>
+      <button class="btn solid" id="cbRun" type="button">Run</button>
+    </div>
+    <div class="log wrap" id="cbLog" style="height:7rem" aria-label="Console output"></div>
+  </div>
+
+  <details class="orig" data-pages="8-10"></details>
+  <div class="quiz" data-quiz="connect"></div>
+</section>
+
+<section class="sec" id="close" data-title="Closing a connection">
+  <div class="sec-head">
+    <p class="eyebrow">Slide 11</p>
+    <div class="sec-head-row"><h2>Closing a connection</h2><label class="done"><input type="checkbox" id="done-close"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A database can only keep a limited number of connections open at once. Every connection you forget to close is "leaked": it stays busy until the program ends. Leak enough of them and the next <code>getConnection</code> has nothing left to give you, so the program hangs. Code inside <code>finally</code> runs <em>whatever happens</em> in the <code>try</code> (normal end, caught exception, uncaught exception, even a <code>return</code>), so that's where <code>close()</code> belongs.</div></aside>
+
+  <div class="slide">
+    <h3>Connection - Closing <span class="sn">11</span></h3>
+    <ul class="pts">
+      <li>Each machine has a limited number of connections (separate thread)
+        <ul><li>If connections are not closed the system will run out of resources and freeze</li><li>Syntax: <code>public void close() throws SQLException</code></li></ul></li>
+    </ul>
+    <div class="fig-row">
+      <div style="flex:1 1 16rem;display:grid;gap:var(--s2)">
+        <ul class="pts"><li>Naïve Way:</li></ul>
+        <div class="code"><pre class="java">try {
+   Connection conn =
+      DriverManager.getConnection(url);
+   // Jdbc Code
+   …
+} catch (SQLException sqle)
+{
+   sqle.printStackTrace();
+}
+conn.close();</pre></div>
+        <ul class="pts"><li>SQL exception in the Jdbc code will prevent execution to reach conn.close()</li></ul>
+      </div>
+      <div style="flex:1 1 16rem;display:grid;gap:var(--s2)">
+        <ul class="pts"><li>Correct way (Use the finally clause)</li></ul>
+        <div class="code"><pre class="java">try{
+   Connection conn =
+      Driver.Manager.getConnection(url);
+   // JDBC Code
+} catch (SQLException sqle)
+{
+   sqle.printStackTrace();
+} finally {
+   try {
+      conn.close();
+   } catch (Exception e) {
+      e.printStackTrace();
+   }
+}</pre></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Two things to fix before you use slide 11's code: <code>Driver.Manager</code> should be <code>DriverManager</code>, and <code>conn</code> is declared <em>inside</em> the <code>try</code>, so neither <code>finally</code> nor the line after the naïve <code>try</code> can see it (compile error). Declare it first: <code>Connection conn = null;</code> and close with <code>if (conn != null) conn.close();</code>. Also, strictly, the naïve snippet's <code>catch</code> swallows an <code>SQLException</code> and carries on to <code>conn.close()</code>. It leaks when the exception is one the <code>catch</code> doesn't handle (e.g. a <code>NullPointerException</code>) or when the <code>catch</code> returns or re-throws. Try each case below.</span></aside>
+
+  <div class="demo" id="leakDemo">
+    <div class="demo-head"><h3>Try it: leak the connections</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">This machine allows 5 connections. Choose what goes wrong inside the JDBC code, then run either version. A red circle is a connection that was never closed.</p>
+    <div class="ctrl">
+      <label>In the JDBC code… <select id="lkErr">
+        <option value="none">nothing goes wrong</option>
+        <option value="sql">an SQLException is thrown (and caught)</option>
+        <option value="npe">a NullPointerException is thrown (not caught)</option>
+        <option value="ret">an SQLException is thrown and the catch block returns</option>
+      </select></label>
+    </div>
+    <div class="ctrl">
+      <button class="btn" id="lkNaive" type="button">Run naïve way</button>
+      <button class="btn solid" id="lkFinally" type="button">Run correct way (finally)</button>
+      <button class="btn" id="lkReset" type="button">Restart the machine</button>
+    </div>
+    <div class="pool" id="lkPool" aria-live="polite"></div>
+    <div class="log wrap" id="lkLog" style="height:8rem" aria-label="Execution trace"></div>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · the fixed version, and the modern way</p>
+    <div class="code"><span class="code-label">finally, written so it compiles</span><pre class="java">Connection conn = null;
+try {
+   conn = DriverManager.getConnection(url, user, password);
+   // JDBC code
+} catch (SQLException sqle) {
+   sqle.printStackTrace();
+} finally {
+   try {
+      if (conn != null) conn.close();
+   } catch (Exception e) {
+      e.printStackTrace();
+   }
+}</pre></div>
+    <div class="code"><span class="code-label">try-with-resources (Java 7 and later)</span><pre class="java">try (Connection conn = DriverManager.getConnection(url, user, password);
+     Statement stmt = conn.createStatement()) {
+   // JDBC code
+} catch (SQLException sqle) {
+   sqle.printStackTrace();
+}   // stmt and conn are closed automatically, in reverse order, even if an exception happens</pre></div>
+    <p style="font-size:.9rem;color:var(--muted)">Anything that implements <code>AutoCloseable</code> (Connection, Statement and ResultSet all do) can go in the brackets after <code>try</code>. It's shorter and can't forget a <code>close()</code>.</p>
+  </div>
+
+  <details class="orig" data-pages="11"></details>
+  <div class="quiz" data-quiz="close"></div>
+</section>
+
+<section class="sec" id="statement" data-title="Statement">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 12–13</p>
+    <div class="sec-head-row"><h2>Statement</h2><label class="done"><input type="checkbox" id="done-statement"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Once connected, ask the connection for a <code>Statement</code>: <code>connection.createStatement()</code>. One Statement can send as many SQL commands as you like, one after another. When you're done, close it (in <code>finally</code>, like the connection) so its resources are freed straight away instead of "some time later" when the garbage collector notices nobody uses it.</div></aside>
+
+  <div class="slide">
+    <h3>Statement <span class="sn">12</span></h3>
+    <ul class="pts">
+      <li>Statements in JDBC abstract the SQL statements</li>
+      <li>Primary interface to the tables in the database</li>
+      <li>Used to create, retrieve, update &amp; delete data (CRUD) from a table
+        <ul><li>Syntax: <code>Statement statement = connection.createStatement();</code></li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Statement - Release <span class="sn">13</span></h3>
+    <div class="fig-row">
+      <ul class="pts" style="flex:1 1 15rem">
+        <li>Statement can be used multiple times for sending a query</li>
+        <li>It should be released when it is no longer required
+          <ul><li>Statement.close():</li><li>It releases the JDBC resources immediately instead of waiting for the statement to close automatically via garbage collection</li></ul></li>
+        <li>Garbage collection is done when an object is unreachable
+          <ul><li>An object is reachable if there is a chain of reference that reaches the object from some root reference</li></ul></li>
+        <li>Closing of the statement should be in the finally clause</li>
+      </ul>
+      <div class="code" style="flex:1 1 17rem"><pre class="java">try{
+   Connection conn =
+      Driver.Manager.getConnection(url);
+   Statement stmt = conn.
+      createStatement();
+   // JDBC Code
+} catch (SQLException sqle) {
+   sqle.printStackTrace();
+} finally {
+   try {stmt.close();
+        conn.close();
+   } catch (Exception e) {
+      e.printStackTrace();
+   }
+}</pre></div>
+    </div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Same two fixes as slide 11: <code>DriverManager</code>, and declare <code>conn</code> and <code>stmt</code> before the <code>try</code> (set to <code>null</code>). Close the Statement <em>before</em> the Connection (step 8: ResultSet, then Statement, then Connection). Garbage collection example: after <code>stmt = null;</code> nothing refers to the old Statement any more, so it's unreachable and may be collected, but you can't know when.</span></aside>
+
+  <details class="orig" data-pages="12-13"></details>
+</section>
+
+<section class="sec" id="exec" data-title="Executing queries">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 14–17</p>
+    <div class="sec-head-row"><h2>Executing queries</h2><label class="done"><input type="checkbox" id="done-exec"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Two methods, one rule: <b>does the SQL give you rows back?</b><ul><li>Yes (<code>SELECT</code>) → <code>executeQuery(sql)</code>, which returns a <code>ResultSet</code>.</li><li>No (<code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>CREATE</code>, <code>DROP</code>, <code>ALTER</code>) → <code>executeUpdate(sql)</code>, which returns an <code>int</code>: how many rows changed (always 0 for <code>CREATE</code>/<code>DROP</code>/<code>ALTER</code>).</li></ul>The SQL itself is just a Java String, so long commands are glued together with <code>+</code>. Watch the spaces and quotes where the pieces join.</div></aside>
+
+  <div class="slide">
+    <h3>Statement Methods - Executing Queries <span class="sn">14</span></h3>
+    <ul class="pts">
+      <li>Two primary methods in statement interface used for executing Queries
+        <ul><li><b>executeQuery</b> Used to retrieve data from a database</li><li><b>executeUpdate:</b> Used for inserting, updating &amp; deleting data</li></ul></li>
+      <li>executeQuery used to retrieve data from database
+        <ul><li>Primarily uses Select commands</li></ul></li>
+      <li>executeUpdate used for creating, updating &amp; deleting data
+        <ul><li>SQL should contain Update, Insert or Delete commands</li></ul></li>
+      <li>Uset setQueryTimeout to specify a maximum delay to wait for results</li>
+    </ul>
+    <p class="added">Added · setQueryTimeout</p>
+    <div class="code"><pre class="java">statement.setQueryTimeout(10);   // seconds; if the database takes longer, an SQLException is thrown</pre></div>
+  </div>
+
+  <div class="demo" id="sortDemo">
+    <div class="demo-head"><h3>Try it: executeQuery or executeUpdate?</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">For each SQL string, pick the method you'd call. <span id="sortScore" class="score"></span></p>
+    <div class="sorter" id="sorter"></div>
+  </div>
+
+  <div class="slide">
+    <h3>Executing Queries - Data Definition Language (DDL) <span class="sn">15</span></h3>
+    <ul class="pts">
+      <li>Data definition language queries use executeUpdate</li>
+      <li>Syntax: <code>int executeUpdate(String sqlString) throws SQLException</code>
+        <ul><li>It returns an integer which is the number of rows updated</li><li>sqlString should be a valid String else an exception is thrown</li></ul></li>
+      <li>Example 1: Create a new table</li>
+    </ul>
+    <div class="code"><pre class="java">Statement statement = connection.createStatement();
+String sqlString =
+"create table Catalog"
++ "(Title Varchar(256) Primary Key Not Null,"+
++ "LeadActor Varchar(256) Not Null, LeadActress Varchar(256) Not Null,"
++ "Type Varchar(20) Not Null, ReleaseDate Date Not NULL )";
+statement.executeUpdate(sqlString);</pre></div>
+    <ul class="pts"><li>executeUpdate returns a zero since no row is updated</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>Executing Queries - Data Manipulation Language (DML) <span class="sn">16</span></h3>
+    <ul class="pts"><li>Example 2: Update table</li></ul>
+    <div class="code"><pre class="java">Statement statement =
+     connection.createStatement();
+String sqlString =
+ "insert into Catalog"
++ "(Title, LeadActor, LeadActress, Type, ReleaseDate)"
++ "values('Gone With The Wind', 'Clark Gable', 'Vivien Liegh',"
++ "'Romantic', '02/18/2003') "
+statement.executeUpdate(sqlString);</pre></div>
+    <ul class="pts"><li>executeUpdate returns a 1 since one row is added</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>Executing Queries - Data Manipulation Language (DML) <span class="sn">17</span></h3>
+    <ul class="pts">
+      <li>Data definition language queries use executeQuery</li>
+      <li>Syntax</li>
+    </ul>
+    <div class="code"><pre class="java">ResultSet executeQuery(String sqlString) throws
+     SQLException</pre></div>
+    <ul class="pts">
+      <li style="list-style:none">It returns a ResultSet object which contains the results of the Query</li>
+      <li>Example 1: Query a table</li>
+    </ul>
+    <div class="code"><pre class="java">Statement statement = connection.createStatement();
+String sqlString = "Select Catalog.Title, Catalog.LeadActor, Catalog.LeadActress," +
+             "Catalog.Type, Catalog.ReleaseDate From Catalog";
+ResultSet rs = statement.executeQuery(sqlString);</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Bugs to spot (exam favourites): on slide 15 the line ending <code>…Not Null,"+</code> is followed by a line starting with <code>+</code>, giving <code>"…" + + "…"</code>, which doesn't compile (unary <code>+</code> can't be applied to a String). Delete one <code>+</code>. Slide 16's string is missing its <code>;</code>. Slide 17 says "Data definition language" but means queries (<code>SELECT</code>), which use <code>executeQuery</code>. The slides' curly quotes must be typed as straight <code>"</code> and <code>'</code>. Date format depends on the database: MySQL wants <code>'2003-02-18'</code>, not <code>'02/18/2003'</code>.</span></aside>
+
+  <div class="demo" id="sqlDemo">
+    <div class="demo-head"><h3>Try it: a real SQL database</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">This is SQLite running inside the page. Run the slide 15 preset to create <code>Catalog</code>, then slide 16 to insert, then slide 17 to query. The grey line shows which Java method you'd call and what it returns. Edit the SQL freely; <kbd>Ctrl</kbd>+<kbd>Enter</kbd> runs it. The page starts with tables <code>students</code>, <code>Books</code>, <code>Publishers</code>, <code>Authors</code>, <code>BooksAuthors</code> and <code>users</code>.</p>
+    <div class="ctrl">
+      <label>Preset <select id="sqlPreset"></select></label>
+      <button class="btn solid" id="sqlRun" type="button">Run</button>
+      <button class="btn" id="sqlReset" type="button">Reset database</button>
+    </div>
+    <label for="sqlIn" class="sr">SQL</label>
+    <textarea class="sql-in" id="sqlIn" spellcheck="false"></textarea>
+    <div class="java-line" id="sqlJava" aria-live="polite"></div>
+    <div class="win"><div class="win-bar"><span>Result</span><i>–□×</i></div><div class="grid-out" id="sqlOut"></div></div>
+  </div>
+
+  <details class="orig" data-pages="14-17"></details>
+  <div class="quiz" data-quiz="exec"></div>
+</section>
+
+<section class="sec" id="rs" data-title="ResultSet">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 18–20</p>
+    <div class="sec-head-row"><h2>ResultSet</h2><label class="done"><input type="checkbox" id="done-rs"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A ResultSet is the table of rows your <code>SELECT</code> returned, with a <b>cursor</b>: an arrow pointing at one row. It starts <em>before</em> the first row, so you must call <code>rs.next()</code> before reading anything. Each <code>next()</code> moves down one row and says <code>true</code> if there was a row there, <code>false</code> when you've gone past the end. That's why the standard loop is <code>while (rs.next()) { … }</code>. To read a column of the current row, call the <code>getXxx</code> that matches its type, by <b>name</b> or by <b>number</b>, and remember the first column is <b>1</b>, not 0.</div></aside>
+
+  <div class="slide">
+    <h3>ResultSet - Definition <span class="sn">18</span></h3>
+    <ul class="pts">
+      <li>ResultSet contains the results of the database query that are returned</li>
+      <li>Allows the program to scroll through each row and read all columns of data</li>
+      <li>ResultSet provides various access methods that take a column index or column name and returns the data
+        <ul><li>All methods may not be applicable to all resultsets depending on the method of creation of the statement.</li></ul></li>
+      <li>When the executeQuery method returns the ResultSet the cursor is placed before the first row of the data
+        <ul><li>Cursor refers to the set of rows returned by a query and is positioned on the row that is being accessed</li><li>To move the cursor to the first row of data next() method is invoked on the resultset</li><li>If the next row has a data the next() results true else it returns false and the cursor moves beyond the end of the data</li></ul></li>
+      <li>First column has index 1, not 0</li>
+      <li>Depending on the data numerous functions exist
+        <ul><li>getShort(), getInt(), getLong()</li><li>getFloat(), getDouble()</li><li>getClob(), getBlob(),</li><li>getDate(), getTime(), getArray(), getString()</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="demo" id="rsDemo">
+    <div class="demo-head"><h3>Try it: move the cursor and read columns</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">A forward-only ResultSet (the default) for <code>SELECT id, name, age, grade FROM students</code>. Press <b>rs.next()</b> to move the ▶ cursor. Then call a getter on the current row. Try column <code>0</code>, column <code>5</code>, <code>getInt("name")</code>, or a getter before the first <code>next()</code>.</p>
+    <div class="ctrl">
+      <button class="btn solid" type="button" data-rs="next">rs.next()</button>
+      <button class="btn" type="button" data-rs="previous">rs.previous()</button>
+      <button class="btn" type="button" data-rs="loop">Run while (rs.next())</button>
+      <button class="btn" type="button" data-rs="reload">Run the query again</button>
+    </div>
+    <div class="win"><div class="win-bar"><span>ResultSet rs</span><i>–□×</i></div><div class="grid-out" id="rsBox"></div></div>
+    <div class="java-line" id="rsInfo" aria-live="polite"></div>
+    <div class="ctrl">
+      <label>rs.<select id="gtM"><option>getString</option><option>getInt</option><option>getDouble</option><option>getDate</option></select>(</label>
+      <label><span class="sr">argument</span><input type="text" id="gtArg" value="2" size="8" aria-label="Column index or name">)</label>
+      <button class="btn" id="gtRun" type="button">Call</button>
+      <span class="expl">a number means column index, anything else a column name</span>
+    </div>
+    <div class="log wrap" id="rsLog" style="height:8rem" aria-label="ResultSet log"></div>
+  </div>
+
+  <div class="slide">
+    <h3>ResultSet <span class="sn">19</span></h3>
+    <ul class="pts">
+      <li>Examples:
+        <ul>
+          <li>Using column Index:<br>Syntax: <code>public String getString(int columnIndex) throws SQLException</code><br>e.g. <code>ResultSet rs = statement.executeQuery(sqlString);</code><br><code>String data = rs.getString(1)</code></li>
+          <li>Using Column name<br><code>public String getString(String columnName) throws SQLException</code><br>e.g. <code>ResultSet rs = statement.executeQuery(sqlString);</code><br><code>String data = rs.getString(Name)</code></li>
+        </ul></li>
+      <li>The ResultSet can contain multiple records.
+        <ul><li>To view successive records next() function is used on the ResultSet</li><li>Example: <code>while(rs.next()) {</code></li><li><code>System.out.println(rs.getString(1) ); }</code></li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>ResultSet <span class="sn">20</span></h3>
+    <ul class="pts">
+      <li>Access Rows of a ResultSet
+        <ul><li>The basic loop for analyzing a result set uses format:</li></ul></li>
+    </ul>
+    <div class="code"><pre class="java">ResultSet rs = stmt.executeQuery ("select * from books");
+while ( rs.next()) {
+   // rs.next pointers to the next row
+       analyze a row of the result set;
+   }</pre></div>
+    <ul class="pts">
+      <li>Access Attributes of a row
+        <ul><li>Get the value of an attribute by methods of format:</li></ul></li>
+    </ul>
+    <div class="code"><pre class="java">Xxx getXxx (int clmn_num) or
+Xxx getXxx (String clmn_name)
+e.g., String cofName = rs.getString(1) or
+      String cofName = rs.getString("COF_NAME");</pre></div>
+    <ul class="pts"><li style="list-style:none">There are many other getXxx methods including:</li></ul>
+    <div class="code"><pre class="java">int    supId = rs.getInt ("SUP_ID");
+float price = rs.getDouble ("PRICE");</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>On slide 19, <code>rs.getString(Name)</code> needs quotes, <code>rs.getString("Name")</code>, otherwise Java looks for a variable called <code>Name</code>; the two <code>getString</code> lines are also missing <code>;</code>. On slide 20, <code>float price = rs.getDouble("PRICE");</code> doesn't compile: a <code>double</code> can't be stored in a <code>float</code> without a cast. Write <code>double price = rs.getDouble("PRICE");</code> or <code>float price = rs.getFloat("PRICE");</code>. Column names are not case-sensitive: <code>"name"</code> and <code>"NAME"</code> both work.</span></aside>
+
+  <details class="orig" data-pages="18-20"></details>
+  <div class="quiz" data-quiz="rs"></div>
+</section>
+
+<section class="sec" id="meta" data-title="Metadata">
+  <div class="sec-head">
+    <p class="eyebrow">Slide 21</p>
+    <div class="sec-head-row"><h2>Metadata</h2><label class="done"><input type="checkbox" id="done-meta"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div><b>Metadata</b> is "data about the data". <code>rs.getMetaData()</code> tells you how many columns the result has and what they're called, so you can write one method that prints, or fills a JTable with, <em>any</em> query, without knowing the columns in advance.</div></aside>
+
+  <div class="slide">
+    <h3>JDBC – Metadata from RS <span class="sn">21</span></h3>
+    <div class="code"><pre class="java">public static void printRS(ResultSet rs) throws
+  SQLException
+{
+  ResultSetMetaData md = rs.getMetaData();
+  // get number of columns
+  int nCols = md.getColumnCount();
+  // print column names
+  for(int i=1; i &lt; nCols; ++i)
+       System.out.print( md.getColumnName( i)+",");
+     / / output resultset
+  while ( rs.next() )
+  {    for(int i=1; i &lt; nCols; ++i)
+             System.out.print( rs.getString( i)+",");
+       System.out.println( rs.getString(nCols) );
+  }
+}</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>The row loop is right: it prints columns 1 to <code>nCols-1</code> followed by commas, then the last column with <code>println</code>. The header loop is missing that last step, so the last column name is never printed and there's no line break, which glues the first row onto the header line. Add <code>System.out.println(md.getColumnName(nCols));</code> after the first loop. Also <code>/ / output resultset</code> (with a space) isn't a comment and won't compile; it should be <code>// output resultset</code>.</span></aside>
+
+  <div class="demo" id="metaDemo">
+    <div class="demo-head"><h3>Try it: printRS and a JTable from any query</h3><span class="added">Added</span></div>
+    <div class="ctrl">
+      <label>Query <select id="mdQ"></select></label>
+      <label><input type="radio" name="mdV" value="slide" checked> slide version</label>
+      <label><input type="radio" name="mdV" value="fixed"> fixed version</label>
+      <button class="btn solid" id="mdRun" type="button">printRS(rs)</button>
+      <button class="btn" id="mdTable" type="button">Load into a JTable</button>
+    </div>
+    <div class="java-line" id="mdInfo" aria-live="polite"></div>
+    <pre class="console" id="mdOut" style="min-height:6rem" aria-label="Console output"><span class="ttl">Output</span></pre>
+    <div class="win" id="mdWin" hidden><div class="win-bar"><span>JTable</span><i>–□×</i></div><div class="grid-out" id="mdGrid"></div></div>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · printRS fixed, and filling a JTable from a ResultSet (links Lecture 10 to your final project)</p>
+    <div class="code"><span class="code-label">printRS, fixed</span><pre class="java">public static void printRS(ResultSet rs) throws SQLException
+{
+   ResultSetMetaData md = rs.getMetaData();
+   int nCols = md.getColumnCount();
+   // print column names: the first nCols-1 with commas, the last one with println
+   for (int i = 1; i &lt; nCols; ++i)
+      System.out.print(md.getColumnName(i) + ",");
+   System.out.println(md.getColumnName(nCols));
+   // output resultset
+   while (rs.next())
+   {
+      for (int i = 1; i &lt; nCols; ++i)
+         System.out.print(rs.getString(i) + ",");
+      System.out.println(rs.getString(nCols));
+   }
+}</pre></div>
+    <div class="code"><span class="code-label">ResultSet → JTable</span><pre class="java">import java.sql.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+public static DefaultTableModel toTableModel(ResultSet rs) throws SQLException {
+   ResultSetMetaData md = rs.getMetaData();
+   int nCols = md.getColumnCount();
+   DefaultTableModel model = new DefaultTableModel();
+   for (int i = 1; i &lt;= nCols; i++)
+      model.addColumn(md.getColumnLabel(i));      // headers come from the metadata
+   while (rs.next()) {
+      Object[] row = new Object[nCols];
+      for (int i = 1; i &lt;= nCols; i++)
+         row[i - 1] = rs.getObject(i);            // JDBC columns start at 1, arrays at 0
+      model.addRow(row);
+   }
+   return model;
+}
+
+// inside your JFrame, e.g. in a button's actionPerformed:
+try (Connection conn = DriverManager.getConnection(url, user, password);
+     Statement stmt = conn.createStatement();
+     ResultSet rs = stmt.executeQuery("SELECT * FROM students")) {
+   table.setModel(toTableModel(rs));
+} catch (SQLException ex) {
+   JOptionPane.showMessageDialog(this, ex.getMessage(), "Database error", JOptionPane.ERROR_MESSAGE);
+}</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>ResultSetMetaData method</th><th>Returns</th></tr></thead>
+        <tbody>
+          <tr><td><code>int getColumnCount()</code></td><td>Number of columns in the result.</td></tr>
+          <tr><td><code>String getColumnName(int column)</code></td><td>The column's name in the table.</td></tr>
+          <tr><td><code>String getColumnLabel(int column)</code></td><td>The heading to show: the <code>AS</code> alias if the query gave one, otherwise the name.</td></tr>
+          <tr><td><code>String getColumnTypeName(int column)</code></td><td>The database's type name, e.g. <code>VARCHAR</code>, <code>INT</code>.</td></tr>
+          <tr><td><code>int getColumnType(int column)</code></td><td>The type as a <code>java.sql.Types</code> constant.</td></tr>
+          <tr><td><code>String getTableName(int column)</code></td><td>The table the column came from.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="21"></details>
+  <div class="quiz" data-quiz="meta"></div>
+</section>
+
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 11</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 11 – Database – part 1</em> (CS254, 21 slides). The in-page database is SQLite (sql.js); it resets when you reload. Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l11-done", "quizzes": {"intro": [{"q": "JDBC stands for…", "o": ["Java Database Connectivity", "Java Data Binding Component", "Joint Database Connection", "Java Driver Base Class"], "a": 0, "e": "Slide 2."}, {"q": "In what form does JDBC communicate with the database?", "o": ["SQL commands", "Java objects", "XML files", "HTTP requests"], "a": 0, "e": "Slide 2: all the communications are in the form of SQL commands."}, {"q": "Which component translates API calls into operations for a specific database?", "o": ["Driver", "DriverManager", "Statement", "Metadata"], "a": 0, "e": "Slide 3."}, {"q": "In the slide 3 diagram, which object creates the Statement?", "o": ["Connection", "DriverManager", "ResultSet", "Driver"], "a": 0, "e": "DriverManager creates Connection, Connection creates Statement, Statement creates ResultSet."}, {"q": "A Result Set is…", "o": ["a logical set of columns and rows of data returned by executing a statement", "the list of loaded drivers", "the session between application and data source", "information about the database"], "a": 0, "e": "Slide 3. Information about the data is Metadata; the session is the Connection."}], "driver": [{"q": "Which step comes straight after \"Load the JDBC driver\"?", "o": ["Identify the data source (define the connection URL)", "Create a Statement object", "Establish the connection", "Import the necessary classes"], "a": 0, "e": "Slide 4: import, load driver, URL, connect, statement, execute, retrieve, close."}, {"q": "In what order are the objects closed (step 8)?", "o": ["ResultSet, then Statement, then Connection", "Connection, then Statement, then ResultSet", "Statement, then ResultSet, then Connection", "Order doesn't matter"], "a": 0, "e": "Slide 4: close ResultSet & Statement & Connection in order, the reverse of how they were created."}, {"q": "Why can't you write <code>new DriverManager()<\/code>?", "o": ["Its constructor is private; all its methods are static", "It's an interface", "It's abstract", "You can, it's just unusual"], "a": 0, "e": "Slide 5."}, {"q": "If several loaded drivers could handle a URL, DriverManager uses…", "o": ["the first suitable driver it finds", "the newest driver", "all of them", "it throws an exception"], "a": 0, "e": "Slide 5."}, {"q": "What does <code>Class.forName(\"com.mysql.jdbc.Driver\")<\/code> do?", "o": ["Loads the driver class, which creates an instance and registers it with DriverManager", "Opens a connection to MySQL", "Creates a Statement", "Checks that the database exists"], "a": 0, "e": "Slide 6."}, {"q": "Which checked exception does <code>Class.forName<\/code> throw when the driver isn't on the class path?", "o": ["ClassNotFoundException", "SQLException", "NullPointerException", "IOException"], "a": 0, "e": "Slide 7."}, {"q": "Why does the driver not need to be present at compile time?", "o": ["Its name is just a String literal, looked up at run time", "The compiler downloads it", "DriverManager contains every driver", "It does need to be present"], "a": 0, "e": "Slide 7."}], "connect": [{"q": "Which is NOT one of the three <code>getConnection<\/code> methods?", "o": ["getConnection(String user, String password)", "getConnection(String url)", "getConnection(String url, Properties info)", "getConnection(String url, String user, String password)"], "a": 0, "e": "Slide 9: every version takes the URL first."}, {"q": "In <code>jdbc:oracle:thin:@hostname:1521:databasename<\/code>, what is 1521?", "o": ["The port number", "The user ID", "The driver version", "The timeout"], "a": 0, "e": "1521 is Oracle's default port."}, {"q": "The password is wrong. Which catch block runs in the slide 10 example?", "o": ["catch (SQLException sqle)", "catch (ClassNotFoundException cnfe)", "neither, the program just stops", "both"], "a": 0, "e": "Problems talking to the database are SQLExceptions; ClassNotFoundException is only for a missing driver class."}, {"q": "What does <code>DriverManager.getConnection<\/code> return?", "o": ["An open Connection you can use to create statements", "A ResultSet", "A Driver", "true or false"], "a": 0, "e": "Slide 8."}, {"q": "On Java 8 or newer, <code>Class.forName(\"sun.jdbc.odbc.JdbcOdbcDriver\")<\/code>…", "o": ["throws ClassNotFoundException, the bridge was removed", "connects to Access", "works only on Windows", "returns null"], "a": 0, "e": "The JDBC-ODBC bridge was removed in Java 8; use a pure-Java driver such as UCanAccess for Access."}], "close": [{"q": "Why must connections be closed?", "o": ["Each machine has a limited number; unclosed ones use up resources until the system freezes", "Otherwise the data isn't saved", "Java won't compile otherwise", "To clear the ResultSet"], "a": 0, "e": "Slide 11."}, {"q": "Where should <code>conn.close()<\/code> go?", "o": ["In a finally clause", "Right after getConnection", "In the catch block only", "In main, at the very end"], "a": 0, "e": "Slide 11: finally runs whether or not an exception happened."}, {"q": "Why does slide 11's \"correct way\" not compile as written?", "o": ["conn is declared inside try, so finally can't see it (and Driver.Manager is a typo)", "finally can't contain a try", "close() doesn't exist", "catch must come after finally"], "a": 0, "e": "Declare Connection conn = null; before the try."}, {"q": "What does <code>stmt.close()<\/code> do?", "o": ["Releases the JDBC resources immediately instead of waiting for garbage collection", "Deletes the table", "Closes the connection too", "Commits the data"], "a": 0, "e": "Slide 13."}, {"q": "When can an object be garbage collected?", "o": ["When it's unreachable: no chain of references reaches it from a root", "As soon as a method ends", "When close() is called", "Every 10 seconds"], "a": 0, "e": "Slide 13."}, {"q": "With try-with-resources, the Connection and Statement are…", "o": ["closed automatically, in reverse order, even if an exception happens", "never closed", "closed only if no exception happens", "closed by the garbage collector"], "a": 0, "e": "Added: Java 7's try ( … ) { } closes every AutoCloseable it declares."}], "exec": [{"q": "Which method runs a SELECT?", "o": ["executeQuery", "executeUpdate", "createStatement", "getConnection"], "a": 0, "e": "Slide 14."}, {"q": "<code>executeUpdate<\/code> on a CREATE TABLE returns…", "o": ["0", "1", "a ResultSet", "true"], "a": 0, "e": "Slide 15: no row is updated."}, {"q": "<code>executeUpdate<\/code> on an INSERT that adds one row returns…", "o": ["1", "0", "the new row", "a ResultSet"], "a": 0, "e": "Slide 16."}, {"q": "What type does <code>executeQuery<\/code> return?", "o": ["ResultSet", "int", "boolean", "String"], "a": 0, "e": "Slide 17."}, {"q": "Which method sets the maximum time to wait for results?", "o": ["setQueryTimeout", "setMaxRows", "setWait", "setTimeout"], "a": 0, "e": "Slide 14."}, {"q": "CRUD stands for…", "o": ["Create, Retrieve, Update, Delete", "Connect, Run, Use, Disconnect", "Create, Read, Upload, Download", "Class, Record, Update, Driver"], "a": 0, "e": "Slide 12."}, {"q": "What's wrong with slide 15's string?", "o": ["A line ends with + and the next starts with +, giving + + which doesn't compile", "SQL can't create tables", "It uses executeQuery", "Nothing"], "a": 0, "e": "\"…\" + + \"…\" applies unary + to a String: compile error."}], "rs": [{"q": "Right after <code>executeQuery<\/code>, where is the cursor?", "o": ["Before the first row", "On the first row", "On the last row", "After the last row"], "a": 0, "e": "Slide 18."}, {"q": "What does <code>rs.next()<\/code> return when there are no more rows?", "o": ["false, and the cursor moves beyond the end", "null", "it throws an exception", "true"], "a": 0, "e": "Slide 18."}, {"q": "What's the index of the first column?", "o": ["1", "0", "-1", "it depends"], "a": 0, "e": "Slide 18: first column has index 1, not 0."}, {"q": "<code>rs.getString(1)<\/code> vs <code>rs.getString(\"COF_NAME\")<\/code>:", "o": ["both read a column of the current row, by index or by name", "the first reads row 1", "the second reads the whole column", "only the first is allowed"], "a": 0, "e": "Slides 19–20."}, {"q": "<code>float price = rs.getDouble(\"PRICE\");<\/code>", "o": ["doesn't compile: a double can't go into a float without a cast", "works fine", "returns 0", "reads the column as a String"], "a": 0, "e": "Use double price = rs.getDouble(…) or rs.getFloat(…)."}, {"q": "Which loop reads every row?", "o": ["while (rs.next()) { … }", "for (int i = 0; i < rs.length; i++)", "do { … } while (rs.hasNext())", "rs.forEach(…)"], "a": 0, "e": "Slides 19–20."}], "meta": [{"q": "How do you get a ResultSet's metadata?", "o": ["rs.getMetaData()", "conn.getMetaData()", "new ResultSetMetaData(rs)", "rs.getColumns()"], "a": 0, "e": "Slide 21. (conn.getMetaData() exists too, but describes the whole database.)"}, {"q": "For <code>SELECT id, name, age FROM students<\/code>, <code>md.getColumnCount()<\/code> is…", "o": ["3", "4", "the number of rows", "0"], "a": 0, "e": "Three columns."}, {"q": "What goes wrong in slide 21's header loop?", "o": ["It stops at nCols-1 with no println, so the last name is missing and the first row joins the header line", "It prints every name twice", "It starts at column 0", "Nothing"], "a": 0, "e": "Add System.out.println(md.getColumnName(nCols)); after it."}, {"q": "Why does the row loop print <code>rs.getString(nCols)<\/code> separately with println?", "o": ["So the last value ends the line with no trailing comma", "Because column nCols is special", "To skip the last column", "It's a mistake"], "a": 0, "e": "Columns 1..nCols-1 get a comma; the last ends the line."}]}, "flashcards": [["JDBC", "Java Database Connectivity: the interface between Java and a database. It opens a connection, sends SQL, and returns results.", "Slide 2"], ["DriverManager", "Loads drivers and hands out connections. Uses the first driver that can handle the URL. All methods are static; the constructor is private.", "Slides 3, 5"], ["Driver", "Translates JDBC API calls into operations for one specific database.", "Slide 3"], ["Connection", "Session between the application and the data source. Close it in finally.", "Slides 3, 11"], ["Statement", "Sends SQL (CRUD). Made by connection.createStatement(); reusable; close it when done.", "Slides 12–13"], ["ResultSet", "Rows and columns returned by a query. The cursor starts before the first row.", "Slides 3, 18"], ["Metadata", "Information about the returned data, database and driver; rs.getMetaData() gives column count and names.", "Slides 3, 21"], ["8 basic steps", "Import, load driver, URL, connect, create Statement, execute, read ResultSet, close (ResultSet → Statement → Connection).", "Slide 4"], ["Class.forName(\"…Driver\")", "Loads the driver class; it registers itself with DriverManager. Throws ClassNotFoundException.", "Slides 6–7"], ["getConnection overloads", "(url) · (url, Properties info) · (url, user, password). Throws SQLException.", "Slide 9"], ["JDBC URLs", "jdbc:odbc:music · jdbc:oracle:thin:@host:1521:db · jdbc:mysql://localhost:3306/db", "Slides 9–10"], ["Closing", "Limited connections: unclosed ones freeze the system. Put close() in finally, or use try-with-resources.", "Slide 11"], ["executeQuery(sql)", "For SELECT. Returns a ResultSet.", "Slides 14, 17"], ["executeUpdate(sql)", "For INSERT/UPDATE/DELETE (returns the number of rows changed) and CREATE/DROP (returns 0).", "Slides 14–16"], ["setQueryTimeout(s)", "Maximum delay to wait for results.", "Slide 14"], ["rs.next()", "Moves the cursor down one row; true if there is a row, false past the end. Loop: while (rs.next()) { … }", "Slides 18–20"], ["getXxx(index | name)", "getInt, getString, getDouble, getDate, … on the current row. First column is 1, not 0.", "Slides 18–20"], ["printRS", "Uses ResultSetMetaData to print any ResultSet; fix the header loop with println(md.getColumnName(nCols)).", "Slide 21"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+<script>
+// Shared in-browser "database" for the JDBC guides (SQLite via sql.js, pure-JS build).
+(function () {
+  var SRC = "../vendor/sql-asm.js";
+  var SEED = [
+    "CREATE TABLE students(id INTEGER PRIMARY KEY, name VARCHAR(40) NOT NULL, age INT, grade INT);",
+    "INSERT INTO students(id,name,age,grade) VALUES (1,'Lina',20,78),(2,'Omar',21,64),(3,'Sara',19,91),(4,'Yazan',22,55),(5,'Rama',20,83),(6,'Khaled',21,70);",
+    "CREATE TABLE Publishers(Publisher_Id INT PRIMARY KEY, Name VARCHAR(40));",
+    "INSERT INTO Publishers VALUES (1,'Pearson'),(2,'OReilly'),(3,'Wiley');",
+    "CREATE TABLE Books(ISBN VARCHAR(20) PRIMARY KEY, Title VARCHAR(80), Price DECIMAL(6,2), Publisher_Id INT);",
+    "INSERT INTO Books VALUES ('111','Visual C# How to Program',89.99,1),('222','Java Swing',45.50,2),('333','Head First Java',39.99,2),('444','Database Systems',72.00,3),('555','Java How to Program',95.00,1);",
+    "CREATE TABLE Authors(Author_Id INT PRIMARY KEY, Name VARCHAR(40));",
+    "INSERT INTO Authors VALUES (1,'Deitel'),(2,'Loy'),(3,'Sierra'),(4,'Connolly');",
+    "CREATE TABLE BooksAuthors(ISBN VARCHAR(20), Author_Id INT);",
+    "INSERT INTO BooksAuthors VALUES ('111',1),('222',2),('333',3),('444',4),('555',1);",
+    "CREATE TABLE users(username VARCHAR(20), password VARCHAR(20));",
+    "INSERT INTO users VALUES ('admin','S3cret!'),('rami','gju2026');"
+  ].join("\n");
+
+  var waiting = [], SQL = null, db = null, failed = null;
+  function boot() {
+    if (window.initSqlJs) return start();
+    var s = document.createElement("script"); s.src = SRC; s.async = true;
+    s.onload = start; s.onerror = function () { failed = "The SQL engine could not be loaded (no internet connection?). The code and explanations still work; the live database needs the connection."; flush(); };
+    document.head.appendChild(s);
+  }
+  function start() {
+    window.initSqlJs().then(function (S) { SQL = S; reset(); flush(); }).catch(function (e) { failed = String(e); flush(); });
+  }
+  function flush() { var w = waiting; waiting = []; w.forEach(function (f) { f(failed); }); }
+  function reset() { if (db) db.close(); db = new SQL.Database(); db.run(SEED); }
+
+  window.JDBC = {
+    ready: function (cb) { if (db || failed) cb(failed); else waiting.push(cb); },
+    reset: reset,
+    db: function () { return db; },
+    // run one statement; returns {kind:'query', columns, rows} or {kind:'update', count}
+    exec: function (sql) {
+      var s = sql.trim().replace(/;\s*$/, "");
+      var isQuery = /^(select|with|pragma)\b/i.test(s);
+      if (isQuery) {
+        var r = db.exec(s);
+        return { kind: "query", columns: r.length ? r[0].columns : [], rows: r.length ? r[0].values : [] };
+      }
+      db.run(s);
+      return { kind: "update", count: /^(create|drop|alter)\b/i.test(s) ? 0 : db.getRowsModified() };
+    },
+    // render a result as an HTML table
+    table: function (cols, rows, opts) {
+      opts = opts || {};
+      var esc = window.Guide.esc;
+      var th = "text-transform:none;letter-spacing:0;background:#e3e8eb;border:1px solid #b6c0c5;padding:3px 8px;font:600 12px sans-serif;color:#1c2328;text-align:left;white-space:nowrap";
+      var td = "border:1px solid #d3dadd;padding:3px 8px;font:12px var(--f-mono);color:#1c2328;white-space:nowrap";
+      var h = '<table style="border-collapse:collapse;background:#fff;width:100%">';
+      h += "<thead><tr>" + (opts.cursor != null ? '<th style="' + th + ';width:1.6rem"></th>' : "") + cols.map(function (c, i) { return '<th style="' + th + '">' + esc(String(c)) + (opts.idx ? ' <span style="opacity:.55;font-weight:400">(' + (i + 1) + ")</span>" : "") + "</th>"; }).join("") + "</tr></thead><tbody>";
+      if (opts.cursor != null) h += '<tr><td style="' + td + ';color:#b0261c;font-weight:700">' + (opts.cursor === 0 ? "▶" : "") + '</td><td colspan="' + cols.length + '" style="' + td + ';color:#7a868c;font-style:italic">before first row</td></tr>';
+      rows.forEach(function (r, i) {
+        var on = opts.cursor === i + 1;
+        h += '<tr style="background:' + (on ? "#fff2b3" : "#fff") + '">' + (opts.cursor != null ? '<td style="' + td + ';color:#b0261c;font-weight:700">' + (on ? "▶" : i + 1) + "</td>" : "") +
+          r.map(function (v) { return '<td style="' + td + '">' + (v === null ? '<span style="color:#7a868c">NULL</span>' : esc(String(v))) + "</td>"; }).join("") + "</tr>";
+      });
+      if (opts.cursor != null) h += '<tr><td style="' + td + ';color:#b0261c;font-weight:700">' + (opts.cursor === rows.length + 1 ? "▶" : "") + '</td><td colspan="' + cols.length + '" style="' + td + ';color:#7a868c;font-style:italic">after last row</td></tr>';
+      if (!rows.length && opts.cursor == null) h += '<tr><td colspan="' + cols.length + '" style="' + td + ';color:#7a868c">(no rows)</td></tr>';
+      return h + "</tbody></table>";
+    }
+  };
+
+  // ---------- reusable widgets ----------
+  var $ = function (id) { return document.getElementById(id); };
+  function logger(el) { return function (t, c) { var d = document.createElement("div"); d.textContent = t; if (c) d.style.color = c; el.appendChild(d); el.scrollTop = el.scrollHeight; }; }
+  var C = { ev: "#9fd3ff", ok: "#7fd3ad", warn: "#f0b071", bad: "#ff8f86", dim: "#9aa4a8" };
+  window.JDBC.C = C; window.JDBC.logger = logger;
+
+  // SQL console: needs #sqlIn, #sqlRun, #sqlReset, #sqlPreset (select with data-sql in option values), #sqlOut, #sqlJava
+  window.JDBC.console = function (presets) {
+    var inp = $("sqlIn"), out = $("sqlOut"), java = $("sqlJava"), pre = $("sqlPreset");
+    if (!inp) return;
+    presets.forEach(function (p, i) { var o = document.createElement("option"); o.value = i; o.textContent = p[0]; pre.appendChild(o); });
+    pre.addEventListener("change", function () { if (this.value !== "") inp.value = presets[this.value][1]; });
+    inp.value = presets[0][1];
+    function run() {
+      window.JDBC.ready(function (err) {
+        if (err) { out.innerHTML = '<p class="expl">' + window.Guide.esc(err) + "</p>"; return; }
+        var sql = inp.value.trim();
+        try {
+          var r = window.JDBC.exec(sql);
+          if (r.kind === "query") {
+            java.textContent = 'ResultSet rs = statement.executeQuery(sql);   // ' + r.rows.length + " row(s)\nwhile (rs.next()) { ... rs.getString(1) ... }";
+            out.innerHTML = window.JDBC.table(r.columns, r.rows, { idx: true });
+          } else {
+            java.textContent = "int n = statement.executeUpdate(sql);   // n = " + r.count + (r.count === 0 && /^(create|drop|alter)/i.test(sql) ? "   (DDL: no rows updated)" : r.count === 1 ? "   (one row changed)" : "");
+            out.innerHTML = '<p class="expl" style="margin:0">Done. Rows affected: ' + r.count + "</p>";
+          }
+        } catch (e) {
+          java.textContent = "// throws java.sql.SQLException";
+          out.innerHTML = '<p class="expl" style="margin:0;color:#b0261c">SQLException: ' + window.Guide.esc(String(e.message || e)) + "</p>";
+        }
+      });
+    }
+    $("sqlRun").addEventListener("click", run);
+    inp.addEventListener("keydown", function (e) { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); run(); } });
+    $("sqlReset").addEventListener("click", function () { window.JDBC.ready(function (err) { if (!err) { window.JDBC.reset(); out.innerHTML = '<p class="expl" style="margin:0">Database reset to its starting data.</p>'; java.textContent = ""; } }); });
+    window.JDBC.ready(function (err) { if (err) out.innerHTML = '<p class="expl">' + window.Guide.esc(err) + "</p>"; else out.innerHTML = '<p class="expl" style="margin:0">Database ready: tables students, Books, Publishers, Authors, BooksAuthors, users.</p>'; });
+  };
+
+  // ResultSet cursor stepper: needs #rsBox, #rsInfo, #rsLog, buttons [data-rs], optional #rsType, #rsN
+  // opts: {sql, onDraw(state)}; returns {state()} so pages can read the current row
+  window.JDBC.cursor = function (opts) {
+    opts = opts || {};
+    var SQLQ = opts.sql || "SELECT id, name, age, grade FROM students";
+    var box = $("rsBox"); if (!box) return;
+    var cols = [], rows = [], pos = 0, out = logger($("rsLog"));
+    function type() { return $("rsType") ? $("rsType").value : "TYPE_FORWARD_ONLY"; }
+    function state() { return { cols: cols, rows: rows, pos: pos, row: pos >= 1 && pos <= rows.length ? rows[pos - 1] : null }; }
+    function draw() {
+      box.innerHTML = window.JDBC.table(cols, rows, { cursor: pos, idx: true });
+      var on = pos >= 1 && pos <= rows.length;
+      $("rsInfo").textContent = on ? "rs.getRow() = " + pos + "   " + cols.map(function (c, i) { var v = rows[pos - 1][i]; return "rs." + (typeof v === "number" ? (Math.round(v) === v ? "getInt" : "getDouble") : "getString") + '("' + c + '") = ' + (typeof v === "number" ? v : '"' + v + '"'); }).join("   ")
+        : "Cursor is " + (pos === 0 ? "before the first row" : "after the last row") + ": calling rs.getString(...) here throws SQLException.";
+      if (opts.onDraw) opts.onDraw(state());
+    }
+    function load() {
+      window.JDBC.ready(function (err) {
+        if (err) { box.innerHTML = '<p class="expl">' + window.Guide.esc(err) + "</p>"; return; }
+        var r = window.JDBC.exec(SQLQ);
+        cols = r.columns; rows = r.rows; pos = 0; draw();
+        out('ResultSet rs = stmt.executeQuery("' + SQLQ + '");   // cursor before first row', C.dim);
+      });
+    }
+    function forwardOnly(m) { if (type() === "TYPE_FORWARD_ONLY" && m !== "next") { out("rs." + m + "() → SQLException: ResultSet is TYPE_FORWARD_ONLY", C.bad); return true; } return false; }
+    var acts = {
+      next: function () { var ok = pos < rows.length; pos = Math.min(rows.length + 1, pos + 1); out("rs.next() → " + ok + (ok ? "   (now on row " + pos + ")" : "   (cursor moved past the last row)"), ok ? C.ok : C.warn); },
+      previous: function () { if (forwardOnly("previous")) return; var ok = pos > 1; pos = Math.max(0, pos - 1); out("rs.previous() → " + ok, ok ? C.ok : C.warn); },
+      first: function () { if (forwardOnly("first")) return; pos = rows.length ? 1 : 0; out("rs.first() → " + (rows.length > 0), C.ok); },
+      last: function () { if (forwardOnly("last")) return; pos = rows.length; out("rs.last() → " + (rows.length > 0), C.ok); },
+      beforeFirst: function () { if (forwardOnly("beforeFirst")) return; pos = 0; out("rs.beforeFirst()", C.ok); },
+      afterLast: function () { if (forwardOnly("afterLast")) return; pos = rows.length + 1; out("rs.afterLast()", C.ok); },
+      absolute: function () { if (forwardOnly("absolute")) return; var n = +($("rsN") ? $("rsN").value : 1) || 0; pos = n < 0 ? Math.max(0, rows.length + 1 + n) : Math.min(rows.length + 1, n); out("rs.absolute(" + n + ") → " + (pos >= 1 && pos <= rows.length), C.ok); },
+      relative: function () { if (forwardOnly("relative")) return; var n = +($("rsN") ? $("rsN").value : 1) || 0; pos = Math.max(0, Math.min(rows.length + 1, pos + n)); out("rs.relative(" + n + ") → " + (pos >= 1 && pos <= rows.length), C.ok); },
+      loop: function () {
+        if (pos !== 0) { out("(re-running the query so the cursor starts before the first row)", C.dim); pos = 0; }
+        out("while (rs.next()) { System.out.println(rs.getString(" + '"' + cols[1] + '"' + ")); }", C.dim);
+        var names = []; while (pos < rows.length) { pos++; names.push(rows[pos - 1][1]); }
+        pos = rows.length + 1; out("prints: " + names.join(", ") + "   (then rs.next() → false, loop ends)", C.ok);
+      },
+      reload: function () { load(); }
+    };
+    document.querySelectorAll("[data-rs]").forEach(function (b) { b.addEventListener("click", function () { if (b.dataset.rs === "reload") { load(); return; } if (!rows.length) return; acts[b.dataset.rs](); draw(); }); });
+    if ($("rsType")) $("rsType").addEventListener("change", function () { out("stmt = con.createStatement(ResultSet." + type() + ", ResultSet.CONCUR_READ_ONLY);", C.dim); load(); });
+    load();
+    return { state: state, log: out };
+  };
+
+  window.JDBC.boot = boot;
+})();
+// Lecture 11 page demos (appended after jdbcsim.js by the build step)
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = window.Guide.esc, C = JDBC.C, logger = JDBC.logger;
+  JDBC.boot();
+
+  // wrap each line of a highlighted <pre> in <span class="ln"> so lines can be lit
+  function lineify(pre) {
+    var lines = pre.innerHTML.split("\n");
+    pre.innerHTML = lines.map(function (l) { return '<span class="ln">' + l + "</span>"; }).join("\n");
+    return pre.querySelectorAll(".ln");
+  }
+  function num(v, col) { return typeof v === "number" && /price/i.test(col || "") ? v.toFixed(2) : String(v); }
+
+  // ---------- 1. component explorer ----------
+  var INFO = {
+    dm: { t: "DriverManager", type: "java.sql.DriverManager · a class whose methods are all static", d: "Loads database drivers and manages connections between the application and the driver.", p: "The operator: finds a driver that understands your URL and hands you a Connection.", code: "Connection conn = DriverManager.getConnection(url, user, password);" },
+    drv: { t: "Driver", type: "java.sql.Driver · an interface, implemented inside the database maker's JAR", d: "Translates API calls into operations for specific database.", p: "The translator for one brand of database. You load it once with Class.forName; you never call it yourself.", code: 'Class.forName("com.mysql.cj.jdbc.Driver");' },
+    con: { t: "Connection", type: "java.sql.Connection · interface", d: "Session between application and data source.", p: "The open phone call. Statements are made from it, and it must be closed at the end.", code: "Connection conn = DriverManager.getConnection(url, user, password);" },
+    st: { t: "Statement", type: "java.sql.Statement · interface", d: "SQL statement to perform query or update.", p: "Carries one SQL String at a time to the database. Reusable.", code: "Statement stmt = conn.createStatement();" },
+    rs: { t: "Result Set", type: "java.sql.ResultSet · interface", d: "Logical set of columns and rows of data returned by executing a statement.", p: "The answer to a SELECT, read row by row with rs.next().", code: 'ResultSet rs = stmt.executeQuery("SELECT * FROM students");' },
+    db: { t: "Database", type: "not Java: MySQL, Oracle, Access, SQLite, …", d: "Where the tables live. Only the driver talks to it directly.", p: "The other end of the call, often a server on port 3306 (MySQL) or 1521 (Oracle).", code: "-- e.g. a MySQL server listening on localhost:3306" },
+    md: { t: "Metadata", type: "java.sql.ResultSetMetaData / DatabaseMetaData", d: "Information about returned data, database, & driver.", p: "Data about the data: how many columns, their names and types.", code: "ResultSetMetaData md = rs.getMetaData();" }
+  };
+  (function () {
+    var btns = document.querySelectorAll("#chain button");
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (x) { x.classList.toggle("on", x === b); x.setAttribute("aria-pressed", x === b); });
+        var i = INFO[b.dataset.k];
+        $("chainInfo").innerHTML = "<b>" + i.t + '</b><span style="font-size:.85rem;color:var(--muted)">' + esc(i.type) + "</span><span>Slide 3: " + esc(i.d) + "</span><span>In plain words: " + esc(i.p) + '</span><code style="justify-self:start">' + esc(i.code) + "</code>";
+      });
+    });
+  })();
+
+  // ---------- 2. eight steps ----------
+  (function () {
+    var lines = lineify($("stCode")), out = $("stLog"), cur = 0, renders = 0;
+    var S = [
+      { r: [1, 2], lit: [], t: "Import the necessary classes", d: "<code>import java.sql.*;</code> brings in <code>DriverManager</code>, <code>Connection</code>, <code>Statement</code>, <code>ResultSet</code> and <code>SQLException</code>, which all live in the <code>java.sql</code> package.", log: ["// java.sql.* imported"] },
+      { r: [10, 11], lit: ["drv", "dm"], t: "Load the JDBC driver", d: "The class loader finds <code>com.mysql.cj.jdbc.Driver</code> inside the driver JAR and loads it. Its static initializer creates an instance and registers it with DriverManager. If the JAR is missing: <code>ClassNotFoundException</code>, first catch block.", log: ["// driver loaded and registered with DriverManager"] },
+      { r: [12, 13], lit: ["dm"], t: "Identify the data source", d: "The URL names the driver type (<code>mysql</code>), where the server is (<code>localhost:3306</code>) and the database (<code>university</code>). Nothing is contacted yet: it's just a String.", log: [] },
+      { r: [14, 15], lit: ["dm", "con", "drv", "db"], t: "Establish the connection", d: "DriverManager asks each registered driver whether it can handle <code>jdbc:mysql:…</code>. The MySQL driver says yes, logs in as <code>root</code> and returns an open <code>Connection</code>. A wrong password or a stopped server would throw <code>SQLException</code> here and jump to the second catch block.", log: ["// connected to jdbc:mysql://localhost:3306/university"] },
+      { r: [16, 17], lit: ["con", "st"], t: "Create a Statement", d: "The connection makes a <code>Statement</code>, the object that carries SQL text to the database. One Statement can be reused for many queries.", log: [] },
+      { r: [18, 19], lit: ["st", "drv", "db", "rs"], t: "Execute the query", d: "<code>executeQuery</code> sends the SELECT through the driver; the database runs it and the rows come back as a <code>ResultSet</code>. Its cursor (▶) starts <em>before</em> the first row.", log: ["// query sent; ResultSet received"], grid: 0 },
+      { r: [20, 23], lit: ["rs"], t: "Retrieve the data", d: "Each <code>rs.next()</code> moves the cursor down a row and returns <code>true</code>; inside the loop <code>getInt</code> and <code>getString</code> read the current row by column name. After the last row <code>next()</code> returns <code>false</code> and the loop ends.", grid: "end", print: true },
+      { r: [28, 37], lit: [], t: "Close, in order", d: "<code>finally</code> runs whether or not an exception happened. It closes the ResultSet, then the Statement, then the Connection (the reverse of the order they were made), and the <code>null</code> checks skip anything that was never created.", log: ["// rs closed, stmt closed, conn closed"] }
+    ];
+    var Q = "SELECT id, name, grade FROM students";
+    function render() {
+      lines.forEach(function (l, i) { var s = cur ? S[cur - 1] : null; l.classList.toggle("on", !!s && i + 1 >= s.r[0] && i + 1 <= s.r[1]); });
+      var s = cur ? S[cur - 1] : null;
+      $("stLabel").textContent = cur ? "Step " + cur + " of 8 · " + s.t : "Press Next step to begin";
+      $("stInfo").innerHTML = s ? "<b>" + cur + ". " + s.t + "</b><span>" + s.d + "</span>" : '<span class="expl">The program hasn\'t started. Eight presses run it to the end.</span>';
+      document.querySelectorAll("#stChain button").forEach(function (b) { b.classList.toggle("on", !!s && s.lit.indexOf(b.dataset.k) >= 0); });
+      $("stPrev").disabled = cur === 0; $("stNext").disabled = cur === 8;
+      out.innerHTML = ""; var log = logger(out), token = ++renders;
+      JDBC.ready(function (err) {
+        if (token !== renders) return;
+        for (var k = 0; k < cur; k++) {
+          (S[k].log || []).forEach(function (t) { log(t, C.dim); });
+          if (S[k].print) {
+            if (err) { log("(database not available: " + err + ")", C.bad); continue; }
+            JDBC.exec(Q).rows.forEach(function (r) { log(r[0] + "  " + r[1] + "  " + r[2]); });
+          }
+        }
+        var g = s && s.grid != null;
+        $("stGridWin").hidden = !g;
+        if (g && !err) { var r = JDBC.exec(Q); $("stGrid").innerHTML = JDBC.table(r.columns, r.rows, { cursor: s.grid === "end" ? r.rows.length + 1 : 0, idx: true }); }
+      });
+      if (s) { var first = lines[s.r[0] - 1]; var pre = $("stCode"); var top = first.offsetTop - pre.offsetTop; if (top < pre.scrollTop || top > pre.scrollTop + pre.clientHeight - 40) pre.scrollTop = Math.max(0, top - 40); }
+    }
+    $("stNext").addEventListener("click", function () { if (cur < 8) { cur++; render(); } });
+    $("stPrev").addEventListener("click", function () { if (cur > 0) { cur--; render(); } });
+    $("stReset").addEventListener("click", function () { cur = 0; render(); });
+    render();
+  })();
+
+  // ---------- 3. connection builder ----------
+  (function () {
+    var DBS = [
+      { n: "MySQL (Connector/J 8 or later)", cls: "com.mysql.cj.jdbc.Driver", port: 3306, url: function (o) { return "jdbc:mysql://" + o.h + ":" + o.p + "/" + o.d; }, note: "Driver JAR: <em>mysql-connector-j</em>. Slide 6's <code>com.mysql.jdbc.Driver</code> is the Connector/J 5 name.",
+        down: "com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure", pw: function (o) { return "java.sql.SQLException: Access denied for user '" + o.u + "'@'localhost' (using password: YES)"; }, nodb: function (o) { return "java.sql.SQLSyntaxErrorException: Unknown database '" + o.d + "'"; } },
+      { n: "Oracle, thin driver (slide 10)", cls: "oracle.jdbc.driver.OracleDriver", port: 1521, url: function (o) { return "jdbc:oracle:thin:@" + o.h + ":" + o.p + ":" + o.d; }, note: "Driver JAR: <em>ojdbc8.jar</em> (or ojdbc11). The last part is the database's SID.",
+        down: "java.sql.SQLRecoverableException: IO Error: The Network Adapter could not establish the connection", pw: function () { return "java.sql.SQLException: ORA-01017: invalid username/password; logon denied"; }, nodb: function () { return "java.sql.SQLException: Listener refused the connection with the following error: ORA-12505, TNS:listener does not currently know of SID given in connect descriptor"; } },
+      { n: "Java DB / Apache Derby (NetBeans)", cls: "org.apache.derby.jdbc.ClientDriver", port: 1527, url: function (o) { return "jdbc:derby://" + o.h + ":" + o.p + "/" + o.d; }, note: "Driver JAR: <em>derbyclient.jar</em>. Older NetBeans versions include Java DB under Services → Databases. Derby was once called Cloudscape (slide 7).",
+        down: "java.sql.SQLNonTransientConnectionException: java.net.ConnectException : Error connecting to server localhost on port 1527 with message Connection refused", pw: function () { return "java.sql.SQLNonTransientConnectionException: Connection authentication failure occurred.  Reason: Userid or password invalid."; }, nodb: function (o) { return "java.sql.SQLNonTransientConnectionException: The connection was refused because the database " + o.d + " was not found."; } },
+      { n: "MS Access, UCanAccess", cls: "net.ucanaccess.jdbc.UcanaccessDriver", file: true, url: function (o) { return "jdbc:ucanaccess://C:/data/" + o.d + ".accdb"; }, note: "Driver: <em>UCanAccess</em>, a pure-Java Access driver (add its JAR and the JARs in its lib folder). The URL is the path to the .accdb file.",
+        missing: function (o) { return "net.ucanaccess.jdbc.UcanaccessSQLException: given file does not exist: C:/data/" + o.d + ".accdb"; } },
+      { n: "MS Access, JDBC-ODBC bridge (slide 9)", cls: "sun.jdbc.odbc.JdbcOdbcDriver", file: true, removed: true, url: function (o) { return "jdbc:odbc:" + o.d; }, note: "The name after <code>jdbc:odbc:</code> is a Windows ODBC data source name (DSN). The bridge was <b>removed in Java 8</b>, so this only works on Java 7 or older." },
+      { n: "SQLite", cls: "org.sqlite.JDBC", file: true, url: function (o) { return "jdbc:sqlite:" + o.d + ".db"; }, note: "Driver JAR: <em>sqlite-jdbc</em>. The URL is the path to the database file. This is the same engine running inside this page." }
+    ];
+    var sel = $("cbDb"), out = logger($("cbLog"));
+    DBS.forEach(function (d, i) { var o = document.createElement("option"); o.value = i; o.textContent = d.n; sel.appendChild(o); });
+    function opts() { return { h: $("cbHost").value.trim() || "localhost", p: $("cbPort").value || "", d: $("cbName").value.trim() || "university", u: $("cbUser").value.trim() || "root", w: $("cbPass").value }; }
+    function code() {
+      var d = DBS[sel.value], o = opts();
+      var src = d.file
+        ? 'try {\n   Class.forName("' + d.cls + '");\n   String sourceURL = "' + d.url(o) + '";\n   Connection databaseConnection = DriverManager.getConnection(sourceURL);\n   System.out.println("Connected Connection");\n}\ncatch (ClassNotFoundException cnfe) {\n   System.err.println(cnfe);\n}\ncatch (SQLException sqle) {\n   System.err.println(sqle);\n}'
+        : 'try {\n   Class.forName("' + d.cls + '");\n   String sourceURL = "' + d.url(o) + '";\n   String user = "' + o.u + '";\n   String password = "' + o.w + '";\n   Connection databaseConnection = DriverManager.getConnection(sourceURL, user, password);\n   System.out.println("Connected Connection");\n}\ncatch (ClassNotFoundException cnfe) {\n   System.err.println(cnfe);\n}\ncatch (SQLException sqle) {\n   System.err.println(sqle);\n}';
+      $("cbCode").innerHTML = window.Guide.java(src);
+      $("cbNote").innerHTML = d.note;
+      ["cbHost", "cbPort", "cbUser", "cbPass"].forEach(function (id) { $(id).disabled = !!d.file; });
+      $("cbPw").disabled = !!d.file; $("cbExists").parentNode.hidden = !!d.file;
+      $("cbUpLbl").textContent = d.file ? (d.removed ? "The DSN is set up in Windows" : "The database file exists at that path") : "Database server is running";
+    }
+    sel.addEventListener("change", function () { var d = DBS[sel.value]; if (d.port) $("cbPort").value = d.port; code(); });
+    ["cbHost", "cbPort", "cbName", "cbUser", "cbPass"].forEach(function (id) { $(id).addEventListener("input", code); });
+    $("cbRun").addEventListener("click", function () {
+      var d = DBS[sel.value], o = opts();
+      $("cbLog").innerHTML = "";
+      out('Class.forName("' + d.cls + '")', C.dim);
+      if (d.removed || !$("cbJar").checked) {
+        out("java.lang.ClassNotFoundException: " + d.cls, C.bad);
+        out(d.removed ? "// caught by catch (ClassNotFoundException cnfe): the bridge isn't in Java 8+" : "// caught by catch (ClassNotFoundException cnfe): add the driver JAR to the project's Libraries", C.dim);
+        return;
+      }
+      out("DriverManager.getConnection(\"" + d.url(o) + "\"" + (d.file ? "" : ", user, password") + ")", C.dim);
+      var err = null;
+      if (d.file) {
+        if (!$("cbUp").checked) {
+          if (d.missing) err = d.missing(o);
+          else { out("Connected Connection", C.ok); out("// careful: SQLite quietly CREATED a new, empty " + o.d + ".db, so your tables aren't there and the first SELECT will fail with \"no such table\"", C.warn); return; }
+        }
+      } else if (!$("cbUp").checked) err = d.down;
+      else if (!$("cbPw").checked) err = d.pw(o);
+      else if (!$("cbExists").checked) err = d.nodb(o);
+      if (err) { out(err, C.bad); out("// typical message; caught by catch (SQLException sqle), because every one of these is an SQLException or a subclass", C.dim); return; }
+      out("Connected Connection", C.ok);
+    });
+    code();
+  })();
+
+  // ---------- 4. connection leak simulator ----------
+  (function () {
+    var N = 5, pool, out = logger($("lkLog"));
+    function draw() {
+      var free = pool.filter(function (x) { return x === 0; }).length;
+      $("lkPool").innerHTML = pool.map(function (x, i) { return '<i class="' + (x ? "used" : "") + '" title="connection ' + (i + 1) + (x ? " leaked" : " free") + '">' + (i + 1) + "</i>"; }).join("") + '<span style="margin-left:.4rem">' + free + " of " + N + " free</span>";
+    }
+    function reset() { pool = []; for (var i = 0; i < N; i++) pool.push(0); $("lkLog").innerHTML = ""; draw(); out("// machine started: " + N + " connections available", C.dim); }
+    function run(fin) {
+      var e = $("lkErr").value, k = pool.indexOf(0);
+      out("— " + (fin ? "correct way (finally)" : "naïve way") + " —", C.ev);
+      if (k < 0) { out("conn = DriverManager.getConnection(url) … no connections left: the program waits forever (it freezes)", C.bad); return; }
+      out("conn = DriverManager.getConnection(url)   → connection #" + (k + 1), C.dim);
+      var closed;
+      if (e === "none") { out("// JDBC code runs without problems", C.dim); closed = true; }
+      else if (e === "sql") { out("// JDBC code throws SQLException", C.warn); out("catch (SQLException sqle) → sqle.printStackTrace();", C.dim); closed = true; if (!fin) out("// the catch handled it, so execution carries on after the try/catch", C.dim); }
+      else if (e === "npe") { out("// JDBC code throws NullPointerException", C.warn); out("catch (SQLException sqle) doesn't match a NullPointerException", C.dim); closed = fin; if (!fin) out("// the exception leaves the method straight away", C.dim); }
+      else { out("// JDBC code throws SQLException", C.warn); out("catch (SQLException sqle) → sqle.printStackTrace(); return;", C.dim); closed = fin; }
+      if (fin) {
+        out("finally { conn.close(); }   → connection #" + (k + 1) + " returned", C.ok);
+        if (e === "npe") out("// …then the NullPointerException carries on up to the caller", C.dim);
+        if (e === "ret") out("// …then the method returns", C.dim);
+      } else if (closed) out("conn.close();   → connection #" + (k + 1) + " returned", C.ok);
+      else { out("conn.close(); is never reached   → connection #" + (k + 1) + " LEAKED", C.bad); pool[k] = 1; }
+      draw();
+    }
+    $("lkNaive").addEventListener("click", function () { run(false); });
+    $("lkFinally").addEventListener("click", function () { run(true); });
+    $("lkReset").addEventListener("click", reset);
+    reset();
+  })();
+
+  // ---------- 5. executeQuery or executeUpdate? ----------
+  (function () {
+    var ITEMS = [
+      ["SELECT * FROM students", "q", "returns a ResultSet with every student."],
+      ["INSERT INTO students VALUES (7, 'Noor', 20, 88)", "u", "returns 1: one row added."],
+      ["UPDATE students SET grade = grade + 5 WHERE grade < 60", "u", "returns the number of rows changed (1 with this page's data: Yazan)."],
+      ["create table Catalog(Title Varchar(256) Primary Key Not Null, …)", "u", "returns 0: DDL changes no rows (slide 15)."],
+      ["SELECT COUNT(*) FROM Books", "q", "returns a ResultSet with one row and one column; read it with rs.next() then rs.getInt(1)."],
+      ["DELETE FROM students WHERE id = 99", "u", "returns 0: no row has id 99. Not an error."],
+      ["Select Catalog.Title, Catalog.LeadActor From Catalog", "q", "returns a ResultSet (slide 17)."],
+      ["DROP TABLE users", "u", "returns 0: DDL."]
+    ];
+    var box = $("sorter"), right = 0, done = 0;
+    function score() { $("sortScore").textContent = done ? right + " / " + done + " right" + (done === ITEMS.length ? " · all done" : "") : ""; }
+    ITEMS.forEach(function (it) {
+      var row = document.createElement("div"); row.className = "sort-row";
+      row.innerHTML = "<code>" + esc(it[0]) + '</code><span class="acts"><button class="btn" type="button" data-v="q">executeQuery</button><button class="btn" type="button" data-v="u">executeUpdate</button></span><span class="res" hidden></span>';
+      row.querySelectorAll("button").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var ok = b.dataset.v === it[1];
+          row.classList.add(ok ? "right" : "wrong");
+          row.querySelectorAll("button").forEach(function (x) { x.disabled = true; });
+          var res = row.querySelector(".res"); res.hidden = false;
+          res.innerHTML = (ok ? "<b>Right.</b> " : "<b>Not quite:</b> use <code>" + (it[1] === "q" ? "executeQuery" : "executeUpdate") + "</code>. ") + (it[1] === "q" ? "<code>executeQuery</code> " : "<code>executeUpdate</code> ") + esc(it[2]);
+          done++; if (ok) right++; score();
+        });
+      });
+      box.appendChild(row);
+    });
+  })();
+
+  // ---------- 6. SQL console ----------
+  JDBC.console([
+    ["Slide 15 · create table Catalog", "create table Catalog(Title Varchar(256) Primary Key Not Null,LeadActor Varchar(256) Not Null, LeadActress Varchar(256) Not Null,Type Varchar(20) Not Null, ReleaseDate Date Not NULL )"],
+    ["Slide 16 · insert Gone With The Wind", "insert into Catalog(Title, LeadActor, LeadActress, Type, ReleaseDate)values('Gone With The Wind', 'Clark Gable', 'Vivien Liegh','Romantic', '02/18/2003') "],
+    ["Slide 17 · query Catalog", "Select Catalog.Title, Catalog.LeadActor, Catalog.LeadActress,Catalog.Type, Catalog.ReleaseDate From Catalog"],
+    ["Slide 20 · select * from books", "select * from books"],
+    ["All students", "SELECT * FROM students"],
+    ["Students with grade 70 or more, best first", "SELECT name, grade FROM students WHERE grade >= 70 ORDER BY grade DESC"],
+    ["Update: add 5 to grades under 60", "UPDATE students SET grade = grade + 5 WHERE grade < 60"],
+    ["Insert a student", "INSERT INTO students (id, name, age, grade) VALUES (7, 'Noor', 20, 88)"],
+    ["Delete student 6", "DELETE FROM students WHERE id = 6"],
+    ["Books with their publisher (join)", "SELECT Books.Title, Publishers.Name FROM Books JOIN Publishers ON Books.Publisher_Id = Publishers.Publisher_Id"],
+    ["Error: a table that doesn't exist", "SELECT * FROM Movies"]
+  ]);
+
+  // ---------- 7. ResultSet cursor + getters ----------
+  (function () {
+    var cur = JDBC.cursor({ sql: "SELECT id, name, age, grade FROM students" });
+    if (!cur) return;
+    function call() {
+      var st = cur.state(), m = $("gtM").value, raw = $("gtArg").value.trim(), log = cur.log;
+      var isIdx = /^-?\d+$/.test(raw), name = raw.replace(/^["']|["']$/g, "");
+      var c = "rs." + m + "(" + (isIdx ? raw : '"' + name + '"') + ")";
+      if (!st.cols.length) return;
+      if (!st.row) { log(c + " → SQLException: " + (st.pos === 0 ? "Before start of result set (call rs.next() first)" : "After end of result set"), C.bad); return; }
+      var ci;
+      if (isIdx) {
+        ci = +raw;
+        if (ci < 1 || ci > st.cols.length) { log(c + " → SQLException: Column index out of range, " + ci + (ci < 1 ? " < 1." : " > " + st.cols.length + ".") + (ci === 0 ? "   (the first column is 1, not 0)" : ""), C.bad); return; }
+      } else {
+        ci = 0; st.cols.forEach(function (col, i) { if (col.toLowerCase() === name.toLowerCase()) ci = i + 1; });
+        if (!ci) { log(c + " → SQLException: Column '" + name + "' not found.", C.bad); return; }
+      }
+      var v = st.row[ci - 1], col = st.cols[ci - 1];
+      if (m === "getString") log(c + ' → "' + v + '"   (String)', C.ok);
+      else if (m === "getInt") { if (typeof v === "number") log(c + " → " + Math.trunc(v) + "   (int)", C.ok); else log(c + ' → SQLException: "' + v + '" can\'t be converted to int (column ' + col + " holds text)", C.bad); }
+      else if (m === "getDouble") { if (typeof v === "number") log(c + " → " + (Number.isInteger(v) ? v + ".0" : v) + "   (double)", C.ok); else log(c + ' → SQLException: "' + v + '" can\'t be converted to double', C.bad); }
+      else log(c + " → SQLException: the value " + v + " isn't a date (no column here is DATE)", C.bad);
+    }
+    $("gtRun").addEventListener("click", call);
+    $("gtArg").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); call(); } });
+  })();
+
+  // ---------- 8. printRS / JTable ----------
+  (function () {
+    var QS = [
+      "SELECT id, name, age FROM students",
+      "SELECT * FROM Books",
+      "SELECT Name FROM Publishers",
+      "SELECT Books.Title, Publishers.Name FROM Books JOIN Publishers ON Books.Publisher_Id = Publishers.Publisher_Id",
+      "Select Catalog.Title, Catalog.LeadActor, Catalog.LeadActress,Catalog.Type, Catalog.ReleaseDate From Catalog"
+    ];
+    QS.forEach(function (q, i) { var o = document.createElement("option"); o.value = i; o.textContent = i === 4 ? "Slide 17's Catalog query" : q; $("mdQ").appendChild(o); });
+    function get(cb) {
+      JDBC.ready(function (err) {
+        if (err) { $("mdInfo").textContent = err; return; }
+        try { cb(JDBC.exec(QS[$("mdQ").value])); }
+        catch (e) { $("mdInfo").textContent = "SQLException: " + (e.message || e) + (/catalog/i.test(String(e.message)) ? "   (run the slide 15 and 16 presets in the SQL console above first)" : ""); $("mdOut").innerHTML = '<span class="ttl">Output</span>'; $("mdWin").hidden = true; }
+      });
+    }
+    function info(r) { $("mdInfo").textContent = "md.getColumnCount() = " + r.columns.length + "   " + r.columns.map(function (c, i) { return "md.getColumnName(" + (i + 1) + ') = "' + c + '"'; }).join("   "); }
+    $("mdRun").addEventListener("click", function () {
+      get(function (r) {
+        info(r);
+        var n = r.columns.length, fixed = document.querySelector('input[name="mdV"]:checked').value === "fixed", s = "";
+        for (var i = 1; i < n; i++) s += r.columns[i - 1] + ",";
+        if (fixed) s += r.columns[n - 1] + "\n";
+        r.rows.forEach(function (row) {
+          for (var i = 1; i < n; i++) s += (row[i - 1] === null ? "null" : num(row[i - 1], r.columns[i - 1])) + ",";
+          s += (row[n - 1] === null ? "null" : num(row[n - 1], r.columns[n - 1])) + "\n";
+        });
+        $("mdOut").innerHTML = '<span class="ttl">Output · ' + (fixed ? "fixed version" : "slide version: look at the first line") + "</span>" + esc(s);
+      });
+    });
+    $("mdTable").addEventListener("click", function () {
+      get(function (r) {
+        info(r);
+        $("mdGrid").innerHTML = JDBC.table(r.columns, r.rows.map(function (row) { return row.map(function (v, i) { return v === null ? null : num(v, r.columns[i]); }); }));
+        $("mdWin").hidden = false;
+      });
+    });
+  })();
+})();
+
+</script>
+</body>
+</html>

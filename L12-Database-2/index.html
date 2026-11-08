@@ -1,0 +1,2147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 Advanced JDBC Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+pre.pickable .ln { cursor: pointer; }
+pre.pickable .ln:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+pre .ln.pick { background: color-mix(in srgb, var(--mark) 16%, transparent); }
+pre .ln.hit { background: color-mix(in srgb, var(--ok) 22%, transparent); box-shadow: inset 3px 0 var(--ok); }
+pre .ln.miss { background: color-mix(in srgb, var(--mark) 22%, transparent); box-shadow: inset 3px 0 var(--mark); }
+pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
+.bug-x { font-size: .9rem; border-left: 3px solid var(--line); padding: var(--s1) var(--s3); }
+.bug-x.hit { border-color: var(--ok); } .bug-x.miss { border-color: var(--mark); }
+.res-ok { color: var(--ok); font-weight: 600; } .res-bad { color: var(--bad); font-weight: 600; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L12 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 12</p>
+  <h1>Database, Part 2: Advanced JDBC</h1>
+  <p class="lede">Properties files, the three Statement types, scrollable and updatable ResultSets, database metadata, PreparedStatement, stored procedures with CallableStatement, transactions, batch execution and error handling. Every slide of <em>Lecture 12 – Database – part 2</em> (32 slides) in order with all of its code, plus live demos on a real SQL database inside the page: move and edit a ResultSet, break a login with SQL injection and fix it, call stored procedures, watch a transaction roll back and save a JTable with one batch.</p>
+  <div class="legend">
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<section class="sec" id="props" data-title="Reading settings from a properties file">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–2</p>
+    <div class="sec-head-row"><h2>Reading settings from a properties file</h2><label class="done"><input type="checkbox" id="done-props"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Don't hard-code the database URL, user name and password in your Java code. Put them in a small text file of <code>key=value</code> lines and read it with <code>java.util.Properties</code>. Then you can point the program at another database, or change the password, without recompiling, and the password isn't sitting in your source code (or on GitHub).</div></aside>
+
+  <div class="slide">
+    <p class="divider">JDBC <span class="sn">1</span></p>
+    <p style="font-size:.85rem;color:var(--muted)">The slides adapted from different resources including:</p>
+    <ul class="pts" style="font-size:.85rem;color:var(--muted)">
+      <li>Hitha Paulson, Assistant Professor, Dept. of Computer Science LF College, Guruvayoor</li>
+      <li>MET CS 667: 9. JDBC, Servlets, JSP Zlateva</li>
+      <li>Sanjay Goel</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Reading from the Properties File <span class="sn">2</span></h3>
+    <div class="code"><pre class="java">Properties props = new Properties();
+String fileName = "QueryDB.properties";
+FileInputStream in = new FileInputStream(fileName);
+props.load(in);
+in.close();
+String drivers = props.getProperty("jdbc.drivers");
+if (drivers != null)
+       System.setProperty("jdbc.drivers", drivers);
+String url = props.getProperty("jdbc.url");
+String username = props.getProperty("jdbc.username");
+String password = props.getProperty("jdbc.password");</pre></div>
+  </div>
+
+  <div class="demo" id="propDemo">
+    <div class="demo-head"><h3>Try it: edit the file, run the code</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">This is <code>QueryDB.properties</code>. Change a value, delete a line or misspell a key, then run slide 2's code. A missing key gives <code>null</code>, not an error.</p>
+    <label for="prIn" class="sr">QueryDB.properties</label>
+    <textarea class="sql-in" id="prIn" spellcheck="false" style="min-height:8rem"></textarea>
+    <div class="ctrl">
+      <label><input type="checkbox" id="prExists" checked> The file exists next to the program</label>
+      <button class="btn solid" id="prRun" type="button">Run slide 2's code</button>
+    </div>
+    <div class="log wrap" id="prLog" style="height:9rem" aria-label="Output"></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Imports needed: <code>java.util.Properties</code> and <code>java.io.FileInputStream</code>. <code>new FileInputStream(…)</code> throws <code>FileNotFoundException</code> and <code>props.load(in)</code> throws <code>IOException</code>, so the code must be inside a <code>try</code>/<code>catch (IOException e)</code> or in a method that <code>throws IOException</code>. In NetBeans the file is looked up in the project's main folder (the working directory), not in <code>src</code>.</span></aside>
+
+  <details class="orig" data-pages="1-2"></details>
+  <div class="quiz" data-quiz="props"></div>
+</section>
+
+<section class="sec" id="types" data-title="Statement types">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 3–4</p>
+    <div class="sec-head-row"><h2>Statement types</h2><label class="done"><input type="checkbox" id="done-types"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>There are three kinds of statement, each one made by the Connection:<ul><li><b>Statement</b> (<code>createStatement()</code>): plain SQL text. Fine for fixed SQL with no user input.</li><li><b>PreparedStatement</b> (<code>prepareStatement(sql)</code>): SQL with <code>?</code> gaps that you fill with <code>setString</code>, <code>setInt</code>… Use it whenever values come from the user: it's safe from SQL injection and faster when repeated.</li><li><b>CallableStatement</b> (<code>prepareCall(sql)</code>): runs a stored procedure or function that lives inside the database.</li></ul><code>createStatement</code> can also take extra numbers that decide whether the ResultSet can scroll backwards and be edited (next section).</div></aside>
+
+  <div class="slide">
+    <h3>Statement - Types <span class="sn">3</span></h3>
+    <ul class="pts">
+      <li>Statements in JDBC abstract the SQL statements</li>
+      <li>Primary interface to the tables in the database</li>
+      <li>Used to create, retrieve, update &amp; delete data (CRUD) from a table
+        <ul><li>Syntax: <code>Statement statement = connection.createStatement();</code></li></ul></li>
+      <li>Three types of statements each reflecting a specific SQL statements
+        <ul>
+          <li>Statement</li>
+          <li>PreparedStatement allows to write SQL queries with placeholders for input parameters (using ? symbols), which will later be replaced by actual values.
+            <ul><li>This eliminates the need to concatenate strings when including values in SQL queries, which is important for security reasons, particularly to prevent SQL injection attacks.</li></ul></li>
+          <li>CallableStatement used for executing <b>stored procedures</b> or <b>functions</b></li>
+        </ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Statement - Syntax <span class="sn">4</span></h3>
+    <ul class="pts">
+      <li>Statement used to send SQL commands to the database
+        <ul>
+          <li>Case 1: ResultSet is non-scrollable and non-updateable</li>
+        </ul></li>
+    </ul>
+    <div class="code"><pre class="java">public Statement createStatement() throws SQLException
+Statement statement = connection.createStatement();</pre></div>
+    <ul class="pts"><li style="list-style:none"><ul><li>Case 2: ResultSet is non-scrollable and/or non-updateable</li></ul></li></ul>
+    <div class="code"><pre class="java">public Statement createStatement(int, int) throws
+    SQLException
+Statement statement = connection.createStatement();</pre></div>
+    <ul class="pts"><li style="list-style:none"><ul><li>Case 3: ResultSet is non-scrollable and/or non-updateable and/or holdable</li></ul></li></ul>
+    <div class="code"><pre class="java">public Statement createStatement(int, int, int) throws
+    SQLException
+Statement statement = connection.createStatement();</pre></div>
+    <ul class="pts"><li>PreparedStatement</li></ul>
+    <div class="code"><pre class="java">public PreparedStatement prepareStatement(String sql) throws
+    SQLException
+PreparedStatement pstatement = prepareStatement(sqlString);</pre></div>
+    <ul class="pts"><li>CallableStatement used to call stored procedures</li></ul>
+    <div class="code"><pre class="java">public CallableStatement prepareCall(String sql) throws
+    SQLException</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Slide 4's example lines for cases 2 and 3 repeat the no-argument call; they should pass the numbers, e.g. <code>connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)</code> and <code>connection.createStatement(type, concurrency, ResultSet.HOLD_CURSORS_OVER_COMMIT)</code>. Case 2 really means "scrollable and/or updatable". The PreparedStatement line needs the connection: <code>connection.prepareStatement(sqlString)</code>.</span></aside>
+
+  <div class="slide">
+    <p class="added">Added · the three types side by side</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th></th><th>Statement</th><th>PreparedStatement</th><th>CallableStatement</th></tr></thead>
+        <tbody>
+          <tr><td><b>Made by</b></td><td><code>con.createStatement()</code></td><td><code>con.prepareStatement(sql)</code></td><td><code>con.prepareCall("{call p(?)}")</code></td></tr>
+          <tr><td><b>SQL given</b></td><td>when executing: <code>executeQuery(sql)</code></td><td>when created; execute with no arguments</td><td>when created</td></tr>
+          <tr><td><b>Values</b></td><td>glued into the String with <code>+</code></td><td><code>?</code> filled with <code>setXxx(n, value)</code></td><td><code>?</code> IN with <code>setXxx</code>, OUT with <code>registerOutParameter</code></td></tr>
+          <tr><td><b>Use for</b></td><td>fixed SQL, DDL</td><td>anything with user input; repeated SQL; batches</td><td>stored procedures and functions</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="3-4"></details>
+  <div class="quiz" data-quiz="types"></div>
+</section>
+
+<section class="sec" id="scroll" data-title="Scrollable and updatable ResultSets">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 5–10</p>
+    <div class="sec-head-row"><h2>Scrollable and updatable ResultSets</h2><label class="done"><input type="checkbox" id="done-scroll"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>By default a ResultSet is a one-way, read-only list: you can only call <code>next()</code>. Pass two settings to <code>createStatement</code> to get more:<ul><li><b>Type</b>: <code>TYPE_FORWARD_ONLY</code> (default, <code>next()</code> only), <code>TYPE_SCROLL_INSENSITIVE</code> (jump anywhere; a frozen snapshot that ignores other people's changes) or <code>TYPE_SCROLL_SENSITIVE</code> (jump anywhere; shows changes others make to the rows).</li><li><b>Concurrency</b>: <code>CONCUR_READ_ONLY</code> (default) or <code>CONCUR_UPDATABLE</code>, which lets you change the row under the cursor with <code>updateXxx</code> then save it with <code>updateRow()</code>, delete it with <code>deleteRow()</code>, or add one with <code>moveToInsertRow()</code> … <code>insertRow()</code>.</li></ul>The demo below shows both sides: what your program's ResultSet holds, and what's actually in the database.</div></aside>
+
+  <div class="slide">
+    <h3>Scrollable ResultSet <span class="sn">5</span></h3>
+    <ul class="pts">
+      <li>ResultSet obtained from the statement created using the no argument constructor is:
+        <ul><li>Type forward only (non-scrollable)</li><li>Not updateable</li></ul></li>
+      <li>To create a scrollable ResultSet the following statement constructor is required
+        <ul><li><code>Statement createStatement(int resultSetType, int resultSetConcurrency)</code></li></ul></li>
+      <li>ResultSetType determines whether it is scrollable. It can have the following values:
+        <ul>
+          <li><code>ResultSet.TYPE_FORWARD_ONLY</code></li>
+          <li><code>ResultSet.TYPE_SCROLL_INSENSITIVE</code> (Unaffected by changes to underlying database)</li>
+          <li><code>ResultSet.TYPE_SCROLL_SENSITIVE</code> (Reflects changes to underlying database)</li>
+          <li>resultSetHoldability - one of the following ResultSet constants: ResultSet.HOLD_CURSORS_OVER_COMMIT or ResultSet.CLOSE_CURSORS_AT_COMMIT</li>
+        </ul></li>
+      <li>ResultSetConcurrency determines whether data is updateable. Its possible values are
+        <ul><li><code>CONCUR_READ_ONLY</code></li><li><code>CONCUR_UPDATEABLE</code></li></ul></li>
+      <li>Not all database drivers may support these functionalities</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Scrollable ResultSet <span class="sn">6</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Constant</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>TYPE_FORWARD_ONLY</code></td><td>The constant indicating the type for a ResultSet object whose cursor may move only forward.</td></tr>
+          <tr><td><code>TYPE_SCROLL_INSENSITIVE</code></td><td>The constant indicating the type for a ResultSet object that is scrollable but generally not sensitive to changes to the data that underlies the ResultSet.</td></tr>
+          <tr><td><code>TYPE_SCROLL_SENSITIVE</code></td><td>The constant indicating the type for a ResultSet object that is scrollable and generally sensitive to changes to the data that underlies the ResultSet.</td></tr>
+          <tr><td><code>CONCUR_READ_ONLY</code></td><td>The constant indicating the concurrency mode for a ResultSet object that may NOT be updated.</td></tr>
+          <tr><td><code>CONCUR_UPDATABLE</code></td><td>The constant indicating the concurrency mode for a ResultSet object that may be updated.</td></tr>
+          <tr><td><code>CLOSE_CURSORS_AT_COMMIT</code></td><td>The constant indicating that open ResultSet objects with this holdability will be closed when the current transaction is committed.</td></tr>
+          <tr><td><code>HOLD_CURSORS_OVER_COMMIT</code></td><td>The constant indicating that open ResultSet objects with this holdability will remain open when the current transaction is committed.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Scrollable ResultSet <span class="sn">7</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>absolute(int row)</code></td><td>Moves the cursor to the given row number in this ResultSet object.</td></tr>
+          <tr><td><code>relative(int rows)</code></td><td>Moves the cursor a relative number of rows, either positive or negative.</td></tr>
+          <tr><td><code>afterLast()</code></td><td>Moves the cursor to the end of this ResultSet object, just after the last row.</td></tr>
+          <tr><td><code>beforeFirst()</code></td><td>Moves the cursor to the front of this ResultSet object, just before the first row.</td></tr>
+          <tr><td><code>first()</code></td><td>Moves the cursor to the first row in this ResultSet object.</td></tr>
+          <tr><td><code>last()</code></td><td>Moves the cursor to the last row in this ResultSet object.</td></tr>
+          <tr><td><code>isAfterLast()</code></td><td>Retrieves whether the cursor is after the last row in this ResultSet object.</td></tr>
+          <tr><td><code>isBeforeFirst()</code></td><td>Retrieves whether the cursor is before the first row in this ResultSet object.</td></tr>
+          <tr><td><code>isClosed()</code></td><td>Retrieves whether this ResultSet object has been closed.</td></tr>
+          <tr><td><code>isFirst()</code></td><td>Retrieves whether the cursor is on the first row of this ResultSet object.</td></tr>
+          <tr><td><code>isLast()</code></td><td>Retrieves whether the cursor is on the last row of this ResultSet object.</td></tr>
+          <tr><td><code>findColumn(String columnLabel)</code></td><td>Maps the given ResultSet column label to its ResultSet column index.</td></tr>
+          <tr><td><code>moveToCurrentRow()</code></td><td>Moves the cursor to the remembered cursor position, usually the current row.</td></tr>
+          <tr><td><code>next()</code></td><td>Moves the cursor forward one row from its current position.</td></tr>
+          <tr><td><code>previous()</code></td><td>Moves the cursor to the previous row in this ResultSet object.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>JDBC 2 – Scrollable Result Set <span class="sn">8</span></h3>
+    <div class="code"><pre class="java">…
+Statement stmt =
+con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY);
+
+String query = "select students from class where type='not sleeping' ";
+ResultSet rs = stmt.executeQuery( query );
+
+rs.previous(); // go back in the RS
+rs.relative(-5); // go 5 records back
+rs.relative(7); // go 7 records forward
+rs.absolute(100); // go to 100th record
+…</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Updateable ResultSet <span class="sn">9</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>moveToInsertRow()</code></td><td>Moves the cursor to the insert row.<br><span style="font-size:.85rem;color:var(--muted)">The insert row is a special row associated with an updatable result set. It is essentially a buffer where a new row may be constructed by calling the updater methods prior to inserting the row into the result set.</span></td></tr>
+          <tr><td><code>refreshRow()</code></td><td>Refreshes the current row with its most recent value in the database</td></tr>
+          <tr><td><code>getStatement()</code></td><td>Retrieves the Statement object that produced this ResultSet object.</td></tr>
+          <tr><td><code>rowDeleted()</code></td><td>Retrieves whether a row has been deleted.</td></tr>
+          <tr><td><code>rowInserted()</code></td><td>Retrieves whether the current row has had an insertion.</td></tr>
+          <tr><td><code>rowUpdated()</code></td><td>Retrieves whether the current row has been updated.</td></tr>
+          <tr><td><code>cancelRowUpdates()</code></td><td>Cancels the updates made to the current row in this ResultSet object.</td></tr>
+          <tr><td><code>deleteRow()</code></td><td>Deletes the current row from this ResultSet object and from the underlying database.</td></tr>
+          <tr><td><code>insertRow()</code></td><td>Inserts the contents of the insert row into this ResultSet object and into the database</td></tr>
+          <tr><td><code>updateRow()</code></td><td>Updates the underlying database with the new contents of the current row of this ResultSet object.</td></tr>
+          <tr><td><code>updateRowId(int columnIndex, RowId x)</code></td><td>Updates the designated column with a RowId value.</td></tr>
+          <tr><td><code>updateRowId(String columnLabel, RowId x)</code></td><td>Updates the designated column with a RowId value.</td></tr>
+          <tr><td><code>updateDouble(String columnLabel, double x)</code></td><td>Updates the designated column with a double value.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>JDBC 2 – Updateable ResultSet <span class="sn">10</span></h3>
+    <div class="code"><pre class="java">…
+Statement stmt =
+con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+                    ResultSet.CONCUR_UPDATABLE);
+String query = " select students, grade from class where type='really listening this presentation☺' ";
+ResultSet rs = stmt.executeQuery( query );
+…
+while ( rs.next() )
+{
+  int grade = rs.getInt("grade");
+  rs.updateInt("grade", grade+10);
+  rs.updateRow();
+}</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Slide 5 spells the constant <code>CONCUR_UPDATEABLE</code>; the real name is <code>CONCUR_UPDATABLE</code> (as on slide 6), so the slide 5 spelling won't compile. Slide 8 is a sketch: with only a few rows, <code>absolute(100)</code> just moves past the end and returns <code>false</code>. For an updatable ResultSet, most drivers (MySQL included) need the query to read from <b>one table</b> and include its <b>primary key</b>. Changes made with <code>updateXxx</code> stay in your program until you call <code>updateRow()</code>; moving the cursor first throws them away.</span></aside>
+
+  <div class="demo" id="scDemo">
+    <div class="demo-head"><h3>Try it: a scrollable, updatable ResultSet</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">Choose the type and concurrency, run the query, then move and edit. Left: the ResultSet your program holds. Right: the <code>students</code> table in the database. Try: <b>Another program changes grades</b> with INSENSITIVE, then with SENSITIVE; an <code>updateXxx</code> without <code>updateRow()</code>; anything but <code>next()</code> on FORWARD_ONLY; and slide 10's loop on READ_ONLY.</p>
+    <div class="ctrl">
+      <label>Type <select id="scType"><option>TYPE_FORWARD_ONLY</option><option selected>TYPE_SCROLL_INSENSITIVE</option><option>TYPE_SCROLL_SENSITIVE</option></select></label>
+      <label>Concurrency <select id="scConc"><option>CONCUR_READ_ONLY</option><option selected>CONCUR_UPDATABLE</option></select></label>
+      <button class="btn solid" id="scRun" type="button">executeQuery</button>
+    </div>
+    <div class="code"><pre class="java" id="scCode"></pre></div>
+    <div class="ctrl" role="group" aria-label="Move the cursor">
+      <button class="btn" type="button" data-sc="next">next()</button>
+      <button class="btn" type="button" data-sc="previous">previous()</button>
+      <button class="btn" type="button" data-sc="first">first()</button>
+      <button class="btn" type="button" data-sc="last">last()</button>
+      <button class="btn" type="button" data-sc="beforeFirst">beforeFirst()</button>
+      <button class="btn" type="button" data-sc="afterLast">afterLast()</button>
+      <label><button class="btn" type="button" data-sc="absolute">absolute(n)</button> <button class="btn" type="button" data-sc="relative">relative(n)</button> n = <input type="number" id="scN" value="3" style="width:4.5rem"></label>
+    </div>
+    <div class="ctrl" role="group" aria-label="Change data">
+      <label>rs.update…( <select id="scCol"><option value="1">"name"</option><option value="2">"age"</option><option value="3" selected>"grade"</option></select> , <input type="text" id="scVal" value="99" size="7" aria-label="New value"> )</label>
+      <button class="btn" type="button" data-sc="update">update</button>
+      <button class="btn" type="button" data-sc="updateRow">updateRow()</button>
+      <button class="btn" type="button" data-sc="cancelRowUpdates">cancelRowUpdates()</button>
+      <button class="btn" type="button" data-sc="refreshRow">refreshRow()</button>
+      <button class="btn" type="button" data-sc="deleteRow">deleteRow()</button>
+      <button class="btn" type="button" data-sc="moveToInsertRow">moveToInsertRow()</button>
+      <button class="btn" type="button" data-sc="insertRow">insertRow()</button>
+      <button class="btn" type="button" data-sc="moveToCurrentRow">moveToCurrentRow()</button>
+    </div>
+    <div class="ctrl">
+      <button class="btn" type="button" id="scLoop">Run slide 10's loop (grade + 10)</button>
+      <button class="btn" type="button" id="scOther">Another program changes grades (+1)</button>
+    </div>
+    <div class="java-line" id="scInfo" aria-live="polite"></div>
+    <div class="fig-row">
+      <div class="win" style="flex:1 1 18rem"><div class="win-bar"><span>ResultSet rs (your program)</span><i>–□×</i></div><div class="grid-out" id="scRS"></div></div>
+      <div class="win" style="flex:1 1 15rem"><div class="win-bar"><span>students table (database)</span><i>–□×</i></div><div class="grid-out" id="scDB"></div></div>
+    </div>
+    <div class="log wrap" id="scLog" style="height:9rem" aria-label="ResultSet log"></div>
+  </div>
+
+  <details class="orig" data-pages="5-10"></details>
+  <div class="quiz" data-quiz="scroll"></div>
+</section>
+
+<section class="sec" id="dbmeta" data-title="Database metadata">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 11–13</p>
+    <div class="sec-head-row"><h2>Database metadata</h2><label class="done"><input type="checkbox" id="done-dbmeta"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Lecture 11 used <b>ResultSet</b> metadata (<code>rs.getMetaData()</code>) to learn about the columns of one query. <b>Database</b> metadata (<code>connection.getMetaData()</code>) describes the whole database: which product and version it is, which driver you're using, and which tables, keys and procedures exist. Most of its methods answer with a ResultSet, which you read with the usual <code>while (rs.next())</code> loop.</div></aside>
+
+  <div class="slide">
+    <h3>MetaData <span class="sn">11</span></h3>
+    <ul class="pts">
+      <li>Meta Data means data about data.</li>
+      <li>Retrieves a DatabaseMetaData object that contains metadata about the database to which this Connection object represents a connection.</li>
+      <li>Two kinds of meta data in JDBC
+        <ul><li>Database Metadata: To look up information about the database (here)</li><li>ResultSet Metadata: To get the structure of data that is returned (later)</li></ul></li>
+      <li>Example
+        <ul><li><code>connection.getMetaData().getDatabaseProductName()</code></li><li><code>connection.getMetaData().getDatabaseProductVersion()</code></li></ul></li>
+      <li>Sample Code:</li>
+    </ul>
+    <div class="code"><pre class="java">private void showInfo(String driver,String url,String user,String
+password,
+  String table,PrintWriter out) {
+Class.forName(driver);
+   Conntection con = DriverManager.getConnection(url, username, password);
+   DatabaseMetaData dbMetaData = connection.getMetaData();
+   String productName = dbMetaData.getDatabaseProductName();
+   System.out.println("Database: " + productName);
+   String productVersion = dbMetaData.getDatabaseProductVersion();
+   System.out.println("Version: " + productVersion);
+    }</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>MetaData <span class="sn">12</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>getDatabaseProductName()</code></td><td>Retrieves the name of this database product.</td></tr>
+          <tr><td><code>getDatabaseProductVersion()</code></td><td>Retrieves the version number of this database product.</td></tr>
+          <tr><td><code>getDriverName()</code></td><td>Retrieves the name of this JDBC driver.</td></tr>
+          <tr><td><code>getPrimaryKeys(String catalog, String schema, String table)</code></td><td>Retrieves a description of the given table's primary key columns.</td></tr>
+          <tr><td><code>getProcedures(String catalog, String schemaPattern, String procedureNamePattern)</code></td><td>Retrieves a description of the stored procedures available in the given catalog.</td></tr>
+          <tr><td><code>getSchemas()</code></td><td>Retrieves the schema names available in this database.</td></tr>
+          <tr><td><code>getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types)</code></td><td>Retrieves a description of the tables available in the given catalog.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Metadata from DB - example <span class="sn">13</span></h3>
+    <div class="code"><pre class="java">…
+Connection con = …. ;
+
+DatabaseMetaData dbmd = con.getMetaData();
+
+String catalog = null;
+String schema = null;
+String table = "sys%";
+String[ ] types = null;
+
+ResultSet rs =
+  dbmd.getTables(catalog , schema , table , types );
+…</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Slide 11's sample won't compile as written: <code>Conntection</code> → <code>Connection</code>; it uses <code>username</code> and <code>connection</code> but the parameter and variable are called <code>user</code> and <code>con</code>; and <code>Class.forName</code>/<code>getConnection</code> throw checked exceptions, so the method needs <code>throws Exception</code> or a <code>try</code>/<code>catch</code>. In <code>getTables</code>, <code>null</code> means "don't filter on this", and the name pattern uses SQL wildcards: <code>%</code> = any run of characters, <code>_</code> = exactly one. So <code>"sys%"</code> means every table whose name starts with <i>sys</i>.</span></aside>
+
+  <div class="demo" id="dmDemo">
+    <div class="demo-head"><h3>Try it: ask the database about itself</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">Each button calls one <code>DatabaseMetaData</code> method on this page's database (SQLite). Try table patterns like <code>%</code>, <code>B%</code>, <code>%s</code>, <code>sys%</code>.</p>
+    <div class="ctrl">
+      <button class="btn" type="button" data-dm="name">getDatabaseProductName()</button>
+      <button class="btn" type="button" data-dm="version">getDatabaseProductVersion()</button>
+      <button class="btn" type="button" data-dm="driver">getDriverName()</button>
+      <button class="btn" type="button" data-dm="schemas">getSchemas()</button>
+      <button class="btn" type="button" data-dm="procs">getProcedures(null, null, "%")</button>
+    </div>
+    <div class="ctrl">
+      <label>getTables(null, null, "<input type="text" id="dmPat" value="%" size="6" aria-label="Table name pattern">", null)</label>
+      <button class="btn solid" type="button" data-dm="tables">Call</button>
+      <label>getPrimaryKeys(null, null, <select id="dmTab"></select>)</label>
+      <button class="btn solid" type="button" data-dm="pk">Call</button>
+    </div>
+    <div class="java-line" id="dmInfo" aria-live="polite"></div>
+    <div class="win" id="dmWin" hidden><div class="win-bar"><span>ResultSet rs</span><i>–□×</i></div><div class="grid-out" id="dmOut"></div></div>
+  </div>
+
+  <details class="orig" data-pages="11-13"></details>
+  <div class="quiz" data-quiz="dbmeta"></div>
+</section>
+
+<section class="sec" id="prepared" data-title="PreparedStatement">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 14–18</p>
+    <div class="sec-head-row"><h2>PreparedStatement</h2><label class="done"><input type="checkbox" id="done-prepared"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Write the SQL once with a <code>?</code> where each value goes, then fill the gaps with <code>setString(position, value)</code>, <code>setInt(…)</code> and so on. Positions count from <b>1</b>, left to right. Then call <code>executeQuery()</code> or <code>executeUpdate()</code> <em>with no arguments</em>. The database receives the SQL and the values separately, so a value can never change the meaning of the SQL. That's what stops SQL injection, and it also means quotes in names like <i>O'Brien</i> just work.</div></aside>
+
+  <div class="slide">
+    <h3>Prepared Statement <span class="sn">14</span></h3>
+    <p><b>Main Idea:</b> Prepare query in advance with a <b>host variable,</b> denoted by <b>?</b>, that is filled with a different value every time the query is run.</p>
+    <p>The host variable must be bound to an actual value of a field, and this is performed by a <b>set</b> function similar to the get function discussed earlier.</p>
+    <ul class="pts"><li>PreparedStatement provides a means to create a reusable statement that is precompiled by the database</li></ul>
+    <div class="code"><pre class="java">String publisherQuery =
+ "SELECT Books.Price, Books.Title " +
+ "FROM Books, Publishers " +
+ "WHERE Books.Publisher_Id=Publishers.Publisher_Id AND" +
+ "Publishers.Name = ?";
+
+PreparedStatement publisherQueryStmt =
+  con.prepareStatement(publisherQuery);
+
+publisherQueryStmt.setString(1, publisher);
+rs = publisherQueryStmt.executeQuery();</pre></div>
+    <p class="callout">1st argument is host variable we want to set, 2d argument value to be assigned to host variable; position 1denotes first ?</p>
+  </div>
+
+  <div class="slide">
+    <h3>Prepared Statement <span class="sn">15</span></h3>
+    <ul class="pts">
+      <li>It has three main uses
+        <ul><li>Create parameterized statements such that data for parameters can be dynamically substituted</li><li>Create statements where data values may not be character strings</li><li>Precompiling SQL statements to avoid repeated compiling of the same SQL statement</li></ul></li>
+      <li>If parameters for the query are not set the driver returns an SQL Exception</li>
+      <li>Only the no parameters versions of executeUpdate() and executeQuery() allowed with prepared statements.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Prepared Statement <span class="sn">16</span></h3>
+    <ul class="pts"><li>Example</li></ul>
+    <div class="code"><pre class="java">// Creating a prepared Statement
+String sqlString = "UPDATE authors SET lastname = ? Authid = ?";
+PreparedStatement ps =
+   connection.prepareStatement(sqlString);
+ps.setString(1, "Allamaraju");      // Sets first placeholder to Allamaraju
+ps.setString(2, 212);                 // Sets second placeholder to 212
+ps.executeUpdate();            // Executes the update</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>authorPublisherQuery <span class="sn">17</span></h3>
+    <div class="code"><pre class="java">String authorPublisherQuery =
+ "SELECT Books.Price, Books.Title " +
+ "FROM Books, BooksAuthors, Authors, Publishers " +
+ "WHERE Authors.Author_Id = BooksAuthors.Author_Id AND "+
+ "BooksAuthors.ISBN = Books.ISBN AND " +
+ "Books.Publisher_Id = Publishers.Publisher_Id AND " +
+ "Authors.Name = ? AND " +
+ "Publishers.Name = ?";
+
+authorPublisherQueryStmt =
+ con.prepareStatement(authorPublisherQuery);
+authorPublisherQueryStmt.setString(1, author);
+authorPublisherQueryStmt.setString(2,publisher);
+rs = authorPublisherQueryStmt.executeQuery();</pre></div>
+  </div>
+
+  <div class="demo" id="pqDemo">
+    <div class="demo-head"><h3>Try it: slides 14 and 17, live</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">Pick the values for the <code>?</code> placeholders and run. Tick "exactly as on slide 14" to see what the missing space after <code>AND</code> does.</p>
+    <div class="ctrl">
+      <label>Query <select id="pqQ"><option value="pub">publisherQuery (slide 14)</option><option value="ap">authorPublisherQuery (slide 17)</option></select></label>
+      <label id="pqAuthL">author <select id="pqAuth"></select></label>
+      <label>publisher <select id="pqPub"></select></label>
+      <label id="pqExactL"><input type="checkbox" id="pqExact"> exactly as on slide 14</label>
+    </div>
+    <div class="ctrl">
+      <button class="btn solid" type="button" id="pqRun">executeQuery()</button>
+      <button class="btn" type="button" id="pqNoSet">executeQuery() without setString</button>
+    </div>
+    <div class="code"><pre class="java" id="pqCode"></pre></div>
+    <div class="java-line" id="pqInfo" aria-live="polite"></div>
+    <div class="win"><div class="win-bar"><span>ResultSet rs</span><i>–□×</i></div><div class="grid-out" id="pqOut"></div></div>
+  </div>
+
+  <div class="slide">
+    <h3>Prepared Statement <span class="sn">18</span></h3>
+    <div class="code"><span class="code-label">AuthorDatabase.java (the slide's two columns, in order)</span><pre class="java" id="adCode">Import java.sql.*;
+
+public class AuthorDatabase {
+  public static void main(String[] args) {
+    try {
+      String url = "jdbc:odbc:library";
+      String driver = "sun.jdbc.odbc.JdbcOdbcDriver";
+      String user = "goel"
+      String password = "password";
+      // Load the Driver
+      Class.forName(driver);
+      Connection connection = DriverManager.getConnection();
+      String sqlString = "UPDATE authors SET lastname = ? Authid = ?";
+      PreparedStatement ps = connection.prepareStatement(sqlString);
+      // Sets first placeholder to Allamaraju
+      ps.setString(1, "Allamaraju");
+      // Sets second placeholder to 212
+      ps.setString(2, 212);
+      // Executes the update
+      int rowsUpdated = ps.executeUpdate();
+      System.out.println("Number of rows changed = " + rowsUpdated);
+      connection.close();
+    }
+    catch (ClassNotFoundException cnfe) {
+      System.out.println("Driver not found");
+      cnfe.printStackTrace();
+    }
+    catch (SQLException sqle) {
+      System.out.println("Bad SQL statement");
+      sqle.printStackTrace();
+    }
+  }
+}</pre></div>
+  </div>
+
+  <div class="demo" id="bugDemo">
+    <div class="demo-head"><h3>Try it: find the 6 bugs in slide 18</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">Tap every line of the code just above that you think is wrong (tap again to unmark), then press <b>Check</b>. Slides 14 and 16 share some of the same mistakes.</p>
+    <div class="ctrl">
+      <button class="btn solid" type="button" id="bugCheck">Check</button>
+      <button class="btn" type="button" id="bugShow">Show all bugs</button>
+      <button class="btn" type="button" id="bugReset">Clear</button>
+      <span class="score" id="bugScore"></span>
+    </div>
+    <div id="bugOut" style="display:grid;gap:var(--s2)"></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Slide 14's String pieces join as <code>…Publisher_Id ANDPublishers.Name = ?</code> because there's no space after <code>AND</code>: a run-time SQL syntax error. Always leave a space at the end (or start) of each piece. Slide 16 has two of slide 18's bugs: <code>WHERE</code> is missing, and <code>setString(2, 212)</code> passes an <code>int</code> where a <code>String</code> is expected. The fixed statement is <code>"UPDATE authors SET lastname = ? WHERE Authid = ?"</code> with <code>ps.setInt(2, 212);</code>.</span></aside>
+
+  <div class="demo" id="injDemo">
+    <div class="demo-head"><h3>Try it: SQL injection, and how PreparedStatement stops it</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">A login screen checks the <code>users</code> table (real accounts: <code>admin</code> / <code>S3cret!</code> and <code>rami</code> / <code>gju2026</code>). Log in normally, then try an attack on each version.</p>
+    <div class="win" style="max-width:24rem"><div class="win-bar"><span>Login</span><i>–□×</i></div>
+      <div class="win-body" style="display:grid;gap:.4rem">
+        <label style="display:grid;grid-template-columns:5.5rem minmax(0,1fr);gap:.4rem;align-items:center">User name <input type="text" id="inU" value="admin" style="font:inherit;padding:2px 4px;border:1px solid #8f9ba1;background:#fff;color:#1c2328;min-width:0"></label>
+        <label style="display:grid;grid-template-columns:5.5rem minmax(0,1fr);gap:.4rem;align-items:center">Password <input type="text" id="inP" value="wrong" style="font:inherit;padding:2px 4px;border:1px solid #8f9ba1;background:#fff;color:#1c2328;min-width:0"></label>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap"><button class="jbtn" type="button" id="inSt">Log in (Statement)</button><button class="jbtn" type="button" id="inPs">Log in (PreparedStatement)</button></div>
+      </div>
+    </div>
+    <div class="ctrl">
+      <span class="expl">Fill in an attack:</span>
+      <button class="chip" type="button" data-u="admin" data-p="' OR '1'='1">password <code>' OR '1'='1</code></button>
+      <button class="chip" type="button" data-u="admin' --" data-p="anything">user <code>admin' --</code></button>
+      <button class="chip" type="button" data-u="O'Brien" data-p="x">user <code>O'Brien</code></button>
+    </div>
+    <div class="code"><pre class="java" id="inCode"></pre></div>
+    <div class="java-line" id="inSql" aria-live="polite"></div>
+    <div class="java-line" id="inRes" aria-live="polite"></div>
+  </div>
+
+  <details class="orig" data-pages="14-18"></details>
+  <div class="quiz" data-quiz="prepared"></div>
+</section>
+
+<section class="sec" id="callable" data-title="Stored procedures and CallableStatement">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 19–21</p>
+    <div class="sec-head-row"><h2>Stored procedures and CallableStatement</h2><label class="done"><input type="checkbox" id="done-callable"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A <b>stored procedure</b> is a small named program saved <em>inside</em> the database, like a method you call by name. Java runs it with a <b>CallableStatement</b>: <code>con.prepareCall("{call name(?, ?)}")</code>. Each <code>?</code> is a parameter: <b>IN</b> parameters are filled with <code>setXxx</code> like a PreparedStatement; <b>OUT</b> parameters are announced with <code>registerOutParameter(position, type)</code> before <code>execute()</code> and read afterwards with <code>getXxx(position)</code>. The catch: each database has its own procedure language, so your SQL stops being portable.</div></aside>
+
+  <div class="slide">
+    <h3>Callable Statements &amp; Stored Procedures <span class="sn">19</span></h3>
+    <ul class="pts">
+      <li>Stored Procedures
+        <ul><li>Are procedures that are stored in a database.</li><li>Consist of SQL statements as well as procedural language statements</li><li>May (or may not) take some arguments</li><li>May (or may not) return some values</li></ul></li>
+      <li>Advantages of Stored Procedures
+        <ul><li>Encapsulation &amp; Reuse</li><li>Transaction Control</li><li>Standardization</li></ul></li>
+      <li>Disadvantages
+        <ul><li>Database specific (lose independence)</li></ul></li>
+      <li>Callable statements provide means of using stored procedures in the database</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Callable Statements &amp; Stored Procedures <span class="sn">20</span></h3>
+    <ul class="pts">
+      <li>Stored Procedures must follow certain rules
+        <ul><li>Names of the stored procedures and parameters must be legal</li><li>Parameter types must be legal supported by database</li><li>Each parameter must have one of In, Out or Inout modes</li></ul></li>
+      <li>Example</li>
+    </ul>
+    <div class="code"><span class="code-label">// Creating a stored procedure using SQL</span><pre class="sql">CREATE PROC procProductsList AS SELECT * FROM Products;
+
+CREATE PROC procProductsDeleteItem(inProductsID LONG) AS DELETE
+FROM Products WHERE ProductsID = inProductsID;"
+
+CREATE PROC procProductsAddItem(inProductName VARCHAR(40),
+inSupplierID LONG, inCategoryID LONG) AS INSERT INTO Products
+(ProductName, SupplierID, CategoryID) Values (inProductName,
+inSupplierID, inCategoryID);"
+
+CREATE PROC procProductsUpdateItem(inProductID LONG,
+inProductName VARCHAR(40)) AS UPDATE Products SET ProductName =
+inProductName WHERE ProductID = inProductID;"</pre></div>
+    <p>Usage: <code>procProductsUpdateItem(1000, "My Music")</code></p>
+    <p>(Sets the name of the product with id 1000 to 16.99)</p>
+  </div>
+
+  <div class="slide">
+    <h3>Callable Statements &amp; Stored Procedures <span class="sn">21</span></h3>
+    <div class="code"><pre class="java">String sql = "{call getEmployeeSalary(?, ?)}"; // SQL calling a stored procedure with parameters
+
+CallableStatement callableStatement = connection.prepareCall(sql);
+callableStatement.setInt(1, 101);   // Input parameter: employee ID
+callableStatement.registerOutParameter(2, Types.DECIMAL); // Output parameter: salary
+
+callableStatement.execute(); // Execute the stored procedure
+
+double salary = callableStatement.getDouble(2); // Get the output parameter (salary)
+System.out.println("Employee Salary: " + salary);</pre></div>
+    <div class="code"><pre class="sql">CREATE FUNCTION get_salary(emp_id INT) RETURNS DECIMAL(10, 2)
+BEGIN
+    DECLARE total DECIMAL(10, 2);
+    SELECT salary INTO total FROM employees WHERE id = emp_id;
+    RETURN total;
+END;
+
+CREATE PROCEDURE get_employee_salary(IN emp_id INT, OUT total_salary DECIMAL(10, 2))
+BEGIN
+    SELECT salary INTO total_salary FROM employees WHERE id = emp_id;
+END;</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Slide 20's <code>CREATE PROC … AS</code> syntax and the <code>LONG</code> type are MS Access / SQL Server style; slide 21's <code>CREATE FUNCTION</code>/<code>CREATE PROCEDURE … BEGIN … END</code> is MySQL style. That's the "database specific" disadvantage from slide 19 in action. Small slip-ups: slide 20 mixes <code>ProductsID</code> and <code>ProductID</code>, the stray <code>"</code> at the ends of lines shouldn't be there, and the usage line sets the name to <i>"My Music"</i>, not 16.99. On slide 21 the Java calls <code>getEmployeeSalary</code> but the procedure is named <code>get_employee_salary</code>; the names must match. A function is called with <code>"{? = call get_salary(?)}"</code>, where the first <code>?</code> is the return value (register it as OUT).</span></aside>
+
+  <div class="demo" id="cpDemo">
+    <div class="demo-head"><h3>Try it: call the slides' procedures</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">Pick a procedure, fill its parameters, and run it. The page acts as the database: it runs each procedure's SQL on the <code>Products</code> and <code>employees</code> tables. For <code>get_employee_salary</code>, untick <code>registerOutParameter</code> to see what happens.</p>
+    <div class="ctrl"><label>Procedure <select id="cpProc"></select></label></div>
+    <div class="ctrl" id="cpParams"></div>
+    <div class="code"><pre class="java" id="cpCode"></pre></div>
+    <div class="ctrl"><button class="btn solid" type="button" id="cpRun">execute()</button></div>
+    <div class="java-line" id="cpInfo" aria-live="polite"></div>
+    <div class="fig-row">
+      <div class="win" style="flex:1 1 16rem"><div class="win-bar"><span id="cpResT">Result</span><i>–□×</i></div><div class="grid-out" id="cpRes"></div></div>
+      <div class="win" style="flex:1 1 16rem"><div class="win-bar"><span id="cpTabT">Products table</span><i>–□×</i></div><div class="grid-out" id="cpTab"></div></div>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="19-21"></details>
+  <div class="quiz" data-quiz="callable"></div>
+</section>
+
+<section class="sec" id="tx" data-title="Transactions">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 22–23</p>
+    <div class="sec-head-row"><h2>Transactions</h2><label class="done"><input type="checkbox" id="done-tx"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A transaction is "all or nothing". Moving 100 JD from Lina to Omar takes two UPDATEs; if the program dies between them, the money must not vanish. Normally every statement is saved the moment it runs (<b>auto-commit</b>). Turn that off with <code>con.setAutoCommit(false)</code>, run your statements, then <code>con.commit()</code> to make them all permanent, or <code>con.rollback()</code> to undo all of them since the last commit.</div></aside>
+
+  <div class="slide">
+    <h3>Transactions <span class="sn">22</span></h3>
+    <p>A transaction is a group of statements that will be committed if all goes well, or all rolled back if an error occurs.</p>
+    <p>They are needed to support database <b>integrity:</b> e.g. when adding a record, we want to be sure that all tables containing information on that record have indeed been updated; if some have not, the entire transaction should be rolled back.</p>
+    <p>By <b>default</b> a database connection is in <b>autocommit</b> mode, i.e. each SQL command is committed as soon as executed. Thus, for transaction management, we first need to turn off the autocommit mode:</p>
+    <div class="code"><pre class="java">con.setAutoCommit(false);
+Statement stmt=con.creatStatement();
+stmt.executeUpdate(command1);
+stmt.executeUpdate(command2);
+…
+con.commit(); //if all goes well
+con.rollback();//if error occurs</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Transactions and JDBC <span class="sn">23</span></h3>
+    <ul class="pts">
+      <li>JDBC allows SQL statements to be grouped together into a single transaction</li>
+      <li>Transaction control is performed by the Connection object, default mode is auto-commit, I.e., each sql statement is treated as a transaction</li>
+      <li>We can turn off the auto-commit mode with <code>con.setAutoCommit(false);</code></li>
+      <li>And turn it back on with <code>con.setAutoCommit(true);</code></li>
+      <li>Once auto-commit is off, no SQL statement will be committed until an explicit is invoked <code>con.commit();</code></li>
+      <li>At this point all changes done by the SQL statements will be made permanent in the database.</li>
+    </ul>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span><code>con.creatStatement()</code> on slide 22 is a typo for <code>createStatement()</code>. The last two lines aren't meant to run one after the other: <code>commit()</code> goes at the end of the <code>try</code>, <code>rollback()</code> in the <code>catch</code> (see the full pattern under "Handling errors" below).</span></aside>
+
+  <div class="demo" id="txDemo">
+    <div class="demo-head"><h3>Try it: transfer money, then pull the plug</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">Two UPDATEs move money from Lina to Omar. The total should always be 800. Tick "crash" and compare auto-commit on and off. The <code>accounts</code> table also refuses a negative balance, so try a transfer bigger than Lina has.</p>
+    <div class="ctrl">
+      <label><input type="checkbox" id="txAuto" checked> auto-commit on (the default)</label>
+      <label><input type="checkbox" id="txCrash"> crash between the two UPDATEs</label>
+      <label>Amount <input type="number" id="txAmt" value="100" style="width:5.5rem"></label>
+      <button class="btn solid" type="button" id="txRun">Transfer Lina → Omar</button>
+      <button class="btn" type="button" id="txReset">Reset balances</button>
+    </div>
+    <div class="code"><pre class="java" id="txCode"></pre></div>
+    <div class="win" style="max-width:26rem"><div class="win-bar"><span>accounts table</span><i>–□×</i></div><div class="grid-out" id="txTab"></div></div>
+    <div class="log wrap" id="txLog" style="height:9rem" aria-label="Transaction log"></div>
+  </div>
+
+  <details class="orig" data-pages="22-23"></details>
+  <div class="quiz" data-quiz="tx"></div>
+</section>
+
+<section class="sec" id="batch" data-title="Batch execution">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 24–31</p>
+    <div class="sec-head-row"><h2>Batch execution</h2><label class="done"><input type="checkbox" id="done-batch"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Sending 1,000 INSERTs one by one means 1,000 trips to the database and back. A <b>batch</b> collects them first: for each row, set the <code>?</code> values and call <code>addBatch()</code>; then one <code>executeBatch()</code> sends them all together and returns an <code>int[]</code> with the row count of each one. Turn auto-commit off first and <code>commit()</code> at the end, so the whole batch is saved or none of it is.</div></aside>
+
+  <div class="slide">
+    <h3>Batch Execution <span class="sn">24</span></h3>
+    <ul class="pts">
+      <li>A JDBC feature that allows executing multiple SQL statements as a group</li>
+      <li>Reduces the number of round-trips to the database</li>
+      <li>Useful for inserting/updating large sets of records</li>
+      <li>Great performance improvement over single-row executions</li>
+    </ul>
+    <h4>When to Use It</h4>
+    <ul class="pts">
+      <li>Importing data (CSV, Excel, JSON)</li>
+      <li>Saving many rows from a Swing JTable</li>
+      <li>Periodic data syncing</li>
+      <li>Bulk updates or deletes</li>
+      <li>Logging / auditing</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>How Batch Execution Works <span class="sn">25</span></h3>
+    <ul class="pts">
+      <li>Create a PreparedStatement</li>
+      <li>Loop through data</li>
+      <li>For each record, set parameters</li>
+      <li>Call addBatch()</li>
+      <li>After loop, call executeBatch()</li>
+      <li>Commit the transaction</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>How Batch Execution Works <span class="sn">26</span></h3>
+    <div class="code"><pre class="java">Connection conn = DriverManager.getConnection(url, user, pass);
+String sql = "INSERT INTO students(name, age) VALUES(?, ?)";
+
+PreparedStatement ps = conn.prepareStatement(sql);
+conn.setAutoCommit(false);
+
+for (Student s : students) {
+    ps.setString(1, s.getName());
+    ps.setInt(2, s.getAge());
+    ps.addBatch();
+}
+
+ps.executeBatch();
+conn.commit();</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Error Handling <span class="sn">27</span></h3>
+    <ul class="pts">
+      <li>Wrap batch execution in <b>try-catch</b></li>
+      <li>On exception:<br><code>conn.rollback();</code></li>
+      <li>Log failed batch indices</li>
+      <li>Avoid mixing huge batches (split into chunks of 500–1000)</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Best Practices <span class="sn">28</span></h3>
+    <ul class="pts">
+      <li>Always use PreparedStatement, not Statement</li>
+      <li>Disable auto-commit while batching</li>
+      <li>Tune batch size (100–1000 is usually ideal)</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>saveBatch <span class="sn">29</span></h3>
+    <div class="code"><pre class="java">public void saveBatch(List&lt;MyData&gt; dataList) {
+    String sql = "INSERT INTO students (name, age) VALUES (?, ?)";
+
+    try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        conn.setAutoCommit(false); // required for batch
+
+        for (MyData data : dataList) {
+            ps.setString(1, data.getName());
+            ps.setInt(2, data.getAge());
+
+            ps.addBatch(); // add to batch
+        }
+
+        int[] result = ps.executeBatch(); // execute batch
+        conn.commit();
+
+        System.out.println("Inserted rows: " + result.length);
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Save button <span class="sn">30</span></h3>
+    <div class="code"><pre class="java">JButton saveButton = new JButton("Save");
+
+saveButton.addActionListener(e -&gt; {
+    List&lt;MyData&gt; list = new ArrayList&lt;&gt;();
+
+    // imagine tableModel contains rows entered by the user
+    for (int i = 0; i &lt; tableModel.getRowCount(); i++) {
+        String name = tableModel.getValueAt(i, 0).toString();
+        int age = Integer.parseInt(tableModel.getValueAt(i, 1).toString());
+        list.add(new MyData(name, age));
+    }
+
+    saveBatch(list); // call the batch method
+    JOptionPane.showMessageDialog(null, "Batch Insert Completed!");
+});</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Batch update <span class="sn">31</span></h3>
+    <div class="code"><pre class="java">String sql = "UPDATE students SET age = ? WHERE id = ?";
+
+PreparedStatement ps = conn.prepareStatement(sql);
+
+for (Student s : studentsToUpdate) {
+    ps.setInt(1, s.getAge());
+    ps.setInt(2, s.getId());
+    ps.addBatch();
+}
+
+ps.executeBatch();</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Slides 29–31 have no titles on the PDF (their code fills the slide); the headings here are the guide's. <code>MyData</code> and <code>Student</code> are your own small classes with a constructor <code>(String name, int age)</code> and getters. Slide 29's <code>catch</code> only prints the error; follow slide 27 and add <code>conn.rollback()</code> there (which means declaring <code>conn</code> where the catch can see it). Slide 30 shows the "done" message even if <code>saveBatch</code> failed, and a non-number in the Age column makes <code>Integer.parseInt</code> throw <code>NumberFormatException</code> before anything is saved.</span></aside>
+
+  <div class="demo" id="btDemo">
+    <div class="demo-head"><h3>Try it: save a JTable with one batch</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">Type new students into the table (Name, Age), then press <b>Save</b>: slide 30's handler builds the list and slide 29's <code>saveBatch</code> sends it. Try a bad age like <code>abc</code>, a failing row, a chunk size of 2, or auto-commit left on.</p>
+    <div class="win" style="max-width:24rem"><div class="win-bar"><span>New students</span><i>–□×</i></div>
+      <div class="win-body" style="display:grid;gap:.4rem">
+        <div style="overflow-x:auto;background:#fff"><table id="btGrid" style="border-collapse:collapse;width:100%"></table></div>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap"><button class="jbtn" type="button" id="btAdd">Add row</button><button class="jbtn" type="button" id="btDel">Remove last row</button><button class="jbtn" type="button" id="btSave" style="font-weight:600">Save</button></div>
+      </div>
+    </div>
+    <div class="ctrl">
+      <label><input type="checkbox" id="btAuto" checked> <code>conn.setAutoCommit(false)</code></label>
+      <label><input type="checkbox" id="btFail"> the database rejects row 2</label>
+      <label><input type="checkbox" id="btRb" checked> <code>conn.rollback()</code> in the catch (slide 27)</label>
+      <label>Chunk size <select id="btChunk"><option value="0">all in one batch</option><option value="2">2</option></select></label>
+    </div>
+    <div class="java-line" id="btTrips" aria-live="polite"></div>
+    <div class="log wrap" id="btLog" style="height:10rem" aria-label="Batch log"></div>
+    <div class="ctrl"><button class="btn" type="button" id="btUpd">Run slide 31: batch UPDATE every age + 1</button><button class="btn" type="button" id="btShow">Show the students table</button></div>
+    <div class="win" id="btTabWin" hidden><div class="win-bar"><span>students table (database)</span><i>–□×</i></div><div class="grid-out" id="btTab"></div></div>
+  </div>
+
+  <details class="orig" data-pages="24-31"></details>
+  <div class="quiz" data-quiz="batch"></div>
+</section>
+
+<section class="sec" id="errors" data-title="Handling errors">
+  <div class="sec-head">
+    <p class="eyebrow">Slide 32</p>
+    <div class="sec-head-row"><h2>Handling errors</h2><label class="done"><input type="checkbox" id="done-errors"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Almost every JDBC method can throw <code>SQLException</code>. The pattern that keeps the database consistent: do the work and <code>commit()</code> in <code>try</code>; <code>rollback()</code> in <code>catch</code>; <code>close()</code> in <code>finally</code>.</div></aside>
+
+  <div class="slide">
+    <h3>Handling Errors with Exceptions <span class="sn">32</span></h3>
+    <ul class="pts">
+      <li>Programs should recover and leave the database in a consistent state.</li>
+      <li>If a statement in the try block throws an exception or warning, it can be caught in one of the corresponding catch statements</li>
+      <li>How might a finally {…} block be helpful here?
+        <ul><li>E.g., you could rollback your transaction in a catch { …} block or close database connection and free database related resources in finally {…} block</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · the whole pattern in one place</p>
+    <div class="code"><pre class="java">Connection conn = null;
+PreparedStatement ps = null;
+try {
+   conn = DriverManager.getConnection(url, user, password);
+   conn.setAutoCommit(false);                       // start a transaction
+   ps = conn.prepareStatement("UPDATE accounts SET balance = balance + ? WHERE id = ?");
+   ps.setDouble(1, -100); ps.setInt(2, 1); ps.executeUpdate();
+   ps.setDouble(1,  100); ps.setInt(2, 2); ps.executeUpdate();
+   conn.commit();                                   // all went well: make it permanent
+} catch (SQLException e) {
+   System.out.println("Error " + e.getErrorCode() + " (" + e.getSQLState() + "): " + e.getMessage());
+   try { if (conn != null) conn.rollback(); }      // undo everything since the last commit
+   catch (SQLException ex) { ex.printStackTrace(); }
+} finally {
+   try {                                            // always free the resources
+      if (ps != null) ps.close();
+      if (conn != null) conn.close();
+   } catch (SQLException ex) { ex.printStackTrace(); }
+}</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>SQLException method</th><th>Gives you</th></tr></thead>
+        <tbody>
+          <tr><td><code>getMessage()</code></td><td>The database's description of the error.</td></tr>
+          <tr><td><code>getErrorCode()</code></td><td>The vendor's own error number (e.g. MySQL 1045 = access denied).</td></tr>
+          <tr><td><code>getSQLState()</code></td><td>A standard five-character code (e.g. <code>23000</code> = constraint violation).</td></tr>
+          <tr><td><code>getNextException()</code></td><td>The next error in a chain, if several happened.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.9rem;color:var(--muted)">"Warnings" are not thrown: they're attached to the Connection, Statement or ResultSet as an <code>SQLWarning</code>; read them with <code>getWarnings()</code>.</p>
+  </div>
+
+  <details class="orig" data-pages="32"></details>
+  <div class="quiz" data-quiz="errors"></div>
+</section>
+
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 12</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 12 – Database – part 2</em> (CS254, 32 slides). The in-page database is SQLite (sql.js); it resets when you reload. Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l12-done", "quizzes": {"props": [{"q": "Which class reads a <code>key=value<\/code> settings file?", "o": ["java.util.Properties", "java.sql.DriverManager", "java.io.PrintWriter", "java.util.Scanner only"], "a": 0, "e": "Slide 2: props.load(in)."}, {"q": "What does <code>props.getProperty(\"jdbc.url\")<\/code> return if that key isn't in the file?", "o": ["null", "an empty String", "it throws an exception", "\"jdbc.url\""], "a": 0, "e": "A missing key gives null; that's why slide 2 checks drivers != null."}, {"q": "Why keep the URL and password in a properties file?", "o": ["You can change them without recompiling, and they stay out of the source code", "JDBC requires it", "It makes queries faster", "Passwords are encrypted automatically"], "a": 0, "e": "Added explanation."}, {"q": "What does <code>System.setProperty(\"jdbc.drivers\", drivers)<\/code> do?", "o": ["Tells DriverManager which driver classes to load", "Opens a connection", "Saves the file", "Sets the password"], "a": 0, "e": "DriverManager reads the jdbc.drivers system property when it starts."}], "types": [{"q": "Which statement type uses <code>?<\/code> placeholders?", "o": ["PreparedStatement", "Statement", "CallableStatement only", "ResultSet"], "a": 0, "e": "Slide 3."}, {"q": "Which statement type runs stored procedures or functions?", "o": ["CallableStatement", "PreparedStatement", "Statement", "DatabaseMetaData"], "a": 0, "e": "Slide 3."}, {"q": "Why does PreparedStatement matter for security?", "o": ["Values aren't concatenated into the SQL, which prevents SQL injection", "It encrypts the connection", "It hides the password", "It only allows SELECT"], "a": 0, "e": "Slide 3."}, {"q": "Which method creates a CallableStatement?", "o": ["prepareCall(sql)", "createCall(sql)", "prepareStatement(sql)", "callStatement(sql)"], "a": 0, "e": "Slide 4."}, {"q": "<code>createStatement(int, int, int)<\/code>: what is the third int?", "o": ["Holdability", "Timeout", "Fetch size", "Max rows"], "a": 0, "e": "Slides 4–5: type, concurrency, holdability."}], "scroll": [{"q": "A ResultSet from <code>createStatement()<\/code> with no arguments is…", "o": ["forward-only and read-only", "scrollable and updatable", "scrollable but read-only", "forward-only but updatable"], "a": 0, "e": "Slide 5."}, {"q": "Which type is scrollable and shows changes others make to the data?", "o": ["TYPE_SCROLL_SENSITIVE", "TYPE_SCROLL_INSENSITIVE", "TYPE_FORWARD_ONLY", "CONCUR_UPDATABLE"], "a": 0, "e": "Slides 5–6."}, {"q": "On a TYPE_FORWARD_ONLY ResultSet, <code>rs.previous()<\/code>…", "o": ["throws SQLException", "moves back one row", "returns false quietly", "goes to the first row"], "a": 0, "e": "Only next() is allowed."}, {"q": "<code>rs.absolute(-1)<\/code> moves to…", "o": ["the last row", "before the first row", "the first row", "it throws"], "a": 0, "e": "Negative numbers count from the end."}, {"q": "After <code>rs.updateInt(\"grade\", 99)<\/code>, when does the database change?", "o": ["When rs.updateRow() is called", "Immediately", "When the ResultSet closes", "At the next rs.next()"], "a": 0, "e": "updateXxx only changes the ResultSet; moving the cursor first discards it."}, {"q": "How do you add a new row through an updatable ResultSet?", "o": ["moveToInsertRow(), update…, insertRow(), then moveToCurrentRow()", "rs.addRow(…)", "rs.next() past the end and update…", "updateRow() on the last row"], "a": 0, "e": "Slide 9."}, {"q": "What does <code>cancelRowUpdates()<\/code> do?", "o": ["Discards updates made to the current row before updateRow()", "Deletes the row", "Rolls back the transaction", "Closes the ResultSet"], "a": 0, "e": "Slide 9."}, {"q": "Which holdability keeps ResultSets open after a commit?", "o": ["HOLD_CURSORS_OVER_COMMIT", "CLOSE_CURSORS_AT_COMMIT", "CONCUR_READ_ONLY", "TYPE_SCROLL_INSENSITIVE"], "a": 0, "e": "Slide 6."}], "dbmeta": [{"q": "How do you get a DatabaseMetaData object?", "o": ["connection.getMetaData()", "rs.getMetaData()", "new DatabaseMetaData()", "DriverManager.getMetaData()"], "a": 0, "e": "Slide 11. rs.getMetaData() gives ResultSetMetaData instead."}, {"q": "Which method tells you the database is \"MySQL\"?", "o": ["getDatabaseProductName()", "getDriverName()", "getSchemas()", "getURL()"], "a": 0, "e": "Slide 12."}, {"q": "In <code>getTables(null, null, \"sys%\", null)<\/code>, <code>\"sys%\"<\/code> matches…", "o": ["table names starting with sys", "only the table called sys%", "tables in the sys schema", "every table"], "a": 0, "e": "% is the SQL wildcard for any run of characters."}, {"q": "What type does <code>getTables(…)<\/code> return?", "o": ["ResultSet", "String[]", "List<String>", "int"], "a": 0, "e": "Slide 13: read TABLE_NAME from each row."}, {"q": "Which method describes a table's primary key columns?", "o": ["getPrimaryKeys(catalog, schema, table)", "getTables(…)", "getProcedures(…)", "getColumnCount()"], "a": 0, "e": "Slide 12."}], "prepared": [{"q": "In <code>ps.setString(1, publisher)<\/code>, the 1 means…", "o": ["the first ? in the SQL", "the first column of the result", "one row", "the first table"], "a": 0, "e": "Slide 14: position 1 denotes the first ?."}, {"q": "How do you run a PreparedStatement?", "o": ["executeQuery() or executeUpdate() with no arguments", "executeQuery(sql)", "execute(sql, params)", "run()"], "a": 0, "e": "Slide 15."}, {"q": "What happens if a <code>?<\/code> isn't set before executing?", "o": ["SQLException", "It's treated as NULL", "It's ignored", "The program won't compile"], "a": 0, "e": "Slide 15."}, {"q": "What's wrong with slide 14's SQL String?", "o": ["No space after AND, so it becomes ANDPublishers.Name", "It uses ? instead of a value", "It should use executeUpdate", "Nothing"], "a": 0, "e": "Run it in the demo to see the syntax error."}, {"q": "<code>ps.setString(2, 212);<\/code> should be…", "o": ["ps.setInt(2, 212);", "ps.setString(212, 2);", "ps.setNumber(2, 212);", "it's correct"], "a": 0, "e": "212 is an int."}, {"q": "With a Statement, the password <code>' OR '1'='1<\/code> logs in because…", "o": ["the text becomes part of the SQL, so the WHERE is always true", "the password is really that", "Statements skip the WHERE clause", "JDBC ignores quotes"], "a": 0, "e": "SQL injection; a PreparedStatement sends values separately."}, {"q": "Which is one of PreparedStatement's three uses on slide 15?", "o": ["Precompiling SQL to avoid compiling the same statement again", "Calling stored procedures", "Reading metadata", "Opening connections"], "a": 0, "e": "Also: parameterized statements, and values that aren't strings."}], "callable": [{"q": "A stored procedure is…", "o": ["a procedure stored in the database, made of SQL plus procedural statements", "a Java method that runs SQL", "a saved ResultSet", "a JDBC driver"], "a": 0, "e": "Slide 19."}, {"q": "Main disadvantage of stored procedures?", "o": ["Database specific: you lose independence", "They're slow", "They can't take arguments", "They can't return values"], "a": 0, "e": "Slide 19."}, {"q": "What are the three parameter modes?", "o": ["IN, OUT, INOUT", "GET, SET, CALL", "READ, WRITE, BOTH", "INPUT, RESULT, RETURN"], "a": 0, "e": "Slide 20."}, {"q": "Before <code>execute()<\/code>, an OUT parameter needs…", "o": ["registerOutParameter(position, type)", "setString(position, value)", "getDouble(position)", "nothing"], "a": 0, "e": "Slide 21."}, {"q": "After <code>execute()<\/code>, how do you read OUT parameter 2?", "o": ["callableStatement.getDouble(2)", "rs.getDouble(2)", "callableStatement.getOut(2)", "it's returned by execute()"], "a": 0, "e": "Slide 21."}, {"q": "What's the call syntax passed to <code>prepareCall<\/code>?", "o": ["\"{call procName(?, ?)}\"", "\"EXEC procName ?, ?\"", "\"CALL procName\" only", "\"procName(?, ?)\""], "a": 0, "e": "Slide 21 (JDBC escape syntax)."}], "tx": [{"q": "A transaction is…", "o": ["a group of statements committed together if all goes well, or all rolled back on error", "one SELECT", "a connection", "a batch of INSERTs only"], "a": 0, "e": "Slide 22."}, {"q": "By default a JDBC connection is in…", "o": ["auto-commit mode: each statement is committed as soon as it runs", "manual mode", "read-only mode", "batch mode"], "a": 0, "e": "Slides 22–23."}, {"q": "Which object controls transactions?", "o": ["Connection", "Statement", "ResultSet", "DriverManager"], "a": 0, "e": "Slide 23."}, {"q": "With auto-commit on, the program crashes between two UPDATEs. Result?", "o": ["The first UPDATE is already permanent; the data is inconsistent", "Both are undone", "Neither ran", "The database waits"], "a": 0, "e": "Try it in the transfer demo."}, {"q": "Where should <code>con.rollback()<\/code> go?", "o": ["In the catch block", "Right after setAutoCommit(false)", "In finally, always", "After commit()"], "a": 0, "e": "Slide 32: roll back in catch, close in finally."}], "batch": [{"q": "Main benefit of batch execution?", "o": ["Fewer round-trips to the database", "Simpler SQL", "No need for a connection", "Automatic rollback"], "a": 0, "e": "Slide 24."}, {"q": "What does <code>ps.addBatch()<\/code> do?", "o": ["Queues the statement with its current parameter values", "Sends it to the database immediately", "Commits", "Clears the parameters"], "a": 0, "e": "Slides 25–26."}, {"q": "What does <code>executeBatch()<\/code> return?", "o": ["int[]: one update count per queued statement", "a ResultSet", "boolean", "void"], "a": 0, "e": "Slide 29: int[] result."}, {"q": "Why turn off auto-commit while batching?", "o": ["So the whole batch is committed (or rolled back) together", "Batches don't work otherwise", "To make it read-only", "To skip errors"], "a": 0, "e": "Slides 28–29."}, {"q": "Slides 27–28 suggest batch sizes of about…", "o": ["100–1000", "1–10", "10,000+", "exactly 50"], "a": 0, "e": "Split huge batches into chunks of 500–1000."}, {"q": "In slide 30, a user types \"abc\" as an age. What happens?", "o": ["Integer.parseInt throws NumberFormatException before anything is saved", "The row is saved with age 0", "saveBatch rolls back", "The JOptionPane shows an error"], "a": 0, "e": "The listener stops at parseInt."}], "errors": [{"q": "Per slide 32, what's a good use of <code>finally<\/code> with JDBC?", "o": ["Closing the connection and freeing database resources", "Committing the transaction", "Running the next query", "Catching the exception"], "a": 0, "e": "Slide 32."}, {"q": "Which SQLException method gives the vendor's own error number?", "o": ["getErrorCode()", "getSQLState()", "getMessage()", "getNextException()"], "a": 0, "e": "Added table."}, {"q": "How are SQL warnings delivered?", "o": ["As SQLWarning objects, read with getWarnings()", "As thrown SQLExceptions", "Printed to System.err automatically", "They're ignored"], "a": 0, "e": "Warnings aren't thrown."}]}, "flashcards": [["Properties file", "key=value lines; props.load(in); props.getProperty(\"jdbc.url\") returns null if missing.", "Slide 2"], ["Statement", "createStatement(); plain SQL text; fine for fixed SQL.", "Slides 3–4"], ["PreparedStatement", "prepareStatement(sql) with ? placeholders; setXxx(position, value); executeQuery()/executeUpdate() with no arguments.", "Slides 3, 14–15"], ["CallableStatement", "prepareCall(\"{call proc(?, ?)}\"); runs stored procedures or functions.", "Slides 3, 21"], ["createStatement(type, concurrency)", "Makes a scrollable and/or updatable ResultSet. A third int sets holdability.", "Slides 4–5"], ["TYPE_FORWARD_ONLY", "Cursor moves forward only: next(). The default.", "Slide 6"], ["TYPE_SCROLL_INSENSITIVE", "Scrollable; a snapshot not affected by changes to the underlying data.", "Slide 6"], ["TYPE_SCROLL_SENSITIVE", "Scrollable; reflects changes to the underlying data.", "Slide 6"], ["CONCUR_READ_ONLY / CONCUR_UPDATABLE", "Whether the ResultSet may be updated.", "Slide 6"], ["HOLD_CURSORS_OVER_COMMIT / CLOSE_CURSORS_AT_COMMIT", "Whether open ResultSets stay open or close when the transaction commits.", "Slide 6"], ["Scrolling methods", "absolute(n), relative(n), first(), last(), beforeFirst(), afterLast(), previous(), next(); isFirst()/isLast()/isBeforeFirst()/isAfterLast().", "Slide 7"], ["Updating a row", "rs.updateInt(\"grade\", g + 10); rs.updateRow(); cancelRowUpdates() discards; deleteRow() deletes.", "Slides 9–10"], ["Inserting a row", "moveToInsertRow(); updateXxx(…); insertRow(); moveToCurrentRow().", "Slide 9"], ["DatabaseMetaData", "con.getMetaData(): getDatabaseProductName(), getDatabaseProductVersion(), getDriverName(), getTables(…), getPrimaryKeys(…), getProcedures(…), getSchemas().", "Slides 11–13"], ["SQL injection", "User text glued into SQL changes its meaning (e.g. ' OR '1'='1). PreparedStatement prevents it.", "Slide 3"], ["Stored procedure", "SQL + procedural code stored in the database. Pros: encapsulation & reuse, transaction control, standardization. Con: database specific.", "Slide 19"], ["IN / OUT / INOUT", "Parameter modes. IN: setXxx. OUT: registerOutParameter(i, Types.X) before execute(), getXxx(i) after.", "Slides 20–21"], ["Transaction", "All or nothing. con.setAutoCommit(false); … con.commit(); or con.rollback() on error.", "Slides 22–23"], ["Auto-commit", "The default: each statement is committed as soon as it's executed.", "Slides 22–23"], ["Batch execution", "ps.addBatch() per row; int[] counts = ps.executeBatch(); conn.commit(). Fewer round-trips.", "Slides 24–29"], ["Batch best practices", "Use PreparedStatement; disable auto-commit; 100–1000 per batch; rollback() on error.", "Slides 27–28"], ["Error-handling pattern", "try { … commit(); } catch (SQLException e) { rollback(); } finally { close(); }", "Slide 32"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+<script>
+// Shared in-browser "database" for the JDBC guides (SQLite via sql.js, pure-JS build).
+(function () {
+  var SRC = "../vendor/sql-asm.js";
+  var SEED = [
+    "CREATE TABLE students(id INTEGER PRIMARY KEY, name VARCHAR(40) NOT NULL, age INT, grade INT);",
+    "INSERT INTO students(id,name,age,grade) VALUES (1,'Lina',20,78),(2,'Omar',21,64),(3,'Sara',19,91),(4,'Yazan',22,55),(5,'Rama',20,83),(6,'Khaled',21,70);",
+    "CREATE TABLE Publishers(Publisher_Id INT PRIMARY KEY, Name VARCHAR(40));",
+    "INSERT INTO Publishers VALUES (1,'Pearson'),(2,'OReilly'),(3,'Wiley');",
+    "CREATE TABLE Books(ISBN VARCHAR(20) PRIMARY KEY, Title VARCHAR(80), Price DECIMAL(6,2), Publisher_Id INT);",
+    "INSERT INTO Books VALUES ('111','Visual C# How to Program',89.99,1),('222','Java Swing',45.50,2),('333','Head First Java',39.99,2),('444','Database Systems',72.00,3),('555','Java How to Program',95.00,1);",
+    "CREATE TABLE Authors(Author_Id INT PRIMARY KEY, Name VARCHAR(40));",
+    "INSERT INTO Authors VALUES (1,'Deitel'),(2,'Loy'),(3,'Sierra'),(4,'Connolly');",
+    "CREATE TABLE BooksAuthors(ISBN VARCHAR(20), Author_Id INT);",
+    "INSERT INTO BooksAuthors VALUES ('111',1),('222',2),('333',3),('444',4),('555',1);",
+    "CREATE TABLE users(username VARCHAR(20), password VARCHAR(20));",
+    "INSERT INTO users VALUES ('admin','S3cret!'),('rami','gju2026');",
+    "CREATE TABLE employees(id INT PRIMARY KEY, name VARCHAR(40), salary DECIMAL(10,2));",
+    "INSERT INTO employees VALUES (101,'Ahmad',1250.00),(102,'Dana',1480.50),(103,'Hiba',990.00);",
+    "CREATE TABLE Products(ProductID INTEGER PRIMARY KEY, ProductName VARCHAR(40), SupplierID INT, CategoryID INT);",
+    "INSERT INTO Products VALUES (1000,'Old Music',1,1),(1001,'Headphones',2,3),(1002,'Guitar Strings',1,2);",
+    "CREATE TABLE accounts(id INT PRIMARY KEY, owner VARCHAR(40), balance DECIMAL(10,2) CHECK (balance >= 0));",
+    "INSERT INTO accounts VALUES (1,'Lina',500.00),(2,'Omar',300.00);"
+  ].join("\n");
+
+  var waiting = [], SQL = null, db = null, failed = null;
+  function boot() {
+    if (window.initSqlJs) return start();
+    var s = document.createElement("script"); s.src = SRC; s.async = true;
+    s.onload = start; s.onerror = function () { failed = "The SQL engine could not be loaded (no internet connection?). The code and explanations still work; the live database needs the connection."; flush(); };
+    document.head.appendChild(s);
+  }
+  function start() {
+    window.initSqlJs().then(function (S) { SQL = S; reset(); flush(); }).catch(function (e) { failed = String(e); flush(); });
+  }
+  function flush() { var w = waiting; waiting = []; w.forEach(function (f) { f(failed); }); }
+  function reset() { if (db) db.close(); db = new SQL.Database(); db.run(SEED); }
+
+  window.JDBC = {
+    ready: function (cb) { if (db || failed) cb(failed); else waiting.push(cb); },
+    reset: reset,
+    db: function () { return db; },
+    // run one statement; returns {kind:'query', columns, rows} or {kind:'update', count}
+    exec: function (sql) {
+      var s = sql.trim().replace(/;\s*$/, "");
+      var isQuery = /^(select|with|pragma)\b/i.test(s);
+      if (isQuery) {
+        var r = db.exec(s);
+        return { kind: "query", columns: r.length ? r[0].columns : [], rows: r.length ? r[0].values : [] };
+      }
+      db.run(s);
+      return { kind: "update", count: /^(create|drop|alter)\b/i.test(s) ? 0 : db.getRowsModified() };
+    },
+    // render a result as an HTML table
+    table: function (cols, rows, opts) {
+      opts = opts || {};
+      var esc = window.Guide.esc;
+      var th = "text-transform:none;letter-spacing:0;background:#e3e8eb;border:1px solid #b6c0c5;padding:3px 8px;font:600 12px sans-serif;color:#1c2328;text-align:left;white-space:nowrap";
+      var td = "border:1px solid #d3dadd;padding:3px 8px;font:12px var(--f-mono);color:#1c2328;white-space:nowrap";
+      var h = '<table style="border-collapse:collapse;background:#fff;width:100%">';
+      h += "<thead><tr>" + (opts.cursor != null ? '<th style="' + th + ';width:1.6rem"></th>' : "") + cols.map(function (c, i) { return '<th style="' + th + '">' + esc(String(c)) + (opts.idx ? ' <span style="opacity:.55;font-weight:400">(' + (i + 1) + ")</span>" : "") + "</th>"; }).join("") + "</tr></thead><tbody>";
+      if (opts.cursor != null) h += '<tr><td style="' + td + ';color:#b0261c;font-weight:700">' + (opts.cursor === 0 ? "▶" : "") + '</td><td colspan="' + cols.length + '" style="' + td + ';color:#7a868c;font-style:italic">before first row</td></tr>';
+      rows.forEach(function (r, i) {
+        var on = opts.cursor === i + 1;
+        h += '<tr style="background:' + (on ? "#fff2b3" : "#fff") + '">' + (opts.cursor != null ? '<td style="' + td + ';color:#b0261c;font-weight:700">' + (on ? "▶" : i + 1) + "</td>" : "") +
+          r.map(function (v) { return '<td style="' + td + '">' + (v === null ? '<span style="color:#7a868c">NULL</span>' : esc(String(v))) + "</td>"; }).join("") + "</tr>";
+      });
+      if (opts.cursor != null) h += '<tr><td style="' + td + ';color:#b0261c;font-weight:700">' + (opts.cursor === rows.length + 1 ? "▶" : "") + '</td><td colspan="' + cols.length + '" style="' + td + ';color:#7a868c;font-style:italic">after last row</td></tr>';
+      if (!rows.length && opts.cursor == null) h += '<tr><td colspan="' + cols.length + '" style="' + td + ';color:#7a868c">(no rows)</td></tr>';
+      return h + "</tbody></table>";
+    }
+  };
+
+  // ---------- reusable widgets ----------
+  var $ = function (id) { return document.getElementById(id); };
+  function logger(el) { return function (t, c) { var d = document.createElement("div"); d.textContent = t; if (c) d.style.color = c; el.appendChild(d); el.scrollTop = el.scrollHeight; }; }
+  var C = { ev: "#9fd3ff", ok: "#7fd3ad", warn: "#f0b071", bad: "#ff8f86", dim: "#9aa4a8" };
+  window.JDBC.C = C; window.JDBC.logger = logger;
+
+  // SQL console: needs #sqlIn, #sqlRun, #sqlReset, #sqlPreset (select with data-sql in option values), #sqlOut, #sqlJava
+  window.JDBC.console = function (presets) {
+    var inp = $("sqlIn"), out = $("sqlOut"), java = $("sqlJava"), pre = $("sqlPreset");
+    if (!inp) return;
+    presets.forEach(function (p, i) { var o = document.createElement("option"); o.value = i; o.textContent = p[0]; pre.appendChild(o); });
+    pre.addEventListener("change", function () { if (this.value !== "") inp.value = presets[this.value][1]; });
+    inp.value = presets[0][1];
+    function run() {
+      window.JDBC.ready(function (err) {
+        if (err) { out.innerHTML = '<p class="expl">' + window.Guide.esc(err) + "</p>"; return; }
+        var sql = inp.value.trim();
+        try {
+          var r = window.JDBC.exec(sql);
+          if (r.kind === "query") {
+            java.textContent = 'ResultSet rs = statement.executeQuery(sql);   // ' + r.rows.length + " row(s)\nwhile (rs.next()) { ... rs.getString(1) ... }";
+            out.innerHTML = window.JDBC.table(r.columns, r.rows, { idx: true });
+          } else {
+            java.textContent = "int n = statement.executeUpdate(sql);   // n = " + r.count + (r.count === 0 && /^(create|drop|alter)/i.test(sql) ? "   (DDL: no rows updated)" : r.count === 1 ? "   (one row changed)" : "");
+            out.innerHTML = '<p class="expl" style="margin:0">Done. Rows affected: ' + r.count + "</p>";
+          }
+        } catch (e) {
+          java.textContent = "// throws java.sql.SQLException";
+          out.innerHTML = '<p class="expl" style="margin:0;color:#b0261c">SQLException: ' + window.Guide.esc(String(e.message || e)) + "</p>";
+        }
+      });
+    }
+    $("sqlRun").addEventListener("click", run);
+    inp.addEventListener("keydown", function (e) { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); run(); } });
+    $("sqlReset").addEventListener("click", function () { window.JDBC.ready(function (err) { if (!err) { window.JDBC.reset(); out.innerHTML = '<p class="expl" style="margin:0">Database reset to its starting data.</p>'; java.textContent = ""; } }); });
+    window.JDBC.ready(function (err) { if (err) out.innerHTML = '<p class="expl">' + window.Guide.esc(err) + "</p>"; else out.innerHTML = '<p class="expl" style="margin:0">Database ready: tables students, Books, Publishers, Authors, BooksAuthors, users.</p>'; });
+  };
+
+  // ResultSet cursor stepper: needs #rsBox, #rsInfo, #rsLog, buttons [data-rs], optional #rsType, #rsN
+  // opts: {sql, onDraw(state)}; returns {state()} so pages can read the current row
+  window.JDBC.cursor = function (opts) {
+    opts = opts || {};
+    var SQLQ = opts.sql || "SELECT id, name, age, grade FROM students";
+    var box = $("rsBox"); if (!box) return;
+    var cols = [], rows = [], pos = 0, out = logger($("rsLog"));
+    function type() { return $("rsType") ? $("rsType").value : "TYPE_FORWARD_ONLY"; }
+    function state() { return { cols: cols, rows: rows, pos: pos, row: pos >= 1 && pos <= rows.length ? rows[pos - 1] : null }; }
+    function draw() {
+      box.innerHTML = window.JDBC.table(cols, rows, { cursor: pos, idx: true });
+      var on = pos >= 1 && pos <= rows.length;
+      $("rsInfo").textContent = on ? "rs.getRow() = " + pos + "   " + cols.map(function (c, i) { var v = rows[pos - 1][i]; return "rs." + (typeof v === "number" ? (Math.round(v) === v ? "getInt" : "getDouble") : "getString") + '("' + c + '") = ' + (typeof v === "number" ? v : '"' + v + '"'); }).join("   ")
+        : "Cursor is " + (pos === 0 ? "before the first row" : "after the last row") + ": calling rs.getString(...) here throws SQLException.";
+      if (opts.onDraw) opts.onDraw(state());
+    }
+    function load() {
+      window.JDBC.ready(function (err) {
+        if (err) { box.innerHTML = '<p class="expl">' + window.Guide.esc(err) + "</p>"; return; }
+        var r = window.JDBC.exec(SQLQ);
+        cols = r.columns; rows = r.rows; pos = 0; draw();
+        out('ResultSet rs = stmt.executeQuery("' + SQLQ + '");   // cursor before first row', C.dim);
+      });
+    }
+    function forwardOnly(m) { if (type() === "TYPE_FORWARD_ONLY" && m !== "next") { out("rs." + m + "() → SQLException: ResultSet is TYPE_FORWARD_ONLY", C.bad); return true; } return false; }
+    var acts = {
+      next: function () { var ok = pos < rows.length; pos = Math.min(rows.length + 1, pos + 1); out("rs.next() → " + ok + (ok ? "   (now on row " + pos + ")" : "   (cursor moved past the last row)"), ok ? C.ok : C.warn); },
+      previous: function () { if (forwardOnly("previous")) return; var ok = pos > 1; pos = Math.max(0, pos - 1); out("rs.previous() → " + ok, ok ? C.ok : C.warn); },
+      first: function () { if (forwardOnly("first")) return; pos = rows.length ? 1 : 0; out("rs.first() → " + (rows.length > 0), C.ok); },
+      last: function () { if (forwardOnly("last")) return; pos = rows.length; out("rs.last() → " + (rows.length > 0), C.ok); },
+      beforeFirst: function () { if (forwardOnly("beforeFirst")) return; pos = 0; out("rs.beforeFirst()", C.ok); },
+      afterLast: function () { if (forwardOnly("afterLast")) return; pos = rows.length + 1; out("rs.afterLast()", C.ok); },
+      absolute: function () { if (forwardOnly("absolute")) return; var n = +($("rsN") ? $("rsN").value : 1) || 0; pos = n < 0 ? Math.max(0, rows.length + 1 + n) : Math.min(rows.length + 1, n); out("rs.absolute(" + n + ") → " + (pos >= 1 && pos <= rows.length), C.ok); },
+      relative: function () { if (forwardOnly("relative")) return; var n = +($("rsN") ? $("rsN").value : 1) || 0; pos = Math.max(0, Math.min(rows.length + 1, pos + n)); out("rs.relative(" + n + ") → " + (pos >= 1 && pos <= rows.length), C.ok); },
+      loop: function () {
+        if (pos !== 0) { out("(re-running the query so the cursor starts before the first row)", C.dim); pos = 0; }
+        out("while (rs.next()) { System.out.println(rs.getString(" + '"' + cols[1] + '"' + ")); }", C.dim);
+        var names = []; while (pos < rows.length) { pos++; names.push(rows[pos - 1][1]); }
+        pos = rows.length + 1; out("prints: " + names.join(", ") + "   (then rs.next() → false, loop ends)", C.ok);
+      },
+      reload: function () { load(); }
+    };
+    document.querySelectorAll("[data-rs]").forEach(function (b) { b.addEventListener("click", function () { if (b.dataset.rs === "reload") { load(); return; } if (!rows.length) return; acts[b.dataset.rs](); draw(); }); });
+    if ($("rsType")) $("rsType").addEventListener("change", function () { out("stmt = con.createStatement(ResultSet." + type() + ", ResultSet.CONCUR_READ_ONLY);", C.dim); load(); });
+    load();
+    return { state: state, log: out };
+  };
+
+  window.JDBC.boot = boot;
+})();
+// Lecture 12 page demos (appended after jdbcsim.js by the build step)
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = window.Guide.esc, C = JDBC.C, logger = JDBC.logger, J = window.Guide.java;
+  JDBC.boot();
+
+  function q(sql, params) {
+    var s = JDBC.db().prepare(sql);
+    try { if (params) s.bind(params); var rows = []; while (s.step()) rows.push(s.get()); return { columns: s.getColumnNames(), rows: rows }; }
+    finally { s.free(); }
+  }
+  function run(sql, params) { JDBC.db().run(sql, params || []); return JDBC.db().getRowsModified(); }
+  function lineify(pre) {
+    pre.innerHTML = pre.innerHTML.split("\n").map(function (l) { return '<span class="ln">' + l + "</span>"; }).join("\n");
+    return pre.querySelectorAll(".ln");
+  }
+  function money(v) { return v == null ? null : Number(v).toFixed(2); }
+  var TH = "text-transform:none;letter-spacing:0;background:#e3e8eb;border:1px solid #b6c0c5;padding:3px 8px;font:600 12px sans-serif;color:#1c2328;text-align:left;white-space:nowrap";
+  var TD = "border:1px solid #d3dadd;padding:3px 8px;font:12px var(--f-mono);color:#1c2328;white-space:nowrap";
+
+  // ---------- properties file ----------
+  (function () {
+    var out = logger($("prLog"));
+    $("prIn").value = "# QueryDB.properties\njdbc.drivers=com.mysql.cj.jdbc.Driver\njdbc.url=jdbc:mysql://localhost:3306/university\njdbc.username=root\njdbc.password=secret\n";
+    function parse(text) {
+      var m = {}, n = 0;
+      text.split(/\r?\n/).forEach(function (line) {
+        var l = line.replace(/^\s+/, "");
+        if (!l || l[0] === "#" || l[0] === "!") return;
+        var i = l.search(/[=:\s]/), k, v;
+        if (i < 0) { k = l; v = ""; } else { k = l.slice(0, i); v = l.slice(i).replace(/^\s*[=:]?\s*/, ""); }
+        m[k] = v; n++;
+      });
+      return { m: m, n: n };
+    }
+    $("prRun").addEventListener("click", function () {
+      $("prLog").innerHTML = "";
+      out("Properties props = new Properties();", C.dim);
+      if (!$("prExists").checked) {
+        out('new FileInputStream("QueryDB.properties") → java.io.FileNotFoundException: QueryDB.properties (The system cannot find the file specified)', C.bad);
+        out("// nothing after this line runs: catch the IOException or declare throws IOException", C.dim);
+        return;
+      }
+      var p = parse($("prIn").value);
+      out("props.load(in);   // " + p.n + " key(s) loaded", C.ok);
+      out("in.close();", C.dim);
+      function g(k) { return Object.prototype.hasOwnProperty.call(p.m, k) ? '"' + p.m[k] + '"' : "null"; }
+      var d = g("jdbc.drivers");
+      out('drivers = props.getProperty("jdbc.drivers") → ' + d, d === "null" ? C.warn : C.ok);
+      if (d !== "null") out('System.setProperty("jdbc.drivers", drivers);   // DriverManager will load ' + d + " itself", C.dim);
+      else out("// drivers is null, so System.setProperty is skipped", C.dim);
+      [["url", "jdbc.url"], ["username", "jdbc.username"], ["password", "jdbc.password"]].forEach(function (x) {
+        var v = g(x[1]); out(x[0] + ' = props.getProperty("' + x[1] + '") → ' + v, v === "null" ? C.warn : C.ok);
+      });
+      if (g("jdbc.url") === "null") out('// then DriverManager.getConnection(url, …) → SQLException: The url cannot be null', C.bad);
+      else out("// ready: Connection con = DriverManager.getConnection(url, username, password);", C.dim);
+    });
+  })();
+
+  // ---------- scrollable / updatable ResultSet ----------
+  (function () {
+    var out = logger($("scLog")), COLS = ["id", "name", "age", "grade"];
+    var S = { type: "", conc: "", rows: [], pos: 0, pend: null, ins: null, saved: 0, loaded: false };
+    function code() { $("scCode").innerHTML = J("Statement stmt = con.createStatement(ResultSet." + $("scType").value + ",\n                                      ResultSet." + $("scConc").value + ');\nResultSet rs = stmt.executeQuery("SELECT id, name, age, grade FROM students");'); }
+    function dbRows() { return JDBC.exec("SELECT id, name, age, grade FROM students ORDER BY id").rows; }
+    function dbMap() { var m = {}; dbRows().forEach(function (r) { m[r[0]] = r; }); return m; }
+    function n() { return S.rows.length; }
+    function onRow() { return !S.ins && S.pos >= 1 && S.pos <= n(); }
+    function view(r, m) { if (S.type === "TYPE_SCROLL_SENSITIVE" && m[r.id]) return m[r.id]; return r.v; }
+    function draw() {
+      if (!S.loaded) return;
+      var m = dbMap(), h = '<table style="border-collapse:collapse;background:#fff;width:100%"><thead><tr><th style="' + TH + ';width:1.6rem"></th>' + COLS.map(function (c) { return '<th style="' + TH + '">' + c + "</th>"; }).join("") + "</tr></thead><tbody>";
+      var mark = function (on) { return '<td style="' + TD + ';color:#b0261c;font-weight:700">' + (on ? "▶" : "") + "</td>"; };
+      h += "<tr>" + mark(!S.ins && S.pos === 0) + '<td colspan="4" style="' + TD + ';color:#7a868c;font-style:italic">before first row</td></tr>';
+      S.rows.forEach(function (r, i) {
+        var on = !S.ins && S.pos === i + 1, vals = view(r, m), d = m[r.id];
+        h += '<tr style="background:' + (on ? "#fff2b3" : "#fff") + '"><td style="' + TD + ';color:#b0261c;font-weight:700">' + (on ? "▶" : i + 1) + (r.upd ? " ✎" : "") + (r.ins ? " +" : "") + "</td>";
+        COLS.forEach(function (c, ci) {
+          var v = vals[ci], st = TD, title = "";
+          if (on && S.pend && S.pend[ci] !== undefined) { v = S.pend[ci]; st += ";background:#ffd966;font-weight:700"; title = "pending: not in the database until updateRow()"; }
+          else if (d && String(d[ci]) !== String(v)) { st += ";color:#a2560f;font-weight:700"; title = "the database now holds " + d[ci]; }
+          h += '<td style="' + st + '"' + (title ? ' title="' + esc(title) + '"' : "") + ">" + (v === null ? '<span style="color:#7a868c">NULL</span>' : esc(String(v))) + "</td>";
+        });
+        h += "</tr>";
+      });
+      h += "<tr>" + mark(!S.ins && S.pos === n() + 1) + '<td colspan="4" style="' + TD + ';color:#7a868c;font-style:italic">after last row</td></tr>';
+      if (S.ins) h += '<tr style="background:#dff3e4"><td style="' + TD + ';color:#1f7a4a;font-weight:700">✱</td>' + S.ins.map(function (v, ci) { return '<td style="' + TD + '">' + (ci === 0 ? '<span style="color:#7a868c">(auto)</span>' : v === null || v === "" ? '<span style="color:#7a868c">' + (v === "" ? '""' : "NULL") + "</span>" : esc(String(v))) + "</td>"; }).join("") + "</tr>";
+      $("scRS").innerHTML = h + "</tbody></table>" + '<p class="expl" style="margin:0;font-size:.78rem">▶ cursor · ✎ updated · + inserted · <b style="color:#a2560f">brown</b> = differs from the database · <b style="background:#ffd966;color:#1c2328">yellow</b> = pending update</p>';
+      $("scDB").innerHTML = JDBC.table(COLS, dbRows());
+      var r = onRow() ? S.rows[S.pos - 1] : null;
+      $("scInfo").textContent = S.ins ? "On the insert row: fill it with update…, then insertRow(). moveToCurrentRow() goes back to row " + S.saved + "."
+        : "rs.getRow() = " + (onRow() ? S.pos : 0) + "   isBeforeFirst() = " + (S.pos === 0 && n() > 0) + "   isFirst() = " + (S.pos === 1) + "   isLast() = " + (S.pos === n() && n() > 0) + "   isAfterLast() = " + (S.pos === n() + 1 && n() > 0) + "   rowUpdated() = " + !!(r && r.upd) + "   rowInserted() = " + !!(r && r.ins);
+    }
+    function load(silent) {
+      JDBC.ready(function (err) {
+        if (err) { $("scRS").innerHTML = '<p class="expl">' + esc(err) + "</p>"; return; }
+        S.type = $("scType").value; S.conc = $("scConc").value;
+        S.rows = dbRows().map(function (v) { return { id: v[0], v: v.slice() }; });
+        S.pos = 0; S.pend = null; S.ins = null; S.loaded = true;
+        if (!silent) out("stmt = con.createStatement(ResultSet." + S.type + ", ResultSet." + S.conc + ");  rs = stmt.executeQuery(…);   // " + n() + " rows, cursor before the first row", C.dim);
+        draw();
+      });
+    }
+    function scrollOnly(m) { if (S.type === "TYPE_FORWARD_ONLY") { out("rs." + m + " → SQLException: Operation not allowed for a result set of type ResultSet.TYPE_FORWARD_ONLY.", C.bad); return true; } return false; }
+    function updOnly(m) { if (S.conc === "CONCUR_READ_ONLY") { out("rs." + m + " → SQLException: the ResultSet is CONCUR_READ_ONLY, so it can't be changed", C.bad); return true; } return false; }
+    function notIns(m) { if (S.ins) { out("rs." + m + " → SQLException: on the insert row only update…, get… and insertRow() are allowed; call moveToCurrentRow() first", C.bad); return true; } return false; }
+    function leave() { if (S.pend) { out("// the pending update on row " + S.pos + " was thrown away: the cursor moved before updateRow()", C.warn); S.pend = null; } }
+    function moved(m, ok) { out("rs." + m + " → " + ok, ok ? C.ok : C.warn); }
+    var A = {
+      next: function () { if (notIns("next()")) return; leave(); var ok = S.pos < n(); S.pos = Math.min(n() + 1, S.pos + 1); moved("next()", ok); },
+      previous: function () { if (scrollOnly("previous()") || notIns("previous()")) return; leave(); var ok = S.pos > 1; S.pos = Math.max(0, S.pos - 1); moved("previous()", ok); },
+      first: function () { if (scrollOnly("first()") || notIns("first()")) return; leave(); S.pos = n() ? 1 : 0; moved("first()", n() > 0); },
+      last: function () { if (scrollOnly("last()") || notIns("last()")) return; leave(); S.pos = n(); moved("last()", n() > 0); },
+      beforeFirst: function () { if (scrollOnly("beforeFirst()") || notIns("beforeFirst()")) return; leave(); S.pos = 0; out("rs.beforeFirst()", C.ok); },
+      afterLast: function () { if (scrollOnly("afterLast()") || notIns("afterLast()")) return; leave(); S.pos = n() + 1; out("rs.afterLast()", C.ok); },
+      absolute: function () {
+        var k = parseInt($("scN").value, 10) || 0; if (scrollOnly("absolute(" + k + ")") || notIns("absolute(" + k + ")")) return; leave();
+        S.pos = k > 0 ? Math.min(k, n() + 1) : k < 0 ? Math.max(0, n() + 1 + k) : 0; moved("absolute(" + k + ")", onRow());
+      },
+      relative: function () {
+        var k = parseInt($("scN").value, 10) || 0; if (scrollOnly("relative(" + k + ")") || notIns("relative(" + k + ")")) return; leave();
+        S.pos = Math.max(0, Math.min(n() + 1, S.pos + k)); moved("relative(" + k + ")", onRow());
+      },
+      update: function () {
+        var c = +$("scCol").value, raw = $("scVal").value, isInt = c !== 1, nm = isInt ? "updateInt" : "updateString";
+        var call = nm + '("' + COLS[c] + '", ' + (isInt ? raw.trim() : '"' + raw + '"') + ")";
+        if (updOnly(call)) return;
+        if (isInt && !/^-?\d+$/.test(raw.trim())) { out("rs." + call + " → doesn't compile: " + nm + " needs an int", C.bad); return; }
+        var v = isInt ? parseInt(raw, 10) : raw;
+        if (S.ins) { S.ins[c] = v; out("rs." + call + "   // written into the insert row", C.ok); return; }
+        if (!onRow()) { out("rs." + call + " → SQLException: the cursor is not on a row", C.bad); return; }
+        S.pend = S.pend || {}; S.pend[c] = v; out("rs." + call + "   // changed in the ResultSet only; the database is untouched until updateRow()", C.ok);
+      },
+      updateRow: function () {
+        if (updOnly("updateRow()") || notIns("updateRow()")) return;
+        if (!onRow()) { out("rs.updateRow() → SQLException: the cursor is not on a row", C.bad); return; }
+        if (!S.pend) { out("rs.updateRow()   // no pending changes, nothing to save", C.dim); return; }
+        var r = S.rows[S.pos - 1], ks = Object.keys(S.pend);
+        try {
+          run("UPDATE students SET " + ks.map(function (c) { return COLS[c] + " = ?"; }).join(", ") + " WHERE id = ?", ks.map(function (c) { return S.pend[c]; }).concat([r.id]));
+          ks.forEach(function (c) { r.v[c] = S.pend[c]; }); r.upd = true; S.pend = null;
+          out("rs.updateRow() → UPDATE students SET " + ks.map(function (c) { return COLS[c]; }).join(", ") + " … WHERE id = " + r.id + "   // now saved in the database", C.ok);
+        } catch (e) { out("rs.updateRow() → SQLException: " + e.message, C.bad); }
+      },
+      cancelRowUpdates: function () { if (S.pend) { S.pend = null; out("rs.cancelRowUpdates()   // pending changes discarded", C.ok); } else out("rs.cancelRowUpdates()   // nothing to cancel", C.dim); },
+      refreshRow: function () {
+        if (scrollOnly("refreshRow()") || notIns("refreshRow()")) return;
+        if (!onRow()) { out("rs.refreshRow() → SQLException: the cursor is not on a row", C.bad); return; }
+        var r = S.rows[S.pos - 1], d = dbMap()[r.id]; if (d) r.v = d.slice(); S.pend = null;
+        out("rs.refreshRow()   // row " + S.pos + " re-read from the database", C.ok);
+      },
+      deleteRow: function () {
+        if (updOnly("deleteRow()") || notIns("deleteRow()")) return;
+        if (!onRow()) { out("rs.deleteRow() → SQLException: the cursor is not on a row", C.bad); return; }
+        var r = S.rows[S.pos - 1]; run("DELETE FROM students WHERE id = ?", [r.id]);
+        S.rows.splice(S.pos - 1, 1); S.pend = null; S.pos -= 1;
+        out("rs.deleteRow() → DELETE FROM students WHERE id = " + r.id + "   // gone from the ResultSet and the database; the cursor now sits just before the next row", C.ok);
+      },
+      moveToInsertRow: function () {
+        if (updOnly("moveToInsertRow()")) return;
+        if (!S.ins) { leave(); S.saved = S.pos; }
+        S.ins = [null, "", null, null];
+        out("rs.moveToInsertRow()   // an empty buffer row; position " + S.saved + " is remembered", C.ok);
+      },
+      insertRow: function () {
+        if (updOnly("insertRow()")) return;
+        if (!S.ins) { out("rs.insertRow() → SQLException: not on the insert row (call moveToInsertRow() first)", C.bad); return; }
+        if (!S.ins[1]) { out('rs.insertRow() → SQLException: NOT NULL constraint failed: students.name   (choose "name" and update it first)', C.bad); return; }
+        run("INSERT INTO students(name, age, grade) VALUES (?, ?, ?)", [S.ins[1], S.ins[2], S.ins[3]]);
+        var id = JDBC.exec("SELECT last_insert_rowid()").rows[0][0];
+        S.rows.push({ id: id, v: [id, S.ins[1], S.ins[2], S.ins[3]], ins: true }); S.ins = [null, "", null, null];
+        out("rs.insertRow() → INSERT INTO students … (new id " + id + ")   // added to the database and to the ResultSet", C.ok);
+      },
+      moveToCurrentRow: function () {
+        if (!S.ins) { out("rs.moveToCurrentRow()   // not on the insert row, so nothing happens", C.dim); return; }
+        S.ins = null; S.pos = S.saved; out("rs.moveToCurrentRow()   // back to position " + S.pos, C.ok);
+      }
+    };
+    document.querySelectorAll("[data-sc]").forEach(function (b) {
+      b.addEventListener("click", function () { if (!S.loaded) { out("Press executeQuery first", C.warn); return; } A[b.dataset.sc](); draw(); });
+    });
+    $("scRun").addEventListener("click", function () { load(false); });
+    ["scType", "scConc"].forEach(function (id) { $(id).addEventListener("change", function () { code(); load(false); }); });
+    $("scLoop").addEventListener("click", function () {
+      if (!S.loaded) return;
+      load(true);
+      JDBC.ready(function () {
+        out("— slide 10: while (rs.next()) { grade = rs.getInt(\"grade\"); rs.updateInt(\"grade\", grade+10); rs.updateRow(); } —", C.ev);
+        var m = dbMap();
+        for (var i = 0; i < n(); i++) {
+          S.pos = i + 1; var r = S.rows[i], g = view(r, m)[3];
+          if (S.conc === "CONCUR_READ_ONLY") { out('row ' + S.pos + ': rs.updateInt("grade", ' + (g + 10) + ") → SQLException: the ResultSet is CONCUR_READ_ONLY; the loop dies on its first row", C.bad); draw(); return; }
+          run("UPDATE students SET grade = ? WHERE id = ?", [g + 10, r.id]); r.v[3] = g + 10; r.upd = true;
+          out("row " + S.pos + " (" + r.v[1] + "): grade " + g + " → " + (g + 10) + ", updateRow()", C.ok);
+        }
+        S.pos = n() + 1; out("rs.next() → false: loop ends", C.dim); draw();
+      });
+    });
+    $("scOther").addEventListener("click", function () {
+      JDBC.ready(function (err) {
+        if (err) return;
+        var k = run("UPDATE students SET grade = grade + 1");
+        out("// another program ran UPDATE students SET grade = grade + 1 (" + k + " rows, committed)", C.ev);
+        if (!S.loaded) return;
+        out(S.type === "TYPE_SCROLL_SENSITIVE" ? "// SENSITIVE: your ResultSet shows the new grades" : "// " + S.type.replace("TYPE_", "") + ": your ResultSet still shows the old grades (a snapshot). refreshRow() re-reads one row; executeQuery again re-reads all", C.dim);
+        draw();
+      });
+    });
+    code(); load(false);
+  })();
+
+  // ---------- database metadata ----------
+  (function () {
+    function show(cols, rows, line, note) {
+      $("dmInfo").textContent = line + (note ? "   // " + note : "");
+      $("dmWin").hidden = !cols; if (cols) $("dmOut").innerHTML = JDBC.table(cols, rows);
+    }
+    var T = {
+      name: function () { show(null, null, 'dbmd.getDatabaseProductName() → "SQLite"', 'on MySQL this returns "MySQL"'); },
+      version: function () { show(null, null, 'dbmd.getDatabaseProductVersion() → "' + JDBC.exec("select sqlite_version()").rows[0][0] + '"', "the version of the engine running in this page"); },
+      driver: function () { show(null, null, 'dbmd.getDriverName() → "SQLite JDBC"', 'what the sqlite-jdbc driver reports; MySQL\'s reports "MySQL Connector/J"'); },
+      schemas: function () { show(["TABLE_SCHEM", "TABLE_CATALOG"], [], "ResultSet rs = dbmd.getSchemas();   // 0 rows", "SQLite has no schemas; MySQL lists its databases as catalogs (getCatalogs()) instead"); },
+      procs: function () { show(["PROCEDURE_CAT", "PROCEDURE_SCHEM", "PROCEDURE_NAME", "REMARKS", "PROCEDURE_TYPE"], [], 'ResultSet rs = dbmd.getProcedures(null, null, "%");   // 0 rows', "SQLite has no stored procedures; on MySQL you'd see each CREATE PROCEDURE here"); },
+      tables: function () {
+        var p = $("dmPat").value;
+        var r = q("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' AND name LIKE ? ORDER BY name", [p]).rows;
+        show(["TABLE_CAT", "TABLE_SCHEM", "TABLE_NAME", "TABLE_TYPE", "REMARKS"], r.map(function (x) { return [null, null, x[0], "TABLE", null]; }), 'ResultSet rs = dbmd.getTables(null, null, "' + p + '", null);   // ' + r.length + " row(s)", "read the names with rs.getString(\"TABLE_NAME\")");
+      },
+      pk: function () {
+        var t = $("dmTab").value, r = JDBC.exec("PRAGMA table_info(" + t + ")").rows.filter(function (x) { return x[5] > 0; });
+        show(["TABLE_CAT", "TABLE_SCHEM", "TABLE_NAME", "COLUMN_NAME", "KEY_SEQ", "PK_NAME"], r.map(function (x) { return [null, null, t, x[1], x[5], null]; }), 'ResultSet rs = dbmd.getPrimaryKeys(null, null, "' + t + '");   // ' + r.length + " row(s)", r.length ? "" : "this table has no primary key");
+      }
+    };
+    JDBC.ready(function (err) {
+      if (err) { $("dmInfo").textContent = err; return; }
+      JDBC.exec("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name").rows.forEach(function (x) { var o = document.createElement("option"); o.textContent = x[0]; $("dmTab").appendChild(o); });
+    });
+    document.querySelectorAll("[data-dm]").forEach(function (b) { b.addEventListener("click", function () { JDBC.ready(function (err) { if (!err) T[b.dataset.dm](); }); }); });
+  })();
+
+  // ---------- slide 14 / 17 prepared queries ----------
+  (function () {
+    var PUB = ["SELECT Books.Price, Books.Title ", "FROM Books, Publishers ", "WHERE Books.Publisher_Id=Publishers.Publisher_Id AND", "Publishers.Name = ?"];
+    var AP = "SELECT Books.Price, Books.Title FROM Books, BooksAuthors, Authors, Publishers WHERE Authors.Author_Id = BooksAuthors.Author_Id AND BooksAuthors.ISBN = Books.ISBN AND Books.Publisher_Id = Publishers.Publisher_Id AND Authors.Name = ? AND Publishers.Name = ?";
+    function isAP() { return $("pqQ").value === "ap"; }
+    function sql() { return isAP() ? AP : PUB.join("").replace("AND" + "Publishers", $("pqExact").checked ? "ANDPublishers" : "AND Publishers"); }
+    function params() { return isAP() ? [$("pqAuth").value, $("pqPub").value] : [$("pqPub").value]; }
+    function code() {
+      $("pqAuthL").hidden = !isAP(); $("pqExactL").hidden = isAP();
+      var p = params(), v = isAP() ? "authorPublisherQueryStmt" : "publisherQueryStmt";
+      $("pqCode").innerHTML = J("PreparedStatement " + v + " = con.prepareStatement(" + (isAP() ? "authorPublisherQuery" : "publisherQuery") + ");\n" +
+        p.map(function (x, i) { return v + ".setString(" + (i + 1) + ', "' + x + '");'; }).join("\n") + "\nrs = " + v + ".executeQuery();");
+    }
+    function go(skipSet) {
+      JDBC.ready(function (err) {
+        if (err) { $("pqInfo").textContent = err; return; }
+        var s = sql(), p = params();
+        if (skipSet) { $("pqInfo").textContent = "rs = …executeQuery() → SQLException: No value specified for parameter 1   (slide 15: every ? must be set first)"; $("pqOut").innerHTML = ""; return; }
+        $("pqInfo").textContent = "The database receives: " + s + "   with " + p.map(function (x, i) { return "?" + (i + 1) + ' = "' + x + '"'; }).join(", ");
+        try { var r = q(s, p); $("pqOut").innerHTML = JDBC.table(r.columns, r.rows.map(function (x) { return [money(x[0]), x[1]]; }), { idx: true }); }
+        catch (e) { $("pqOut").innerHTML = '<p class="expl" style="margin:0;color:#b0261c">SQLException: ' + esc(e.message) + (/ANDPublishers/.test(e.message) ? "  ← the missing space after AND" : "") + "</p>"; }
+      });
+    }
+    JDBC.ready(function (err) {
+      if (err) return;
+      JDBC.exec("SELECT Name FROM Publishers ORDER BY Publisher_Id").rows.forEach(function (x) { var o = document.createElement("option"); o.textContent = x[0]; $("pqPub").appendChild(o); });
+      JDBC.exec("SELECT Name FROM Authors ORDER BY Author_Id").rows.forEach(function (x) { var o = document.createElement("option"); o.textContent = x[0]; $("pqAuth").appendChild(o); });
+      code(); go(false);
+    });
+    ["pqQ", "pqAuth", "pqPub", "pqExact"].forEach(function (id) { $(id).addEventListener("change", function () { code(); go(false); }); });
+    $("pqRun").addEventListener("click", function () { go(false); });
+    $("pqNoSet").addEventListener("click", function () { go(true); });
+    code();
+  })();
+
+  // ---------- find the bugs in slide 18 ----------
+  (function () {
+    var pre = $("adCode"), lines = lineify(pre); pre.classList.add("pickable");
+    var BUGS = {
+      1: "<code>Import</code> must be lowercase <code>import</code>: Java keywords are case-sensitive, so this doesn't compile.",
+      8: "Missing <code>;</code> after <code>\"goel\"</code>: compile error.",
+      12: "There's no <code>getConnection()</code> with no arguments. Pass the URL and login: <code>DriverManager.getConnection(url, user, password)</code>. Otherwise <code>url</code>, <code>user</code> and <code>password</code> are never used.",
+      13: "The SQL has no <code>WHERE</code>: it should be <code>UPDATE authors SET lastname = ? WHERE Authid = ?</code>. This compiles, but <code>executeUpdate</code> throws an <code>SQLException</code> (syntax error) when it runs.",
+      18: "<code>212</code> is an <code>int</code> but <code>setString</code> wants a <code>String</code>: compile error. Use <code>ps.setInt(2, 212);</code>.",
+      22: "<code>close()</code> inside <code>try</code> is skipped whenever an exception happens, leaking the connection (Lecture 11, slide 11). Close <code>ps</code> and <code>connection</code> in <code>finally</code>, or use try-with-resources."
+    };
+    var EXTRA = { 7: "Not counted as a bug, but worth knowing: the JDBC-ODBC bridge was removed in Java 8, so on a modern JDK <code>Class.forName(driver)</code> throws <code>ClassNotFoundException</code>." };
+    var total = Object.keys(BUGS).length;
+    lines.forEach(function (l, i) {
+      l.setAttribute("tabindex", "0"); l.setAttribute("role", "button");
+      function t() { l.classList.remove("hit", "miss", "nope"); l.classList.toggle("pick"); }
+      l.addEventListener("click", t);
+      l.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); t(); } });
+    });
+    function report(all) {
+      var hit = 0, wrong = [], html = "";
+      lines.forEach(function (l, i) {
+        var no = i + 1, picked = l.classList.contains("pick") || l.classList.contains("hit") || l.classList.contains("nope");
+        l.classList.remove("pick", "hit", "miss", "nope");
+        if (BUGS[no]) {
+          if (picked) { hit++; l.classList.add("hit"); html += '<div class="bug-x hit"><b>Line ' + no + " ✓</b> " + BUGS[no] + "</div>"; }
+          else if (all) { l.classList.add("miss"); html += '<div class="bug-x miss"><b>Line ' + no + ":</b> " + BUGS[no] + "</div>"; }
+        } else if (picked) {
+          l.classList.add("nope"); wrong.push(no);
+          if (EXTRA[no]) html += '<div class="bug-x"><b>Line ' + no + ":</b> " + EXTRA[no] + "</div>";
+        }
+      });
+      if (wrong.length) html += '<div class="bug-x"><b>Fine as written:</b> line' + (wrong.length > 1 ? "s " : " ") + wrong.join(", ") + "</div>";
+      $("bugOut").innerHTML = html;
+      $("bugScore").textContent = (all ? "All " + total + " bugs shown" + (hit ? " (you had found " + hit + ")" : "") : "Found " + hit + " of " + total + (hit === total ? ": all of them!" : "")) + (wrong.length ? " · " + wrong.length + " picked line(s) are fine" : "");
+    }
+    $("bugCheck").addEventListener("click", function () { report(false); });
+    $("bugShow").addEventListener("click", function () { report(true); });
+    $("bugReset").addEventListener("click", function () { lines.forEach(function (l) { l.classList.remove("pick", "hit", "miss", "nope"); }); $("bugOut").innerHTML = ""; $("bugScore").textContent = ""; });
+  })();
+
+  // ---------- SQL injection ----------
+  (function () {
+    $("inCode").innerHTML = J('// Statement: the user\'s text is glued into the SQL\nString sql = "SELECT * FROM users WHERE username = \'" + user + "\' AND password = \'" + pass + "\'";\nResultSet rs = stmt.executeQuery(sql);\n\n// PreparedStatement: SQL and values travel separately\nPreparedStatement ps = con.prepareStatement("SELECT * FROM users WHERE username = ? AND password = ?");\nps.setString(1, user);\nps.setString(2, pass);\nResultSet rs = ps.executeQuery();\n\nif (rs.next()) { /* logged in as rs.getString("username") */ }');
+    function legit(u, p) { return q("SELECT username FROM users WHERE username = ? AND password = ?", [u, p]).rows; }
+    function say(html) { $("inRes").innerHTML = html; }
+    $("inSt").addEventListener("click", function () {
+      JDBC.ready(function (err) {
+        if (err) return;
+        var u = $("inU").value, p = $("inP").value, s = "SELECT * FROM users WHERE username = '" + u + "' AND password = '" + p + "'";
+        $("inSql").textContent = "SQL sent: " + s;
+        try {
+          var rows = JDBC.exec(s).rows;
+          if (rows.length && !legit(u, p).length) say('<span class="res-bad">Logged in as ' + esc(rows[0][0]) + " without the right password: SQL injection!</span> The typed text became part of the SQL, so the WHERE clause no longer checks the password.");
+          else if (rows.length) say('<span class="res-ok">Logged in as ' + esc(rows[0][0]) + ".</span>");
+          else say('<span class="res-bad">Wrong user name or password.</span>');
+        } catch (e) { say('<span class="res-bad">SQLException: ' + esc(e.message) + "</span> The quote in the input broke the SQL string."); }
+      });
+    });
+    $("inPs").addEventListener("click", function () {
+      JDBC.ready(function (err) {
+        if (err) return;
+        var u = $("inU").value, p = $("inP").value, rows = legit(u, p);
+        $("inSql").textContent = 'SQL sent: SELECT * FROM users WHERE username = ? AND password = ?   with ?1 = "' + u + '", ?2 = "' + p + '"';
+        say(rows.length ? '<span class="res-ok">Logged in as ' + esc(rows[0][0]) + ".</span>" : '<span class="res-bad">Wrong user name or password.</span> The values are only ever compared as plain text, so quotes and <code>--</code> have no special meaning.');
+      });
+    });
+    document.querySelectorAll("#injDemo .chip").forEach(function (c) { c.addEventListener("click", function () { $("inU").value = c.dataset.u; $("inP").value = c.dataset.p; $("inSql").textContent = ""; say(""); }); });
+  })();
+
+  // ---------- CallableStatement ----------
+  (function () {
+    var P = [
+      { n: "procProductsList", ps: [], kind: "rs", tab: "Products", body: function () { return JDBC.exec("SELECT * FROM Products"); } },
+      { n: "procProductsDeleteItem", ps: [{ n: "inProductsID", t: "int", d: "1002" }], kind: "count", tab: "Products", body: function (v) { return run("DELETE FROM Products WHERE ProductID = ?", v); } },
+      { n: "procProductsAddItem", ps: [{ n: "inProductName", t: "String", d: "Drum Sticks" }, { n: "inSupplierID", t: "int", d: "2" }, { n: "inCategoryID", t: "int", d: "2" }], kind: "count", tab: "Products", body: function (v) { return run("INSERT INTO Products (ProductName, SupplierID, CategoryID) VALUES (?, ?, ?)", v); } },
+      { n: "procProductsUpdateItem", ps: [{ n: "inProductID", t: "int", d: "1000" }, { n: "inProductName", t: "String", d: "My Music" }], kind: "count", tab: "Products", body: function (v) { return run("UPDATE Products SET ProductName = ? WHERE ProductID = ?", [v[1], v[0]]); } },
+      { n: "get_employee_salary", ps: [{ n: "emp_id", t: "int", d: "101" }, { n: "total_salary", t: "DECIMAL", out: true }], kind: "out", tab: "employees", body: function (v) { var r = q("SELECT salary FROM employees WHERE id = ?", v); return r.rows.length ? r.rows[0][0] : null; } }
+    ];
+    P.forEach(function (p, i) { var o = document.createElement("option"); o.value = i; o.textContent = p.n + "(" + p.ps.map(function (x) { return (x.out ? "OUT " : "IN ") + x.n; }).join(", ") + ")"; $("cpProc").appendChild(o); });
+    function cur() { return P[$("cpProc").value]; }
+    function params() {
+      var p = cur();
+      $("cpParams").innerHTML = p.ps.map(function (x, i) {
+        return x.out ? '<label><input type="checkbox" id="cpOut" checked> ?' + (i + 1) + " OUT " + x.n + ": <code>registerOutParameter(" + (i + 1) + ", Types.DECIMAL)</code></label>"
+          : "<label>?" + (i + 1) + " IN " + x.n + ' <input type="text" data-cp="' + i + '" value="' + esc(x.d) + '" size="10"></label>';
+      }).join("") || '<span class="expl">No parameters.</span>';
+      $("cpParams").querySelectorAll("input").forEach(function (el) { el.addEventListener("input", code); el.addEventListener("change", code); });
+      code(); table();
+    }
+    function vals() { var p = cur(); return p.ps.filter(function (x) { return !x.out; }).map(function (x, i) { var el = $("cpParams").querySelector('[data-cp="' + i + '"]'); return el ? el.value : ""; }); }
+    function code() {
+      var p = cur(), v = vals(), reg = $("cpOut") ? $("cpOut").checked : false;
+      var s = 'CallableStatement cs = connection.prepareCall("{call ' + p.n + (p.ps.length ? "(" + p.ps.map(function () { return "?"; }).join(", ") + ")" : "") + '}");\n';
+      p.ps.forEach(function (x, i) {
+        if (x.out) { if (reg) s += "cs.registerOutParameter(" + (i + 1) + ", Types.DECIMAL);\n"; }
+        else s += "cs.set" + (x.t === "int" ? "Int" : "String") + "(" + (i + 1) + ", " + (x.t === "int" ? v[i] : '"' + v[i] + '"') + ");\n";
+      });
+      s += p.kind === "rs" ? "ResultSet rs = cs.executeQuery();" : p.kind === "count" ? "int n = cs.executeUpdate();" : 'cs.execute();\ndouble salary = cs.getDouble(2);\nSystem.out.println("Employee Salary: " + salary);';
+      $("cpCode").innerHTML = J(s);
+    }
+    function table() { JDBC.ready(function (err) { if (err) return; var p = cur(); $("cpTabT").textContent = p.tab + " table"; var r = JDBC.exec("SELECT * FROM " + p.tab); $("cpTab").innerHTML = JDBC.table(r.columns, p.tab === "employees" ? r.rows.map(function (x) { return [x[0], x[1], money(x[2])]; }) : r.rows); }); }
+    $("cpProc").addEventListener("change", function () { $("cpInfo").textContent = ""; $("cpRes").innerHTML = ""; params(); });
+    $("cpRun").addEventListener("click", function () {
+      JDBC.ready(function (err) {
+        if (err) { $("cpInfo").textContent = err; return; }
+        var p = cur(), v = vals(), bad = null;
+        p.ps.forEach(function (x, i) { if (!x.out && x.t === "int" && !/^-?\d+$/.test((v[i] || "").trim())) bad = "cs.setInt(" + (i + 1) + ", " + v[i] + ") doesn't compile: " + x.n + " needs an int"; });
+        if (bad) { $("cpInfo").textContent = bad; return; }
+        v = v.map(function (x, i) { return p.ps[i].t === "int" ? parseInt(x, 10) : x; });
+        try {
+          if (p.kind === "rs") { var r = p.body(v); $("cpResT").textContent = "ResultSet rs"; $("cpRes").innerHTML = JDBC.table(r.columns, r.rows); $("cpInfo").textContent = "cs.executeQuery() → a ResultSet with " + r.rows.length + " row(s)"; }
+          else if (p.kind === "count") { var k = p.body(v); $("cpResT").textContent = "Result"; $("cpRes").innerHTML = '<p class="expl" style="margin:0">n = ' + k + "</p>"; $("cpInfo").textContent = "cs.executeUpdate() → " + k + " row(s) affected" + (k === 0 ? "   (no product has that id)" : ""); }
+          else {
+            $("cpResT").textContent = "OUT parameter";
+            if (!$("cpOut").checked) { $("cpInfo").textContent = "cs.getDouble(2) → SQLException: parameter 2 was never registered as an OUT parameter (call registerOutParameter before execute())"; $("cpRes").innerHTML = ""; return; }
+            var o = p.body(v);
+            $("cpInfo").textContent = o === null ? "salary = 0.0   (no employee " + v[0] + ": the OUT value is SQL NULL, which getDouble turns into 0.0; check cs.wasNull())" : "Employee Salary: " + Number(o).toFixed(1);
+            $("cpRes").innerHTML = '<p class="expl" style="margin:0">?2 total_salary = ' + (o === null ? "NULL" : money(o)) + "</p>";
+          }
+        } catch (e) { $("cpInfo").textContent = "SQLException: " + e.message; }
+        table();
+      });
+    });
+    params();
+  })();
+
+  // ---------- transactions ----------
+  (function () {
+    var out = logger($("txLog"));
+    function code() {
+      var auto = $("txAuto").checked, a = +$("txAmt").value || 0;
+      $("txCode").innerHTML = J((auto ? "// auto-commit is on (the default): each executeUpdate is saved at once\n" : "con.setAutoCommit(false);\n") + "Statement stmt = con.createStatement();\n" +
+        'stmt.executeUpdate("UPDATE accounts SET balance = balance - ' + a + ' WHERE id = 1");\nstmt.executeUpdate("UPDATE accounts SET balance = balance + ' + a + ' WHERE id = 2");\n' +
+        (auto ? "" : "con.commit();     // if all goes well\n// in the catch block: con.rollback();   // if error occurs"));
+    }
+    function draw() {
+      JDBC.ready(function (err) {
+        if (err) { $("txTab").innerHTML = '<p class="expl">' + esc(err) + "</p>"; return; }
+        var r = JDBC.exec("SELECT id, owner, balance FROM accounts ORDER BY id").rows, tot = 0;
+        r.forEach(function (x) { tot += x[2]; });
+        $("txTab").innerHTML = JDBC.table(["id", "owner", "balance"], r.map(function (x) { return [x[0], x[1], money(x[2])]; })) +
+          '<p class="expl" style="margin:0;' + (Math.abs(tot - 800) > 0.001 ? "color:#b0261c;font-weight:600" : "") + '">Total = ' + money(tot) + (Math.abs(tot - 800) > 0.001 ? ": " + money(800 - tot) + " JD vanished. The database is inconsistent." : " ✓") + "</p>";
+      });
+    }
+    $("txRun").addEventListener("click", function () {
+      JDBC.ready(function (err) {
+        if (err) return;
+        var auto = $("txAuto").checked, crash = $("txCrash").checked, a = +$("txAmt").value, db = JDBC.db();
+        if (!(a > 0)) { out("Enter an amount above 0", C.warn); return; }
+        out("— transfer " + a + " JD, auto-commit " + (auto ? "on" : "off") + " —", C.ev);
+        if (!auto) { db.run("BEGIN"); out("con.setAutoCommit(false);   // transaction started", C.dim); }
+        try {
+          run("UPDATE accounts SET balance = balance - ? WHERE id = 1", [a]);
+          out("UPDATE … balance - " + a + " WHERE id = 1 → 1 row" + (auto ? "   // auto-committed: permanent already" : "   // not committed yet"), C.ok);
+          if (crash) throw new Error("CRASH");
+          run("UPDATE accounts SET balance = balance + ? WHERE id = 2", [a]);
+          out("UPDATE … balance + " + a + " WHERE id = 2 → 1 row" + (auto ? "   // auto-committed" : ""), C.ok);
+          if (!auto) { db.run("COMMIT"); out("con.commit();   // both changes are permanent now", C.ok); }
+        } catch (e) {
+          out(e.message === "CRASH" ? "SQLException: the second UPDATE failed (e.g. a deadlock or the connection dropped)" : "SQLException: " + e.message + (/CHECK/.test(e.message) ? "   (Lina doesn't have that much)" : ""), C.bad);
+          if (!auto) { db.run("ROLLBACK"); out("con.rollback();   // every change since setAutoCommit(false) is undone", C.ok); }
+          else out(e.message === "CRASH" ? "// con.rollback() can't help now: with auto-commit on, the first UPDATE was already committed" : "// the first UPDATE was refused, so nothing changed", C.warn);
+        }
+        draw();
+      });
+    });
+    $("txReset").addEventListener("click", function () { JDBC.ready(function (err) { if (err) return; run("UPDATE accounts SET balance = 500 WHERE id = 1"); run("UPDATE accounts SET balance = 300 WHERE id = 2"); out("// balances reset to 500 and 300", C.dim); draw(); }); });
+    ["txAuto", "txAmt"].forEach(function (id) { $(id).addEventListener("input", code); $(id).addEventListener("change", code); });
+    code(); draw();
+  })();
+
+  // ---------- batch ----------
+  (function () {
+    var data = [["Noor", "20"], ["Ali", "22"], ["Maya", "19"]], out = logger($("btLog"));
+    function grid() {
+      var h = '<thead><tr><th style="' + TH + '">Name</th><th style="' + TH + ';width:5rem">Age</th></tr></thead><tbody>';
+      data.forEach(function (r, i) {
+        h += "<tr>" + r.map(function (v, c) { return '<td style="' + TD + ';padding:0"><input type="text" data-r="' + i + '" data-c="' + c + '" value="' + esc(v) + '" aria-label="' + (c ? "Age" : "Name") + " row " + (i + 1) + '" style="width:100%;min-width:3rem;border:0;padding:3px 6px;font:12px var(--f-mono);background:#fff;color:#1c2328"></td>'; }).join("") + "</tr>";
+      });
+      $("btGrid").innerHTML = h + "</tbody>";
+      $("btGrid").querySelectorAll("input").forEach(function (el) { el.addEventListener("input", function () { data[+el.dataset.r][+el.dataset.c] = el.value; }); });
+    }
+    function showTab() { JDBC.ready(function (err) { if (err) return; var r = JDBC.exec("SELECT id, name, age, grade FROM students ORDER BY id"); $("btTab").innerHTML = JDBC.table(r.columns, r.rows); $("btTabWin").hidden = false; }); }
+    $("btAdd").addEventListener("click", function () { data.push(["", ""]); grid(); var ins = $("btGrid").querySelectorAll("input"); ins[ins.length - 2].focus(); });
+    $("btDel").addEventListener("click", function () { if (data.length) { data.pop(); grid(); } });
+    $("btSave").addEventListener("click", function () {
+      JDBC.ready(function (err) {
+        if (err) { out(err, C.bad); return; }
+        $("btLog").innerHTML = ""; $("btTrips").textContent = "";
+        out("— Save clicked: slide 30's listener —", C.ev);
+        var list = [];
+        for (var i = 0; i < data.length; i++) {
+          var a = data[i][1];
+          if (!/^\s*-?\d+\s*$/.test(a)) { out('row ' + (i + 1) + ': Integer.parseInt("' + a + '") → NumberFormatException: For input string: "' + a + '"', C.bad); out("// the listener stops here: saveBatch is never called, nothing is saved, and no message appears", C.dim); return; }
+          list.push([data[i][0], parseInt(a, 10)]);
+        }
+        out("list built from tableModel: " + list.length + " row(s) → saveBatch(list)", C.dim);
+        var manual = $("btAuto").checked, fail = $("btFail").checked, rb = $("btRb").checked, size = +$("btChunk").value || list.length, db = JDBC.db();
+        if (manual) { db.run("BEGIN"); out("conn.setAutoCommit(false);   // required for batch", C.dim); }
+        else out("// auto-commit left on: every row is committed the moment it runs", C.warn);
+        var trips = 0, queue = [], done = [];
+        try {
+          list.forEach(function (row, k) {
+            queue.push({ k: k, row: row });
+            out('ps.setString(1, "' + row[0] + '"); ps.setInt(2, ' + row[1] + "); ps.addBatch();   // queued: " + queue.length, C.dim);
+            if (queue.length === size || k === list.length - 1) {
+              trips++; var res = [];
+              queue.forEach(function (it) {
+                if (fail && it.k === 1) { var e = new Error("BATCH"); e.res = res; e.k = it.k; throw e; }
+                run("INSERT INTO students (name, age) VALUES (?, ?)", it.row); res.push(1); done.push(it.k);
+              });
+              out("int[] result = ps.executeBatch(); → [" + res.join(", ") + "]   // trip " + trips + " to the database", C.ok);
+              queue = [];
+            }
+          });
+          if (manual) { db.run("COMMIT"); out("conn.commit();", C.ok); }
+          out("Inserted rows: " + list.length, C.ok);
+          out('JOptionPane: "Batch Insert Completed!"', C.ev);
+          data = []; grid();
+        } catch (e) {
+          if (e.message !== "BATCH") throw e;
+          out("BatchUpdateException: row " + (e.k + 1) + " was rejected (e.g. a duplicate key). getUpdateCounts() → [" + e.res.join(", ") + "]", C.bad);
+          if (manual) {
+            db.run("ROLLBACK");
+            out(rb ? "conn.rollback();   // nothing from this batch is saved; fix the data and try again" : "// no rollback() in the catch: the connection closes with an uncommitted transaction, which most drivers then roll back. Don't rely on it; call rollback() (slide 27).", rb ? C.ok : C.warn);
+          } else out("// auto-commit was on: row" + (done.length === 1 ? " " : "s ") + done.map(function (k) { return k + 1; }).join(", ") + " before the failure " + (done.length === 1 ? "is" : "are") + " already saved. The import is half done.", C.warn);
+          out('JOptionPane: "Batch Insert Completed!"   // slide 30 still shows this: saveBatch caught the error itself', C.warn);
+        }
+        $("btTrips").textContent = "Round trips to the database: " + trips + " with batching, instead of " + list.length + " (one per row) without.";
+        showTab();
+      });
+    });
+    $("btUpd").addEventListener("click", function () {
+      JDBC.ready(function (err) {
+        if (err) return;
+        $("btLog").innerHTML = "";
+        var st = JDBC.exec("SELECT id, age FROM students WHERE age IS NOT NULL ORDER BY id").rows, res = [];
+        out('— slide 31: PreparedStatement ps = conn.prepareStatement("UPDATE students SET age = ? WHERE id = ?") —', C.ev);
+        st.forEach(function (s) { out("ps.setInt(1, " + (s[1] + 1) + "); ps.setInt(2, " + s[0] + "); ps.addBatch();", C.dim); });
+        st.forEach(function (s) { res.push(run("UPDATE students SET age = ? WHERE id = ?", [s[1] + 1, s[0]])); });
+        out("ps.executeBatch(); → [" + res.join(", ") + "]   // one count per queued UPDATE, all in 1 trip", C.ok);
+        $("btTrips").textContent = "";
+        showTab();
+      });
+    });
+    $("btShow").addEventListener("click", showTab);
+    grid();
+  })();
+})();
+
+</script>
+</body>
+</html>

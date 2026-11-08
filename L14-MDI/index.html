@@ -1,0 +1,1187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 MDI Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+pre.pickable .ln { cursor: pointer; }
+pre.pickable .ln:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+pre .ln.pick { background: color-mix(in srgb, var(--mark) 16%, transparent); }
+pre .ln.hit { background: color-mix(in srgb, var(--ok) 22%, transparent); box-shadow: inset 3px 0 var(--ok); }
+pre .ln.miss { background: color-mix(in srgb, var(--mark) 22%, transparent); box-shadow: inset 3px 0 var(--mark); }
+pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
+.bug-x { font-size: .9rem; border-left: 3px solid var(--line); padding: var(--s1) var(--s3); }
+.bug-x.hit { border-color: var(--ok); } .bug-x.miss { border-color: var(--mark); }
+.res-ok { color: var(--ok); font-weight: 600; } .res-bad { color: var(--bad); font-weight: 600; }
+
+/* L13: Swing component mock-ups (inside .win, always light) */
+.tree-view { background: #fff; padding: .4rem .3rem; font: 13px system-ui, "Segoe UI", sans-serif; color: #1c2328; min-height: 6rem; overflow-x: auto; }
+.tv-row { display: flex; align-items: center; white-space: nowrap; line-height: 1.6; }
+.tv-guide { font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace; color: #8b98a0; white-space: pre; }
+.tv-tog { width: 1.1rem; flex: none; border: 0; background: none; padding: 0; font-size: .72rem; color: #3c4a52; cursor: pointer; }
+.tv-tog.none { visibility: hidden; }
+.tv-ico { width: 16px; height: 14px; margin-right: .3rem; flex: none; }
+.tv-lbl { padding: 0 .3rem; border-radius: 2px; cursor: pointer; border: 1px solid transparent; }
+.tv-lbl.sel { background: #b8cfe5; border-color: #6d8fb5; }
+.tv-lbl.fresh { background: #fff2b3; }
+.tv-hline { border-top: 1px solid #8b98a0; margin: .1rem 0; }
+.sp-frame { display: flex; flex-direction: column; height: 18rem; background: var(--win-bg); }
+.sp { display: flex; flex: 1; min-height: 0; min-width: 0; }
+.sp.vert { flex-direction: column; }
+#sp2 { height: 100%; }
+.sp-a, .sp-b { overflow: auto; background: #fff; min-width: 0; min-height: 0; }
+.sp-a { flex: none; }
+.sp-b { flex: 1; }
+.sp-div { flex: none; background: #d5dde1; border: 1px solid #a9b4ba; display: flex; gap: 3px; cursor: col-resize; touch-action: none; }
+.sp:not(.vert) > .sp-div { flex-direction: column; align-items: center; padding-top: 3px; }
+.sp.vert > .sp-div { flex-direction: row; align-items: center; padding-left: 3px; cursor: row-resize; }
+.sp-div:focus-visible { outline: 2px solid #2a6ebb; }
+.sp-arrow { font-size: 9px; line-height: 1; padding: 1px; border: 0; background: none; color: #24323a; cursor: pointer; }
+.jlist { list-style: none; margin: 0; padding: 2px 0; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jlist li { padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+.jlist li.sel { background: #b8cfe5; }
+.pic { display: grid; place-items: center; }
+.ok-cyan { background: #00ffff; border: 1px solid #6b7b82; font: 600 13px system-ui, sans-serif; padding: .35rem; color: #1c2328; cursor: pointer; }
+.jtp { display: flex; flex-direction: column; height: 13rem; background: var(--win-bg); font: 12px system-ui, sans-serif; color: #1c2328; padding: 4px; }
+.jtp.pos-BOTTOM { flex-direction: column-reverse; }
+.jtp.pos-LEFT { flex-direction: row; }
+.jtp.pos-RIGHT { flex-direction: row-reverse; }
+.jtp-tabs { display: flex; flex-wrap: wrap; gap: 2px; min-width: 0; }
+.jtp.pos-LEFT .jtp-tabs, .jtp.pos-RIGHT .jtp-tabs { flex-direction: column; flex-wrap: nowrap; overflow: auto; max-width: 45%; }
+.jtp.scroll:not(.pos-LEFT):not(.pos-RIGHT) .jtp-tabs { flex-wrap: nowrap; overflow-x: auto; }
+.jtp-tab { border: 1px solid #9aa7ad; background: #dfe5e8; padding: 2px 9px; cursor: pointer; white-space: nowrap; font: inherit; color: inherit; }
+.jtp-tab.sel { background: #fff; font-weight: 600; }
+.jtp-page { flex: 1; border: 1px solid #9aa7ad; background: #eceff1; min-height: 0; min-width: 0; overflow: auto; }
+.jtp-empty { padding: .5rem; color: #7a868c; }
+.bl3 { display: grid; grid-template: auto 1fr auto / auto 1fr auto; height: 100%; gap: 2px; padding: 2px; }
+.bl3 .jbtn { font-weight: 600; }
+.tl-frame { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto; height: 14rem; background: var(--win-bg); }
+.tl-frame.drop { outline: 2px dashed #2a6ebb; outline-offset: -4px; }
+.tl-frame[data-dock="NORTH"] > .tl-bar { grid-area: 1 / 1 / 2 / 4; }
+.tl-frame[data-dock="SOUTH"] > .tl-bar { grid-area: 3 / 1 / 4 / 4; }
+.tl-frame[data-dock="WEST"] > .tl-bar { grid-area: 1 / 1 / 4 / 2; }
+.tl-frame[data-dock="EAST"] > .tl-bar { grid-area: 1 / 3 / 4 / 4; }
+.tl-center { grid-area: 2 / 2 / 3 / 3; background: #fff; margin: 4px; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tl-bar { display: flex; align-items: center; gap: 2px; padding: 2px; background: #e3e8eb; border: 1px solid #b6c0c5; }
+.tl-bar.vertical { flex-direction: column; }
+.tl-grip { width: 9px; align-self: stretch; min-height: 1.6rem; background-image: radial-gradient(#7d8a91 1px, transparent 1.3px); background-size: 4px 4px; cursor: grab; touch-action: none; }
+.tl-bar.vertical .tl-grip { width: auto; min-height: 9px; height: 9px; min-width: 1.6rem; }
+.tl-btn { min-width: 1.9rem; height: 1.9rem; border: 1px solid transparent; background: none; border-radius: 3px; cursor: pointer; font: 14px system-ui, sans-serif; color: #24323a; padding: 0 .35rem; }
+.tl-btn:hover:not(:disabled) { border-color: #8f9ba1; background: #f4f6f7; }
+.tl-btn:disabled { color: #a9b2b7; cursor: default; }
+.tl-sep { width: 1px; align-self: stretch; background: #9aa7ad; margin: 2px 4px; }
+.tl-bar.vertical .tl-sep { width: auto; height: 1px; margin: 4px 2px; }
+.tl-floatwin { max-width: 16rem; }
+.pp-area { position: relative; background: #fff; min-height: 9rem; padding: .2rem; outline: none; }
+.pp-area:focus-visible { outline: 2px solid #2a6ebb; }
+.jpopup { position: absolute; z-index: 5; background: #f4f6f7; border: 1px solid #8f9ba1; box-shadow: 2px 2px 6px rgba(0, 0, 0, .25); padding: 2px 0; min-width: 8rem; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jpopup button { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; text-align: left; border: 0; background: none; padding: 3px 12px; font: inherit; color: inherit; cursor: pointer; }
+.jpopup button:hover:not(:disabled), .jpopup button:focus-visible { background: #b8cfe5; outline: none; }
+.jpopup button:disabled { color: #a9b2b7; cursor: default; }
+.jpopup hr { border: 0; border-top: 1px solid #b6c0c5; margin: 2px 0; }
+.jpopup kbd { font: 11px system-ui, sans-serif; color: #56676f; }
+.ac-frame { background: var(--win-bg); outline: none; position: relative; }
+.ac-frame:focus-visible { outline: 2px solid #2a6ebb; }
+.ac-menubar { position: relative; background: #e3e8eb; border-bottom: 1px solid #b6c0c5; padding: 1px 2px; }
+.ac-menu { border: 0; background: none; padding: 2px 8px; font: 12px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.ac-menu[aria-expanded="true"] { background: #b8cfe5; }
+.ac-drop { top: 100%; left: 2px; }
+.ac-area { position: relative; background: #fff; margin: 4px; min-height: 7rem; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tv-row { align-items: stretch; }
+.tv-row > .tv-tog, .tv-row > .tv-ico, .tv-row > .tv-lbl { align-self: center; }
+.tv-g { display: inline-block; width: 16px; flex: none; }
+.tv-g.pipe { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat; }
+.tv-g.tee { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+.tv-g.elbow { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 50% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+
+/* L14 MDI: desktop pane, internal frames, card deck */
+.dsk { position: relative; height: 20rem; background: #5d7d8f; overflow: hidden; }
+.jif { position: absolute; display: flex; flex-direction: column; background: #eceff1; border: 1px solid #44525a; box-shadow: 2px 3px 8px rgba(0, 0, 0, .35); }
+.jif-bar { display: flex; align-items: center; gap: 3px; padding: 2px 4px; background: #c5ced3; font: 600 12px system-ui, sans-serif; color: #1c2328; cursor: move; user-select: none; touch-action: none; }
+.jif.sel { border-color: #1d4f8a; }
+.jif.sel .jif-bar { background: #8fb3d9; }
+.jif-bar span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jif-bar button { width: 18px; height: 16px; padding: 0; font: 11px/1 system-ui, sans-serif; border: 1px solid #6b7b82; background: #f4f6f7; color: #1c2328; cursor: pointer; flex: none; }
+.jif textarea { flex: 1; resize: none; border: 0; border-top: 1px solid #9aa7ad; font: 12px ui-monospace, Menlo, Consolas, monospace; padding: 4px; background: #fff; color: #1c2328; min-height: 0; width: 100%; }
+.jif-rs { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 55%, #6b7b82 55%, #6b7b82 62%, transparent 62%, transparent 78%, #6b7b82 78%, #6b7b82 85%, transparent 85%); }
+.jif-icon { position: absolute; bottom: 4px; display: flex; align-items: center; gap: 4px; width: 8.5rem; padding: 2px 4px; background: #c5ced3; border: 1px solid #44525a; font: 600 11px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.jif-icon span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dsk-outline { position: absolute; border: 2px dashed #fff; pointer-events: none; }
+.cards { background: var(--win-bg); padding: .6rem; font: 13px system-ui, sans-serif; color: #1c2328; }
+.card-page { background: #fff; border: 1px solid #b6c0c5; padding: .7rem; min-height: 9rem; display: grid; gap: .4rem; align-content: start; }
+.card-page h4 { font: 600 14px system-ui, sans-serif; }
+.card-page .tag { font: 11px ui-monospace, monospace; color: #7a868c; }
+.ways-host { position: relative; background: var(--win-bg); color: #1c2328; font: 12px system-ui, sans-serif; min-height: 15rem; padding: .5rem; color-scheme: light; }
+.ways-host pre { margin: 0; white-space: pre-wrap; font: 12px ui-monospace, monospace; }
+.dlg-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .28); display: grid; place-items: center; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L14 MDI ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 14</p>
+  <h1>MDI: Multiple Document Interface</h1>
+  <p class="lede">Many child windows inside one main window: JDesktopPane and JInternalFrame, the five ways to give an app several "documents" (internal frames, tabs, CardLayout, dialogs, separate frames), and CardLayout. Every slide of <em>Lecture 14 – MDI</em> (16 slides) in order, with a working desktop you can open, drag, minimise, maximise and close windows in, the same three documents shown all five ways, and a live CardLayout.</p>
+  <div class="legend">
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<section class="sec" id="what" data-title="What MDI is">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–7</p>
+    <div class="sec-head-row"><h2>What MDI is</h2><label class="done"><input type="checkbox" id="done-what"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Think of a desk inside a window. The <b>JFrame</b> is the room, the <b>JDesktopPane</b> is the desk that fills it, and each <b>JInternalFrame</b> is a sheet of paper on the desk. Sheets can overlap, be moved, minimised, maximised or closed, but none of them can leave the room. Three lines do it: make a <code>JDesktopPane</code>, add <code>JInternalFrame</code>s to it (and make each visible!), and put the desktop in the frame.</div></aside>
+
+  <div class="slide"><p class="divider">MDI <span class="sn">1</span></p></div>
+
+  <div class="slide">
+    <h3>MDI <span class="sn">2</span></h3>
+    <p><b>MDI – Multiple Document Interface</b></p>
+    <ul class="pts">
+      <li>A user interface that allows multiple child windows inside a single main window.</li>
+      <li>Common in apps like Microsoft Word, Photoshop, Excel.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Key Components <span class="sn">3</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Part</th><th>What it is</th><th>In Java</th></tr></thead>
+        <tbody>
+          <tr><td><b>Main Frame (Parent Window)</b></td><td>The main application window.</td><td>Often called JFrame in Java.</td></tr>
+          <tr><td><b>Child Frames (Internal Windows)</b></td><td>Sub-windows inside the main frame.</td><td>In Java, they are JInternalFrame.</td></tr>
+          <tr><td><b>Desktop Pane</b></td><td>A container to hold all internal frames.</td><td>In Java, this is JDesktopPane.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Features of MDI <span class="sn">4</span></h3>
+    <ul class="pts">
+      <li>Multiple documents can be open simultaneously.</li>
+      <li>Child windows can be minimized, maximized, or closed individually.</li>
+      <li>Main window controls all child windows.</li>
+      <li>Saves screen space compared to multiple top-level windows.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Example <span class="sn">5</span></h3>
+    <div class="code"><pre class="java">JFrame mainFrame = new JFrame("MDI Example");
+JDesktopPane desktop = new JDesktopPane(); // Holds child windows
+
+JInternalFrame child1 = new JInternalFrame("Child 1",
+true, true, true, true);
+child1.setSize(200, 150);
+child1.setVisible(true);
+
+desktop.add(child1);
+mainFrame.add(desktop);
+mainFrame.setSize(500, 400);
+mainFrame.setVisible(true);</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>The four <code>true</code>s are, in order, <b>resizable, closable, maximizable, iconifiable</b> (iconify = minimise). An internal frame starts <b>invisible and 0 × 0 pixels</b>, so <code>setSize</code> (or <code>pack()</code>) and <code>setVisible(true)</code> are not optional: without them nothing appears. JDesktopPane has no layout manager, so also give each child a position with <code>setLocation(x, y)</code> (it starts at 0, 0). Add <code>mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</code> so the program ends when the window closes.</span></aside>
+
+  <div class="demo" id="mdiDemo">
+    <div class="demo-head"><h3>Try it: a JDesktopPane with internal frames</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">Choose the four constructor options and open windows. Drag a title bar to move, the corner to resize, and use the title-bar buttons. The log is an <code>InternalFrameListener</code>.</p>
+    <div class="ctrl">
+      <label><input type="checkbox" id="mdR" checked> resizable</label>
+      <label><input type="checkbox" id="mdC" checked> closable</label>
+      <label><input type="checkbox" id="mdM" checked> maximizable</label>
+      <label><input type="checkbox" id="mdI" checked> iconifiable</label>
+      <button class="btn solid" type="button" id="mdNew">new JInternalFrame(…)</button>
+    </div>
+    <div class="ctrl">
+      <label>setDragMode(<select id="mdDrag"><option>LIVE_DRAG_MODE</option><option>OUTLINE_DRAG_MODE</option></select>)</label>
+      <button class="btn" type="button" id="mdAll">getAllFrames()</button>
+      <button class="btn" type="button" id="mdSel">getSelectedFrame()</button>
+      <button class="btn" type="button" id="mdBack">selected.toBack()</button>
+      <button class="btn" type="button" id="mdFront">toFront() the back one</button>
+    </div>
+    <div class="win"><div class="win-bar"><span>MDI Example</span><i>–□×</i></div><div class="dsk" id="dsk" aria-label="Desktop pane"></div></div>
+    <div class="code"><pre class="java" id="mdCode"></pre></div>
+    <div class="log wrap" id="mdLog" style="height:8rem" aria-label="InternalFrameListener log"></div>
+  </div>
+
+  <div class="slide">
+    <h3>Advantages of MDI <span class="sn">6</span></h3>
+    <ul class="pts">
+      <li>Easy to manage multiple documents in one window.</li>
+      <li>Reduces desktop clutter.</li>
+      <li>Centralized control and menu system.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Disadvantages of MDI <span class="sn">7</span></h3>
+    <ul class="pts">
+      <li>Can be complex to implement.</li>
+      <li>Child windows can overlap and confuse users.</li>
+      <li>Not always suitable for small screens.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · a complete MDI program (File → New opens another child)</p>
+    <div class="code"><span class="code-label">MdiDemo.java</span><pre class="java">import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+public class MdiDemo extends JFrame {
+   private JDesktopPane desktop = new JDesktopPane();
+   private int count = 0;
+
+   public MdiDemo() {
+      super("MDI Example");
+      JMenuBar bar = new JMenuBar();
+      JMenu file = new JMenu("File");
+      JMenuItem newItem = new JMenuItem("New");
+      newItem.addActionListener(e -&gt; newDocument());
+      file.add(newItem);
+      bar.add(file);
+      setJMenuBar(bar);                 // one menu bar controls every child (slide 6)
+
+      desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE);
+      add(desktop);                     // fills the CENTER of the frame
+      setSize(500, 400);
+      setDefaultCloseOperation(EXIT_ON_CLOSE);
+      newDocument();
+   }
+
+   private void newDocument() {
+      count++;
+      JInternalFrame child = new JInternalFrame("Child " + count, true, true, true, true);
+      child.add(new JScrollPane(new JTextArea()));
+      child.setSize(200, 150);
+      child.setLocation(24 * count, 24 * count);   // cascade the windows
+      child.addInternalFrameListener(new InternalFrameAdapter() {
+         public void internalFrameClosed(InternalFrameEvent e) {
+            System.out.println(e.getInternalFrame().getTitle() + " closed");
+         }
+      });
+      desktop.add(child);
+      child.setVisible(true);
+      try { child.setSelected(true); } catch (java.beans.PropertyVetoException ex) { }
+   }
+
+   public static void main(String[] args) {
+      SwingUtilities.invokeLater(() -&gt; new MdiDemo().setVisible(true));
+   }
+}</pre></div>
+  </div>
+
+  <details class="orig" data-pages="1-7"></details>
+  <div class="quiz" data-quiz="what"></div>
+</section>
+
+<section class="sec" id="ways" data-title="Five ways to implement MDI">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 8–13</p>
+    <div class="sec-head-row"><h2>Five ways to implement MDI</h2><label class="done"><input type="checkbox" id="done-ways"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>"Several documents in one program" can be built five ways, each a different trade-off between freedom and tidiness: overlapping internal windows (most like Word or Photoshop), tabs (tidy, one at a time), CardLayout (one panel at a time, switched by your code), dialogs (pop-up forms, possibly blocking the main window), or completely separate JFrames (most freedom, most clutter). The demo shows the same three documents all five ways.</div></aside>
+
+  <div class="slide">
+    <h3>Ways to implement MDI: <span class="sn">8</span></h3>
+    <ul class="pts">
+      <li>Using JDesktopPane and JInternalFrame (Java Swing)</li>
+      <li>Using Tabbed Panes (JTabbedPane)</li>
+      <li>Using Custom Panels + CardLayout</li>
+      <li>Using Dialogs</li>
+      <li>Using Multiple Frames</li>
+    </ul>
+  </div>
+
+  <div class="demo" id="waysDemo">
+    <div class="demo-head"><h3>Try it: the same three documents, five ways</h3><span class="added">Added</span></div>
+    <div class="chips" role="radiogroup" aria-label="Implementation">
+      <button class="chip" type="button" data-way="desk" aria-pressed="true">JDesktopPane</button>
+      <button class="chip" type="button" data-way="tabs" aria-pressed="false">JTabbedPane</button>
+      <button class="chip" type="button" data-way="card" aria-pressed="false">CardLayout</button>
+      <button class="chip" type="button" data-way="dlg" aria-pressed="false">Dialogs</button>
+      <button class="chip" type="button" data-way="frames" aria-pressed="false">Multiple frames</button>
+    </div>
+    <div id="waysView"></div>
+    <div class="java-line" id="waysInfo" aria-live="polite"></div>
+  </div>
+
+  <div class="slide">
+    <h3>JDesktopPane + JInternalFrame <span class="sn">9</span></h3>
+    <ul class="pts">
+      <li>Standard Java Swing approach.</li>
+      <li><b>Main Frame:</b> JFrame</li>
+      <li><b>Child Windows:</b> JInternalFrame</li>
+      <li><b>Container:</b> JDesktopPane</li>
+    </ul>
+    <p><b>Pros:</b> Multiple windows can overlap, minimize, maximize.<br><b>Cons:</b> Overlapping windows can confuse users.</p>
+  </div>
+
+  <div class="slide">
+    <h3>Tabbed Pane (JTabbedPane) <span class="sn">10</span></h3>
+    <ul class="pts">
+      <li>Each "document" is a <b>tab instead of a window</b>.</li>
+      <li>JTabbedPane holds multiple panels.</li>
+      <li>Easy to switch between documents via tabs.</li>
+    </ul>
+    <p><b>Pros:</b> Simple, organized, no overlapping.<br><b>Cons:</b> Not a "true windowing" experience.</p>
+  </div>
+
+  <div class="slide">
+    <h3>CardLayout with Panels <span class="sn">11</span></h3>
+    <ul class="pts">
+      <li>Each document is a <b>panel</b> inside a container.</li>
+      <li>Only <b>one panel visible at a time</b>.</li>
+      <li>Switch documents programmatically using <code>CardLayout.show()</code>.</li>
+    </ul>
+    <p><b>Pros:</b> Lightweight, simple.<br><b>Cons:</b> Only one visible at a time, no minimize/maximize.</p>
+  </div>
+
+  <div class="slide">
+    <h3>Using Dialogs <span class="sn">12</span></h3>
+    <ul class="pts">
+      <li>Each document or child window is a dialog.</li>
+      <li>Can be modal (blocks parent) or non-modal (independent).</li>
+      <li>Good for temporary input forms, alerts, or small tools.</li>
+    </ul>
+    <p><b>Pros:</b></p>
+    <ul class="pts"><li>Simple to create and manage.</li><li>Can force user attention using <b>modal dialogs</b>.</li></ul>
+    <p><b>Cons:</b></p>
+    <ul class="pts"><li>Not ideal for complex MDI apps with many documents.</li><li>Doesn't provide a "stack of internal windows" look.</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>Using Multiple Frames <span class="sn">13</span></h3>
+    <ul class="pts">
+      <li>Each document or child window is a <b>separate JFrame</b>.</li>
+      <li>Fully independent windows.</li>
+    </ul>
+    <p><b>Pros:</b></p>
+    <ul class="pts"><li>No restriction from parent window.</li><li>Each frame can have menus, toolbars, resizing, etc.</li></ul>
+    <p><b>Cons:</b></p>
+    <ul class="pts"><li>Can clutter the desktop if too many frames are open.</li><li>Harder to manage compared to JDesktopPane.</li></ul>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>For the final project's "at least two windows", the simplest choices are a second <code>JFrame</code> opened from a button (multiple frames) or a <code>JDialog</code> (Lecture 9). A modal dialog is made with <code>new JDialog(parentFrame, "Title", true)</code>; the <code>true</code> means modal. When a second JFrame closes, use <code>setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)</code> on it, not <code>EXIT_ON_CLOSE</code>, or closing it ends the whole program.</span></aside>
+
+  <details class="orig" data-pages="8-13"></details>
+  <div class="quiz" data-quiz="ways"></div>
+</section>
+
+<section class="sec" id="api" data-title="JDesktopPane and JInternalFrame methods">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 14–15</p>
+    <div class="sec-head-row"><h2>JDesktopPane and JInternalFrame methods</h2><label class="done"><input type="checkbox" id="done-api"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>The desktop keeps track of its windows: <code>getAllFrames()</code> lists them and <code>getSelectedFrame()</code> tells you which one is active (handy for a "Save" menu item: save whichever document is in front). Each internal frame can be brought to the front or sent to the back, and you can listen to it: an <code>InternalFrameListener</code> hears it open, close, activate or minimise. The desktop demo in the first section uses all of these.</div></aside>
+
+  <div class="slide">
+    <h3>JDesktopPane <span class="sn">14</span></h3>
+    <p>Helps Java Developers to make desktop-like applications, It allows the developers to manage and organize child frames within a parent frame.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Member</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>JDesktopPane()</code></td><td>Constructor.</td></tr>
+          <tr><td><code>add(JInternalFrame frame)</code></td><td>Method for Adds a JInternalFrame(Child) to the JDesktopPane(Parent).</td></tr>
+          <tr><td><code>remove(JInternalFrame frame)</code></td><td>Method for Removes a JInternalFrame from the JDesktopPane</td></tr>
+          <tr><td><code>getAllFrames()</code></td><td>Method for Returns an array of all the internal frames within the JDesktopPane</td></tr>
+          <tr><td><code>getSelectedFrame()</code></td><td>Method for Returning the currently selected internal frame.</td></tr>
+          <tr><td><code>DEFAULT_DRAG_MODE</code></td><td>It is a constant, that represents the default drag mode for internal frames.</td></tr>
+          <tr><td><code>LIVE_DRAG_MODE</code></td><td>This constant indicates that when an internal frame is dragged within the JDesktopPane, the entire contents of the item should be visible during the drag operation.</td></tr>
+          <tr><td><code>OUTLINE_DRAG_MODE</code></td><td>This constant indicates that, during the drag operation, only an outline or a frame-like representation of the item being dragged should appear inside the JDesktopPane.</td></tr>
+          <tr><td><code>IS_CLOSED_PROPERTY</code></td><td>It is a Constant,that is used for check the internal frame is close or not.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>JInternalFrame <span class="sn">15</span></h3>
+    <p>A lightweight, child window that resides within a JDesktopPane in a Swing application. It behaves like a regular window (can be opened, closed, minimized, maximized, and moved) but is contained inside a main application frame, allowing multiple internal windows (MDI – Multiple Document Interface) within a single top-level JFrame</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Member</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>JInternalFrame()</code></td><td>Creates a non-resizable, non-closable, non-maximizable, non-iconifiable JInternalFrame with no title</td></tr>
+          <tr><td><code>JInternalFrame(String title)</code></td><td></td></tr>
+          <tr><td><code>JInternalFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable)</code></td><td>Creates a JInternalFrame with the specified title, resizability, closability, maximizability, and iconifiability.</td></tr>
+          <tr><td><code>addImpl(Component comp, Object constraints, int index)</code></td><td>Adds the specified child Component.</td></tr>
+          <tr><td><code>addInternalFrameListener(InternalFrameListener l)</code></td><td>Adds the specified listener to receive internal frame events from this internal frame.</td></tr>
+          <tr><td><code>addPropertyChangeListener(PropertyChangeListener listener)</code></td><td>Registers the specified listener to receive notifications whenever a bound property of the internal frame changes, including changes caused by user interaction or programmatic updates</td></tr>
+          <tr><td><code>isSelected()</code></td><td>Returns whether the JInternalFrame is the currently "selected" or active frame.</td></tr>
+          <tr><td><code>toFront()</code></td><td>Brings this internal frame to the front.</td></tr>
+          <tr><td><code>toBack()</code></td><td>Sends this internal frame to the back.</td></tr>
+          <tr><td><code>show()</code></td><td>If the internal frame is not visible, brings the internal frame to the front, makes it visible, and attempts to select it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>For most internal frame events (open, close, activate, iconify): InternalFrameListener is simpler and clearer.</p>
+    <p>For programmatic monitoring of specific properties or combined tracking: PropertyChangeListener is better.</p>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Drag mode is set with <code>desktop.setDragMode(JDesktopPane.OUTLINE_DRAG_MODE)</code>; live dragging is what you get if you don't call it. <code>IS_CLOSED_PROPERTY</code> is defined in <code>JInternalFrame</code> (the property name <code>"closed"</code>), for use with a <code>PropertyChangeListener</code>. <code>addImpl</code> is <code>protected</code>: you never call it, you call <code>add(component)</code>, which uses it. For the frame itself, <code>setVisible(true)</code> is the usual call rather than <code>show()</code>.</span></aside>
+
+  <div class="slide">
+    <p class="added">Added · listening to internal frames, both ways</p>
+    <div class="code"><pre class="java">child.addInternalFrameListener(new InternalFrameAdapter() {   // override only what you need
+   public void internalFrameActivated(InternalFrameEvent e)  { status.setText(child.getTitle() + " is active"); }
+   public void internalFrameIconified(InternalFrameEvent e)  { System.out.println("minimised"); }
+   public void internalFrameClosing(InternalFrameEvent e)    { /* ask "Save changes?" here */ }
+});
+
+child.addPropertyChangeListener(JInternalFrame.IS_CLOSED_PROPERTY, evt -&gt; {
+   if (Boolean.TRUE.equals(evt.getNewValue())) System.out.println(child.getTitle() + " was closed");
+});</pre></div>
+    <p style="font-size:.9rem;color:var(--muted)">The seven <code>InternalFrameListener</code> methods: <code>internalFrameOpened</code>, <code>Closing</code>, <code>Closed</code>, <code>Iconified</code>, <code>Deiconified</code>, <code>Activated</code>, <code>Deactivated</code>. Like Lecture 5's adapters, <code>InternalFrameAdapter</code> lets you override just the ones you need.</p>
+  </div>
+
+  <details class="orig" data-pages="14-15"></details>
+  <div class="quiz" data-quiz="api"></div>
+</section>
+
+<section class="sec" id="cardlayout" data-title="CardLayout">
+  <div class="sec-head">
+    <p class="eyebrow">Slide 16</p>
+    <div class="sec-head-row"><h2>CardLayout</h2><label class="done"><input type="checkbox" id="done-cardlayout"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>CardLayout stacks panels like a deck of cards and shows only the top one. Give each panel a name when you add it, then flip with <code>next</code>/<code>previous</code> (which wrap around), jump to <code>first</code>/<code>last</code>, or go straight to one with <code>show(container, "name")</code>. It's how "wizards" (Next → Next → Finish) and login-then-main-screen apps are usually built. Note that you call the methods on the <em>layout</em> and pass it the <em>container</em>.</div></aside>
+
+  <div class="slide">
+    <h3>CardLayout <span class="sn">16</span></h3>
+    <p>manages the components in such a way that only one component is visible at a time. It treats each component as a card in the container. Only one card is visible at a time. The first component added to a <i>CardLayout</i> object is the visible component when the container is first displayed.</p>
+    <ul class="pts">
+      <li><b><code>CardLayout()</code></b></li>
+      <li><code>first(Container parent)</code> Shows the first component in the container.</li>
+      <li><code>last(Container parent)</code> Shows the last component.</li>
+      <li><code>next(Container parent)</code> Shows the next component. Wraps around to first after the last.</li>
+      <li><code>previous(Container parent)</code> Shows the previous component. Wraps around to last before first.</li>
+      <li><code>show(Container parent, String name)</code> Shows the component associated with the specified name.</li>
+    </ul>
+  </div>
+
+  <div class="demo" id="cardDemo">
+    <div class="demo-head"><h3>Try it: a four-card deck</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">A sign-up wizard built with CardLayout. Press the buttons and watch <code>next</code> and <code>previous</code> wrap around at the ends.</p>
+    <div class="win" style="max-width:24rem"><div class="win-bar"><span>CardLayout</span><i>–□×</i></div><div class="cards" id="cards"></div></div>
+    <div class="ctrl">
+      <button class="btn" type="button" data-cl="first">first(cards)</button>
+      <button class="btn" type="button" data-cl="previous">previous(cards)</button>
+      <button class="btn solid" type="button" data-cl="next">next(cards)</button>
+      <button class="btn" type="button" data-cl="last">last(cards)</button>
+      <label>show(cards, <select id="clName"></select>)</label><button class="btn" type="button" data-cl="show">Show</button>
+    </div>
+    <div class="log wrap" id="clLog" style="height:6rem" aria-label="CardLayout log"></div>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · the code for that wizard</p>
+    <div class="code"><pre class="java">CardLayout cardLayout = new CardLayout();
+JPanel cards = new JPanel(cardLayout);          // the container that holds the cards
+
+cards.add(welcomePanel, "welcome");             // the first card added is shown first
+cards.add(detailsPanel, "details");
+cards.add(confirmPanel, "confirm");
+cards.add(donePanel,    "done");
+
+nextButton.addActionListener(e -&gt; cardLayout.next(cards));
+backButton.addActionListener(e -&gt; cardLayout.previous(cards));
+editButton.addActionListener(e -&gt; cardLayout.show(cards, "details"));
+
+frame.add(cards, BorderLayout.CENTER);</pre></div>
+  </div>
+
+  <details class="orig" data-pages="16"></details>
+  <div class="quiz" data-quiz="card"></div>
+</section>
+
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 14 – MDI</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 14 – MDI</em> (CS254, 16 slides). Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l14mdi-done", "quizzes": {"what": [{"q": "MDI stands for…", "o": ["Multiple Document Interface", "Main Display Interface", "Multi-Desktop Integration", "Modal Dialog Interface"], "a": 0, "e": "Slide 2."}, {"q": "In Java, the child windows of an MDI app are…", "o": ["JInternalFrame", "JFrame", "JDialog", "JPanel"], "a": 0, "e": "Slide 3."}, {"q": "Which container holds the internal frames?", "o": ["JDesktopPane", "JTabbedPane", "JLayeredFrame", "JScrollPane"], "a": 0, "e": "Slide 3."}, {"q": "In <code>new JInternalFrame(\"Child 1\", true, true, true, true)<\/code>, the booleans are…", "o": ["resizable, closable, maximizable, iconifiable", "visible, enabled, modal, focusable", "closable, resizable, movable, visible", "maximized, minimized, closed, selected"], "a": 0, "e": "Slide 15's constructor."}, {"q": "You forget <code>child1.setVisible(true)<\/code>. What happens?", "o": ["The child never appears: internal frames start invisible", "It appears anyway", "Compile error", "The main frame is hidden"], "a": 0, "e": "Guide note on slide 5."}, {"q": "Which is a disadvantage of MDI (slide 7)?", "o": ["Child windows can overlap and confuse users", "Only one document at a time", "No menus", "Can't be minimised"], "a": 0, "e": "Also: complex to implement; not always suitable for small screens."}], "ways": [{"q": "Which approach shows only one panel at a time and switches with show()?", "o": ["CardLayout", "JDesktopPane", "Multiple frames", "Non-modal dialogs"], "a": 0, "e": "Slide 11."}, {"q": "Which approach's con is \"not a true windowing experience\"?", "o": ["JTabbedPane", "JDesktopPane", "Multiple frames", "Dialogs"], "a": 0, "e": "Slide 10."}, {"q": "A modal dialog…", "o": ["blocks its parent until it's closed", "can't be closed", "is a JInternalFrame", "has no title bar"], "a": 0, "e": "Slide 12."}, {"q": "Which approach can clutter the desktop when many documents are open?", "o": ["Multiple frames", "JTabbedPane", "CardLayout", "JDesktopPane"], "a": 0, "e": "Slide 13."}, {"q": "The \"standard Java Swing approach\" to MDI is…", "o": ["JDesktopPane + JInternalFrame", "CardLayout", "JOptionPane", "Multiple JFrames"], "a": 0, "e": "Slide 9."}], "api": [{"q": "Which JDesktopPane method returns every internal frame?", "o": ["getAllFrames()", "getFrames()", "getComponents(JInternalFrame)", "listFrames()"], "a": 0, "e": "Slide 14."}, {"q": "Which returns the active internal frame?", "o": ["getSelectedFrame()", "getActiveFrame()", "getFocusFrame()", "getTopFrame()"], "a": 0, "e": "Slide 14."}, {"q": "OUTLINE_DRAG_MODE means that while dragging…", "o": ["only an outline of the frame moves", "the full contents move", "the frame can't move", "the frame is minimised"], "a": 0, "e": "Slide 14."}, {"q": "<code>new JInternalFrame()<\/code> with no arguments is…", "o": ["non-resizable, non-closable, non-maximizable, non-iconifiable, with no title", "fully featured", "invisible forever", "a dialog"], "a": 0, "e": "Slide 15."}, {"q": "For open, close, activate and iconify events, the slide recommends…", "o": ["InternalFrameListener", "PropertyChangeListener", "ActionListener", "WindowListener"], "a": 0, "e": "Slide 15."}, {"q": "What does <code>toBack()<\/code> do?", "o": ["Sends the internal frame behind the others", "Closes it", "Minimises it", "Selects it"], "a": 0, "e": "Slide 15."}], "card": [{"q": "When a CardLayout container first appears, which card is visible?", "o": ["The first one added", "The last one added", "None", "A random one"], "a": 0, "e": "Slide 16."}, {"q": "On the last card, <code>next(parent)<\/code>…", "o": ["wraps around to the first card", "stays on the last card", "throws an exception", "hides everything"], "a": 0, "e": "Slide 16."}, {"q": "How do you jump straight to the card named \"details\"?", "o": ["cardLayout.show(cards, \"details\")", "cards.show(\"details\")", "cardLayout.next(\"details\")", "cards.setCard(\"details\")"], "a": 0, "e": "Slide 16: call the method on the layout, pass the container."}, {"q": "The parameter of <code>first<\/code>, <code>next<\/code> etc. is…", "o": ["the container that uses the CardLayout", "the card to show", "the card's name", "an index"], "a": 0, "e": "Slide 16."}]}, "flashcards": [["MDI", "Multiple Document Interface: many child windows inside one main window (Word, Photoshop, Excel).", "Slide 2"], ["Main frame / child frames / desktop", "JFrame / JInternalFrame / JDesktopPane.", "Slide 3"], ["MDI features", "Many documents open at once; children minimised, maximised or closed individually; main window controls them.", "Slide 4"], ["Slide 5 recipe", "desktop = new JDesktopPane(); child = new JInternalFrame(\"Child 1\", true, true, true, true); child.setSize; child.setVisible(true); desktop.add(child); frame.add(desktop).", "Slide 5"], ["MDI pros / cons", "Pros: manages many documents, less clutter, central menus. Cons: complex, overlapping windows confuse, bad on small screens.", "Slides 6–7"], ["Five ways", "JDesktopPane + JInternalFrame, JTabbedPane, CardLayout panels, dialogs, multiple frames.", "Slide 8"], ["Modal vs non-modal dialog", "Modal blocks the parent until closed; non-modal is independent.", "Slide 12"], ["JDesktopPane methods", "add(frame), remove(frame), getAllFrames(), getSelectedFrame(); drag modes LIVE / OUTLINE.", "Slide 14"], ["JInternalFrame constructor", "(title, resizable, closable, maximizable, iconifiable). No-arg version: none of these, no title.", "Slide 15"], ["JInternalFrame methods", "addInternalFrameListener, addPropertyChangeListener, isSelected(), toFront(), toBack(), show().", "Slide 15"], ["InternalFrameListener", "Opened, Closing, Closed, Iconified, Deiconified, Activated, Deactivated. Use InternalFrameAdapter to override a few.", "Slide 15 + guide"], ["CardLayout", "One card visible at a time; first added shows first. first/last/next/previous(parent) (next/previous wrap), show(parent, name).", "Slide 16"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = window.Guide.esc, J = window.Guide.java;
+  function logger(el) { return function (t, c) { var d = document.createElement("div"); d.textContent = t; if (c) d.style.color = c; el.appendChild(d); el.scrollTop = el.scrollHeight; }; }
+  var C = { ev: "#9fd3ff", ok: "#7fd3ad", warn: "#f0b071", bad: "#ff8f86", dim: "#9aa4a8" };
+
+  // ---------- JDesktopPane simulator ----------
+  (function () {
+    var dsk = $("dsk"), out = logger($("mdLog")), frames = [], z = 10, count = 0, sel = null;
+    function byZ() { return frames.slice().sort(function (a, b) { return b.z - a.z; }); }
+    function place(f) {
+      var el = f.el;
+      el.hidden = f.state === "icon"; f.icon.hidden = f.state !== "icon";
+      el.style.left = f.x + "px"; el.style.top = f.y + "px"; el.style.width = f.w + "px"; el.style.height = f.h + "px"; el.style.zIndex = f.z;
+      el.classList.toggle("sel", sel === f);
+      var mx = el.querySelector('[data-b="max"]'); if (mx) { mx.textContent = f.state === "max" ? "❐" : "□"; mx.setAttribute("aria-label", f.state === "max" ? "Restore" : "Maximize"); }
+      var rs = el.querySelector(".jif-rs"); if (rs) rs.hidden = f.state === "max";
+    }
+    function icons() { var i = 0; frames.forEach(function (f) { if (f.state === "icon") { f.icon.style.left = 4 + i * 142 + "px"; i++; } }); }
+    function select(f) {
+      if (sel === f) { f.z = ++z; place(f); return; }
+      if (sel) { out("internalFrameDeactivated: " + sel.title, C.dim); var old = sel; sel = null; place(old); }
+      sel = f; if (f) { f.z = ++z; place(f); out("internalFrameActivated: " + f.title, C.ev); }
+    }
+    function topVisible(except) { return byZ().filter(function (f) { return f !== except && f.state !== "icon"; })[0] || null; }
+    function code(f) {
+      var v = "child" + f.n;
+      $("mdCode").innerHTML = J('JInternalFrame ' + v + ' = new JInternalFrame("' + f.title + '",\n        ' + f.r + ", " + f.c + ", " + f.m + ", " + f.i + ");   // resizable, closable, maximizable, iconifiable\n" + v + ".setSize(200, 150);\n" + v + ".setLocation(" + f.x + ", " + f.y + ");\n" + v + ".setVisible(true);\ndesktop.add(" + v + ");");
+    }
+    function drag(handle, f, resize) {
+      handle.addEventListener("pointerdown", function (e) {
+        if (e.target.tagName === "BUTTON") return;
+        select(f);
+        if (f.state === "max" || (resize && !f.r)) return;
+        e.preventDefault(); handle.setPointerCapture(e.pointerId);
+        var sx = e.clientX, sy = e.clientY, ox = f.x, oy = f.y, ow = f.w, oh = f.h, live = $("mdDrag").value === "LIVE_DRAG_MODE" || resize, ol = null;
+        if (!live) { ol = document.createElement("div"); ol.className = "dsk-outline"; dsk.appendChild(ol); }
+        function geo(ev) {
+          var dx = ev.clientX - sx, dy = ev.clientY - sy, W = dsk.clientWidth, H = dsk.clientHeight;
+          if (resize) return { x: ox, y: oy, w: Math.max(120, Math.min(W - ox, ow + dx)), h: Math.max(60, Math.min(H - oy, oh + dy)) };
+          return { x: Math.max(-ow + 40, Math.min(W - 40, ox + dx)), y: Math.max(0, Math.min(H - 20, oy + dy)), w: ow, h: oh };
+        }
+        function mv(ev) { var g = geo(ev); if (live) { f.x = g.x; f.y = g.y; f.w = g.w; f.h = g.h; place(f); } else { ol.style.left = g.x + "px"; ol.style.top = g.y + "px"; ol.style.width = g.w + "px"; ol.style.height = g.h + "px"; ol.style.zIndex = z + 1; } }
+        function up(ev) {
+          handle.removeEventListener("pointermove", mv); handle.removeEventListener("pointerup", up); handle.removeEventListener("pointercancel", up);
+          var g = geo(ev); f.x = g.x; f.y = g.y; f.w = g.w; f.h = g.h; if (ol) ol.remove(); place(f);
+        }
+        handle.addEventListener("pointermove", mv); handle.addEventListener("pointerup", up); handle.addEventListener("pointercancel", up);
+      });
+    }
+    function make() {
+      count++;
+      var f = { n: count, title: "Child " + count, r: $("mdR").checked, c: $("mdC").checked, m: $("mdM").checked, i: $("mdI").checked, x: 12 + ((count - 1) % 6) * 26, y: 10 + ((count - 1) % 6) * 22, w: 200, h: 150, state: "normal", z: ++z };
+      var el = document.createElement("div"); el.className = "jif"; el.setAttribute("role", "dialog"); el.setAttribute("aria-label", f.title);
+      el.innerHTML = '<div class="jif-bar"><span>' + f.title + "</span>" + (f.i ? '<button type="button" data-b="icon" aria-label="Iconify">_</button>' : "") + (f.m ? '<button type="button" data-b="max" aria-label="Maximize">□</button>' : "") + (f.c ? '<button type="button" data-b="close" aria-label="Close">×</button>' : "") + "</div>" +
+        '<textarea aria-label="' + f.title + ' text">Document ' + count + "\n</textarea>" + (f.r ? '<div class="jif-rs" aria-hidden="true"></div>' : "");
+      var ic = document.createElement("div"); ic.className = "jif-icon"; ic.hidden = true; ic.tabIndex = 0; ic.setAttribute("role", "button"); ic.innerHTML = "<span>" + f.title + "</span>▢";
+      f.el = el; f.icon = ic; dsk.appendChild(el); dsk.appendChild(ic); frames.push(f);
+      el.addEventListener("pointerdown", function () { select(f); });
+      drag(el.querySelector(".jif-bar"), f, false);
+      if (f.r) drag(el.querySelector(".jif-rs"), f, true);
+      el.querySelectorAll(".jif-bar button").forEach(function (b) {
+        b.addEventListener("click", function (e) {
+          e.stopPropagation();
+          if (b.dataset.b === "close") {
+            out("internalFrameClosing: " + f.title, C.warn);
+            el.remove(); ic.remove(); frames.splice(frames.indexOf(f), 1);
+            out("internalFrameClosed: " + f.title + "   (getAllFrames().length = " + frames.length + ")", C.bad);
+            if (sel === f) { sel = null; var t = topVisible(); if (t) select(t); }
+          } else if (b.dataset.b === "max") {
+            if (f.state === "max") { f.x = f.prev.x; f.y = f.prev.y; f.w = f.prev.w; f.h = f.prev.h; f.state = "normal"; out("propertyChange \"maximum\": true → false   (restored)", C.dim); }
+            else { f.prev = { x: f.x, y: f.y, w: f.w, h: f.h }; f.x = 0; f.y = 0; f.w = dsk.clientWidth; f.h = dsk.clientHeight; f.state = "max"; out("propertyChange \"maximum\": false → true   (no InternalFrameListener method for this one)", C.dim); }
+            place(f);
+          } else {
+            f.before = f.state; f.state = "icon"; out("internalFrameIconified: " + f.title, C.warn); place(f); icons();
+            if (sel === f) { out("internalFrameDeactivated: " + f.title, C.dim); sel = null; var t2 = topVisible(f); if (t2) select(t2); }
+          }
+        });
+      });
+      function deicon() { f.state = f.before === "max" ? "max" : "normal"; out("internalFrameDeiconified: " + f.title, C.ok); icons(); select(f); place(f); }
+      ic.addEventListener("click", deicon); ic.addEventListener("keydown", function (e) { if (e.key === "Enter") deicon(); });
+      out("internalFrameOpened: " + f.title, C.ok);
+      place(f); select(f); code(f);
+      if (!f.r && !f.c && !f.m && !f.i) out("// all four false (like new JInternalFrame()): it can be moved, but not resized, closed, maximised or minimised", C.warn);
+    }
+    $("mdNew").addEventListener("click", make);
+    $("mdAll").addEventListener("click", function () { out("desktop.getAllFrames() → [" + byZ().map(function (f) { return f.title + (f.state === "icon" ? " (icon)" : ""); }).join(", ") + "]   length " + frames.length, C.ok); });
+    $("mdSel").addEventListener("click", function () { out("desktop.getSelectedFrame() → " + (sel ? sel.title : "null"), C.ok); });
+    $("mdBack").addEventListener("click", function () { if (!sel) { out("no selected frame", C.warn); return; } var m = Math.min.apply(null, frames.map(function (f) { return f.z; })); sel.z = m - 1; place(sel); out(sel.title + ".toBack()   // still selected, just behind the others", C.ok); });
+    $("mdFront").addEventListener("click", function () { var v = byZ().filter(function (f) { return f.state !== "icon"; }); var b = v[v.length - 1]; if (!b) return; b.z = ++z; place(b); out(b.title + ".toFront()", C.ok); });
+    $("mdDrag").addEventListener("change", function () { out("desktop.setDragMode(JDesktopPane." + this.value + ")", C.dim); });
+    make(); make();
+  })();
+
+  // ---------- five ways ----------
+  (function () {
+    var DOCS = [["Report.txt", "Q3 sales are up 12%.\nCosts are flat."], ["Notes.txt", "Meeting moved to Monday.\nBring the slides."], ["Todo.txt", "1. Finish Lab 7\n2. Study JDBC\n3. Final project"]];
+    var INFO = {
+      desk: "Slide 9 · JDesktopPane + JInternalFrame. Pros: multiple windows can overlap, minimize, maximize. Cons: overlapping windows can confuse users. Click a window to bring it to the front.",
+      tabs: "Slide 10 · JTabbedPane. Pros: simple, organized, no overlapping. Cons: not a \"true windowing\" experience.",
+      card: "Slide 11 · CardLayout. Pros: lightweight, simple. Cons: only one visible at a time, no minimize/maximize.",
+      dlg: "Slide 12 · Dialogs. Pros: simple; modal dialogs force attention. Cons: not for many documents; no stack of internal windows.",
+      frames: "Slide 13 · Multiple JFrames. Pros: no restriction from a parent; each frame has its own menus and toolbars. Cons: clutter, harder to manage."
+    };
+    var view = $("waysView"), way = "desk", cardI = 0, tabI = 0, z = [1, 2, 3];
+    function win(title, body, style) { return '<div class="win" style="' + (style || "") + '"><div class="win-bar"><span>' + title + "</span><i>–□×</i></div>" + body + "</div>"; }
+    function draw() {
+      var h = "";
+      if (way === "desk") {
+        h = '<div class="ways-host" style="height:15rem;background:#5d7d8f">' + DOCS.map(function (d, i) { return '<div class="jif" data-i="' + i + '" style="left:' + (10 + i * 46) + "px;top:" + (8 + i * 34) + "px;width:180px;height:120px;z-index:" + z[i] + '"><div class="jif-bar"><span>' + d[0] + '</span><button type="button" tabindex="-1">_</button><button type="button" tabindex="-1">□</button><button type="button" tabindex="-1">×</button></div><pre style="padding:4px;background:#fff;flex:1">' + esc(d[1]) + "</pre></div>"; }).join("") + "</div>";
+      } else if (way === "tabs") {
+        h = '<div class="ways-host"><div class="jtp" style="height:13rem"><div class="jtp-tabs" role="tablist">' + DOCS.map(function (d, i) { return '<button type="button" role="tab" class="jtp-tab' + (i === tabI ? " sel" : "") + '" data-t="' + i + '">' + d[0] + "</button>"; }).join("") + '</div><div class="jtp-page" style="background:#fff;padding:.5rem"><pre>' + esc(DOCS[tabI][1]) + "</pre></div></div></div>";
+      } else if (way === "card") {
+        h = '<div class="ways-host"><div class="card-page"><span class="tag">card "' + DOCS[cardI][0] + '" (' + (cardI + 1) + " of 3)</span><pre>" + esc(DOCS[cardI][1]) + '</pre></div><div style="display:flex;gap:.4rem;margin-top:.5rem"><button type="button" class="jbtn" data-c="-1">◀ previous</button><button type="button" class="jbtn" data-c="1">next ▶</button></div></div>';
+      } else if (way === "dlg") {
+        h = '<div class="ways-host" id="dlgHost" style="height:16rem"><div class="card-page" id="dlgMain"><b>Main window</b>' + DOCS.map(function (d, i) { return '<div style="display:flex;gap:.4rem;align-items:center;flex-wrap:wrap"><span style="min-width:6rem">' + d[0] + '</span><button type="button" class="jbtn" data-d="' + i + '" data-modal="1">Open (modal)</button><button type="button" class="jbtn" data-d="' + i + '" data-modal="0">Open (non-modal)</button></div>'; }).join("") + "</div></div>";
+      } else {
+        h = '<div class="ways-host"><div style="display:flex;flex-wrap:wrap;gap:.5rem">' + DOCS.map(function (d) { return win(d[0], '<div style="background:#e3e8eb;padding:1px 6px;border-bottom:1px solid #b6c0c5">File  Edit  View</div><pre style="padding:4px;background:#fff;min-height:5rem">' + esc(d[1]) + "</pre>", "flex:1 1 9rem;min-width:0"); }).join("") + "</div></div>";
+      }
+      view.innerHTML = h; $("waysInfo").textContent = INFO[way];
+      view.querySelectorAll(".jif").forEach(function (el) { el.addEventListener("pointerdown", function () { var i = +el.dataset.i; z[i] = Math.max.apply(null, z) + 1; el.style.zIndex = z[i]; view.querySelectorAll(".jif").forEach(function (x) { x.classList.toggle("sel", x === el); }); }); });
+      view.querySelectorAll("[data-t]").forEach(function (b) { b.addEventListener("click", function () { tabI = +b.dataset.t; draw(); }); });
+      view.querySelectorAll("[data-c]").forEach(function (b) { b.addEventListener("click", function () { cardI = (cardI + +b.dataset.c + 3) % 3; draw(); }); });
+      view.querySelectorAll("[data-d]").forEach(function (b) { b.addEventListener("click", function () { openDlg(+b.dataset.d, b.dataset.modal === "1"); }); });
+    }
+    var nd = 0;
+    function openDlg(i, modal) {
+      var host = $("dlgHost"); if (host.querySelector(".dlg-scrim")) { $("waysInfo").textContent = "Blocked: a modal dialog is open, so the main window ignores clicks until it's closed."; return; }
+      nd++;
+      var box = document.createElement("div");
+      box.innerHTML = win(DOCS[i][0] + (modal ? " (modal)" : ""), '<pre style="padding:6px;background:#fff">' + esc(DOCS[i][1]) + '</pre><div style="padding:4px;text-align:right"><button type="button" class="jbtn">Close</button></div>', "width:12rem");
+      var w = box.firstChild;
+      if (modal) { var scrim = document.createElement("div"); scrim.className = "dlg-scrim"; scrim.appendChild(w); host.appendChild(scrim); w.querySelector("button").addEventListener("click", function () { scrim.remove(); $("waysInfo").textContent = INFO.dlg; }); $("waysInfo").textContent = "new JDialog(frame, \"" + DOCS[i][0] + "\", true): modal. Try clicking the main window's buttons behind it."; scrim.addEventListener("click", function (e) { if (e.target === scrim) $("waysInfo").textContent = "Blocked: a modal dialog is open, so the main window ignores clicks until it's closed."; }); }
+      else { w.style.position = "absolute"; w.style.right = (8 + (nd % 3) * 14) + "px"; w.style.top = (10 + (nd % 3) * 26) + "px"; w.style.zIndex = 5 + nd; host.appendChild(w); w.querySelector("button").addEventListener("click", function () { w.remove(); }); $("waysInfo").textContent = "new JDialog(frame, \"" + DOCS[i][0] + "\", false): non-modal. The main window still works; open more."; }
+    }
+    view.parentElement.querySelectorAll("[data-way]").forEach(function (b) {
+      b.addEventListener("click", function () { way = b.dataset.way; view.parentElement.querySelectorAll("[data-way]").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); }); draw(); });
+    });
+    draw();
+  })();
+
+  // ---------- CardLayout ----------
+  (function () {
+    var CARDS = [
+      ["welcome", "Welcome", "Create your GJU account in three steps."],
+      ["details", "Your details", '<label style="display:grid;gap:2px">Name <input type="text" value="Rami" style="font:inherit;border:1px solid #8f9ba1;padding:2px 4px;background:#fff;color:#1c2328"></label><label style="display:grid;gap:2px">Major <input type="text" value="Computer Science" style="font:inherit;border:1px solid #8f9ba1;padding:2px 4px;background:#fff;color:#1c2328"></label>'],
+      ["confirm", "Confirm", "Check your details, then press Next."],
+      ["done", "Done", "Account created. ✓"]
+    ];
+    var i = 0, out = logger($("clLog"));
+    CARDS.forEach(function (c) { var o = document.createElement("option"); o.value = c[0]; o.textContent = '"' + c[0] + '"'; $("clName").appendChild(o); });
+    function draw() { var c = CARDS[i]; $("cards").innerHTML = '<div class="card-page"><span class="tag">card "' + c[0] + '" · ' + (i + 1) + " of " + CARDS.length + "</span><h4>" + c[1] + "</h4><div>" + c[2] + "</div></div>"; }
+    var OPS = {
+      first: function () { i = 0; return "first(cards)"; },
+      last: function () { i = CARDS.length - 1; return "last(cards)"; },
+      next: function () { var w = i === CARDS.length - 1; i = (i + 1) % CARDS.length; return "next(cards)" + (w ? "   ← wrapped around to the first card" : ""); },
+      previous: function () { var w = i === 0; i = (i - 1 + CARDS.length) % CARDS.length; return "previous(cards)" + (w ? "   ← wrapped around to the last card" : ""); },
+      show: function () { var n = $("clName").value; CARDS.forEach(function (c, k) { if (c[0] === n) i = k; }); return 'show(cards, "' + n + '")'; }
+    };
+    document.querySelectorAll("[data-cl]").forEach(function (b) { b.addEventListener("click", function () { var t = OPS[b.dataset.cl](); draw(); out("cardLayout." + t + '   → showing "' + CARDS[i][0] + '"', /wrapped/.test(t) ? C.warn : C.ok); }); });
+    draw();
+  })();
+})();
+
+</script>
+</body>
+</html>

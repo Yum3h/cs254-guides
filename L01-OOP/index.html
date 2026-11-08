@@ -1,0 +1,2664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 OOP Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+pre.pickable .ln { cursor: pointer; }
+pre.pickable .ln:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+pre .ln.pick { background: color-mix(in srgb, var(--mark) 16%, transparent); }
+pre .ln.hit { background: color-mix(in srgb, var(--ok) 22%, transparent); box-shadow: inset 3px 0 var(--ok); }
+pre .ln.miss { background: color-mix(in srgb, var(--mark) 22%, transparent); box-shadow: inset 3px 0 var(--mark); }
+pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
+.bug-x { font-size: .9rem; border-left: 3px solid var(--line); padding: var(--s1) var(--s3); }
+.bug-x.hit { border-color: var(--ok); } .bug-x.miss { border-color: var(--mark); }
+.res-ok { color: var(--ok); font-weight: 600; } .res-bad { color: var(--bad); font-weight: 600; }
+
+/* L13: Swing component mock-ups (inside .win, always light) */
+.tree-view { background: #fff; padding: .4rem .3rem; font: 13px system-ui, "Segoe UI", sans-serif; color: #1c2328; min-height: 6rem; overflow-x: auto; }
+.tv-row { display: flex; align-items: center; white-space: nowrap; line-height: 1.6; }
+.tv-guide { font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace; color: #8b98a0; white-space: pre; }
+.tv-tog { width: 1.1rem; flex: none; border: 0; background: none; padding: 0; font-size: .72rem; color: #3c4a52; cursor: pointer; }
+.tv-tog.none { visibility: hidden; }
+.tv-ico { width: 16px; height: 14px; margin-right: .3rem; flex: none; }
+.tv-lbl { padding: 0 .3rem; border-radius: 2px; cursor: pointer; border: 1px solid transparent; }
+.tv-lbl.sel { background: #b8cfe5; border-color: #6d8fb5; }
+.tv-lbl.fresh { background: #fff2b3; }
+.tv-hline { border-top: 1px solid #8b98a0; margin: .1rem 0; }
+.sp-frame { display: flex; flex-direction: column; height: 18rem; background: var(--win-bg); }
+.sp { display: flex; flex: 1; min-height: 0; min-width: 0; }
+.sp.vert { flex-direction: column; }
+#sp2 { height: 100%; }
+.sp-a, .sp-b { overflow: auto; background: #fff; min-width: 0; min-height: 0; }
+.sp-a { flex: none; }
+.sp-b { flex: 1; }
+.sp-div { flex: none; background: #d5dde1; border: 1px solid #a9b4ba; display: flex; gap: 3px; cursor: col-resize; touch-action: none; }
+.sp:not(.vert) > .sp-div { flex-direction: column; align-items: center; padding-top: 3px; }
+.sp.vert > .sp-div { flex-direction: row; align-items: center; padding-left: 3px; cursor: row-resize; }
+.sp-div:focus-visible { outline: 2px solid #2a6ebb; }
+.sp-arrow { font-size: 9px; line-height: 1; padding: 1px; border: 0; background: none; color: #24323a; cursor: pointer; }
+.jlist { list-style: none; margin: 0; padding: 2px 0; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jlist li { padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+.jlist li.sel { background: #b8cfe5; }
+.pic { display: grid; place-items: center; }
+.ok-cyan { background: #00ffff; border: 1px solid #6b7b82; font: 600 13px system-ui, sans-serif; padding: .35rem; color: #1c2328; cursor: pointer; }
+.jtp { display: flex; flex-direction: column; height: 13rem; background: var(--win-bg); font: 12px system-ui, sans-serif; color: #1c2328; padding: 4px; }
+.jtp.pos-BOTTOM { flex-direction: column-reverse; }
+.jtp.pos-LEFT { flex-direction: row; }
+.jtp.pos-RIGHT { flex-direction: row-reverse; }
+.jtp-tabs { display: flex; flex-wrap: wrap; gap: 2px; min-width: 0; }
+.jtp.pos-LEFT .jtp-tabs, .jtp.pos-RIGHT .jtp-tabs { flex-direction: column; flex-wrap: nowrap; overflow: auto; max-width: 45%; }
+.jtp.scroll:not(.pos-LEFT):not(.pos-RIGHT) .jtp-tabs { flex-wrap: nowrap; overflow-x: auto; }
+.jtp-tab { border: 1px solid #9aa7ad; background: #dfe5e8; padding: 2px 9px; cursor: pointer; white-space: nowrap; font: inherit; color: inherit; }
+.jtp-tab.sel { background: #fff; font-weight: 600; }
+.jtp-page { flex: 1; border: 1px solid #9aa7ad; background: #eceff1; min-height: 0; min-width: 0; overflow: auto; }
+.jtp-empty { padding: .5rem; color: #7a868c; }
+.bl3 { display: grid; grid-template: auto 1fr auto / auto 1fr auto; height: 100%; gap: 2px; padding: 2px; }
+.bl3 .jbtn { font-weight: 600; }
+.tl-frame { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto; height: 14rem; background: var(--win-bg); }
+.tl-frame.drop { outline: 2px dashed #2a6ebb; outline-offset: -4px; }
+.tl-frame[data-dock="NORTH"] > .tl-bar { grid-area: 1 / 1 / 2 / 4; }
+.tl-frame[data-dock="SOUTH"] > .tl-bar { grid-area: 3 / 1 / 4 / 4; }
+.tl-frame[data-dock="WEST"] > .tl-bar { grid-area: 1 / 1 / 4 / 2; }
+.tl-frame[data-dock="EAST"] > .tl-bar { grid-area: 1 / 3 / 4 / 4; }
+.tl-center { grid-area: 2 / 2 / 3 / 3; background: #fff; margin: 4px; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tl-bar { display: flex; align-items: center; gap: 2px; padding: 2px; background: #e3e8eb; border: 1px solid #b6c0c5; }
+.tl-bar.vertical { flex-direction: column; }
+.tl-grip { width: 9px; align-self: stretch; min-height: 1.6rem; background-image: radial-gradient(#7d8a91 1px, transparent 1.3px); background-size: 4px 4px; cursor: grab; touch-action: none; }
+.tl-bar.vertical .tl-grip { width: auto; min-height: 9px; height: 9px; min-width: 1.6rem; }
+.tl-btn { min-width: 1.9rem; height: 1.9rem; border: 1px solid transparent; background: none; border-radius: 3px; cursor: pointer; font: 14px system-ui, sans-serif; color: #24323a; padding: 0 .35rem; }
+.tl-btn:hover:not(:disabled) { border-color: #8f9ba1; background: #f4f6f7; }
+.tl-btn:disabled { color: #a9b2b7; cursor: default; }
+.tl-sep { width: 1px; align-self: stretch; background: #9aa7ad; margin: 2px 4px; }
+.tl-bar.vertical .tl-sep { width: auto; height: 1px; margin: 4px 2px; }
+.tl-floatwin { max-width: 16rem; }
+.pp-area { position: relative; background: #fff; min-height: 9rem; padding: .2rem; outline: none; }
+.pp-area:focus-visible { outline: 2px solid #2a6ebb; }
+.jpopup { position: absolute; z-index: 5; background: #f4f6f7; border: 1px solid #8f9ba1; box-shadow: 2px 2px 6px rgba(0, 0, 0, .25); padding: 2px 0; min-width: 8rem; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jpopup button { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; text-align: left; border: 0; background: none; padding: 3px 12px; font: inherit; color: inherit; cursor: pointer; }
+.jpopup button:hover:not(:disabled), .jpopup button:focus-visible { background: #b8cfe5; outline: none; }
+.jpopup button:disabled { color: #a9b2b7; cursor: default; }
+.jpopup hr { border: 0; border-top: 1px solid #b6c0c5; margin: 2px 0; }
+.jpopup kbd { font: 11px system-ui, sans-serif; color: #56676f; }
+.ac-frame { background: var(--win-bg); outline: none; position: relative; }
+.ac-frame:focus-visible { outline: 2px solid #2a6ebb; }
+.ac-menubar { position: relative; background: #e3e8eb; border-bottom: 1px solid #b6c0c5; padding: 1px 2px; }
+.ac-menu { border: 0; background: none; padding: 2px 8px; font: 12px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.ac-menu[aria-expanded="true"] { background: #b8cfe5; }
+.ac-drop { top: 100%; left: 2px; }
+.ac-area { position: relative; background: #fff; margin: 4px; min-height: 7rem; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tv-row { align-items: stretch; }
+.tv-row > .tv-tog, .tv-row > .tv-ico, .tv-row > .tv-lbl { align-self: center; }
+.tv-g { display: inline-block; width: 16px; flex: none; }
+.tv-g.pipe { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat; }
+.tv-g.tee { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+.tv-g.elbow { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 50% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+
+/* L14 MDI: desktop pane, internal frames, card deck */
+.dsk { position: relative; height: 20rem; background: #5d7d8f; overflow: hidden; }
+.jif { position: absolute; display: flex; flex-direction: column; background: #eceff1; border: 1px solid #44525a; box-shadow: 2px 3px 8px rgba(0, 0, 0, .35); }
+.jif-bar { display: flex; align-items: center; gap: 3px; padding: 2px 4px; background: #c5ced3; font: 600 12px system-ui, sans-serif; color: #1c2328; cursor: move; user-select: none; touch-action: none; }
+.jif.sel { border-color: #1d4f8a; }
+.jif.sel .jif-bar { background: #8fb3d9; }
+.jif-bar span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jif-bar button { width: 18px; height: 16px; padding: 0; font: 11px/1 system-ui, sans-serif; border: 1px solid #6b7b82; background: #f4f6f7; color: #1c2328; cursor: pointer; flex: none; }
+.jif textarea { flex: 1; resize: none; border: 0; border-top: 1px solid #9aa7ad; font: 12px ui-monospace, Menlo, Consolas, monospace; padding: 4px; background: #fff; color: #1c2328; min-height: 0; width: 100%; }
+.jif-rs { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 55%, #6b7b82 55%, #6b7b82 62%, transparent 62%, transparent 78%, #6b7b82 78%, #6b7b82 85%, transparent 85%); }
+.jif-icon { position: absolute; bottom: 4px; display: flex; align-items: center; gap: 4px; width: 8.5rem; padding: 2px 4px; background: #c5ced3; border: 1px solid #44525a; font: 600 11px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.jif-icon span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dsk-outline { position: absolute; border: 2px dashed #fff; pointer-events: none; }
+.cards { background: var(--win-bg); padding: .6rem; font: 13px system-ui, sans-serif; color: #1c2328; }
+.card-page { background: #fff; border: 1px solid #b6c0c5; padding: .7rem; min-height: 9rem; display: grid; gap: .4rem; align-content: start; }
+.card-page h4 { font: 600 14px system-ui, sans-serif; }
+.card-page .tag { font: 11px ui-monospace, monospace; color: #7a868c; }
+.ways-host { position: relative; background: var(--win-bg); color: #1c2328; font: 12px system-ui, sans-serif; min-height: 15rem; padding: .5rem; color-scheme: light; }
+.ways-host pre { margin: 0; white-space: pre-wrap; font: 12px ui-monospace, monospace; }
+.dlg-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .28); display: grid; place-items: center; }
+
+/* Threads: lanes, progress bar, frozen window */
+.lanes { display: grid; gap: 4px; font: 12px var(--f-mono); }
+.lane { display: grid; grid-template-columns: minmax(0, 9.5rem) 7.5rem minmax(0, 1fr); gap: .5rem; align-items: center; }
+.lane > b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lane .st { font-size: 11px; padding: 1px 6px; border-radius: 99px; border: 1px solid var(--line); text-align: center; color: var(--muted); }
+.lane .st.RUNNABLE { color: var(--ok); border-color: var(--ok); }
+.lane .st.TIMED_WAITING, .lane .st.WAITING { color: var(--c-num); border-color: var(--c-num); }
+.lane .st.TERMINATED { color: var(--bad); border-color: var(--bad); }
+.lane .ticks { display: flex; gap: 2px; overflow: hidden; min-width: 0; justify-content: flex-end; }
+.tick { width: 1.15rem; height: 1.15rem; border-radius: 3px; display: grid; place-items: center; font-size: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
+@media (max-width: 520px) { .lane { grid-template-columns: minmax(0, 1fr) 7rem; } .lane .ticks { grid-column: 1 / -1; justify-content: flex-start; } }
+.jprog { position: relative; height: 18px; border: 1px solid #6b7b82; background: #fff; border-radius: 2px; overflow: hidden; }
+.jprog i { position: absolute; top: 0; bottom: 0; left: 0; background: #5b8fc7; }
+.jprog span { position: absolute; inset: 0; display: grid; place-items: center; font: 600 11px system-ui, sans-serif; color: #1c2328; }
+.jprog.ind i { width: 30% !important; animation: jprog-ind 1.2s linear infinite; }
+@keyframes jprog-ind { from { left: -30%; } to { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .jprog.ind i { animation: none; width: 100% !important; opacity: .45; } }
+.win.frozen .win-body { filter: grayscale(.7) brightness(.9); }
+.win .win-bar .nr { color: #b0261c; font-weight: 600; }
+.win-body .row { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+.win-body textarea { width: 100%; min-height: 4.5rem; font: 12px ui-monospace, monospace; border: 1px solid #9aa7ad; background: #fff; color: #1c2328; padding: 4px; resize: none; }
+.verdict { font: 600 .8rem var(--f-body); padding: .1rem .5rem; border-radius: 99px; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.jbtn:disabled { color: #9aa4a8; cursor: default; }
+
+/* Your lab answers */
+.mine { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ok); font-weight: 600; }
+.slide.answer { border-left: 3px solid var(--ok); padding-left: var(--s4); }
+.xpl { display: grid; gap: var(--s3); margin: 0; }
+.xpl > div { display: grid; gap: var(--s1); min-width: 0; }
+.xpl dt { min-width: 0; }
+.xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
+.xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L1 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 1 + Lab 1</p>
+  <h1>Object Oriented Programming with Java</h1>
+  <p class="lede">Every slide of <em>Lecture 1-OOP</em> and both pages of <em>Lab 1: OOP</em>, in order: text, code, diagrams, screenshots and photos. Each topic opens with a plain-language explanation and ends with the original slides and a short self-check.</p>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--mark)"></i><span class="k">Red text</span> was emphasized in red on the slide</span>
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words: a simpler explanation</span>
+    <span><span class="mine">Your answer</span> your own lab code, exactly as in your zip</span>
+    <span><span class="added">Added</span> help that is not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<!-- ============ 1. OOP concepts ============ -->
+<section class="sec" id="concepts" data-title="Concepts of OOP">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1, 3</p>
+    <div class="sec-head-row"><h2>Concepts of OOP</h2><label class="done"><input type="checkbox" id="done-concepts"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>OOP organises a program around <em>things</em> (objects) instead of one long list of steps. A class describes a kind of thing; objects are the actual things made from it. The four pillars in one line each:<ul><li><b>Abstraction</b>: show what something does, hide how it does it.</li><li><b>Encapsulation</b>: keep an object's data private; others use it only through its methods.</li><li><b>Inheritance</b>: build a new class on top of an existing one.</li><li><b>Polymorphism</b>: one method call, different behaviour depending on the real object.</li></ul></div></aside>
+
+  <div class="slide">
+    <p class="divider">Object Oriented Programming with Java <span class="sn">1</span></p>
+  </div>
+
+  <div class="slide">
+    <h3>Concepts of OOP <span class="sn">3</span></h3>
+    <div class="fig-row">
+      <ul class="pts" style="flex:1 1 12rem">
+        <li>Objects</li>
+        <li>Classes</li>
+        <li>Data Abstraction</li>
+        <li>Encapsulation</li>
+        <li class="k">Inheritance</li>
+        <li>Polymorphism</li>
+      </ul>
+      <figure style="flex:1 1 16rem">
+        <div class="plate"><img src="img/s3_oop_temple.png" width="360" alt="A temple labelled OOP resting on four pillars: Abstraction, Encapsulation, Inheritance, Polymorphism"></div>
+        <figcaption>The four pillars holding up OOP: Abstraction, Encapsulation, Inheritance, Polymorphism.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="1-2"></details>
+  <div class="quiz" data-quiz="concepts"></div>
+</section>
+
+<!-- ============ 2. Objects & classes ============ -->
+<section class="sec" id="objects" data-title="Objects and Classes">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 4–6</p>
+    <div class="sec-head-row"><h2>Objects and Classes</h2><label class="done"><input type="checkbox" id="done-objects"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>Think of a class as a cookie cutter and objects as the cookies. A <code>Car</code> class says every car has a colour and a speed (state) and can <code>accelerate()</code> (behavior). Each <code>new Car()</code> makes one real car with its own colour and speed.</div></aside>
+
+  <div class="slide">
+    <h3>What is an Objects? <span class="sn">4</span></h3>
+    <ul class="pts">
+      <li>Object is a software bundle of related state and behavior</li>
+      <li>Characteristics:
+        <ul><li><span class="k"><em>state</em> and <em>behavior</em></span></li></ul>
+      </li>
+    </ul>
+    <figure>
+      <div class="plate"><img src="img/s4_object.jpg" width="345" alt="An object drawn as a circle: fields (state) in the centre, surrounded by a ring of methods (behavior)"></div>
+      <figcaption>Fields (state) sit in the middle; methods (behavior) wrap around them.</figcaption>
+    </figure>
+  </div>
+
+  <div class="slide">
+    <h3>What is a class? <span class="sn">5</span></h3>
+    <ul class="pts">
+      <li>A Java class is a group of Java methods and variables</li>
+      <li style="color:var(--accent)">Object is an instance of a class</li>
+    </ul>
+    <figure>
+      <div class="plate"><img src="img/s5_class_diagram.png" width="420" alt="A UML class diagram showing several classes, each box listing variables and methods, connected by relationship lines"></div>
+      <figcaption>A UML class diagram: each box is a class listing its variables and methods.</figcaption>
+    </figure>
+  </div>
+
+  <div class="slide">
+    <p class="divider">Object Oriented Concepts <span class="sn">6</span></p>
+  </div>
+
+  <details class="orig" data-pages="3-5"></details>
+  <div class="quiz" data-quiz="objects"></div>
+</section>
+
+<!-- ============ 3. Constructors ============ -->
+<section class="sec" id="constructors" data-title="Constructors">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 7–8</p>
+    <div class="sec-head-row"><h2>Constructors</h2><label class="done"><input type="checkbox" id="done-constructors"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>A constructor is the setup code that runs once, at the moment you write <code>new</code>. It has the same name as the class and no return type.<ul><li>Write no constructor: Java quietly gives you an empty one.</li><li>Write any constructor: Java gives you nothing extra, so <code>new Foo()</code> only works if you wrote <code>Foo()</code> yourself.</li><li><code>this(...)</code> lets one constructor reuse another, and it must come first.</li></ul></div></aside>
+
+  <div class="slide">
+    <h3>Constructors <span class="sn">7</span></h3>
+    <ul class="pts">
+      <li class="k">You can create multiple constructors, each must accept different parameters.</li>
+      <li>If you don't write any constructor, the compiler will (in effect) write one for you:
+        <div class="code" style="margin-top:.4rem"><pre class="java">classname() {}</pre></div>
+      </li>
+      <li class="k">If you include <em>any</em> constructors in a class, the compiler will not create a default constructor!</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Multiple Constructors <span class="sn">8</span></h3>
+    <ul class="pts">
+      <li>One constructor can call another.</li>
+      <li>You use "this", not the classname:</li>
+    </ul>
+    <div class="code"><pre class="java">class Foo {
+   int i;
+   Foo() {
+      this(0);
+   }
+   Foo( int x ) {
+      i = x;
+   }
+}</pre></div>
+    <p class="callout">A call to <code>this</code> must be the first statement in the constructor!</p>
+    <figure>
+      <div class="plate"><img src="img/s8_constructor_call.jpg" width="520" loading="lazy" alt="Slide 8 code with an arrow pointing at this(0) and the note: a call to this must be the first statement in the constructor"></div>
+      <figcaption>Slide 8 as drawn: the arrow points at <code>this(0);</code>.</figcaption>
+    </figure>
+  </div>
+
+  <details class="orig" data-pages="6-7"></details>
+  <div class="quiz" data-quiz="constructors"></div>
+</section>
+
+<!-- ============ 4. Modifiers ============ -->
+<section class="sec" id="modifiers" data-title="Modifiers and Overloading">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 10–26</p>
+    <div class="sec-head-row"><h2>Modifiers and Overloading</h2><label class="done"><input type="checkbox" id="done-modifiers"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>Modifiers are words in front of a class, field or method.<ul><li><b>Who can use it?</b> public (everyone) → protected (package + subclasses) → default (package only) → private (this class only).</li><li><b>static</b>: belongs to the class itself, shared by all objects.</li><li><b>final</b>: locked. A final variable can't change, a final method can't be overridden, a final class can't be extended.</li><li><b>abstract</b>: no body yet; a subclass has to write it.</li><li><b>Overloading</b>: same method name, different parameter lists. Java picks the right one when it compiles.</li></ul></div></aside>
+
+  <div class="slide">
+    <h3>Class Modifiers <span class="sn">10</span></h3>
+    <ul class="pts"><li>Public</li><li>Abstract</li><li>Final</li><li>Default (none)</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>Class Modifiers <span class="sn">11</span></h3>
+    <ul class="pts">
+      <li><span class="k-b">public</span>: anyone can create an object of the defined class.
+        <ul><li class="k">only one public class per file, must have same name as the file (this is how Java finds it!).</li></ul>
+      </li>
+      <li><span class="k">default</span>: is non-public (if you don't specify "public").</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Class Modifiers <span class="sn">12</span></h3>
+    <ul class="pts">
+      <li><span class="k-b">Abstract:</span> modifier means that the class can be used as a superclass only.
+        <ul><li class="k">no objects of this class can be created.</li></ul>
+      </li>
+      <li><span class="k-b">Final:</span> if its definition is complete and no subclasses are desired or required
+        <ul><li>a final class never has any subclasses, the methods of a final class are never overridden</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Field Modifiers <span class="sn">13</span></h3>
+    <ul class="pts"><li>public</li><li>protected</li><li>private</li><li>none or package or default</li><li>Static</li><li>Final</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>Field Modifiers <span class="sn">14</span></h3>
+    <ul class="pts">
+      <li><code class="k-b">public</code>: any method (in any class) can access the field.</li>
+      <li><code class="k-b">protected</code>: any method in the same <em>package</em> can access the field, or any derived class.</li>
+      <li><code class="k-b">private</code>: only methods in the class can access the field.</li>
+      <li><code class="k-b">Default</code>: is that only methods in the same package can access the field.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Field Modifiers <span class="sn">15</span></h3>
+    <ul class="pts">
+      <li><code class="k-b">Static</code>: Fields declared <code>static</code> are called <em>class fields</em> (<em>class variables</em>). others are called <em>instance fields</em>. There is only one copy of a static field, no matter how many objects are created.</li>
+      <li><code class="k-b">Final</code>: class and instance variables (static and non-static fields) may be declared final. The keyword <code>final</code> means: once the value is set, it can never be changed
+        <ul><li><code class="k-b">static final int BUFSIZE=100;</code></li><li><code class="k-b">final double PI=3.14159;</code></li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Method Modifiers <span class="sn">16</span></h3>
+    <ul class="pts"><li>public</li><li>protected</li><li>none or package or default</li><li>private</li><li>final</li><li>abstract</li><li>static</li><li>native</li><li>synchronized</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>Method Modifiers <span class="sn">17</span></h3>
+    <ul class="pts">
+      <li><code>private/protected/public</code>:
+        <ul><li class="k">same idea as with fields.</li></ul>
+      </li>
+      <li><code>abstract</code>: no implementation given, must be supplied by subclass.
+        <ul><li class="k">the class itself must also be declared <code>abstract</code></li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Method Modifiers <span class="sn">18</span></h3>
+    <ul class="pts">
+      <li><code class="k-b">static</code>: the method is a <em>class method</em>, it doesn't depend on any instance fields or methods, and can be called without first creating an object.</li>
+      <li><code class="k-b">final</code>: the method cannot be changed by a subclass (no alternative implementation can be provided by a subclass).</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Method Modifiers <span class="sn">19</span></h3>
+    <ul class="pts">
+      <li><code class="k-b">native</code>: the method is written in some local code (C/C++) - the implementation is not provided in Java.</li>
+      <li><code class="k-b">synchronized</code>: only one thread at a time can call the method.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Method Overloading <span class="sn">20</span></h3>
+    <ul class="pts">
+      <li>You can overload methods:
+        <ul><li class="k">same method name, different parameters.</li><li class="k">you can't <em>just</em> change return type, the parameters need to be different.</li></ul>
+      </li>
+      <li>Method overloading is resolved at compile time.</li>
+    </ul>
+    <div class="code"><pre class="java">int CounterValue() {
+   return counter;
+}
+double CounterValue() {
+   return (double) counter;
+}</pre></div>
+    <p class="wont">Won't Work!</p>
+    <figure>
+      <div class="plate"><img src="img/s20_overload_wont_work.jpg" width="440" loading="lazy" alt="Two CounterValue methods that differ only in return type, with the label Won't Work!"></div>
+      <figcaption>Slide 20: same name and same (empty) parameter list, only the return type differs, so it does not compile.</figcaption>
+    </figure>
+  </div>
+
+  <div class="slide">
+    <h3>Java Modifier Summary <span class="sn">22–26</span></h3>
+    <p class="expl" style="color:var(--muted);font-size:.9rem">All five summary slides combined into one table. Filter by what the modifier is used on.</p>
+    <div class="chips" role="group" aria-label="Filter modifiers by what they are used on" data-filter-for="modTable">
+      <button class="chip" aria-pressed="true" data-f="all">All</button>
+      <button class="chip" aria-pressed="false" data-f="class">Class</button>
+      <button class="chip" aria-pressed="false" data-f="interface">Interface</button>
+      <button class="chip" aria-pressed="false" data-f="method">Method</button>
+      <button class="chip" aria-pressed="false" data-f="field">Field / variable</button>
+      <button class="chip" aria-pressed="false" data-f="member">Member</button>
+    </div>
+    <div class="tbl-wrap">
+      <table id="modTable">
+        <thead><tr><th>Modifier</th><th>Used on</th><th>Meaning</th><th>Slide</th></tr></thead>
+        <tbody>
+          <tr data-on="class"><td class="mod">abstract</td><td class="on">Class</td><td>Contains unimplemented methods and cannot be instantiated</td><td>22</td></tr>
+          <tr data-on="interface"><td class="mod">abstract</td><td class="on">interface</td><td>All interfaces are abstract. Optional in declarations</td><td>22</td></tr>
+          <tr data-on="method"><td class="mod">abstract</td><td class="on">method</td><td>No body, only signature. The enclosing class is abstract</td><td>22</td></tr>
+          <tr data-on="class"><td class="mod">final</td><td class="on">Class</td><td>Cannot be subclassed</td><td>23</td></tr>
+          <tr data-on="method"><td class="mod">final</td><td class="on">method</td><td>Cannot be overridden and dynamically looked up</td><td>23</td></tr>
+          <tr data-on="field"><td class="mod">final</td><td class="on">field</td><td>Cannot change its value. static final fields are compile-time constants.</td><td>23</td></tr>
+          <tr data-on="field"><td class="mod">final</td><td class="on">variable</td><td>Cannot change its value.</td><td>23</td></tr>
+          <tr data-on="method"><td class="mod">native</td><td class="on">method</td><td>Platform-dependent. No body, only signature</td><td>24</td></tr>
+          <tr data-on="member"><td class="mod">private</td><td class="on">member</td><td>Accessible only in its class</td><td>24</td></tr>
+          <tr data-on="member"><td class="mod">protected</td><td class="on">member</td><td>Accessible only within its package and its subclasses</td><td>24</td></tr>
+          <tr data-on="class"><td class="mod">None</td><td class="on">Class</td><td>Accessible only in its package</td><td>25</td></tr>
+          <tr data-on="interface"><td class="mod">None</td><td class="on">Interface</td><td>Accessible only in its package</td><td>25</td></tr>
+          <tr data-on="member"><td class="mod">None</td><td class="on">Member</td><td>Accessible only in its package</td><td>25</td></tr>
+          <tr data-on="class"><td class="mod">public</td><td class="on">Class</td><td>Accessible anywhere</td><td>26</td></tr>
+          <tr data-on="interface"><td class="mod">public</td><td class="on">interface</td><td>Accessible anywhere</td><td>26</td></tr>
+          <tr data-on="member"><td class="mod">public</td><td class="on">Member</td><td>Accessible anywhere.</td><td>26</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · Access levels at a glance (built from slides 14 and 24–26)</p>
+    <div class="tbl-wrap">
+      <table class="access">
+        <thead><tr><th>Member is…</th><th>Same class</th><th>Same package</th><th>Subclass (other package)</th><th>Anywhere</th></tr></thead>
+        <tbody>
+          <tr><td class="mod">public</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+          <tr><td class="mod">protected</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td><td class="n">–</td></tr>
+          <tr><td class="mod">default (none)</td><td class="y">✓</td><td class="y">✓</td><td class="n">–</td><td class="n">–</td></tr>
+          <tr><td class="mod">private</td><td class="y">✓</td><td class="n">–</td><td class="n">–</td><td class="n">–</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="8-23"></details>
+  <div class="quiz" data-quiz="modifiers"></div>
+</section>
+
+<!-- ============ 5. Packages ============ -->
+<section class="sec" id="packages" data-title="Packages">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 28–32</p>
+    <div class="sec-head-row"><h2>Packages</h2><label class="done"><input type="checkbox" id="done-packages"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>A package is a folder for related classes, like <code>java.io</code> for input/output. The <code>package</code> line at the very top of a file says which folder the class lives in. <code>import</code> lets you use a class from another package by its short name.</div></aside>
+
+  <div class="slide"><p class="divider">Packages <span class="sn">28</span></p></div>
+
+  <div class="slide">
+    <h3>Package <span class="sn">29</span></h3>
+    <ul class="pts">
+      <li>defined as a grouping of related types</li>
+      <li>existing packages in Java are:
+        <ul>
+          <li><span class="k"><b>java.lang</b> - bundles the fundamental classes</span></li>
+          <li><b>java.io</b> - classes for input , output functions are bundled in this package</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Creating a Package <span class="sn">30</span></h3>
+    <ul class="pts">
+      <li>Put a <b>package</b> statement with the package name</li>
+      <li class="k">At the top of every source file that contains the classes, interfaces, enumerations, and annotation types that you want to include in the package</li>
+      <li>The <b>package</b> statement should be the first line in the source file</li>
+      <li class="k">There can be only one package statement in each source file, and it applies to all types in the file</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Example <span class="sn">31</span></h3>
+    <div class="code"><pre class="java">/* File name : Animal.java */
+package animals;
+interface Animal
+{
+   public void eat();
+}</pre></div>
+    <div class="code"><pre class="java">package animals;
+/* File name : MammalInt.java */
+public class Mammal implements Animal
+{
+   public void eat()
+   {
+      System.out.println("Mammal eats");
+   }</pre></div>
+    <p class="k">Now you compile these two files and put them in a sub-directory called <b>animals</b></p>
+    <aside class="note"><b>Guide note</b><span>As printed, the second file is named <code>MammalInt.java</code> but holds <code>public class Mammal</code>, and its closing <code>}</code> is missing. Slide 11 says a public class must have the same name as its file, so to compile it, name the file <code>Mammal.java</code> and add the final brace.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>The Import Keyword <span class="sn">32</span></h3>
+    <ul class="pts">
+      <li>If a class wants to use another class in the same package, the package name does not need to be used. Classes in the same package find each other without any special syntax</li>
+      <li>The fully qualified name of the class can be used.
+        <ul><li class="k">import <b><code>animals</code></b>.Mamal</li></ul>
+      </li>
+      <li>The package can be imported using the import keyword and the wild card (*)
+        <ul><li class="k">import <b><code>animals</code></b>.*;</li></ul>
+      </li>
+    </ul>
+    <aside class="note"><b>Guide note</b><span>"Mamal" is the slides' spelling (it also appears in the diagrams on slides 54–55). In real code the class is <code>Mammal</code>, so the import is <code>import animals.Mammal;</code></span></aside>
+  </div>
+
+  <details class="orig" data-pages="24-28"></details>
+  <div class="quiz" data-quiz="packages"></div>
+</section>
+
+<!-- ============ 6. Abstraction ============ -->
+<section class="sec" id="abstraction" data-title="Abstraction">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 33–43</p>
+    <div class="sec-head-row"><h2>Abstraction</h2><label class="done"><input type="checkbox" id="done-abstraction"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>An abstract class is a half-finished class. It holds the shared code (name, address, <code>mailCheck()</code>) but can leave some methods for subclasses to finish (<code>computePay()</code>). You can't create an object of it directly, only of a subclass such as <code>Salary</code>. This forces every kind of employee to say how its pay is computed.</div></aside>
+
+  <div class="slide"><p class="divider">Abstraction <span class="sn">33</span></p></div>
+
+  <div class="slide">
+    <h3>Abstraction <span class="sn">34</span></h3>
+    <ul class="pts">
+      <li>Refers to the ability to make a class abstract in OOP</li>
+      <li>Abstract class
+        <ul><li class="k">Cannot be instantiated</li><li class="k">Other functionality of the class still exists</li><li class="k">Cannot create an instance of the abstract class</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Abstract Class <span class="sn">35</span></h3>
+    <ul class="pts"><li>Use the <b>abstract</b> keyword to declare a class abstract</li></ul>
+    <div class="code"><pre class="java">public abstract class Employee
+{
+   private String name;
+   private String address;
+   ...
+}</pre></div>
+    <p>Cannot use</p>
+    <div class="code"><pre class="java">Employee e = new Employee();</pre></div>
+    <pre class="console"><span class="ttl">Compiler output</span>Employee.java: xx: Employee is abstract; cannot be instantiated
+Employee e = new Employee();
+^ 1 error</pre>
+    <figure>
+      <div class="plate"><img src="img/s35_abstract_error.jpg" width="520" loading="lazy" alt="Slide 35: 'Cannot use Employee e = new Employee();' with the compiler error in a black box"></div>
+      <figcaption>Slide 35: the compile error you get for <code>new Employee()</code>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="slide">
+    <h3>Extending Abstract Class <span class="sn">36</span></h3>
+    <div class="code"><pre class="java">public class Salary extends Employee
+{
+   private double salary;
+   Salary(String name, String address,
+          int number, double salary)
+   {
+      super(name, address, number);
+      setSalary(salary);
+   }
+   ...
+}</pre></div>
+    <p class="callout"><span><code>extends Employee</code> → Extend Employee class</span></p>
+    <p class="callout"><span><code>super(name, address, number);</code> → Call Employee class</span></p>
+    <figure>
+      <div class="plate"><img src="img/s36_extending_callouts.jpg" width="520" loading="lazy" alt="Slide 36 code with two callout boxes: Extend Employee class, and Call Employee class"></div>
+      <figcaption>Slide 36 with its two callouts.</figcaption>
+    </figure>
+  </div>
+
+  <div class="slide">
+    <h3>Abstract Methods <span class="sn">37</span></h3>
+    <ul class="pts">
+      <li>Can declare the method in the parent class as abstract</li>
+      <li>Abstract methods consist of a method signature, but no method body</li>
+    </ul>
+    <div class="code"><pre class="java">public abstract class Employee
+{
+   private String name;
+   private String address;
+   private int number;
+   public abstract double computePay();
+
+   //Remainder of class definition
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Declaring a Method as Abstract <span class="sn">38</span></h3>
+    <ul class="pts">
+      <li>The class must also be declared abstract</li>
+      <li>Any child class must either override the abstract method or declare itself abstract
+        <ul><li class="k">A child class that inherits an abstract method must override it</li><li class="k">If they do not, they must be abstract,and any of their children must override it</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Salary is Extending Employee class <span class="sn">39</span></h3>
+    <ul class="pts"><li>it is required to implement computePay() method</li></ul>
+    <div class="code"><pre class="java">public class Salary extends Employee
+{
+   private double salary; //Annual salary
+   public double computePay()
+   {
+      System.out.println("Computing " + getName());
+      return salary/52;
+   }
+   //Remainder of class definition
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <p class="divider">Full example <span class="sn">40–43</span></p>
+    <h3>Employee.java <span class="sn">40–41</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">/* File name : Employee.java */
+public abstract class Employee
+{
+   private String name;
+   private String address;
+   private int number;
+
+   public Employee(String name, String address, int number)
+   {
+      System.out.println("Constructing an Employee");
+      this.name = name;
+      this.address = address;
+      this.number = number;
+   }
+
+   public double computePay()
+   {
+      System.out.println("Inside Employee computePay");
+      return 0.0;
+   }
+
+   public void mailCheck()
+   {
+      System.out.println("Mailing a check to " + this.name
+         + " " + this.address);
+   }
+   public String toString()
+   {
+      return name + " " + address + " " + number;
+   }
+   public String getName()
+   {
+      return name;
+   }
+   public String getAddress()
+   {
+      return address;
+   }
+   public void setAddress(String newAddress)
+   {
+      address = newAddress;
+   }
+   public int getNumber()
+   {
+      return number;
+   }
+}</pre></div>
+      <figure style="flex:1 1 9rem">
+        <div class="plate"><img src="img/s41_employee_uml.jpg" width="170" loading="lazy" alt="Employee class box: Name, Address, Number; computePay(), mailCheck(), toString(), getName(), …"></div>
+        <figcaption>Slide 41: the Employee class. Fields: Name, Address, Number. Methods: computePay(), mailCheck(), toString(), getName(), …</figcaption>
+      </figure>
+    </div>
+    <aside class="note"><b>Guide note</b><span>In this full example <code>computePay()</code> has a body in Employee (slide 37 showed it as <code>abstract</code>). Both are legal: an abstract class may contain ordinary methods, and it still cannot be instantiated.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Salary class <span class="sn">42</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">/* File name : Salary.java */
+public class Salary extends Employee
+{
+   private double salary; //Annual salary
+   public Salary(String name, String address, int number, double
+      salary)
+   {
+      super(name, address, number);
+      setSalary(salary);
+   }
+   public void mailCheck()
+   {
+      System.out.println("Within mailCheck of Salary class ");
+      System.out.println("Mailing check to " + getName()
+      + " with salary " + salary);
+   }
+   public double getSalary()
+   {
+      return salary;
+   }
+   public void setSalary(double newSalary)
+   {
+      if(newSalary &gt;= 0.0)
+      {
+         salary = newSalary;
+      }
+   }
+   public double computePay()
+   {
+      System.out.println("Computing salary pay for " + getName());
+      return salary/52;
+   }
+}</pre></div>
+      <figure style="flex:1 1 9rem">
+        <div class="plate"><img src="img/s42_salary_diagram.jpg" width="170" loading="lazy" alt="Diagram: Salary with an arrow up to Employee"></div>
+        <figcaption>Slides 42–43: Salary extends Employee.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Abstract Demonstration <span class="sn">43</span></h3>
+    <div class="code"><pre class="java">public class AbstractDemo1
+{
+   public static void main(String [] args)
+   {
+      Salary s = new Salary("Saman Kumara", "Panadura Rd, Panadura", 3, 3600.00);
+      Salary e = new Salary("S. K. Silva", "No 234, Nugegoda", 2, 2400.00);
+
+      s.computePay();
+      e.computePay();
+
+      System.out.println("Call mailCheck using Salary reference :");
+      s.mailCheck();
+      System.out.println("\n Call mailCheck using Employee reference : ");
+      e.mailCheck();
+   }
+}</pre></div>
+    <pre class="console"><span class="ttl">C:\Windows\system32\cmd.exe</span>Constructing an Employee
+Constructing an Employee
+Computing salary pay for Saman Kumara
+Computing salary pay for S. K. Silva
+Call mailCheck using Salary reference :
+Within mailCheck of Salary class
+Mailing check to Saman Kumara with salary 3600.0
+
+ Call mailCheck using Employee reference :
+Within mailCheck of Salary class
+Mailing check to S. K. Silva with salary 2400.0
+Press any key to continue . . .</pre>
+    <figure>
+      <div class="plate"><img src="img/s43_console.png" width="557" loading="lazy" alt="Screenshot of the Windows console showing the program output"></div>
+      <figcaption>Slide 43: the console screenshot from the slide.</figcaption>
+    </figure>
+    <aside class="note"><b>Guide note</b><span>On the slide, <code>e</code> is declared as <code>Salary</code> even though the label says "Employee reference". To truly call through an Employee reference, write <code>Employee e = new Salary(...)</code>. The output is identical, because Java runs Salary's <code>mailCheck()</code> at run time either way (dynamic binding, see Polymorphism).</span></aside>
+  </div>
+
+  <details class="orig" data-pages="29-39"></details>
+  <div class="quiz" data-quiz="abstraction"></div>
+</section>
+
+<!-- ============ 7. Encapsulation ============ -->
+<section class="sec" id="encapsulation" data-title="Encapsulation">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 44–49</p>
+    <div class="sec-head-row"><h2>Encapsulation</h2><label class="done"><input type="checkbox" id="done-encapsulation"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>Make the fields private, then offer public getters and setters. Outside code can't change the data directly, so the class can check values (for example, refuse a negative salary) and can change how it stores data without breaking anyone who uses it.</div></aside>
+
+  <div class="slide">
+    <div class="fig-row" style="align-items:center">
+      <p class="divider" style="flex:1 1 10rem">Encapsulation <span class="sn">44</span></p>
+      <figure>
+        <div class="plate"><img src="img/s44_encapsulation_photo.jpg" width="128" alt="A sphere wrapped in a closed shell, the slide's image for encapsulation"></div>
+        <figcaption>Slide 44 image: a core wrapped in a protective shell.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Encapsulation <span class="sn">45</span></h3>
+    <ul class="pts">
+      <li>Information Hiding.</li>
+      <li class="k">Don't need to know how some component is implemented to use it.</li>
+      <li>Implementation can change without effecting any calling code.</li>
+      <li class="k">"protects us from ourselves"</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Encapsulation <span class="sn">46</span></h3>
+    <ul class="pts">
+      <li>is the technique of making the fields in a class private and providing access to the fields via public methods</li>
+      <li>is also referred to as data hiding</li>
+      <li>Benefit
+        <ul><li class="k">is the ability to modify our implemented code without breaking the code of others who use our code</li></ul>
+      </li>
+      <li>Encapsulation gives maintainability, flexibility and extensibility to our code</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Example <span class="sn">47</span></h3>
+    <div class="code"><pre class="java">public class Encap
+{
+   private String name;
+   private String idNum;
+   private int age;
+
+   public int getAge()
+   {
+      return age;
+   }
+   public String getName()
+   {
+      return name;
+   }
+   public String getIdNum()
+   {
+      return idNum;
+   }
+   public void setAge( int newAge)
+   {
+      age = newAge;
+   }
+   public void setName(String newName)
+   {
+      name = newName;
+   }
+   public void setIdNum( String newId)
+   {
+      idNum = newId;
+   }
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Example <span class="sn">48</span></h3>
+    <div class="code"><pre class="java">public class RunEncap
+{
+   public static void main(String args[])
+   {
+      EncapTest encap = new EncapTest();
+      encap.setName("James");
+      encap.setAge(20);
+      encap.setIdNum("12343ms");
+      System.out.println("Name : " + encap.getName()+ " Age : "+ encap.getAge());
+   }
+}</pre></div>
+    <pre class="console"><span class="ttl">C:\Windows\system32\cmd.exe</span>Name : James Age : 20
+Press any key to continue . . .</pre>
+    <figure>
+      <div class="plate"><img src="img/s48_console.png" width="389" loading="lazy" alt="Console screenshot: Name : James Age : 20"></div>
+      <figcaption>Slide 48: the console screenshot.</figcaption>
+    </figure>
+    <aside class="note"><b>Guide note</b><span>Slide 47 names the class <code>Encap</code> but slide 48 creates <code>EncapTest</code>. Use one name in both places (for example <code>Encap encap = new Encap();</code>) or it won't compile.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Benefits of Encapsulation: <span class="sn">49</span></h3>
+    <ul class="pts">
+      <li>The fields of a class can be made read-only or write-only.</li>
+      <li style="color:var(--accent)">A class can have total control over what is stored in its fields.</li>
+      <li>The users of a class do not know how the class stores its data. A class can change the data type of a field, and users of the class do not need to change any of their code.</li>
+    </ul>
+  </div>
+
+  <details class="orig" data-pages="40-45"></details>
+  <div class="quiz" data-quiz="encapsulation"></div>
+</section>
+
+<!-- ============ 8. Inheritance ============ -->
+<section class="sec" id="inheritance" data-title="Inheritance, IS-A, HAS-A">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 50–65</p>
+    <div class="sec-head-row"><h2>Inheritance, IS-A, HAS-A</h2><label class="done"><input type="checkbox" id="done-inheritance"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div><code>class Dog extends Mammal</code> means a Dog gets everything a Mammal has (except private members) and can add more. Test it with a sentence: "Dog IS-A Mammal". If that sentence makes sense, inheritance fits. If the sentence is "Van HAS-A Speed", make Speed a field instead. A Java class can have only one parent class.</div></aside>
+
+  <div class="slide"><p class="divider">Inheritance <span class="sn">50</span></p></div>
+
+  <div class="slide">
+    <h3>Inheritance <span class="sn">51</span></h3>
+    <ul class="pts">
+      <li>On the surface, inheritance is a code re-use issue.
+        <ul><li class="k">we can extend code that is already written in a manageable manner.</li></ul>
+      </li>
+      <li>Inheritance is more, it supports polymorphism at the language level!</li>
+      <li style="color:var(--accent)">Information is made manageable in a hierarchical order</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Inheritance cont. <span class="sn">52</span></h3>
+    <ul class="pts">
+      <li style="color:var(--accent)">With Inheritance, new class can be derived from existing classes as a building block</li>
+      <li>New class Inherit properties and methods from the existing class</li>
+      <li><span style="color:var(--accent)">New class can also added Its own</span> <span class="k">properties and methods</span></li>
+      <li>Keyword
+        <ul><li><b>Extends</b></li><li><b>Implements</b></li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Inheritance cont. <span class="sn">53</span></h3>
+    <ul class="pts">
+      <li>Take an existing object type (collection of fields and methods) and <b>extend</b> it.
+        <ul>
+          <li class="k">create a special version of the code without re-writing any of the existing code (or even explicitly calling it!).</li>
+          <li>End result is a more <em>specific</em> object type, called the sub-class / derived class / child class.</li>
+          <li><span class="k">The original code is called the</span> super class / parent class / base class.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>IS-A Relationship (Example) <span class="sn">54</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:1 1 15rem"><pre class="java">public class Animal
+{
+}
+
+public class Mammal extends Animal
+{ }
+
+public class Reptile extends Animal
+{ }
+
+public class Dog extends Mammal
+{ }</pre></div>
+      <figure style="flex:1 1 13rem">
+        <div class="plate">
+          <svg class="dg" viewBox="0 0 300 170" width="260" role="img" aria-label="Mamal box with a red arrow pointing up to Animal box, labelled extends">
+            <defs>
+              <marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#c0261c"/></marker>
+              <marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#4a7db4"/></marker>
+            </defs>
+            <rect x="160" y="10" width="120" height="34" fill="#4a7db4" stroke="#2f5d8f"/>
+            <text x="220" y="32" fill="#ffffff" font-size="14" text-anchor="middle">Animal</text>
+            <rect x="160" y="124" width="120" height="34" fill="#4a7db4" stroke="#2f5d8f"/>
+            <text x="220" y="146" fill="#ffffff" font-size="14" text-anchor="middle">Mamal</text>
+            <line x1="220" y1="124" x2="220" y2="47" stroke="#c0261c" stroke-width="2" marker-end="url(#ah-red)"/>
+            <text x="20" y="44" fill="#17232a" font-size="15">extends</text>
+            <line x1="70" y1="54" x2="212" y2="86" stroke="#4a7db4" stroke-width="1.2" marker-end="url(#ah-blue)"/>
+          </svg>
+        </div>
+        <figcaption>Slide 54 diagram (redrawn): Mamal <b>extends</b> Animal; the arrow points to the superclass.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>IS-A Relationship (Example) <span class="sn">55</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 18rem"><pre class="java">public class Dog extends Mammal
+{
+   public static void main(String args[])
+   {
+      Animal a = new Animal();
+      Reptile r = new Reptile();
+      Mammal m = new Mammal();
+      Dog d = new Dog();
+      System.out.println(m instanceof Animal);
+      System.out.println(d instanceof Mammal);
+      System.out.println(d instanceof Animal);
+   }
+}</pre></div>
+      <figure style="flex:1 1 12rem">
+        <div class="plate"><img src="img/s55_animal_tree.jpg" width="260" loading="lazy" alt="Diagram: Animal at the top with Mamal, Dog and Reptile beneath it"></div>
+        <figcaption>Slide 55 diagram: Animal above Mamal, Dog, Reptile.</figcaption>
+      </figure>
+    </div>
+    <p class="added">Added · Output when you run it</p>
+    <pre class="console">true
+true
+true</pre>
+    <aside class="note"><b>Guide note</b><span>The diagram draws Dog next to Mamal, but the code says <code>Dog extends Mammal</code>, so Dog sits <em>under</em> Mammal. Slide 56 confirms: Dog is the subclass of both Mammal and Animal.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>IS-A Relationship <span class="sn">56</span></h3>
+    <ul class="pts">
+      <li>In Object Oriented terms following are true:
+        <ul>
+          <li>Animal is the superclass of Mammal class.</li>
+          <li class="k">Animal is the superclass of Reptile class.</li>
+          <li>Mammal and Reptile are sub classes of Animal class.</li>
+          <li class="k">Dog is the subclass of both Mammal and Animal classes.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>IS-A Relationship <span class="sn">57</span></h3>
+    <ul class="pts">
+      <li>IS-A relationship we can say:
+        <ul>
+          <li>Mammal IS-A Animal</li>
+          <li class="k">Reptile IS-A Animal</li>
+          <li>Dog IS-A Mammal</li>
+          <li>Hence : Dog IS-A Animal as well</li>
+        </ul>
+      </li>
+      <li>Use of the <b><u>extends</u></b> keyword the subclasses will be able to inherit all the properties of the superclass except for the <b>private properties</b> of the superclass</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Accessing superclass methods <span class="sn">58</span></h3>
+    <ul class="pts">
+      <li>Can use <code><b>super()</b></code> to access all (non-private) superclass methods.
+        <ul><li class="k">even those replaced with new versions in the derived class.</li></ul>
+      </li>
+      <li>Can use <code><b>super()</b></code> to call base class constructor.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Single Inheritance <span class="sn">59</span></h3>
+    <ul class="pts">
+      <li>You can't <em>extend</em> more than one class!
+        <ul><li class="k">the derived class can't have more than one base class.</li></ul>
+      </li>
+      <li>You can do multiple inheritance with <em>interface inheritance.</em></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Inheritance Example cont. <span class="sn">60</span></h3>
+    <ul class="pts">
+      <li>Employee: name, email, phone
+        <ul>
+          <li class="k">FulltimeEmployee: also has salary, office, benefits, …
+            <ul><li style="font-size:.9em">Manager: CompanyCar, can change salaries, rates contracts, offices, etc.</li></ul>
+          </li>
+          <li class="k">Contractor: HourlyRate, ContractDuration, …</li>
+        </ul>
+      </li>
+      <li>A <em>manager</em> a special kind of FullTimeEmployee, which is a special kind of Employee.</li>
+      <li>The relationship modeled by inheritance is often referred to as a "<span class="k-b">is a</span>" relationship</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Inheritance Example <span class="sn">61</span></h3>
+    <figure>
+      <div class="plate"><img src="img/s61_inheritance_uml.jpg" width="560" loading="lazy" alt="UML: Employee (Name, Email, Phone) at top; FulltimeEmployee (Salary, Office) and Contractor (HourlyRate, ContractDuration) below it; Manager (CompanyCar, Email, Phone) below FulltimeEmployee"></div>
+      <figcaption>Employee (Name, Email, Phone) → FulltimeEmployee (Salary, Office) and Contractor (HourlyRate, ContractDuration); Manager (CompanyCar, Email, Phone) → FulltimeEmployee.</figcaption>
+    </figure>
+  </div>
+
+  <div class="slide">
+    <h3>Inheritance Example <span class="sn">62</span></h3>
+    <figure>
+      <div class="plate"><img src="img/s62_inheritance_isa.jpg" width="560" loading="lazy" alt="Same UML with curved arrows labelled 'Is a' from FulltimeEmployee to Employee, Manager to FulltimeEmployee, and Contractor to Employee"></div>
+      <figcaption>The same hierarchy with every link labelled "Is a".</figcaption>
+    </figure>
+  </div>
+
+  <div class="slide">
+    <h3>Inheritance Example <span class="sn">63</span></h3>
+    <ul class="pts">
+      <li>Manager <span class="k">is a</span> full time employee</li>
+      <li>Full time employee <span class="k">is a</span> employee</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>HAS-A Relationship <span class="sn">64</span></h3>
+    <ul class="pts">
+      <li>relationships are mainly based on the usage</li>
+      <li>determines whether a certain class <b>HAS-A</b> certain thing</li>
+      <li>helps to reduce duplication of code as well as bugs</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Example <span class="sn">65</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:1 1 15rem"><pre class="java">public class Vehicle
+{}
+public class Speed
+{}
+public class Van extends Vehicle
+{
+   private Speed sp;
+}</pre></div>
+      <figure style="flex:1 1 9rem">
+        <div class="plate"><img src="img/s65_van_hasa.jpg" width="150" loading="lazy" alt="Van box containing a red 'sp' box, with an arrow up to Vehicle"></div>
+        <figcaption>Van extends Vehicle and contains <code>sp</code> (a Speed).</figcaption>
+      </figure>
+    </div>
+    <ul class="pts">
+      <li>class Van <b>HAS-A</b> Speed
+        <ul><li class="k">Reuse the Speed class in multiple applications</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <details class="orig" data-pages="46-61"></details>
+  <div class="quiz" data-quiz="inheritance"></div>
+</section>
+
+<!-- ============ 9. Interfaces ============ -->
+<section class="sec" id="interfaces" data-title="Interfaces and instanceof">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 66–77</p>
+    <div class="sec-head-row"><h2>Interfaces and instanceof</h2><label class="done"><input type="checkbox" id="done-interfaces"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>An interface is a contract: a list of methods a class promises to have, with no code inside. A class <code>implements</code> the interface and writes the bodies. A class can implement many interfaces, which is how Java gets around having only one parent class. <code>instanceof</code> asks "is this object of that type?" and answers true or false.</div></aside>
+
+  <div class="slide"><p class="divider">Interface <span class="sn">66</span></p></div>
+
+  <div class="slide">
+    <h3>Interfaces <span class="sn">67</span></h3>
+    <ul class="pts">
+      <li>is a collection of abstract methods</li>
+      <li>An interface is not a class
+        <ul><li class="k">A class describes the attributes and behaviors of an object</li><li class="k">An interface contains behaviors that a class implements</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Interfaces cont. <span class="sn">68</span></h3>
+    <ul class="pts">
+      <li>Interfaces have the following properties:
+        <ul><li class="k">An interface is implicitly abstract. You do not need to use the <b>abstract</b> keyword when declaring an interface.</li><li class="k">Methods in an interface are implicitly public.</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Interfaces cont. <span class="sn">69</span></h3>
+    <ul class="pts">
+      <li>An interface is a definition of method prototypes and possibly some constants (static final fields).</li>
+      <li class="k">An interface does not include the implementation of any methods, it just defines a set of methods that could be implemented.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Implement an interfaces <span class="sn">70</span></h3>
+    <ul class="pts">
+      <li>A class can <code><b>implement</b></code> an interface, this means that it provides implementations for all the methods in the interface.</li>
+      <li>Java classes can implement any number of interfaces (multiple interface inheritance).</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Interfaces <span class="sn">71</span></h3>
+    <ul class="pts">
+      <li>Creation (definition) of interfaces can be done using inheritance:
+        <ul><li class="k">one interface can extend another.</li></ul>
+      </li>
+      <li>Sometimes interfaces are used just as labeling mechanisms:
+        <ul><li class="k">Look in the Java API documentation for interfaces like <code><b>Cloneable</b></code>.</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Interfaces <span class="sn">72</span></h3>
+    <ul class="pts">
+      <li>An interface is similar to a class in the following ways:
+        <ul>
+          <li class="k">An interface can contain any number of methods.</li>
+          <li class="k">An interface is written in a file with a <b>.java</b> extension, with the name of the interface matching the name of the file.</li>
+          <li class="k">The bytecode of an interface appears in a <b>.class</b> file.</li>
+          <li class="k">Interfaces appear in packages, and their corresponding bytecode file must be in a directory structure that matches the package name.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Interfaces <span class="sn">73</span></h3>
+    <ul class="pts">
+      <li>An interface is different from a class in several ways, including:
+        <ul>
+          <li class="k">You cannot instantiate an interface.</li>
+          <li class="k">An interface does not contain any constructors.</li>
+          <li class="k">All of the methods in an interface are abstract.</li>
+          <li class="k">An interface cannot contain instance fields. The only fields that can appear in an interface must be declared both static and final.</li>
+          <li class="k">An interface is not extended by a class; it is implemented by a class.</li>
+          <li class="k">An interface can extend multiple interfaces.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Declaring Interfaces <span class="sn">74</span></h3>
+    <ul class="pts"><li>The <b>interface</b> keyword is used to declare an interface</li></ul>
+    <div class="fig-row">
+      <div class="code" style="flex:1 1 11rem"><span class="code-label">The interface (boxed on the slide)</span><pre class="java">interface Animal
+{
+   public void eat();
+}</pre></div>
+      <div class="code" style="flex:2 1 18rem"><span class="code-label">A class that implements it</span><pre class="java">public class MammalInt implements Animal
+{
+   public void eat()
+   {
+      System.out.println("Mammal eats");
+   }
+   public static void main(String args[])
+   {
+      MammalInt m = new MammalInt();
+      m.eat();
+   }
+}</pre></div>
+    </div>
+    <p class="added">Added · Output</p>
+    <pre class="console">Mammal eats</pre>
+  </div>
+
+  <div class="slide">
+    <h3>Extending Interfaces <span class="sn">75</span></h3>
+    <ul class="pts"><li>An interface can extend another interface</li></ul>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 18rem"><pre class="java">public interface Sports
+{
+   public void setHomeTeam(String name);
+}
+
+public interface Football extends Sports
+{
+   public void homeTeamScored(int points);
+}
+
+public interface Hockey extends Sports
+{
+   public void homeGoalScored();
+}</pre></div>
+      <figure style="flex:1 1 12rem">
+        <div class="plate"><img src="img/s75_sports_tree.jpg" width="260" loading="lazy" alt="Diagram: Sport at the top with Football and Hockey beneath it"></div>
+        <figcaption>Football and Hockey both extend Sport(s).</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Multiple Interfaces <span class="sn">76</span></h3>
+    <ul class="pts">
+      <li>A <b><u>Java class</u></b> can only extend one parent class.</li>
+      <li>Multiple inheritance is not allowed</li>
+      <li>An interface can extend more than one parent interface</li>
+      <li><b><u>Extends</u></b> keyword is used once, and the parent interfaces are declared in a <b><u>comma-separated</u></b> list.
+        <ul><li class="k"><code>public interface Hockey extends Sports, Event</code></li></ul>
+      </li>
+    </ul>
+    <figure>
+      <div class="plate"><img src="img/s76_hockey_multi.jpg" width="300" loading="lazy" alt="Diagram: Hockey with arrows up to both Sports and Event"></div>
+      <figcaption>Hockey has two parent interfaces: Sports and Event.</figcaption>
+    </figure>
+  </div>
+
+  <div class="slide">
+    <h3>The "<span class="k">instanceof</span>" Keyword <span class="sn">77</span></h3>
+    <ul class="pts"><li>the <b>instanceof</b> operator to check determine whether Mammal is actually an Animal, and dog is actually an Animal</li></ul>
+    <div class="code"><pre class="java">interface Animal{}
+
+class Mammal implements Animal{}
+
+class Dog extends Mammal{
+   public static void main(String args[]){
+
+      Mammal m = new Mammal();
+      Dog d = new Dog();
+
+      System.out.println(m instanceof Animal);
+      System.out.println(d instanceof Mammal);
+      System.out.println(d instanceof Animal);
+   }
+}</pre></div>
+    <p class="added">Added · Output</p>
+    <pre class="console">true
+true
+true</pre>
+  </div>
+
+  <details class="orig" data-pages="62-73"></details>
+  <div class="quiz" data-quiz="interfaces"></div>
+</section>
+
+<!-- ============ 10. Polymorphism ============ -->
+<section class="sec" id="polymorphism" data-title="Polymorphism">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 78–84</p>
+    <div class="sec-head-row"><h2>Polymorphism</h2><label class="done"><input type="checkbox" id="done-polymorphism"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>Write code against the parent type and let each object decide what to do. With <code>Box b = new WoddenBox(); b.info();</code> Java runs WoddenBox's <code>info()</code>, because it looks at the real object at run time. That is why one loop over a <code>Box[]</code> array prints a different line for each kind of box.</div></aside>
+
+  <div class="slide"><p class="divider">Polymorphism <span class="sn">78</span></p></div>
+
+  <div class="slide">
+    <h3>Polymorphism <span class="sn">79</span></h3>
+    <ul class="pts">
+      <li>is the ability of an object to take on many forms</li>
+      <li>OOP occurs when a parent class reference is used to refer to a child class object</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Polymorphism <span class="sn">80</span></h3>
+    <ul class="pts">
+      <li>Create code that deals with general object types, without the need to know what specific type each object is.</li>
+      <li>Generate a list of employee names:
+        <ul><li class="k">all objects derived from Employee have a name field!</li><li class="k">no need to treat managers differently from anyone else.</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Polymorphism <span class="sn">81</span></h3>
+    <ul class="pts">
+      <li>The real power comes with methods/behaviors.</li>
+      <li>A better example:
+        <ul>
+          <li class="k">shape object types used by a drawing program.</li>
+          <li class="k">we want to be able to handle any kind of shape someone wants to code (in the future).</li>
+          <li class="k">we want to be able to write code now that can deal with shape objects (without knowing what they are!).</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Example <span class="sn">82</span></h3>
+    <div class="code"><pre class="java">public interface Vegetarian {}
+public class Animal {}
+public class Deer extends Animal implements Vegetarian {}</pre></div>
+    <ul class="pts">
+      <li>Deer class is considered to be polymorphic since this has multiple inheritance
+        <ul>
+          <li class="k">A Deer IS-A Animal</li>
+          <li class="k">A Deer IS-A Vegetarian</li>
+          <li class="k">A Deer IS-A Deer</li>
+          <li class="k">A Deer IS-A Object</li>
+        </ul>
+      </li>
+    </ul>
+    <aside class="note"><b>Guide note</b><span>"Multiple inheritance" here means one class (Animal) plus one interface (Vegetarian). Every class also IS-A <code>Object</code>, because all Java classes inherit from <code>java.lang.Object</code>.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Types of Polymorphism <span class="sn">83</span></h3>
+    <ul class="pts">
+      <li><em>Overloading</em></li>
+      <li class="k"><em>Overriding</em></li>
+      <li><em>Dynamic method binding</em></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Example <span class="sn">84</span></h3>
+    <div class="code"><pre class="java">public static void main ( String ary[ ] )
+{
+   Box x;
+   Box b1 =new Box( );
+   WoddenBox wb=new WoddenBox( );
+   SteelBox s1=new SteelBox( );
+   LargeWoddenBox p1=new LargeWoddenBox( );
+   b1.info( );
+   wb.info( );
+   s1.info( );
+   p1.info( );
+   System.out.println("-----------------------");
+   Box b[]=new Box[5];
+   b[1]=new Box();
+   b[2]=new WoddenBox();
+   b[3]=new SteelBox();
+   b[4]=new LargeWoddenBox();
+   for(int i=1;i&lt;5;i++)
+      b[i].info();
+}</pre></div>
+    <figure>
+      <div class="plate"><img src="img/s84_box_output.jpg" width="420" loading="lazy" alt="Diagram: Box at top, WoddenBox and SteelBox below, LargeWoddenBox below WoddenBox; console output underneath"></div>
+      <figcaption>Box → WoddenBox, SteelBox; LargeWoddenBox → WoddenBox. Console output below the diagram.</figcaption>
+    </figure>
+    <pre class="console"><span class="ttl">Console output (from the slide)</span>This is a simple box
+width = 0 hieght 0
+This is a Wodden box
+This is a steel box
+This is a Huge Wodden box
+-----------------------
+This is a simple box
+width = 0 hieght 0
+This is a Wodden box
+This is a steel box
+This is a Huge Wodden box
+Press any key to continue . . .</pre>
+    <p>The second half prints exactly the same lines as the first, even though every element of <code>b[]</code> is a <code>Box</code> reference. Java picks each object's own <code>info()</code> at run time: that is dynamic method binding.</p>
+    <details class="orig solid">
+      <summary>Added · One version of the Box classes that produces this output</summary>
+      <div style="padding:0 var(--s3) var(--s3);display:grid;gap:var(--s2)">
+        <p style="font-size:.9rem;color:var(--muted)">The slide doesn't show the classes. This is a minimal set that matches the diagram and the output, so you can run the example.</p>
+        <div class="code"><pre class="java">class Box {
+   int width, height;
+   void info() {
+      System.out.println("This is a simple box");
+      System.out.println("width = " + width + " hieght " + height);
+   }
+}
+
+class WoddenBox extends Box {
+   void info() {               // overrides Box.info()
+      System.out.println("This is a Wodden box");
+   }
+}
+
+class SteelBox extends Box {
+   void info() {
+      System.out.println("This is a steel box");
+   }
+}
+
+class LargeWoddenBox extends WoddenBox {
+   void info() {
+      System.out.println("This is a Huge Wodden box");
+   }
+}</pre></div>
+      </div>
+    </details>
+  </div>
+
+  <details class="orig" data-pages="74-80"></details>
+  <div class="quiz" data-quiz="polymorphism"></div>
+</section>
+
+<!-- ============ 11. Lab 1 ============ -->
+<section class="sec" id="lab1" data-title="Lab 1: OOP">
+  <div class="sec-head">
+    <p class="eyebrow">Lab 1 · Abualhaj, Amer · 2 pages</p>
+    <div class="sec-head-row"><h2>Lab 1: OOP</h2><label class="done"><input type="checkbox" id="done-lab1"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>Write Person once, then let Employee and Student extend it. Each subclass constructor calls <code>super(...)</code> to fill in the Person part, then sets its own fields. Each class overrides <code>printInfo()</code> and calls <code>super.printInfo()</code> first, so the shared lines are printed by Person and not repeated.</div></aside>
+
+  <div class="slide">
+    <h3>Definitions <span class="sn">p. 1–2</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Term</th><th>Lab definition</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><b>Class</b></td><td>A class is a blueprint or template for creating objects. It defines the attributes (data) and methods (functions) that describe a type of object.</td></tr>
+          <tr><td>2</td><td><b>Object</b></td><td>An object is an instance of a class. It represents a specific example with its own values for the class's attributes.</td></tr>
+          <tr><td>3</td><td><b>Constructor</b></td><td>A constructor is a special method used to initialize an object when it is created. It usually has the same name as the class and no return type.</td></tr>
+          <tr><td>4</td><td><b>Static</b></td><td>A static variable or method belongs to the class itself, not to individual objects. It can be accessed without creating an object.</td></tr>
+          <tr><td>5</td><td><b>Encapsulation</b></td><td>Encapsulation is the concept of hiding internal details of a class and protecting its data from direct access. This is done using private attributes and public getter/setter methods.</td></tr>
+          <tr><td>6</td><td><b>Polymorphism</b></td><td>Polymorphism means "many forms." It allows the same method name to behave differently based on the object that calls it.</td></tr>
+          <tr><td>7</td><td><b>Abstraction</b></td><td>Abstraction means showing only the necessary details and hiding the complex implementation. It can be achieved using abstract classes or interfaces.</td></tr>
+          <tr><td>8</td><td><b>Final</b></td><td>The final keyword is used to declare constants, prevent method overriding, or inheritance.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Task Requirements <span class="sn">p. 2</span></h3>
+    <ol class="pts" style="padding-left:1.4rem">
+      <li>Implement all classes using the UML diagram.</li>
+      <li>Use constructors in each class to initialize attributes.</li>
+      <li>Demonstrate inheritance and method overriding with printInfo().</li>
+      <li>Create a small main program to:
+        <ul><li>Create an Employee object and a Student object.</li><li>Call their printInfo() methods.</li></ul>
+      </li>
+    </ol>
+    <figure>
+      <div class="plate"><img src="img/lab1_uml.png" width="480" loading="lazy" alt="UML: Person (-nationalID int, -personName String, -address String; +Setter Method, +getter Method, +printInfo() void) with two subclasses: Employee (empSalary double, empNo int, empDepartment String) and Student (-stdNo int, -stdAvg float, -stdDepartment String), each with setters, getters and printInfo() void"></div>
+      <figcaption>The Lab 1 UML: Person is the parent of Employee and Student.</figcaption>
+    </figure>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Class</th><th>Attributes (type)</th><th>Methods</th></tr></thead>
+        <tbody>
+          <tr><td><b>Person</b></td><td>-nationalID (int)<br>-personName (String)<br>-address (String)</td><td>+Setter Method<br>+getter Method<br>+printInfo() : void</td></tr>
+          <tr><td><b>Employee</b> extends Person</td><td>empSalary (double)<br>empNo (int)<br>empDepartment (String)</td><td>+Setter Method<br>+getter Method<br>+printInfo() : void</td></tr>
+          <tr><td><b>Student</b> extends Person</td><td>-stdNo (int)<br>-stdAvg (float)<br>-stdDepartment (String)</td><td>+Setter Method<br>+getter Method<br>+printInfo() : void</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="note"><b>Guide note</b><span>In UML, <code>-</code> means private and <code>+</code> means public. Employee's attributes are drawn without a <code>-</code>; the solution below makes them private like the others, which matches the encapsulation definition in item 5.</span></aside>
+  </div>
+
+  <div class="slide answer" id="lab1-answer">
+    <p class="mine">Your answer · Lab1.zip</p>
+    <h3>Your Lab 1 answer</h3>
+    <p>NetBeans Maven project <code>mavenproject7</code>, package <code>com.mycompany.mavenproject7</code>, four files. The main class is <code>Mavenproject7</code> (NetBeans names it after the project), so <kbd>F6</kbd> runs it. The code below is exactly as in your zip.</p>
+    <div class="code"><span class="code-label">Person.java</span><pre class="java">
+
+package com.mycompany.mavenproject7;
+
+
+public class Person {
+    private int nationalID;
+    private String personName;
+    private String address;
+    
+     public Person(int nationalID, String personName, String address) {
+        this.nationalID = nationalID;
+        this.personName = personName;
+        this.address = address;
+    }
+
+    public int getNationalID() {
+        return nationalID;
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setNationalID(int nationalID) {
+        this.nationalID = nationalID;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void printinfo(){
+        System.out.println("NationalID = "+nationalID +"\n"+"PersonName = "+ personName +"\n" +"Address = "+ address);
+    }
+   
+    
+    
+}</pre></div>
+    <h4>Person.java, explained</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">private int nationalID;
+private String personName;
+private String address;</pre></dt><dd>The three attributes from the UML. They're <code>private</code> (the <code>-</code> in the UML), so other classes can only reach them through the getters and setters. That's encapsulation (definition 5).</dd></div>
+<div><dt><pre class="java">public Person(int nationalID, String personName, String address) {
+    this.nationalID = nationalID;
+    ...</pre></dt><dd>The constructor: it runs when you write <code>new Person(...)</code> (or when a subclass calls <code>super(...)</code>). The parameters have the same names as the fields, so <code>this.nationalID</code> means the field and plain <code>nationalID</code> means the parameter.</dd></div>
+<div><dt><pre class="java">public int getNationalID() {
+    return nationalID;
+}</pre></dt><dd>A getter returns a field's value. There is one per field.</dd></div>
+<div><dt><pre class="java">public void setNationalID(int nationalID) {
+    this.nationalID = nationalID;
+}</pre></dt><dd>A setter changes a field's value. There is one per field.</dd></div>
+<div><dt><pre class="java">public void printinfo(){
+    System.out.println("NationalID = "+nationalID +"\n"+"PersonName = "+ personName +"\n" +"Address = "+ address);
+}</pre></dt><dd>Prints the three values. <code>"\n"</code> inside a String starts a new line, so this one <code>println</code> prints three lines.</dd></div>
+</dl>
+    <div class="code"><span class="code-label">Employee.java</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.mavenproject7;
+
+/**
+ *
+ * @author Student
+ */
+public class Employee extends Person{
+     double empSalary;
+     int empNo;
+
+    public void setEmpSalary(double empSalary) {
+        this.empSalary = empSalary;
+    }
+
+    public void setEmpNo(int empNo) {
+        this.empNo = empNo;
+    }
+
+    public void setEmpDepartment(String empDepartment) {
+        this.empDepartment = empDepartment;
+    }
+     String empDepartment;
+
+    public Employee(double empSalary, int empNo, String empDepartment, int nationalID, String personName, String address) {
+        super(nationalID, personName, address);
+        this.empSalary = empSalary;
+        this.empNo = empNo;
+        this.empDepartment = empDepartment;
+    }
+
+    public double getEmpSalary() {
+        return empSalary;
+    }
+
+    public int getEmpNo() {
+        return empNo;
+    }
+
+    public String getEmpDepartment() {
+        return empDepartment;
+    }
+
+    @Override
+    public void printinfo() {
+        super.printinfo(); 
+       System.out.println("Employee{" + "empSalary=" + empSalary + ", empNo=" + empNo + ", empDepartment=" + empDepartment + '}');
+    }
+    
+  
+
+}</pre></div>
+    <h4>Employee.java, explained</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">/*
+ * Click nbfs://nbhost/...
+ */
+/**
+ *
+ * @author Student
+ */</pre></dt><dd>NetBeans' template comments. The compiler ignores them.</dd></div>
+<div><dt><pre class="java">public class Employee extends Person{</pre></dt><dd><code>extends</code> means Employee inherits everything from Person: an Employee <em>is a</em> Person.</dd></div>
+<div><dt><pre class="java">double empSalary;
+int empNo;
+...
+String empDepartment;</pre></dt><dd>No access modifier, so these are <em>package-private</em>: visible to every class in the same package. That matches the UML, which draws Employee's attributes without a <code>-</code>. A field can be declared anywhere in the class: <code>empDepartment</code> sits between the setters and the constructor and works the same.</dd></div>
+<div><dt><pre class="java">public Employee(double empSalary, int empNo, String empDepartment, int nationalID, String personName, String address) {
+    super(nationalID, personName, address);
+    this.empSalary = empSalary;
+    ...</pre></dt><dd><code>super(...)</code> must be the first statement. It runs Person's constructor to fill in the inherited fields, which Employee can't set directly because they're private in Person. Then the constructor sets Employee's own three fields.</dd></div>
+<div><dt><pre class="java">public double getEmpSalary() { ... }
+public void setEmpSalary(double empSalary) { ... }</pre></dt><dd>The getters and setters, as in Person.</dd></div>
+<div><dt><pre class="java">@Override
+public void printinfo() {
+    super.printinfo();
+    System.out.println("Employee{" + "empSalary=" + empSalary + ", empNo=" + empNo + ", empDepartment=" + empDepartment + '}');
+}</pre></dt><dd>Method overriding: same name and parameters as Person's <code>printinfo()</code>. <code>super.printinfo()</code> prints Person's three lines first, then this adds Employee's line. The <code>Employee{...}</code> format is what NetBeans' <em>Insert Code → toString()</em> produces; <code>'}'</code> is a single <code>char</code> added to the end of the String. <code>@Override</code> asks the compiler to check that the method really overrides one in the parent.</dd></div>
+</dl>
+    <div class="code"><span class="code-label">Student.java</span><pre class="java">
+
+package com.mycompany.mavenproject7;
+
+
+public class Student extends Person{
+    private int stdNo;
+    private float stdAvg;
+    private String stdDepartment;
+
+    public Student(int stdNo, float stdAvg, String stdDepartment, int nationalID, String personName, String address) {
+        super(nationalID, personName, address);
+        this.stdNo = stdNo;
+        this.stdAvg = stdAvg;
+        this.stdDepartment = stdDepartment;
+    }
+
+    public int getStdNo() {
+        return stdNo;
+    }
+
+    public float getStdAvg() {
+        return stdAvg;
+    }
+
+    public String getStdDepartment() {
+        return stdDepartment;
+    }
+
+    public void setStdNo(int stdNo) {
+        this.stdNo = stdNo;
+    }
+
+    public void setStdAvg(float stdAvg) {
+        this.stdAvg = stdAvg;
+    }
+
+    public void setStdDepartment(String stdDepartment) {
+        this.stdDepartment = stdDepartment;
+    }
+
+    @Override
+    public void printinfo() {
+        super.printinfo(); 
+        System.out.println("Student{" + "stdNo=" + stdNo + ", stdAvg=" + stdAvg + ", stdDepartment=" + stdDepartment + '}');
+    }
+
+    
+    
+    
+        
+}</pre></div>
+    <h4>Student.java, explained</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">public class Student extends Person{
+    private int stdNo;
+    private float stdAvg;
+    private String stdDepartment;</pre></dt><dd>Like Employee, but these fields are <code>private</code>, as in the UML. <code>stdAvg</code> is a <code>float</code> (a decimal number).</dd></div>
+<div><dt><pre class="java">public Student(int stdNo, float stdAvg, String stdDepartment, int nationalID, String personName, String address) {
+    super(nationalID, personName, address);
+    ...</pre></dt><dd>Same pattern: <code>super(...)</code> fills the Person part, then the Student fields are set.</dd></div>
+<div><dt><pre class="java">@Override
+public void printinfo() {
+    super.printinfo();
+    System.out.println("Student{" + ...);
+}</pre></dt><dd>Student's own version of <code>printinfo()</code>: Person's three lines, then the Student line.</dd></div>
+</dl>
+    <div class="code"><span class="code-label">Mavenproject7.java (main)</span><pre class="java">package com.mycompany.mavenproject7;
+
+
+public class Mavenproject7 {
+
+    public static void main(String[] args) {
+        Employee e =new Employee(3000.0,165,"fun",989,"Ahmad","street");
+        Student s=new Student(563,67,"Informatiker",4323,"Liam","street2");
+        
+        e.printinfo();
+        s.printinfo();
+    }
+}</pre></div>
+    <h4>Mavenproject7.java, explained</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">Employee e =new Employee(3000.0,165,"fun",989,"Ahmad","street");</pre></dt><dd>Creates an Employee. The values go in the constructor's parameter order: salary 3000.0, number 165, department "fun", then the Person part: national ID 989, name "Ahmad", address "street".</dd></div>
+<div><dt><pre class="java">Student s=new Student(563,67,"Informatiker",4323,"Liam","street2");</pre></dt><dd>Creates a Student. <code>67</code> is an <code>int</code> but <code>stdAvg</code> is a <code>float</code>: Java converts it automatically, which is why the output shows <code>67.0</code>.</dd></div>
+<div><dt><pre class="java">e.printinfo();
+s.printinfo();</pre></dt><dd>Each object runs its own overridden version of <code>printinfo()</code>: polymorphism.</dd></div>
+</dl>
+    <pre class="console"><span class="ttl">Output (from running your code)</span>NationalID = 989
+PersonName = Ahmad
+Address = street
+Employee{empSalary=3000.0, empNo=165, empDepartment=fun}
+NationalID = 4323
+PersonName = Liam
+Address = street2
+Student{stdNo=563, stdAvg=67.0, stdDepartment=Informatiker}</pre>
+    <aside class="note"><b>Compared with the task</b><span>All four requirements are met: the three classes follow the UML, each has a constructor, <code>printinfo()</code> is overridden using <code>super</code>, and <code>main</code> creates an Employee and a Student and calls the method. The handout spells the method <code>printInfo()</code> with a capital I; your <code>printinfo()</code> works because it's spelled the same in all four files, but Java is case-sensitive, so those are two different names.</span></aside>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · Example solution (not part of the lab handout)</p>
+    <details class="orig solid">
+      <summary>Show the full solution</summary>
+      <div style="padding:0 var(--s3) var(--s3);display:grid;gap:var(--s3)">
+        <div class="code"><span class="code-label">Person.java</span><pre class="java">public class Person {
+    private int nationalID;
+    private String personName;
+    private String address;
+
+    public Person(int nationalID, String personName, String address) {
+        this.nationalID = nationalID;
+        this.personName = personName;
+        this.address = address;
+    }
+
+    public int getNationalID() { return nationalID; }
+    public void setNationalID(int nationalID) { this.nationalID = nationalID; }
+
+    public String getPersonName() { return personName; }
+    public void setPersonName(String personName) { this.personName = personName; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public void printInfo() {
+        System.out.println("National ID: " + nationalID);
+        System.out.println("Name: " + personName);
+        System.out.println("Address: " + address);
+    }
+}</pre></div>
+        <div class="code"><span class="code-label">Employee.java</span><pre class="java">public class Employee extends Person {
+    private double empSalary;
+    private int empNo;
+    private String empDepartment;
+
+    public Employee(int nationalID, String personName, String address,
+                    double empSalary, int empNo, String empDepartment) {
+        super(nationalID, personName, address);   // must be the first statement
+        this.empSalary = empSalary;
+        this.empNo = empNo;
+        this.empDepartment = empDepartment;
+    }
+
+    public double getEmpSalary() { return empSalary; }
+    public void setEmpSalary(double empSalary) { this.empSalary = empSalary; }
+
+    public int getEmpNo() { return empNo; }
+    public void setEmpNo(int empNo) { this.empNo = empNo; }
+
+    public String getEmpDepartment() { return empDepartment; }
+    public void setEmpDepartment(String empDepartment) { this.empDepartment = empDepartment; }
+
+    @Override
+    public void printInfo() {
+        super.printInfo();                         // reuse Person's version
+        System.out.println("Employee No: " + empNo);
+        System.out.println("Salary: " + empSalary);
+        System.out.println("Department: " + empDepartment);
+    }
+}</pre></div>
+        <div class="code"><span class="code-label">Student.java</span><pre class="java">public class Student extends Person {
+    private int stdNo;
+    private float stdAvg;
+    private String stdDepartment;
+
+    public Student(int nationalID, String personName, String address,
+                   int stdNo, float stdAvg, String stdDepartment) {
+        super(nationalID, personName, address);
+        this.stdNo = stdNo;
+        this.stdAvg = stdAvg;
+        this.stdDepartment = stdDepartment;
+    }
+
+    public int getStdNo() { return stdNo; }
+    public void setStdNo(int stdNo) { this.stdNo = stdNo; }
+
+    public float getStdAvg() { return stdAvg; }
+    public void setStdAvg(float stdAvg) { this.stdAvg = stdAvg; }
+
+    public String getStdDepartment() { return stdDepartment; }
+    public void setStdDepartment(String stdDepartment) { this.stdDepartment = stdDepartment; }
+
+    @Override
+    public void printInfo() {
+        super.printInfo();
+        System.out.println("Student No: " + stdNo);
+        System.out.println("Average: " + stdAvg);
+        System.out.println("Department: " + stdDepartment);
+    }
+}</pre></div>
+        <div class="code"><span class="code-label">Main.java</span><pre class="java">public class Main {
+    public static void main(String[] args) {
+        Employee emp = new Employee(1001, "Omar Khaled", "Amman",
+                                    750.0, 15, "IT");
+        Student std = new Student(2002, "Lina Haddad", "Irbid",
+                                  20231001, 85.5f, "Computer Science");
+
+        emp.printInfo();
+        System.out.println("--------------------");
+        std.printInfo();
+    }
+}</pre></div>
+        <pre class="console"><span class="ttl">Output</span>National ID: 1001
+Name: Omar Khaled
+Address: Amman
+Employee No: 15
+Salary: 750.0
+Department: IT
+--------------------
+National ID: 2002
+Name: Lina Haddad
+Address: Irbid
+Student No: 20231001
+Average: 85.5
+Department: Computer Science</pre>
+        <p style="font-size:.9rem;color:var(--muted)"><code>85.5f</code>: the <code>f</code> makes the literal a <code>float</code>, which <code>stdAvg</code> needs. <code>@Override</code> asks the compiler to check that <code>printInfo()</code> really overrides Person's version.</p>
+      </div>
+    </details>
+  </div>
+
+  <details class="orig" data-imgs="img/slides/lab-1.jpg|Lab 1, page 1;img/slides/lab-2.jpg|Lab 1, page 2" data-label="Original lab pages (2)"></details>
+  <div class="quiz" data-quiz="lab1"></div>
+</section>
+
+<!-- ============ 12. Review ============ -->
+<section class="sec" id="lab2" data-title="Lab 2: inner and anonymous classes">
+  <div class="sec-head">
+    <p class="eyebrow">Lab 2 · your answer (Lab2.zip)</p>
+    <div class="sec-head-row"><h2>Lab 2: Inner and anonymous classes</h2><label class="done"><input type="checkbox" id="done-lab2"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Lab 2 keeps Lab 1's Person, Employee and Student and adds two kinds of class written <em>inside</em> other code:<ul><li>An <b>inner class</b> is a class declared inside another class. Each of its objects belongs to one object of the outer class: here, an <code>Employeecar</code> belongs to one Employee.</li><li>An <b>anonymous class</b> is a class with no name, written and used in one go: <code>new Employee(...) { ... };</code> makes one special Employee whose <code>printinfo()</code> prints an extra line.</li></ul>The Lab 2 handout isn't in your project files, so this section explains your code. Both ideas come back in Lecture 4, where listeners are written as inner and anonymous classes.</div></aside>
+
+  <div class="slide answer" id="lab2-answer">
+    <p class="mine">Your answer · Lab2.zip</p>
+    <h3>Your Lab 2 answer</h3>
+    <p>Same project as Lab 1 (<code>mavenproject7</code>, package <code>com.mycompany.mavenproject7</code>). Two files changed: <code>Employee.java</code> gained an inner class and <code>Mavenproject7.java</code> gained two more employees. The code is exactly as in your zip.</p>
+    <div class="code"><span class="code-label">Employee.java</span><pre class="java">package com.mycompany.mavenproject7;
+
+
+public class Employee extends Person{
+     double empSalary;
+     int empNo;
+
+    public void setEmpSalary(double empSalary) {
+        this.empSalary = empSalary;
+    }
+
+    public void setEmpNo(int empNo) {
+        this.empNo = empNo;
+    }
+
+    public void setEmpDepartment(String empDepartment) {
+        this.empDepartment = empDepartment;
+    }
+     String empDepartment;
+
+    public Employee(double empSalary, int empNo, String empDepartment, int nationalID, String personName, String address) {
+        super(nationalID, personName, address);
+        this.empSalary = empSalary;
+        this.empNo = empNo;
+        this.empDepartment = empDepartment;
+    }
+
+    public double getEmpSalary() {
+        return empSalary;
+    }
+
+    public int getEmpNo() {
+        return empNo;
+    }
+
+    public String getEmpDepartment() {
+        return empDepartment;
+    }
+    
+    
+    @Override
+    public void printinfo() {
+        super.printinfo(); 
+       System.out.println("Employee{" + "empSalary=" + empSalary + ", empNo=" + empNo + ", empDepartment=" + empDepartment + '}');
+    }
+    
+    public class Employeecar{
+    private String car;
+    
+    public Employeecar(String carmake){
+        this.car=carmake;
+    }
+    
+    public void Displayinfo(){
+        System.out.println("Carmake = "+this.car);
+        
+    }
+    
+    }
+    
+    
+
+}</pre></div>
+    <h4>What's new in Employee.java</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">public class Employeecar{
+    private String car;
+
+    public Employeecar(String carmake){
+        this.car=carmake;
+    }
+
+    public void Displayinfo(){
+        System.out.println("Carmake = "+this.car);
+    }
+}</pre></dt><dd>An <b>inner class</b>: it's declared inside <code>Employee</code> and isn't <code>static</code>, so every <code>Employeecar</code> object is tied to one Employee object, and its code could also use that employee's fields (for example <code>empNo</code>). Outside Employee, its full name is <code>Employee.Employeecar</code>. It has one private field, a constructor and a method that prints the car make.</dd></div>
+<div><dt><pre class="java">double empSalary; ... printinfo() { ... }</pre></dt><dd>Everything else is the same as Lab 1, except that the NetBeans comment at the top of the file is gone.</dd></div>
+</dl>
+    <div class="code"><span class="code-label">Mavenproject7.java (main)</span><pre class="java">package com.mycompany.mavenproject7;
+
+
+public class Mavenproject7 {
+
+    public static void main(String[] args) {
+        Employee e =new Employee(3000.0,165,"fun",989,"Ahmad","street");
+        Employee e1 =new Employee(3000.0,165,"Sad",898,"Yazan6","street6"){
+        private int promotion= 50;
+        
+        @Override
+        public void printinfo() {
+        super.printinfo(); 
+      System.out.println("Promotion chance = "+ promotion +"%");
+    }
+        
+        
+
+        };
+        
+        
+        
+        Employee e2 =new Employee(30003.0,1365,"Depression",505,"Why6","street67");
+        Employee.Employeecar e2car= e2.new Employeecar("Lexus");
+        
+        Student s=new Student(563,67,"Informatiker",4323,"Liam","street2");
+       
+        
+        e1.printinfo();
+        e.printinfo();
+        s.printinfo();
+        e2.printinfo();
+        e2car.Displayinfo();
+        
+    }
+}</pre></div>
+    <h4>Mavenproject7.java, explained</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">Employee e =new Employee(3000.0,165,"fun",989,"Ahmad","street");</pre></dt><dd>An ordinary Employee, as in Lab 1.</dd></div>
+<div><dt><pre class="java">Employee e1 =new Employee(3000.0,165,"Sad",898,"Yazan6","street6"){
+    private int promotion= 50;
+
+    @Override
+    public void printinfo() {
+        super.printinfo();
+        System.out.println("Promotion chance = "+ promotion +"%");
+    }
+};</pre></dt><dd>An <b>anonymous class</b>. <code>new Employee(...) { ... }</code> creates a subclass of Employee that has no name, and one object of it, at the same time. The values in brackets go to Employee's constructor. Inside the braces it adds a field <code>promotion</code> and overrides <code>printinfo()</code> to print one more line. Only <code>e1</code> behaves like this. The <code>;</code> after the closing <code>}</code> ends the statement.</dd></div>
+<div><dt><pre class="java">Employee e2 =new Employee(30003.0,1365,"Depression",505,"Why6","street67");</pre></dt><dd>Another ordinary Employee.</dd></div>
+<div><dt><pre class="java">Employee.Employeecar e2car= e2.new Employeecar("Lexus");</pre></dt><dd>Creating an inner-class object needs an outer object first: the syntax is <code>outerObject.new InnerClass(...)</code>. The type is written <code>Outer.Inner</code>. This car belongs to <code>e2</code>.</dd></div>
+<div><dt><pre class="java">e1.printinfo();
+e.printinfo();
+s.printinfo();
+e2.printinfo();
+e2car.Displayinfo();</pre></dt><dd>Prints everyone. <code>e1</code>'s variable type is <code>Employee</code>, but the object is the anonymous subclass, so its overridden <code>printinfo()</code> runs (polymorphism) and adds the promotion line.</dd></div>
+</dl>
+    <pre class="console"><span class="ttl">Output (from running your code)</span>NationalID = 898
+PersonName = Yazan6
+Address = street6
+Employee{empSalary=3000.0, empNo=165, empDepartment=Sad}
+Promotion chance = 50%
+NationalID = 989
+PersonName = Ahmad
+Address = street
+Employee{empSalary=3000.0, empNo=165, empDepartment=fun}
+NationalID = 4323
+PersonName = Liam
+Address = street2
+Student{stdNo=563, stdAvg=67.0, stdDepartment=Informatiker}
+NationalID = 505
+PersonName = Why6
+Address = street67
+Employee{empSalary=30003.0, empNo=1365, empDepartment=Depression}
+Carmake = Lexus</pre>
+    <details class="orig solid"><summary>Person.java and Student.java (unchanged from Lab 1)</summary><div class="drawer-body"><div class="code"><span class="code-label">Person.java</span><pre class="java">package com.mycompany.mavenproject7;
+
+
+public class Person {
+    private int nationalID;
+    private String personName;
+    private String address;
+    
+     public Person(int nationalID, String personName, String address) {
+        this.nationalID = nationalID;
+        this.personName = personName;
+        this.address = address;
+    }
+
+    public int getNationalID() {
+        return nationalID;
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setNationalID(int nationalID) {
+        this.nationalID = nationalID;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void printinfo(){
+        System.out.println("NationalID = "+nationalID +"\n"+"PersonName = "+ personName +"\n" +"Address = "+ address);
+    }
+   
+    
+    
+}</pre></div><div class="code"><span class="code-label">Student.java</span><pre class="java">package com.mycompany.mavenproject7;
+
+
+public class Student extends Person{
+    private int stdNo;
+    private float stdAvg;
+    private String stdDepartment;
+
+    public Student(int stdNo, float stdAvg, String stdDepartment, int nationalID, String personName, String address) {
+        super(nationalID, personName, address);
+        this.stdNo = stdNo;
+        this.stdAvg = stdAvg;
+        this.stdDepartment = stdDepartment;
+    }
+
+    public int getStdNo() {
+        return stdNo;
+    }
+
+    public float getStdAvg() {
+        return stdAvg;
+    }
+
+    public String getStdDepartment() {
+        return stdDepartment;
+    }
+
+    public void setStdNo(int stdNo) {
+        this.stdNo = stdNo;
+    }
+
+    public void setStdAvg(float stdAvg) {
+        this.stdAvg = stdAvg;
+    }
+
+    public void setStdDepartment(String stdDepartment) {
+        this.stdDepartment = stdDepartment;
+    }
+
+    @Override
+    public void printinfo() {
+        super.printinfo(); 
+        System.out.println("Student{" + "stdNo=" + stdNo + ", stdAvg=" + stdAvg + ", stdDepartment=" + stdDepartment + '}');
+    }
+
+    
+    
+    
+        
+}</pre></div></div></details>
+    <aside class="note"><b>Good to know</b><span>From <code>main</code> you can't write <code>e1.promotion</code>: the variable's type is <code>Employee</code>, which has no such field, so only code inside the anonymous class can use it. Java's naming convention starts method names with a small letter (<code>displayInfo</code>), but <code>Displayinfo</code> works the same.</span></aside>
+  </div>
+
+  <div class="quiz" data-quiz="lab2"></div>
+</section>
+
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 1 + Lab 1</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it. Every answer is taken from the slide or lab page shown under it.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  Source: <em>Lecture 1-OOP</em> (CS254, 80 slides, numbered 1–84) and <em>CS254 Lab 1: OOP</em> (Abualhaj, Amer). Your "Studied" ticks are saved in this browser only. <a href="../index.html">All CS254 lectures ↗</a>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l1-done", "slideMap": {"1": 1, "2": 3, "3": 4, "4": 5, "5": 6, "6": 7, "7": 8, "8": 10, "9": 11, "10": 12, "11": 13, "12": 14, "13": 15, "14": 16, "15": 17, "16": 18, "17": 19, "18": 20, "19": 22, "20": 23, "21": 24, "22": 25, "23": 26, "24": 28, "25": 29, "26": 30, "27": 31, "28": 32, "29": 33, "30": 34, "31": 35, "32": 36, "33": 37, "34": 38, "35": 39, "36": 40, "37": 41, "38": 42, "39": 43, "40": 44, "41": 45, "42": 46, "43": 47, "44": 48, "45": 49, "46": 50, "47": 51, "48": 52, "49": 53, "50": 54, "51": 55, "52": 56, "53": 57, "54": 58, "55": 59, "56": 60, "57": 61, "58": 62, "59": 63, "60": 64, "61": 65, "62": 66, "63": 67, "64": 68, "65": 69, "66": 70, "67": 71, "68": 72, "69": 73, "70": 74, "71": 75, "72": 76, "73": 77, "74": 78, "75": 79, "76": 80, "77": 81, "78": 82, "79": 83, "80": 84}, "quizzes": {"concepts": [{"q": "Which list matches the six concepts of OOP on slide 3?", "o": ["Objects, Classes, Data Abstraction, Encapsulation, Inheritance, Polymorphism", "Objects, Methods, Packages, Interfaces, Threads, Events", "Classes, Constructors, Modifiers, Packages, Imports, Interfaces"], "a": 0, "e": "Slide 3. The temple picture shows the four pillars: Abstraction, Encapsulation, Inheritance, Polymorphism."}], "objects": [{"q": "An object is…", "o": ["a software bundle of related state and behavior", "a group of related packages", "a method signature with no body", "a file with a .class extension"], "a": 0, "e": "Slide 4. State = fields, behavior = methods."}, {"q": "What is the relationship between an object and a class?", "o": ["An object is an instance of a class", "A class is an instance of an object", "They are two names for the same thing", "A class is a kind of package"], "a": 0, "e": "Slide 5, and Lab 1 item 2."}], "constructors": [{"q": "<code>class A { A(int x) {} }<\/code>. What happens with <code>new A()<\/code>?", "o": ["Compile error: there is no A() constructor", "The compiler-generated A() runs", "A(int x) runs with x = 0", "It runs and A is left uninitialized"], "a": 0, "e": "Slide 7: if you include any constructor, the compiler will not create a default one."}, {"q": "Where must <code>this(...)<\/code> appear inside a constructor?", "o": ["As the first statement", "As the last statement", "Anywhere in the body", "Only inside the default constructor"], "a": 0, "e": "Slide 8."}, {"q": "How do you call another constructor of the same class?", "o": ["this(...)", "Foo(...)", "super(...)", "new Foo(...)"], "a": 0, "e": "Slide 8: you use \"this\", not the classname. super(...) calls the parent's constructor (slide 58)."}], "modifiers": [{"q": "A field declared <code>static<\/code>…", "o": ["has only one copy, no matter how many objects are created", "gets a separate copy in each object", "can never be changed", "can only be read inside its package"], "a": 0, "e": "Slide 15: static fields are class fields."}, {"q": "Which pair will NOT compile together in one class?", "o": ["int f() and double f()", "int f() and int f(int a)", "void f(int a) and void f(double a)", "void f() and void f(String s)"], "a": 0, "e": "Slide 20: you can't just change the return type; the parameters must differ."}, {"q": "A <code>protected<\/code> member is accessible from…", "o": ["its package and its subclasses", "its class only", "anywhere", "its package only"], "a": 0, "e": "Slides 14 and 24."}, {"q": "Which modifier means only one thread at a time can call the method?", "o": ["synchronized", "native", "static", "final"], "a": 0, "e": "Slide 19."}, {"q": "A <code>final<\/code> class…", "o": ["never has any subclasses", "cannot be instantiated", "has only static methods", "must be public"], "a": 0, "e": "Slides 12 and 23. A class that cannot be instantiated is abstract."}, {"q": "When is method overloading resolved?", "o": ["At compile time", "At run time", "When the class is loaded", "When the object is garbage-collected"], "a": 0, "e": "Slide 20."}], "packages": [{"q": "Where does the <code>package<\/code> statement go?", "o": ["The first line of the source file", "After the imports", "Inside the class body", "Anywhere before main()"], "a": 0, "e": "Slide 30."}, {"q": "How many package statements can one source file have?", "o": ["One, and it applies to all types in the file", "One per class in the file", "As many as you like", "None if the file has an interface"], "a": 0, "e": "Slide 30."}, {"q": "Which line imports every type in package <code>animals<\/code>?", "o": ["import animals.*;", "import animals;", "package animals.*;", "import *.animals;"], "a": 0, "e": "Slide 32: the wild card (*)."}], "abstraction": [{"q": "Employee is abstract. What does <code>Employee e = new Employee();<\/code> give you?", "o": ["A compile error: Employee is abstract; cannot be instantiated", "An Employee with null fields", "A run-time exception", "A Salary object"], "a": 0, "e": "Slide 35."}, {"q": "A subclass inherits an abstract method and doesn't override it. Then…", "o": ["the subclass must also be declared abstract", "the compiler adds an empty body", "the parent's body is used", "it compiles but crashes when called"], "a": 0, "e": "Slide 38."}, {"q": "In AbstractDemo1 (slide 43), what is printed first?", "o": ["Constructing an Employee", "Computing salary pay for Saman Kumara", "Within mailCheck of Salary class", "Call mailCheck using Salary reference :"], "a": 0, "e": "Creating a Salary runs super(...) first, which is Employee's constructor."}, {"q": "What does <code>s.computePay()<\/code> return for Saman Kumara (salary 3600.00)?", "o": ["About 69.23 (3600 / 52)", "3600.0", "0.0", "300.0 (3600 / 12)"], "a": 0, "e": "Slide 42: return salary/52; (weekly pay from annual salary)."}], "encapsulation": [{"q": "Encapsulation means…", "o": ["making fields private and giving access through public methods", "making every method static", "putting classes in packages", "a class extending another class"], "a": 0, "e": "Slide 46. Also called data hiding."}, {"q": "How do you make a field read-only?", "o": ["Give it a getter but no setter", "Give it a setter but no getter", "Make it public", "Make it protected"], "a": 0, "e": "Slide 49: fields can be made read-only or write-only."}, {"q": "Which is a benefit listed on slide 46?", "o": ["You can change your implementation without breaking other people's code", "Programs run faster", "You no longer need constructors", "You can extend more than one class"], "a": 0, "e": "Slide 46: maintainability, flexibility and extensibility."}], "inheritance": [{"q": "Which keywords does slide 52 list for inheritance?", "o": ["extends and implements", "super and this", "abstract and final", "import and package"], "a": 0, "e": "Slide 52."}, {"q": "<code>Dog extends Mammal<\/code> and <code>Mammal extends Animal<\/code>. Is Dog IS-A Animal?", "o": ["Yes", "No, only Dog IS-A Mammal", "Only if Dog also says extends Animal", "Only if Animal is abstract"], "a": 0, "e": "Slide 57: hence Dog IS-A Animal as well."}, {"q": "Which superclass members are NOT inherited through <code>extends<\/code>?", "o": ["private ones", "protected ones", "public ones", "static ones"], "a": 0, "e": "Slide 57."}, {"q": "Can a Java class extend two classes?", "o": ["No. Use interfaces for multiple inheritance", "Yes, with a comma-separated list", "Yes, if both are abstract", "Only inside the same package"], "a": 0, "e": "Slide 59."}, {"q": "<code>class Van extends Vehicle { private Speed sp; }<\/code>. Van and Speed are…", "o": ["HAS-A", "IS-A", "both IS-A and HAS-A", "unrelated"], "a": 0, "e": "Slide 65. Van and Vehicle are IS-A."}], "interfaces": [{"q": "Fields in an interface must be…", "o": ["static and final", "private", "abstract", "protected"], "a": 0, "e": "Slide 73. Slide 69 calls them constants."}, {"q": "Which statement about interfaces is true?", "o": ["An interface can extend multiple interfaces", "An interface can have constructors", "You can instantiate an interface", "A class extends an interface"], "a": 0, "e": "Slide 73."}, {"q": "Correct way to give Hockey two parent interfaces:", "o": ["public interface Hockey extends Sports, Event", "public interface Hockey implements Sports, Event", "public interface Hockey extends Sports extends Event", "public interface Hockey extends Sports implements Event"], "a": 0, "e": "Slide 76: extends is used once, parents in a comma-separated list."}, {"q": "Methods declared in an interface are implicitly…", "o": ["public (and abstract)", "private", "static", "final"], "a": 0, "e": "Slides 68 and 73."}], "polymorphism": [{"q": "Polymorphism in OOP occurs when…", "o": ["a parent class reference is used to refer to a child class object", "a class has many constructors", "a field is declared final", "two classes are in the same package"], "a": 0, "e": "Slide 79."}, {"q": "Which three types are listed on slide 83?", "o": ["Overloading, overriding, dynamic method binding", "Abstraction, encapsulation, inheritance", "public, protected, private", "Static, final, native"], "a": 0, "e": "Slide 83."}, {"q": "In the Box example, <code>b[2] = new WoddenBox();<\/code> then <code>b[2].info()<\/code> prints…", "o": ["This is a Wodden box", "This is a simple box", "Nothing, b[2] is a Box", "A compile error"], "a": 0, "e": "Slide 84: the object's own info() is chosen at run time."}, {"q": "<code>class Deer extends Animal implements Vegetarian<\/code>. Which is FALSE?", "o": ["A Deer IS-A Reptile", "A Deer IS-A Vegetarian", "A Deer IS-A Object", "A Deer IS-A Animal"], "a": 0, "e": "Slide 82 lists Animal, Vegetarian, Deer and Object."}], "lab1": [{"q": "A static method can be…", "o": ["called without creating an object", "called only from a subclass", "overridden by any subclass", "used only inside constructors"], "a": 0, "e": "Lab 1 item 4, and lecture slide 18."}, {"q": "The lab says the <code>final<\/code> keyword is used to…", "o": ["declare constants, prevent method overriding, or prevent inheritance", "hide data with getters and setters", "create an object from a class", "call the parent constructor"], "a": 0, "e": "Lab 1 item 8."}, {"q": "In the Lab 1 UML, <code>-stdAvg<\/code> has type…", "o": ["float", "double", "int", "String"], "a": 0, "e": "Lab 1 UML, Student class."}], "lab2": [{"q": "How does Lab 2's <code>main<\/code> create an <code>Employeecar<\/code>?", "o": ["e2.new Employeecar(\"Lexus\")", "new Employeecar(\"Lexus\")", "Employee.new Employeecar(\"Lexus\")", "e2.Employeecar(\"Lexus\")"], "a": 0, "e": "An inner-class object needs an outer object: outerObject.new InnerClass(...)."}, {"q": "What is <code>e1<\/code> in Lab 2?", "o": ["An object of an anonymous subclass of Employee", "An Employee made with a different constructor", "An object of the inner class", "A copy of e"], "a": 0, "e": "new Employee(...) { ... }; defines a nameless subclass and creates one object of it."}, {"q": "Why is \"Promotion chance = 50%\" printed only for <code>e1<\/code>?", "o": ["Only e1's anonymous class overrides printinfo()", "promotion is static", "e1 is printed first", "Employee prints it when the salary is 3000.0"], "a": 0, "e": "The other employees use Employee's normal printinfo()."}, {"q": "What is the full type name of the inner class outside <code>Employee<\/code>?", "o": ["Employee.Employeecar", "Employeecar", "Person.Employeecar", "Employee$new"], "a": 0, "e": "Outer.Inner, as in Employee.Employeecar e2car = ..."}]}, "flashcards": [["Object", "A software bundle of related state and behavior. An instance of a class.", "Slides 4–5 · Lab item 2"], ["Class", "A blueprint or template for creating objects; a group of methods and variables.", "Slide 5 · Lab item 1"], ["Constructor", "A special method that initializes an object when it is created. Same name as the class, no return type.", "Slide 7 · Lab item 3"], ["Default constructor", "classname() {}. The compiler writes it only if you write no constructor at all.", "Slide 7"], ["this(...)", "Calls another constructor of the same class. Must be the first statement.", "Slide 8"], ["super(...)", "Calls the base class constructor; super.method() reaches non-private superclass methods.", "Slide 58"], ["public (class)", "Anyone can create an object of it. One public class per file, same name as the file.", "Slide 11"], ["abstract class", "Can be used as a superclass only. No objects of it can be created.", "Slides 12, 34"], ["final class", "Never has subclasses; its methods are never overridden.", "Slide 12"], ["protected", "Accessible within its package and its subclasses.", "Slides 14, 24"], ["default (no modifier)", "Accessible only in its package.", "Slides 14, 25"], ["static field", "Class variable: only one copy no matter how many objects exist.", "Slide 15"], ["final field", "Once the value is set, it can never be changed. static final = compile-time constant.", "Slides 15, 23"], ["static method", "A class method. Doesn't depend on instance fields; called without creating an object.", "Slide 18"], ["native method", "Written in local code (C/C++); no body in Java. Platform-dependent.", "Slides 19, 24"], ["synchronized method", "Only one thread at a time can call it.", "Slide 19"], ["Method overloading", "Same name, different parameters. Changing only the return type won't work. Resolved at compile time.", "Slide 20"], ["Package", "A grouping of related types. The package statement is the first line; one per file.", "Slides 29–30"], ["java.lang / java.io", "java.lang bundles the fundamental classes; java.io bundles input/output classes.", "Slide 29"], ["Abstract method", "Signature with no body. The class must be abstract; children override it or are abstract too.", "Slides 37–38"], ["Encapsulation", "Private fields + public getter/setter methods. Also called data hiding.", "Slide 46 · Lab item 5"], ["Inheritance", "A new class derived from an existing one, inheriting its properties and methods. Keywords: extends, implements.", "Slides 51–53"], ["IS-A", "The inheritance relationship: Dog IS-A Mammal IS-A Animal.", "Slides 56–57"], ["HAS-A", "A class holds another as a field: Van HAS-A Speed. Based on usage; reduces duplication.", "Slides 64–65"], ["Single inheritance", "A class can extend only one class. Multiple inheritance comes through interfaces.", "Slide 59"], ["Interface", "A collection of abstract methods (and static final constants). Implicitly abstract; methods implicitly public.", "Slides 67–69"], ["Interface vs class", "No instantiation, no constructors, no instance fields; implemented, not extended; can extend many interfaces.", "Slide 73"], ["instanceof", "Checks whether an object is of a given type, e.g. d instanceof Animal → true.", "Slide 77"], ["Polymorphism", "An object taking many forms: a parent class reference referring to a child class object.", "Slide 79 · Lab item 6"], ["Types of polymorphism", "Overloading, overriding, dynamic method binding.", "Slide 83"], ["Abstraction", "Showing only the necessary details and hiding the complex implementation (abstract classes or interfaces).", "Lab item 7"], ["final (lab)", "Used to declare constants, prevent method overriding, or prevent inheritance.", "Lab item 8"], ["Inner class", "A class declared inside another (not static). Create one with outerObject.new Inner(...); its type is Outer.Inner.", "Lab 2"], ["Anonymous class", "new Parent(args) { extra fields / overridden methods }; defines a nameless subclass and creates one object of it.", "Lab 2"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+</body>
+</html>

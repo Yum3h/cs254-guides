@@ -1,0 +1,1230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 Mouse Events Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L6 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 6</p>
+  <h1>Mouse Events</h1>
+  <p class="lede">Clicks, presses, hovers, drags, the wheel, double clicks and right clicks. Every slide of <em>Lecture 6 – Mouse Events</em> (24 slides) in order, with all code typed out from the screenshots. Use the mouse playground to watch each listener method fire, with its coordinates, button and click count.</p>
+  <div class="legend">
+    <span><span class="sn">12</span> slide number as printed</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<!-- ============ 1 ============ -->
+<section class="sec" id="basics" data-title="Mouse listeners">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–6</p>
+    <div class="sec-head-row"><h2>Mouse listeners</h2><label class="done"><input type="checkbox" id="done-basics"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>There are three mouse listener interfaces, split by what you care about:
+    <ul>
+      <li><b>MouseListener</b> (5 methods): buttons and entering/leaving: <code>mouseClicked</code>, <code>mousePressed</code>, <code>mouseReleased</code>, <code>mouseEntered</code>, <code>mouseExited</code>.</li>
+      <li><b>MouseMotionListener</b> (2 methods): movement: <code>mouseMoved</code> (no button held), <code>mouseDragged</code> (button held).</li>
+      <li><b>MouseWheelListener</b> (1 method): <code>mouseWheelMoved</code>.</li>
+    </ul>
+    You attach them to a <em>component</em>, not to the mouse, so they only hear the mouse while it's over that component. One click calls three methods: pressed → released → clicked.</div></aside>
+
+  <div class="slide">
+    <h3>Mouse Events <span class="sn">1</span></h3>
+    <p style="font-size:.85rem;color:var(--muted)">Slides adapted from slides of Marty Stepp based on materials by M. Ernst, S. Reges, D. Notkin, R. Mercer, Wikipedia — <a href="http://www.cs.washington.edu/331/" target="_blank" rel="noopener">http://www.cs.washington.edu/331/</a></p>
+  </div>
+
+  <div class="slide">
+    <h3>Mouse events <span class="sn">2</span></h3>
+    <ul class="pts">
+      <li>Usage of mouse events:
+        <ul><li>listen to clicks / movement of mouse in a component</li><li>respond to mouse activity with appropriate actions</li><li>create interactive programs that are driven by mouse activity</li></ul>
+      </li>
+      <li>Note that the listener is assigned to a component not to the mouse itself. It tracks the mouse only while it is inside the component.</li>
+    </ul>
+    <p><b>Mouse Events</b><br>Triggered when a user interacts with the mouse.</p>
+    <ul class="pts"><li><b>Source</b>: JButton, JLabel, JPanel, etc.</li><li><b>Event Class</b>: MouseEvent</li><li><b>Listener Interface</b>: MouseListener, MouseMotionListener, MouseWheelListener</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>Mouse Events interfaces <span class="sn">3</span></h3>
+    <ul class="pts">
+      <li>Often one is interested in the mouse buttons or in the mouse motion but not both.</li>
+      <li>There are two listeners defined by the interfaces <code>MouseListener</code> and <code>MouseMotionListener</code> in the AWT library <code>java.awt.event</code>.</li>
+      <li><code>MouseListener</code> is for handling the mouse buttons while <code>MouseMotionListener</code> monitors the motion.</li>
+      <li>To add a mouse listener to a Swing component "comp" use
+        <ul><li><code>comp.addMouseListener(MouseListener mouseListener);</code></li><li><code>comp.addMouseMotionListener(MouseMotionListener motionListener);</code></li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>MouseListener interface <span class="sn">4</span></h3>
+    <div class="code"><pre class="java">public interface <b>MouseListener</b> {
+    public void <b>mouseClicked</b>(MouseEvent event);
+    public void <b>mouseEntered</b>(MouseEvent event);
+    public void <b>mouseExited</b>(MouseEvent event);
+    public void <b>mousePressed</b>(MouseEvent event);
+    public void <b>mouseReleased</b>(MouseEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>Many AWT/Swing components have this method:
+        <ul><li><code>public void addMouseListener(MouseListener ml)</code></li></ul>
+      </li>
+      <li>Mouse listeners are often added to custom components and drawing canvases to respond to clicks and other mouse actions.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>MouseListener Interface <span class="sn">5</span></h3>
+    <ul class="pts">
+      <li><code>mouseClicked(MouseEvent mevt)</code> is automatically called by the runtime system when a mouse button is clicked. To find out which button was clicked one has to look at the MouseEvent object "mevt".</li>
+      <li><code>mouseEntered(MouseEvent mevt)</code> is automatically called by the runtime system if the mouse enters the component to which the listener is associated.</li>
+      <li><code>mouseExited(MouseEvent mevt)</code> is automatically called by the runtime system if the mouse leaves the component to which the listener is associated.</li>
+      <li><code>mousePressed(MouseEvent mevt)</code> is automatically called by the runtime system if a mouse button is pressed. To find out which button was pressed one has to look at the MouseEvent object "mevt".</li>
+      <li><code>mouseReleased(MouseEvent mevt)</code> is automatically called by the runtime system if a mouse button is released. To find out which button was released one has to look at the MouseEvent object "mevt".</li>
+      <li>A click results in calling three methods, <code>mousePressed</code>, <code>mouseReleased</code> and <code>mouseClicked</code>.</li>
+      <li>Interface <code>MouseListener</code> has five such methods, all of which have to be implemented</li>
+    </ul>
+    <div class="code"><pre class="java">// elsewhere,
+myComponent.addMouseListener(MouseListener mouseListener);</pre></div>
+    <ul class="pts"><li>Problem: Tedious to implement entire interface when only partial behavior is wanted / needed.</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>MouseMotionListener Interface <span class="sn">6</span></h3>
+    <div class="code"><pre class="java">void mouseMoved(MouseEvent mevt)
+void mouseDragged(MouseEvent mevt)</pre></div>
+    <ul class="pts">
+      <li><code>mouseMoved(MouseEvent mevt)</code> is automatically called if the mouse is moved while it is in a component that the listener is associated to.
+        <ul>
+          <li>The new mouse position can be found by analyzing the event object "mevt".</li>
+          <li>The mouse is 'moved' if the runtime system receives a signal from the mouse.
+            <ul><li>Usually this results in a change of the position of the mouse pointer on the screen by at least one pixel.</li></ul>
+          </li>
+        </ul>
+      </li>
+      <li><code>mouseDragged(MouseEvent mevt)</code> is automatically called if the mouse is moved while a mouse button is pressed.</li>
+      <li>Interface <code>MouseMotionListener</code> has two methods, all of which have to be implemented</li>
+    </ul>
+    <div class="code"><pre class="java">// elsewhere,
+myComponent.addMouseMotionListener(MouseMotionListener motionListener);</pre></div>
+  </div>
+
+  <details class="orig" data-pages="1-6"></details>
+  <div class="quiz" data-quiz="basics"></div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="sec" id="event" data-title="MouseEvent and MouseAdapter">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 7–14</p>
+    <div class="sec-head-row"><h2>MouseEvent and MouseAdapter</h2><label class="done"><input type="checkbox" id="done-event"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>The <code>MouseEvent</code> object tells you <em>where</em> (<code>getX()</code>, <code>getY()</code>, <code>getPoint()</code>, measured from the component's top-left corner), <em>which button</em> (<code>SwingUtilities.isLeftMouseButton(e)</code> and friends) and <em>how many clicks</em> (<code>getClickCount()</code>). <code>MouseAdapter</code> implements all three mouse interfaces with empty methods, so you extend it and write only what you need. Register the same adapter with <code>addMouseListener</code> and/or <code>addMouseMotionListener</code>, depending on which methods you overrode.</div></aside>
+
+  <div class="slide">
+    <h3>Mouse Event <span class="sn">7</span></h3>
+    <ul class="pts">
+      <li>The methods described all receive a <code>(MouseEvent)</code> as a parameter. This object contains information on what triggered the listener.</li>
+      <li>The following methods from the class <code>MouseEvent</code> show where the event occurred. The x- and y coordinates are in pixels in the coordinate system of the component to which the listener is assigned.
+        <ul><li><code>int getX()</code></li><li><code>int getY()</code></li><li><code>public Point getPoint()</code></li></ul>
+      </li>
+      <li>The following methods from the class <code>SwingUtilities</code> are used to find out which button was used.
+        <ul>
+          <li>These methods return <code>true</code> if the button appearing in the method name is used, and <code>false</code> otherwise</li>
+          <li><code>boolean SwingUtilities.isLeftMouseButton(MouseEvent me)</code></li>
+          <li><code>boolean SwingUtilities.isMiddleMouseButton(MouseEvent me)</code></li>
+          <li><code>boolean SwingUtilities.isRightMouseButton(MouseEvent me)</code></li>
+        </ul>
+      </li>
+      <li><code>public static int BUTTON1_MASK, BUTTON2_MASK, BUTTON3_MASK, CTRL_MASK, ALT_MASK, SHIFT_MASK</code></li>
+      <li><code>public Object getSource()</code></li>
+      <li><code>public int getModifiers() // use *_MASK with this</code></li>
+      <li><code>int getClickCount()</code>
+        <ul>
+          <li>This method is used to determine the number of clicks in a short period.</li>
+          <li>The length of this period depends on the platform and can usually be set using utilities of the operating system.</li>
+          <li>Then a double click can be checked by using <code>if(mevt.getClickCount() == 2)</code></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>An abstract event adapter <span class="sn">8</span></h3>
+    <div class="code"><pre class="java">// This class exists in package java.awt.event.
+
+// An empty implementation of all MouseListener methods.
+public <b>abstract</b> class MouseAdapter implements MouseListener,
+        MouseMotionListener, MouseWheelListener {
+    public void mousePressed(MouseEvent event) {}
+    public void mouseReleased(MouseEvent event) {}
+    public void mouseClicked(MouseEvent event) {}
+    public void mouseEntered(MouseEvent event) {}
+    public void mouseExited(MouseEvent event) {}
+    public void mouseWheelMoved(MouseWheelEvent event){}
+    public void mouseMoved(MouseEvent mevt) {}
+    public void mouseDragged(MouseEvent mevt) {}
+}</pre></div>
+    <ul class="pts">
+      <li>Now classes can extend <code>MouseAdapter</code> rather than implementing <code>MouseListener</code>, <code>MouseMotionListener</code>, and <code>MouseWheelListener</code>.
+        <ul><li>gets the complete mouse listener interface it wants</li><li>implementer gets to write just the few mouse methods they want</li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Writing an adapter <span class="sn">9</span></h3>
+    <div class="code"><pre class="java">public class MyMouse<b>Adapter</b> extends <b>MouseAdapter</b> {
+    public void mousePressed(MouseEvent event) {
+        System.out.println("You pressed the button!");
+    }
+}
+
+// elsewhere,
+myComponent.addMouseListener(new MyMouse<b>Adapter</b>());</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Using MouseEvent <span class="sn">10</span></h3>
+    <div class="code"><pre class="java">public class MyMouseAdapter extends MouseAdapter {
+    public void mousePressed(MouseEvent event) {
+        Object source = <b>event.getSource()</b>;
+        if (source == button &amp;&amp; <b>event.getX()</b> &lt; 10) {
+            JOptionPane.showMessageDialog(null,
+                "You clicked the left edge!");
+        }
+    }
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span><code>getX() &lt; 10</code> means "within 10 pixels of the button's own left edge": x is measured inside the component the listener is on, not on the screen.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Mouse motion <span class="sn">11</span></h3>
+    <ul class="pts"><li>The abstract <code>MouseMotionAdapter</code> class provides empty implementations of both methods if you just want to override one.</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>Mouse wheel scrolling <span class="sn">12</span></h3>
+    <div class="code"><pre class="java">public interface Mouse<b>Wheel</b>Listener {
+    public void <b>mouseWheelMoved</b>(MouseWheelEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>The third mouse event interface focuses on the rolling of the mouse's scroll wheel button.</li>
+      <li>Many AWT/Swing components have this method:
+        <ul><li><code>public void addMouseWheelListener(MouseWheelListener ml)</code></li></ul>
+      </li>
+    </ul>
+    <aside class="note"><b>Guide note</b><span><code>event.getWheelRotation()</code> returns a negative number when the wheel rolls up (away from you) and positive when it rolls down.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Mouse input listener <span class="sn">13</span></h3>
+    <div class="code"><pre class="java">// import javax.swing.event.*;
+public interface Mouse<b>Input</b>Listener
+    extends MouseListener, MouseMotionListener
+    {}</pre></div>
+    <ul class="pts">
+      <li>The <code>MouseInputAdapter</code> class includes empty implementations for all methods from all mouse input interfaces, allowing the same listener object to listen to mouse clicks, movement, and/or wheel events.
+        <ul><li>Extends <code>MouseAdapter</code></li><li>Implements <code>MouseInputListener</code></li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Mouse input example <span class="sn">14</span></h3>
+    <div class="code"><pre class="java">public class MyMouseInputAdapter <b>extends MouseInputAdapter</b> {
+    public void mousePressed(MouseEvent event) {
+        System.out.println("Mouse was pressed");
+    }
+
+    public void mouseDragged(MouseEvent event) {
+        Point p = event.getPoint();
+        System.out.println("Mouse is at " + p);
+    }
+}
+
+...
+
+// using the listener
+MyMouseInputAdapter adapter = new MyMouseInputAdapter();
+myPanel.<b>addMouseListener</b>(adapter);
+myPanel.<b>addMouseMotionListener</b>(adapter);</pre></div>
+    <aside class="note"><b>Guide note</b><span>One adapter object, registered twice: as a MouseListener (so <code>mousePressed</code> is called) and as a MouseMotionListener (so <code>mouseDragged</code> is called). Forget the second line and <code>mouseDragged</code> never runs.</span></aside>
+  </div>
+
+  <details class="orig" data-pages="7-14"></details>
+  <div class="quiz" data-quiz="event"></div>
+</section>
+
+<!-- ============ playground ============ -->
+<section class="sec" id="play" data-title="Mouse playground">
+  <div class="sec-head">
+    <p class="eyebrow">Added · interactive</p>
+    <div class="sec-head-row"><h2>Mouse playground</h2><label class="done"><input type="checkbox" id="done-play"> Studied</label></div>
+  </div>
+  <p class="lede">This grey panel has a MouseListener, a MouseMotionListener and a MouseWheelListener. Move over it, click, double-click, right-click, drag, scroll. Untick a listener to "unregister" it and see which methods stop firing.</p>
+  <div class="demo">
+    <div class="ctrl">
+      <label><input type="checkbox" id="mpL" checked> addMouseListener</label>
+      <label><input type="checkbox" id="mpM" checked> addMouseMotionListener</label>
+      <label><input type="checkbox" id="mpW" checked> addMouseWheelListener</label>
+      <label><input type="checkbox" id="mpMove"> log every mouseMoved</label>
+    </div>
+    <div id="mpPanel" style="position:relative;height:13rem;background:#e6eaec;border:1px solid #9aa7ad;border-radius:6px;touch-action:none;user-select:none;overflow:hidden;cursor:crosshair">
+      <span id="mpXY" style="position:absolute;left:8px;top:6px;font:12px var(--f-mono);color:#1c2328">x = –, y = –</span>
+      <span id="mpBtn" style="position:absolute;right:8px;top:6px;font:12px var(--f-mono);color:#1c2328"></span>
+      <span id="mpDot" style="position:absolute;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#b0261c;display:none"></span>
+    </div>
+    <div class="log" id="mpLog"></div>
+    <button class="btn" type="button" id="mpClear" style="justify-self:start">Clear log</button>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="sec" id="examples" data-title="Listener vs adapter, double and right click">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 20–25</p>
+    <div class="sec-head-row"><h2>Listener vs adapter, double and right click</h2><label class="done"><input type="checkbox" id="done-examples"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Same "print Mouse Clicked" program written two ways: implementing MouseListener (five methods, four of them empty) or extending MouseAdapter (one method). <code>ActionListener</code> can't tell a double click or a right click, so for those use a mouse listener: <code>getClickCount() == 2</code> for a double click, and <code>SwingUtilities.isRightMouseButton(e)</code> inside <code>mousePressed</code> for a right click.</div></aside>
+
+  <div class="slide">
+    <h3>Example of Java Listener <span class="sn">20</span></h3>
+    <div class="code"><pre class="java">import java.awt.*;
+import java.awt.event.*;
+public class ListenerExample extends Frame
+   implements MouseListener {
+      ListenerExample() {
+         addMouseListener(this); // Registering the listener
+         setSize(300, 300);
+         setLayout(null);
+         setVisible(true);
+      }
+      public void mouseClicked(MouseEvent e) {
+         System.out.println("Mouse Clicked");
+      }
+      public void mousePressed(MouseEvent e) {}
+      public void mouseReleased(MouseEvent e) {}
+      public void mouseEntered(MouseEvent e) {}
+      public void mouseExited(MouseEvent e) {}
+      public static void main(String[] args) {
+         new ListenerExample();     }}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Using MouseAdapter class <span class="sn">21</span></h3>
+    <p><b>Advantage</b>: No need to implement unused methods, making the code cleaner and more readable.</p>
+    <div class="code"><pre class="java">import java.awt.*;
+import java.awt.event.*;
+
+public class AdapterExample extends Frame {
+    AdapterExample() {
+        addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("Mouse Clicked");
+            }
+        });
+
+        setSize(300, 300);
+        setLayout(null);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new AdapterExample();
+    }
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span>Both examples use an AWT <code>Frame</code> with no close operation, so the window's X does nothing. Close it from the IDE, or add a WindowAdapter that calls <code>System.exit(0)</code> in <code>windowClosing</code> (Lecture 5).</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Handling Double Click and Right Click in Java Swing <span class="sn">22–23</span></h3>
+    <p>Java Swing does not provide direct support for <b>double-click</b> or <b>right-click</b> events using ActionListener. Instead, you need to use a <b>MouseListener</b> to detect different mouse actions.</p>
+    <h4>1. Handling Double Click Events</h4>
+    <p>To detect a <b>double-click</b>, you need to use MouseListener and check the <b>click count</b>.</p>
+    <p><b>Example: Detecting Double Click</b></p>
+    <div class="code"><pre class="java">import javax.swing.*;
+import java.awt.event.*;
+
+public class DoubleClickExample extends JFrame {
+    public DoubleClickExample() {
+        setTitle("Double Click Example");
+        setSize(300, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
+
+        JButton button = new JButton("Double Click Me");
+        button.setBounds(80, 50, 140, 30);
+
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {  // Detect double click
+                    JOptionPane.showMessageDialog(DoubleClickExample.this, "Button Double-Clicked!");
+                }
+            }
+        });
+
+        add(button);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new DoubleClickExample();
+    }
+}</pre></div>
+    <p><b>Explanation</b></p>
+    <ul class="pts">
+      <li><code>e.getClickCount() == 2</code> → Detects if the user clicked twice rapidly.</li>
+      <li>Uses <b>MouseAdapter</b> instead of MouseListener to avoid overriding unnecessary methods.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>2. Handling Right-Click (Context Menu) <span class="sn">24–25</span></h3>
+    <p>To detect a <b>right-click</b>, check if the <b>mouse button pressed</b> is BUTTON3 (right mouse button).</p>
+    <div class="code"><pre class="java">public class RightClickExample extends JFrame {
+    public RightClickExample() {
+        setTitle("Right Click Example");
+        setSize(300, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
+
+        JButton button = new JButton("Right Click Me");
+        button.setBounds(80, 50, 140, 30);
+
+        button.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {  // Detect right click
+                    JOptionPane.showMessageDialog(RightClickExample.this, "Right Click Detected!");
+                }
+            }
+        });
+
+        add(button);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new RightClickExample();
+    }
+}</pre></div>
+    <figure><div class="plate"><img src="img/s25_right_click.png" width="300" loading="lazy" alt="Right Click Example window with a Right Click Me button and a Message dialog saying Right Click Detected!"></div><figcaption>Slide 25: right-clicking the button.</figcaption></figure>
+    <p><b>Explanation</b></p>
+    <ul class="pts">
+      <li><code>SwingUtilities.isRightMouseButton(e)</code> → Checks if the <b>right mouse button</b> is clicked.</li>
+      <li><code>mousePressed(MouseEvent e)</code> is used instead of <code>mouseClicked()</code> because some OS settings may not register right clicks with <code>mouseClicked()</code>.</li>
+    </ul>
+  </div>
+
+  <details class="orig" data-pages="15-20"></details>
+  <div class="quiz" data-quiz="examples"></div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section class="sec" id="labels" data-title="Exercise: two labels, five events">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 28–29</p>
+    <div class="sec-head-row"><h2>Exercise: two labels, five events</h2><label class="done"><input type="checkbox" id="done-labels"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Two labels, one MouseListener each. Label 1 changes its <b>border</b> on every mouse event; label 2 changes its <b>font</b>. Borders come from <code>BorderFactory</code> (<code>createLineBorder</code>, <code>createDashedBorder</code>, <code>createEtchedBorder</code>) and fonts from <code>new Font(name, style, size)</code>. Try the live version below the table.</div></aside>
+
+  <div class="slide">
+    <h3>Example <span class="sn">28</span></h3>
+    <p>Implement a <b>Java Swing application</b> that demonstrates the use of <b>mouse event handling</b> on two JLabel components using the MouseListener interface. The application should dynamically update the UI based on user interactions.</p>
+    <p><b>Summary of Expected Behavior for Each Mouse Event:</b></p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Mouse Event</th><th>Label 1 (Border Update)</th><th>Label 2 (Font Update)</th></tr></thead>
+        <tbody>
+          <tr><td><b>mouseClicked</b></td><td>Change border to <b>red solid</b></td><td>Font changes to <b>Verdana, Bold, 16px</b></td></tr>
+          <tr><td><b>mousePressed</b></td><td>Change border to <b>green solid</b></td><td>Font size increases to <b>18px</b></td></tr>
+          <tr><td><b>mouseReleased</b></td><td>Change border to <b>orange dashed</b></td><td>Font changes to <b>Courier New, Italic</b></td></tr>
+          <tr><td><b>mouseEntered</b></td><td>Change border to <b>cyan etched</b></td><td>Font changes to <b>Serif, Bold, 18px</b></td></tr>
+          <tr><td><b>mouseExited</b></td><td>Reset border to <b>default dashed</b></td><td>Reset font to <b>Times New Roman, 14px</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Expected output <span class="sn">29</span></h3>
+    <div class="fig-row">
+      <figure style="flex:1 1 12rem"><div class="plate"><img src="img/s29_label_default.png" width="290" loading="lazy" alt="Mouse Listener Example: Label 1 with a dashed border and Label 2 with a blue border"></div><figcaption>At rest.</figcaption></figure>
+      <figure style="flex:1 1 12rem"><div class="plate"><img src="img/s29_label_clicked.png" width="290" loading="lazy" alt="Label 1 now reads Mouse Clicked with a red border"></div><figcaption>After clicking label 1: red border, text "Mouse Clicked".</figcaption></figure>
+      <figure style="flex:1 1 12rem"><div class="plate"><img src="img/s29_label_entered.png" width="290" loading="lazy" alt="Label 2 now reads Mouse Entered in a larger bold serif font"></div><figcaption>Mouse over label 2: "Mouse Entered" in bold serif.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="demo" id="ml">
+    <div class="demo-head"><h3>Try it: the two labels</h3><span class="added">Added</span></div>
+    <div class="win" style="max-width:24rem"><div class="win-bar"><span>Mouse Listener Example</span><i>–□×</i></div>
+      <div class="win-body" style="display:flex;gap:.5rem;justify-content:center;padding:1rem .5rem">
+        <div id="ml1" style="flex:1;max-width:10rem;height:3rem;display:grid;place-items:center;background:#c8c8c8;border:2px dashed #555;user-select:none;cursor:default">Label 1</div>
+        <div id="ml2" style="flex:1;max-width:10rem;height:3rem;display:grid;place-items:center;background:#c8c8c8;border:2px solid #3b46c4;font:14px 'Times New Roman',serif;user-select:none;cursor:default">Label 2</div>
+      </div>
+    </div>
+    <div class="log" id="mlLog" style="height:6rem"></div>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · A solution</p>
+    <details class="orig solid">
+      <summary>Show MouseListenerExample.java</summary>
+      <div class="drawer-body">
+        <div class="code"><span class="code-label">MouseListenerExample.java</span><pre class="java">import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.*;
+
+public class MouseListenerExample extends JFrame {
+
+    private final Border defaultBorder = BorderFactory.createDashedBorder(Color.GRAY);
+    private final Font defaultFont = new Font("Times New Roman", Font.PLAIN, 14);
+
+    public MouseListenerExample() {
+        super("Mouse Listener Example");
+        setLayout(new FlowLayout());
+
+        JLabel label1 = new JLabel("Label 1", SwingConstants.CENTER);
+        JLabel label2 = new JLabel("Label 2", SwingConstants.CENTER);
+        for (JLabel l : new JLabel[] {label1, label2}) {
+            l.setPreferredSize(new Dimension(120, 40));
+            l.setOpaque(true);
+            l.setBackground(Color.LIGHT_GRAY);
+        }
+        label1.setBorder(defaultBorder);
+        label2.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+        label2.setFont(defaultFont);
+
+        // Label 1: border changes
+        label1.addMouseListener(new MouseListener() {
+            public void mouseClicked(MouseEvent e) {
+                label1.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
+                label1.setText("Mouse Clicked");
+            }
+            public void mousePressed(MouseEvent e) {
+                label1.setBorder(BorderFactory.createLineBorder(Color.GREEN, 2));
+            }
+            public void mouseReleased(MouseEvent e) {
+                label1.setBorder(BorderFactory.createDashedBorder(Color.ORANGE, 2, 5, 3, false));
+            }
+            public void mouseEntered(MouseEvent e) {
+                label1.setBorder(BorderFactory.createEtchedBorder(Color.CYAN, Color.DARK_GRAY));
+            }
+            public void mouseExited(MouseEvent e) {
+                label1.setBorder(defaultBorder);
+                label1.setText("Label 1");
+            }
+        });
+
+        // Label 2: font changes
+        label2.addMouseListener(new MouseListener() {
+            public void mouseClicked(MouseEvent e) {
+                label2.setFont(new Font("Verdana", Font.BOLD, 16));
+            }
+            public void mousePressed(MouseEvent e) {
+                label2.setFont(label2.getFont().deriveFont(18f));   // same font, size 18
+            }
+            public void mouseReleased(MouseEvent e) {
+                label2.setFont(new Font("Courier New", Font.ITALIC, label2.getFont().getSize()));
+            }
+            public void mouseEntered(MouseEvent e) {
+                label2.setFont(new Font("Serif", Font.BOLD, 18));
+                label2.setText("Mouse Entered");
+            }
+            public void mouseExited(MouseEvent e) {
+                label2.setFont(defaultFont);
+                label2.setText("Label 2");
+            }
+        });
+
+        add(label1);
+        add(label2);
+        setSize(320, 120);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new MouseListenerExample();
+    }
+}</pre></div>
+        <p style="font-size:.9rem;color:var(--muted)">One click fires pressed → released → clicked, so the label ends up with the <em>clicked</em> style. <code>createDashedBorder</code> needs Java 7 or newer.</p>
+      </div>
+    </details>
+  </div>
+
+  <details class="orig" data-pages="21-22"></details>
+  <div class="quiz" data-quiz="labels"></div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="sec" id="buttons" data-title="Button constants and motion tracking">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 36–37</p>
+    <div class="sec-head-row"><h2>Button constants and motion tracking</h2><label class="done"><input type="checkbox" id="done-buttons"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div><code>e.getButton()</code> returns which button changed: <code>MouseEvent.BUTTON1</code> (left), <code>BUTTON2</code> (middle/wheel) or <code>BUTTON3</code> (right). It's the alternative to the <code>SwingUtilities.isXxxMouseButton(e)</code> helpers. For live tracking, a MouseMotionListener updates a label with the pointer's position on every move or drag.</div></aside>
+
+  <div class="slide">
+    <h3>Mouse Button Constants <span class="sn">36</span></h3>
+    <ol class="pts">
+      <li><b>MouseEvent.BUTTON1</b> (value = 1)
+        <ol>
+          <li>Represents the <b>left mouse button</b> (usually the primary button).</li>
+          <li>It is used for actions like clicking, selecting, or dragging.</li>
+          <li><b>Usage Example:</b><br>In most cases, BUTTON1 refers to a left-click, for example:
+            <div class="code" style="margin-top:.3rem"><pre class="java">if (e.getButton() == MouseEvent.BUTTON1) { // Handle left button click or drag }</pre></div></li>
+        </ol>
+      </li>
+      <li><b>MouseEvent.BUTTON2</b> (value = 2)
+        <ol>
+          <li>Represents the <b>middle mouse button</b> (typically the wheel button on most mice).</li>
+          <li>Often used for scrolling, or for some applications, like opening links in new tabs.</li>
+          <li><b>Usage Example:</b><br>BUTTON2 could be used for special functions such as middle-clicking:
+            <div class="code" style="margin-top:.3rem"><pre class="java">if (e.getButton() == MouseEvent.BUTTON2) { // Handle middle button click }</pre></div></li>
+        </ol>
+      </li>
+      <li><b>MouseEvent.BUTTON3</b> (value = 3)
+        <ol>
+          <li>Represents the <b>right mouse button</b>.</li>
+          <li>This is typically used for context menus (right-click).</li>
+          <li><b>Usage Example:</b><br>BUTTON3 could trigger a context menu or secondary actions:
+            <div class="code" style="margin-top:.3rem"><pre class="java">if (e.getButton() == MouseEvent.BUTTON3) { // Handle right button click (e.g., context menu) }</pre></div></li>
+        </ol>
+      </li>
+    </ol>
+    <aside class="note"><b>Guide note</b><span>On the slide each one-line example ends with the comment still open (<code>{ // … }</code>), so the closing brace is inside the comment. Put the comment on its own line when you write it.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Example <span class="sn">37</span></h3>
+    <p>Implement a Java GUI application that captures and displays mouse movement and dragging events using <b>MouseMotionListener</b>. The application will allow real-time tracking of the mouse's position when the user moves or drags the mouse inside a window.</p>
+    <div class="fig-row">
+      <figure style="flex:1 1 12rem"><div class="plate"><img src="img/s37_moved.png" width="290" loading="lazy" alt="Mouse Motion Listener Example window: Mouse moved at: X = 197, Y = 145"></div><figcaption>Moving: "Mouse moved at: X = 197, Y = 145".</figcaption></figure>
+      <figure style="flex:1 1 12rem"><div class="plate"><img src="img/s37_dragged.png" width="290" loading="lazy" alt="Mouse Motion Listener Example window: Mouse dragged at: X = 305, Y = 203"></div><figcaption>Dragging: "Mouse dragged at: X = 305, Y = 203".</figcaption></figure>
+    </div>
+    <details class="orig solid">
+      <summary>Added · Show a solution</summary>
+      <div class="drawer-body">
+        <div class="code"><span class="code-label">MouseMotionExample.java</span><pre class="java">import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class MouseMotionExample extends JFrame implements MouseMotionListener {
+
+    private JLabel label = new JLabel("Move or drag the mouse");
+
+    public MouseMotionExample() {
+        super("Mouse Motion Listener Example");
+        setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
+        label.setFont(new Font("Arial", Font.PLAIN, 14));
+        add(label);
+
+        getContentPane().addMouseMotionListener(this);   // listen on the content pane
+
+        setSize(400, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public void mouseMoved(MouseEvent e) {
+        label.setText("Mouse moved at: X = " + e.getX() + ", Y = " + e.getY());
+    }
+
+    public void mouseDragged(MouseEvent e) {
+        label.setText("Mouse dragged at: X = " + e.getX() + ", Y = " + e.getY());
+    }
+
+    public static void main(String[] args) {
+        new MouseMotionExample();
+    }
+}</pre></div>
+        <p style="font-size:.9rem;color:var(--muted)">Both methods must be written because the class implements the interface. The playground above shows the same thing live.</p>
+      </div>
+    </details>
+  </div>
+
+  <details class="orig" data-pages="23-24"></details>
+  <div class="quiz" data-quiz="buttons"></div>
+</section>
+
+<!-- ============ flashcards ============ -->
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 6</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it. Each answer names the slide it comes from.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 6 – Mouse Events</em> (CS254, 24 slides). The first 14 slides carry no printed number, so they are numbered 1–14 here; the later slides print 20–25, 28–29 and 36–37, which suggests some slides were removed from the deck. Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l6-done", "slideMap": {"15": 20, "16": 21, "17": 22, "18": 23, "19": 24, "20": 25, "21": 28, "22": 29, "23": 36, "24": 37}, "quizzes": {"basics": [{"q": "A single click calls which MouseListener methods, in order?", "o": ["mousePressed, mouseReleased, mouseClicked", "mouseClicked only", "mouseClicked, mousePressed, mouseReleased", "mouseEntered, mouseClicked"], "a": 0, "e": "Slide 5."}, {"q": "Which method is called when the mouse moves with a button held down?", "o": ["mouseDragged", "mouseMoved", "mousePressed", "mouseWheelMoved"], "a": 0, "e": "Slide 6."}, {"q": "A mouse listener is attached to…", "o": ["a component; it only tracks the mouse inside that component", "the mouse itself", "the whole screen", "the keyboard"], "a": 0, "e": "Slide 2."}, {"q": "How many methods does MouseListener have?", "o": ["5", "2", "3", "8"], "a": 0, "e": "Slides 4–5."}], "event": [{"q": "<code>e.getX()<\/code> is measured from…", "o": ["the top-left corner of the component the listener is on", "the top-left corner of the screen", "the centre of the window", "the last click"], "a": 0, "e": "Slide 7."}, {"q": "How do you detect a double click?", "o": ["e.getClickCount() == 2", "e.getButton() == 2", "e.isDouble()", "two separate listeners"], "a": 0, "e": "Slides 7 and 23."}, {"q": "Which interfaces does MouseAdapter implement?", "o": ["MouseListener, MouseMotionListener, MouseWheelListener", "Only MouseListener", "ActionListener and MouseListener", "KeyListener and MouseListener"], "a": 0, "e": "Slide 8."}, {"q": "You override mouseDragged in a MouseInputAdapter but only call addMouseListener. What happens on drag?", "o": ["Nothing: you must also call addMouseMotionListener", "mouseDragged runs", "mouseClicked runs instead", "A compile error"], "a": 0, "e": "Slide 14 registers the same adapter twice."}, {"q": "Which class only has empty mouseMoved and mouseDragged?", "o": ["MouseMotionAdapter", "MouseAdapter", "MouseInputAdapter", "MouseWheelAdapter"], "a": 0, "e": "Slide 11."}], "examples": [{"q": "Why does ListenerExample contain four empty methods?", "o": ["It implements MouseListener, so all five methods must be written", "Empty methods speed it up", "AWT requires them", "To handle right clicks"], "a": 0, "e": "Slide 20 vs slide 21."}, {"q": "Which call detects a right click in the slide's example?", "o": ["SwingUtilities.isRightMouseButton(e)", "e.getClickCount() == 3", "e.isRight()", "e.getX() > 100"], "a": 0, "e": "Slides 24–25."}, {"q": "Why does RightClickExample use mousePressed instead of mouseClicked?", "o": ["Some OS settings may not register right clicks with mouseClicked", "mouseClicked doesn't exist in MouseAdapter", "mousePressed is faster", "To detect double clicks"], "a": 0, "e": "Slide 25."}, {"q": "Can an ActionListener detect a double click?", "o": ["No; use a MouseListener with getClickCount()", "Yes, with getActionCommand()", "Yes, it fires twice", "Only on JLabels"], "a": 0, "e": "Slide 22."}], "labels": [{"q": "In the exercise, after one full click on Label 1, which border is showing?", "o": ["Red solid (mouseClicked runs last)", "Green solid", "Orange dashed", "Cyan etched"], "a": 0, "e": "pressed → released → clicked, so clicked wins."}, {"q": "Which factory creates Swing borders?", "o": ["BorderFactory", "BorderLayout", "Border.create", "LineBorderMaker"], "a": 0, "e": "Used in the added solution."}], "buttons": [{"q": "<code>MouseEvent.BUTTON3<\/code> is the…", "o": ["right button", "left button", "middle button", "wheel"], "a": 0, "e": "Slide 36."}, {"q": "Which listener interface does the motion-tracking example (slide 37) need?", "o": ["MouseMotionListener", "MouseListener", "MouseWheelListener", "ActionListener"], "a": 0, "e": "Slide 37."}]}, "flashcards": [["MouseListener (5)", "mouseClicked, mousePressed, mouseReleased, mouseEntered, mouseExited. Register with addMouseListener.", "Slides 4–5"], ["MouseMotionListener (2)", "mouseMoved (no button), mouseDragged (button held). Register with addMouseMotionListener.", "Slide 6"], ["MouseWheelListener", "mouseWheelMoved(MouseWheelEvent). Register with addMouseWheelListener.", "Slide 12"], ["One click", "mousePressed → mouseReleased → mouseClicked.", "Slide 5"], ["Where?", "getX(), getY(), getPoint(): pixels in the listener component's own coordinate system.", "Slide 7"], ["Which button?", "SwingUtilities.isLeftMouseButton / isMiddleMouseButton / isRightMouseButton(e), or e.getButton() == MouseEvent.BUTTON1/2/3.", "Slides 7, 36"], ["Double click", "if (e.getClickCount() == 2) inside mouseClicked.", "Slides 7, 23"], ["Right click", "In mousePressed: if (SwingUtilities.isRightMouseButton(e)) …", "Slides 24–25"], ["MouseAdapter", "Abstract class implementing MouseListener, MouseMotionListener and MouseWheelListener with empty bodies.", "Slide 8"], ["MouseMotionAdapter", "Empty mouseMoved and mouseDragged; override just one.", "Slide 11"], ["MouseInputListener", "javax.swing.event interface extending MouseListener + MouseMotionListener. MouseInputAdapter implements it.", "Slide 13"], ["Register twice", "One adapter for clicks and drags: panel.addMouseListener(a); panel.addMouseMotionListener(a);", "Slide 14"], ["BUTTON1 / 2 / 3", "Left (1), middle/wheel (2), right (3).", "Slide 36"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle };
+})();
+
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  function logger(el) { return function (t, c) { var d = document.createElement("div"); d.textContent = t; if (c) d.style.color = c; el.appendChild(d); while (el.childNodes.length > 200) el.removeChild(el.firstChild); el.scrollTop = el.scrollHeight; }; }
+  var C = { ev: "#9fd3ff", ok: "#7fd3ad", warn: "#f0b071", dim: "#9aa4a8" };
+
+  // ---------- playground ----------
+  (function () {
+    var p = $("mpPanel"), out = logger($("mpLog")), xy = $("mpXY"), bt = $("mpBtn"), dot = $("mpDot");
+    var down = false, clicks = 0, lastClick = 0, lastPos = null, moveT = 0;
+    function pos(e) { var r = p.getBoundingClientRect(); return { x: Math.round(e.clientX - r.left), y: Math.round(e.clientY - r.top) }; }
+    function bname(b) { return b === 0 ? "BUTTON1 (left)" : b === 1 ? "BUTTON2 (middle)" : b === 2 ? "BUTTON3 (right)" : "NOBUTTON"; }
+    function which(b) { return b === 0 ? "isLeftMouseButton" : b === 1 ? "isMiddleMouseButton" : "isRightMouseButton"; }
+    var L = function () { return $("mpL").checked; }, M = function () { return $("mpM").checked; }, W = function () { return $("mpW").checked; };
+    p.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+    p.addEventListener("pointerenter", function (e) { var q = pos(e); if (L()) out("mouseEntered   x=" + q.x + " y=" + q.y, C.ok); });
+    p.addEventListener("pointerleave", function (e) { var q = pos(e); xy.textContent = "x = –, y = –"; dot.style.display = "none"; if (L()) out("mouseExited    x=" + q.x + " y=" + q.y, C.warn); down = false; });
+    p.addEventListener("pointerdown", function (e) {
+      var q = pos(e); down = true; lastPos = q; p.setPointerCapture && p.setPointerCapture(e.pointerId);
+      var now = Date.now(); clicks = (now - lastClick < 450) ? clicks + 1 : 1; lastClick = now;
+      bt.textContent = bname(e.button);
+      if (L()) out("mousePressed   x=" + q.x + " y=" + q.y + "  getButton()=" + bname(e.button) + "  " + which(e.button) + "(e)=true  getClickCount()=" + clicks, C.ev);
+    });
+    p.addEventListener("pointerup", function (e) {
+      var q = pos(e); down = false;
+      if (L()) {
+        out("mouseReleased  x=" + q.x + " y=" + q.y, C.ev);
+        if (lastPos && Math.abs(lastPos.x - q.x) < 4 && Math.abs(lastPos.y - q.y) < 4) out("mouseClicked   getClickCount()=" + clicks + (clicks === 2 ? "   ← double click!" : ""), C.ok);
+        else out("// no mouseClicked: the mouse moved between press and release", C.dim);
+      }
+    });
+    p.addEventListener("pointermove", function (e) {
+      var q = pos(e); xy.textContent = "x = " + q.x + ", y = " + q.y; dot.style.left = q.x + "px"; dot.style.top = q.y + "px"; dot.style.display = "block";
+      if (!M()) return;
+      var now = Date.now();
+      if (down) { if (now - moveT > 60) { out("mouseDragged   x=" + q.x + " y=" + q.y, "#f7d774"); moveT = now; } }
+      else if ($("mpMove").checked && now - moveT > 80) { out("mouseMoved     x=" + q.x + " y=" + q.y, C.dim); moveT = now; }
+    });
+    p.addEventListener("wheel", function (e) {
+      if (!W()) return; e.preventDefault();
+      out("mouseWheelMoved  getWheelRotation()=" + (e.deltaY < 0 ? -1 : 1) + (e.deltaY < 0 ? "  (up)" : "  (down)"), "#d4a6ff");
+    }, { passive: false });
+    $("mpClear").addEventListener("click", function () { $("mpLog").innerHTML = ""; });
+    ["mpL", "mpM", "mpW"].forEach(function (id) {
+      $(id).addEventListener("change", function () {
+        var n = { mpL: "MouseListener", mpM: "MouseMotionListener", mpW: "MouseWheelListener" }[id];
+        out((this.checked ? "panel.add" : "panel.remove") + n + "(listener);", C.dim);
+      });
+    });
+    out("// a click = mousePressed → mouseReleased → mouseClicked", C.dim);
+  })();
+
+  // ---------- two labels ----------
+  (function () {
+    var l1 = $("ml1"), l2 = $("ml2"), out = logger($("mlLog"));
+    var B = { clicked: "2px solid #ff0000", pressed: "2px solid #00c000", released: "2px dashed #ffa500", entered: "3px groove #00e5e5", exited: "2px dashed #555" };
+    function on(el, f) {
+      el.addEventListener("mouseenter", function () { f("entered"); });
+      el.addEventListener("mouseleave", function () { f("exited"); });
+      el.addEventListener("mousedown", function () { f("pressed"); });
+      el.addEventListener("mouseup", function () { f("released"); });
+      el.addEventListener("click", function () { f("clicked"); });
+    }
+    on(l1, function (k) {
+      l1.style.border = B[k];
+      if (k === "clicked") l1.textContent = "Mouse Clicked";
+      if (k === "exited") l1.textContent = "Label 1";
+      out("label1 mouse" + k[0].toUpperCase() + k.slice(1) + " → border " + { clicked: "red solid", pressed: "green solid", released: "orange dashed", entered: "cyan etched", exited: "default dashed" }[k], C.ev);
+    });
+    var size = 14;
+    on(l2, function (k) {
+      if (k === "clicked") { l2.style.font = "bold 16px Verdana, sans-serif"; size = 16; }
+      if (k === "pressed") { size = 18; l2.style.fontSize = "18px"; }
+      if (k === "released") l2.style.font = "italic " + size + "px 'Courier New', monospace";
+      if (k === "entered") { l2.style.font = "bold 18px serif"; size = 18; l2.textContent = "Mouse Entered"; }
+      if (k === "exited") { l2.style.font = "14px 'Times New Roman', serif"; size = 14; l2.textContent = "Label 2"; }
+      out("label2 mouse" + k[0].toUpperCase() + k.slice(1) + " → font " + { clicked: "Verdana Bold 16", pressed: "size 18", released: "Courier New Italic", entered: "Serif Bold 18", exited: "Times New Roman 14" }[k], C.ok);
+    });
+  })();
+})();
+
+</script>
+</body>
+</html>

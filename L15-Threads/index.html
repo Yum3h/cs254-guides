@@ -1,0 +1,1692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 Threads Part 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+pre.pickable .ln { cursor: pointer; }
+pre.pickable .ln:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+pre .ln.pick { background: color-mix(in srgb, var(--mark) 16%, transparent); }
+pre .ln.hit { background: color-mix(in srgb, var(--ok) 22%, transparent); box-shadow: inset 3px 0 var(--ok); }
+pre .ln.miss { background: color-mix(in srgb, var(--mark) 22%, transparent); box-shadow: inset 3px 0 var(--mark); }
+pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
+.bug-x { font-size: .9rem; border-left: 3px solid var(--line); padding: var(--s1) var(--s3); }
+.bug-x.hit { border-color: var(--ok); } .bug-x.miss { border-color: var(--mark); }
+.res-ok { color: var(--ok); font-weight: 600; } .res-bad { color: var(--bad); font-weight: 600; }
+
+/* L13: Swing component mock-ups (inside .win, always light) */
+.tree-view { background: #fff; padding: .4rem .3rem; font: 13px system-ui, "Segoe UI", sans-serif; color: #1c2328; min-height: 6rem; overflow-x: auto; }
+.tv-row { display: flex; align-items: center; white-space: nowrap; line-height: 1.6; }
+.tv-guide { font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace; color: #8b98a0; white-space: pre; }
+.tv-tog { width: 1.1rem; flex: none; border: 0; background: none; padding: 0; font-size: .72rem; color: #3c4a52; cursor: pointer; }
+.tv-tog.none { visibility: hidden; }
+.tv-ico { width: 16px; height: 14px; margin-right: .3rem; flex: none; }
+.tv-lbl { padding: 0 .3rem; border-radius: 2px; cursor: pointer; border: 1px solid transparent; }
+.tv-lbl.sel { background: #b8cfe5; border-color: #6d8fb5; }
+.tv-lbl.fresh { background: #fff2b3; }
+.tv-hline { border-top: 1px solid #8b98a0; margin: .1rem 0; }
+.sp-frame { display: flex; flex-direction: column; height: 18rem; background: var(--win-bg); }
+.sp { display: flex; flex: 1; min-height: 0; min-width: 0; }
+.sp.vert { flex-direction: column; }
+#sp2 { height: 100%; }
+.sp-a, .sp-b { overflow: auto; background: #fff; min-width: 0; min-height: 0; }
+.sp-a { flex: none; }
+.sp-b { flex: 1; }
+.sp-div { flex: none; background: #d5dde1; border: 1px solid #a9b4ba; display: flex; gap: 3px; cursor: col-resize; touch-action: none; }
+.sp:not(.vert) > .sp-div { flex-direction: column; align-items: center; padding-top: 3px; }
+.sp.vert > .sp-div { flex-direction: row; align-items: center; padding-left: 3px; cursor: row-resize; }
+.sp-div:focus-visible { outline: 2px solid #2a6ebb; }
+.sp-arrow { font-size: 9px; line-height: 1; padding: 1px; border: 0; background: none; color: #24323a; cursor: pointer; }
+.jlist { list-style: none; margin: 0; padding: 2px 0; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jlist li { padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+.jlist li.sel { background: #b8cfe5; }
+.pic { display: grid; place-items: center; }
+.ok-cyan { background: #00ffff; border: 1px solid #6b7b82; font: 600 13px system-ui, sans-serif; padding: .35rem; color: #1c2328; cursor: pointer; }
+.jtp { display: flex; flex-direction: column; height: 13rem; background: var(--win-bg); font: 12px system-ui, sans-serif; color: #1c2328; padding: 4px; }
+.jtp.pos-BOTTOM { flex-direction: column-reverse; }
+.jtp.pos-LEFT { flex-direction: row; }
+.jtp.pos-RIGHT { flex-direction: row-reverse; }
+.jtp-tabs { display: flex; flex-wrap: wrap; gap: 2px; min-width: 0; }
+.jtp.pos-LEFT .jtp-tabs, .jtp.pos-RIGHT .jtp-tabs { flex-direction: column; flex-wrap: nowrap; overflow: auto; max-width: 45%; }
+.jtp.scroll:not(.pos-LEFT):not(.pos-RIGHT) .jtp-tabs { flex-wrap: nowrap; overflow-x: auto; }
+.jtp-tab { border: 1px solid #9aa7ad; background: #dfe5e8; padding: 2px 9px; cursor: pointer; white-space: nowrap; font: inherit; color: inherit; }
+.jtp-tab.sel { background: #fff; font-weight: 600; }
+.jtp-page { flex: 1; border: 1px solid #9aa7ad; background: #eceff1; min-height: 0; min-width: 0; overflow: auto; }
+.jtp-empty { padding: .5rem; color: #7a868c; }
+.bl3 { display: grid; grid-template: auto 1fr auto / auto 1fr auto; height: 100%; gap: 2px; padding: 2px; }
+.bl3 .jbtn { font-weight: 600; }
+.tl-frame { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto; height: 14rem; background: var(--win-bg); }
+.tl-frame.drop { outline: 2px dashed #2a6ebb; outline-offset: -4px; }
+.tl-frame[data-dock="NORTH"] > .tl-bar { grid-area: 1 / 1 / 2 / 4; }
+.tl-frame[data-dock="SOUTH"] > .tl-bar { grid-area: 3 / 1 / 4 / 4; }
+.tl-frame[data-dock="WEST"] > .tl-bar { grid-area: 1 / 1 / 4 / 2; }
+.tl-frame[data-dock="EAST"] > .tl-bar { grid-area: 1 / 3 / 4 / 4; }
+.tl-center { grid-area: 2 / 2 / 3 / 3; background: #fff; margin: 4px; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tl-bar { display: flex; align-items: center; gap: 2px; padding: 2px; background: #e3e8eb; border: 1px solid #b6c0c5; }
+.tl-bar.vertical { flex-direction: column; }
+.tl-grip { width: 9px; align-self: stretch; min-height: 1.6rem; background-image: radial-gradient(#7d8a91 1px, transparent 1.3px); background-size: 4px 4px; cursor: grab; touch-action: none; }
+.tl-bar.vertical .tl-grip { width: auto; min-height: 9px; height: 9px; min-width: 1.6rem; }
+.tl-btn { min-width: 1.9rem; height: 1.9rem; border: 1px solid transparent; background: none; border-radius: 3px; cursor: pointer; font: 14px system-ui, sans-serif; color: #24323a; padding: 0 .35rem; }
+.tl-btn:hover:not(:disabled) { border-color: #8f9ba1; background: #f4f6f7; }
+.tl-btn:disabled { color: #a9b2b7; cursor: default; }
+.tl-sep { width: 1px; align-self: stretch; background: #9aa7ad; margin: 2px 4px; }
+.tl-bar.vertical .tl-sep { width: auto; height: 1px; margin: 4px 2px; }
+.tl-floatwin { max-width: 16rem; }
+.pp-area { position: relative; background: #fff; min-height: 9rem; padding: .2rem; outline: none; }
+.pp-area:focus-visible { outline: 2px solid #2a6ebb; }
+.jpopup { position: absolute; z-index: 5; background: #f4f6f7; border: 1px solid #8f9ba1; box-shadow: 2px 2px 6px rgba(0, 0, 0, .25); padding: 2px 0; min-width: 8rem; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jpopup button { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; text-align: left; border: 0; background: none; padding: 3px 12px; font: inherit; color: inherit; cursor: pointer; }
+.jpopup button:hover:not(:disabled), .jpopup button:focus-visible { background: #b8cfe5; outline: none; }
+.jpopup button:disabled { color: #a9b2b7; cursor: default; }
+.jpopup hr { border: 0; border-top: 1px solid #b6c0c5; margin: 2px 0; }
+.jpopup kbd { font: 11px system-ui, sans-serif; color: #56676f; }
+.ac-frame { background: var(--win-bg); outline: none; position: relative; }
+.ac-frame:focus-visible { outline: 2px solid #2a6ebb; }
+.ac-menubar { position: relative; background: #e3e8eb; border-bottom: 1px solid #b6c0c5; padding: 1px 2px; }
+.ac-menu { border: 0; background: none; padding: 2px 8px; font: 12px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.ac-menu[aria-expanded="true"] { background: #b8cfe5; }
+.ac-drop { top: 100%; left: 2px; }
+.ac-area { position: relative; background: #fff; margin: 4px; min-height: 7rem; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tv-row { align-items: stretch; }
+.tv-row > .tv-tog, .tv-row > .tv-ico, .tv-row > .tv-lbl { align-self: center; }
+.tv-g { display: inline-block; width: 16px; flex: none; }
+.tv-g.pipe { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat; }
+.tv-g.tee { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+.tv-g.elbow { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 50% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+
+/* L14 MDI: desktop pane, internal frames, card deck */
+.dsk { position: relative; height: 20rem; background: #5d7d8f; overflow: hidden; }
+.jif { position: absolute; display: flex; flex-direction: column; background: #eceff1; border: 1px solid #44525a; box-shadow: 2px 3px 8px rgba(0, 0, 0, .35); }
+.jif-bar { display: flex; align-items: center; gap: 3px; padding: 2px 4px; background: #c5ced3; font: 600 12px system-ui, sans-serif; color: #1c2328; cursor: move; user-select: none; touch-action: none; }
+.jif.sel { border-color: #1d4f8a; }
+.jif.sel .jif-bar { background: #8fb3d9; }
+.jif-bar span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jif-bar button { width: 18px; height: 16px; padding: 0; font: 11px/1 system-ui, sans-serif; border: 1px solid #6b7b82; background: #f4f6f7; color: #1c2328; cursor: pointer; flex: none; }
+.jif textarea { flex: 1; resize: none; border: 0; border-top: 1px solid #9aa7ad; font: 12px ui-monospace, Menlo, Consolas, monospace; padding: 4px; background: #fff; color: #1c2328; min-height: 0; width: 100%; }
+.jif-rs { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 55%, #6b7b82 55%, #6b7b82 62%, transparent 62%, transparent 78%, #6b7b82 78%, #6b7b82 85%, transparent 85%); }
+.jif-icon { position: absolute; bottom: 4px; display: flex; align-items: center; gap: 4px; width: 8.5rem; padding: 2px 4px; background: #c5ced3; border: 1px solid #44525a; font: 600 11px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.jif-icon span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dsk-outline { position: absolute; border: 2px dashed #fff; pointer-events: none; }
+.cards { background: var(--win-bg); padding: .6rem; font: 13px system-ui, sans-serif; color: #1c2328; }
+.card-page { background: #fff; border: 1px solid #b6c0c5; padding: .7rem; min-height: 9rem; display: grid; gap: .4rem; align-content: start; }
+.card-page h4 { font: 600 14px system-ui, sans-serif; }
+.card-page .tag { font: 11px ui-monospace, monospace; color: #7a868c; }
+.ways-host { position: relative; background: var(--win-bg); color: #1c2328; font: 12px system-ui, sans-serif; min-height: 15rem; padding: .5rem; color-scheme: light; }
+.ways-host pre { margin: 0; white-space: pre-wrap; font: 12px ui-monospace, monospace; }
+.dlg-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .28); display: grid; place-items: center; }
+
+/* Threads: lanes, progress bar, frozen window */
+.lanes { display: grid; gap: 4px; font: 12px var(--f-mono); }
+.lane { display: grid; grid-template-columns: minmax(0, 9.5rem) 7.5rem minmax(0, 1fr); gap: .5rem; align-items: center; }
+.lane > b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lane .st { font-size: 11px; padding: 1px 6px; border-radius: 99px; border: 1px solid var(--line); text-align: center; color: var(--muted); }
+.lane .st.RUNNABLE { color: var(--ok); border-color: var(--ok); }
+.lane .st.TIMED_WAITING, .lane .st.WAITING { color: var(--c-num); border-color: var(--c-num); }
+.lane .st.TERMINATED { color: var(--bad); border-color: var(--bad); }
+.lane .ticks { display: flex; gap: 2px; overflow: hidden; min-width: 0; justify-content: flex-end; }
+.tick { width: 1.15rem; height: 1.15rem; border-radius: 3px; display: grid; place-items: center; font-size: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
+@media (max-width: 520px) { .lane { grid-template-columns: minmax(0, 1fr) 7rem; } .lane .ticks { grid-column: 1 / -1; justify-content: flex-start; } }
+.jprog { position: relative; height: 18px; border: 1px solid #6b7b82; background: #fff; border-radius: 2px; overflow: hidden; }
+.jprog i { position: absolute; top: 0; bottom: 0; left: 0; background: #5b8fc7; }
+.jprog span { position: absolute; inset: 0; display: grid; place-items: center; font: 600 11px system-ui, sans-serif; color: #1c2328; }
+.jprog.ind i { width: 30% !important; animation: jprog-ind 1.2s linear infinite; }
+@keyframes jprog-ind { from { left: -30%; } to { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .jprog.ind i { animation: none; width: 100% !important; opacity: .45; } }
+.win.frozen .win-body { filter: grayscale(.7) brightness(.9); }
+.win .win-bar .nr { color: #b0261c; font-weight: 600; }
+.win-body .row { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+.win-body textarea { width: 100%; min-height: 4.5rem; font: 12px ui-monospace, monospace; border: 1px solid #9aa7ad; background: #fff; color: #1c2328; padding: 4px; resize: none; }
+.verdict { font: 600 .8rem var(--f-body); padding: .1rem .5rem; border-radius: 99px; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.jbtn:disabled { color: #9aa4a8; cursor: default; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L15 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 15</p>
+  <h1>Threads, Part 2: SwingWorker and Progress</h1>
+  <p class="lede">Lecture 15 repeats Lecture 14's thread basics (with a few changes) and adds the SwingWorker skeleton, Runnable vs SwingWorker, <code>JProgressBar</code>, <code>setProgress</code> and <code>PropertyChangeListener</code>. Every slide of <em>Lecture 15 – Threads</em> (32 slides) in order with all code, plus the same live demos and a progress-bar playground. New material is in the last two sections; slides that differ from Lecture 14 are marked <span class="added">New in L15</span>.</p>
+  <div class="legend">
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<section class="sec" id="what" data-title="What a thread is">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–5</p>
+    <div class="sec-head-row"><h2>What a thread is</h2><label class="done"><input type="checkbox" id="done-what"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A running program (a <b>process</b>) can do several things at once. Each line of work is a <b>thread</b>: its own path through the code, sharing the program's memory with the others. A game has one thread drawing, one reading the keyboard and one talking to the network, so a slow network doesn't freeze the picture. The price: threads that share data must be careful, or they can block each other forever (<b>deadlock</b>), and switching between threads costs a little time. In a Swing program the main reason to use one is slide 3: keep slow work off the Event Dispatch Thread so the window stays responsive.</div></aside>
+
+  <div class="slide">
+    <p class="divider">Threads <span class="sn">1</span></p>
+    <p style="font-size:.85rem;color:var(--muted)">The slides adapted from different resources including:</p>
+    <ul class="pts" style="font-size:.85rem;color:var(--muted)"><li>Shivaram Venkataraman, CS 537 - Introduction to Operating Systems</li><li>COMPSCI230 Software Construction</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>What is a Thread? <span class="sn">2</span></h3>
+    <ul class="pts">
+      <li>Individual and separate unit of execution that is part of a process
+        <ul><li>multiple threads can work together to accomplish a common goal</li></ul></li>
+      <li>Video Game example
+        <ul><li>one thread for graphics</li><li>one thread for user interaction</li><li>one thread for networking</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Why Multithreading in Swing? <span class="sn">3</span> <span class="added">New in L15</span></h3>
+    <ul class="pts">
+      <li>Swing runs on Event Dispatch Thread (EDT)</li>
+      <li>Long tasks (DB queries, file I/O, network calls) freeze the UI if run on EDT</li>
+      <li>Solution: Run tasks in a separate thread</li>
+    </ul>
+    <p style="font-size:.9rem;color:var(--muted)">This replaces Lecture 14's slide 3 (the video-game process picture). For your final project it's exactly the database case: a slow query run straight inside a button's <code>actionPerformed</code> freezes the window until it finishes.</p>
+  </div>
+
+  <div class="slide">
+    <h3>Advantages <span class="sn">4</span></h3>
+    <ul class="pts">
+      <li>easier to program
+        <ul><li>1 thread per task</li></ul></li>
+      <li>can provide better performance
+        <ul><li>thread only runs when needed</li><li>no polling to decide what to do</li></ul></li>
+      <li>multiple threads can share resources</li>
+      <li>utilize multiple processors if available</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Disadvantage <span class="sn">5</span></h3>
+    <ul class="pts">
+      <li>multiple threads can lead to deadlock</li>
+      <li>overhead of switching between threads</li>
+    </ul>
+    <p style="font-size:.9rem;color:var(--muted)"><span class="added">Added</span> <b>Deadlock</b>: thread A holds resource 1 and waits for resource 2, while thread B holds resource 2 and waits for resource 1. Neither can continue, ever. <b>Polling</b> (slide 4) means checking again and again "is there something to do yet?", which wastes time; a thread can instead sleep until it's needed.</p>
+  </div>
+
+  <details class="orig" data-pages="1-5"></details>
+  <div class="quiz" data-quiz="what"></div>
+</section>
+
+<section class="sec" id="create" data-title="Creating threads">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 6–12</p>
+    <div class="sec-head-row"><h2>Creating threads</h2><label class="done"><input type="checkbox" id="done-create"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Put the work in a method called <code>run()</code>, then call <b><code>start()</code></b>. <code>start()</code> creates the new thread and that new thread calls <code>run()</code>; calling <code>run()</code> yourself is just a normal method call on the current thread. Two ways to supply <code>run()</code>:<ul><li><b>extend Thread</b> and override <code>run()</code>, then <code>new MyThread().start()</code>;</li><li><b>implement Runnable</b> (only <code>run()</code>), then <code>new Thread(myRunnable).start()</code>. This is usually better: Java allows only one superclass, so your class can still extend something else (a JPanel, say).</li></ul>A thread ends when its <code>run()</code> returns. <code>main</code> is just the first thread; the program keeps running until every (non-daemon) thread has finished.</div></aside>
+
+  <div class="slide">
+    <h3>Creating Threads (method 1) <span class="sn">6</span> <span class="added">New in L15</span></h3>
+    <ul class="pts">
+      <li>implementing Runnable interface</li>
+      <li>The Runnable interface should be implemented by any class whose instances are intended to be executed by a thread.</li>
+      <li>The class must define a method of no arguments called run.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Creating Threads (method 2) <span class="sn">7</span> <span class="added">New in L15</span></h3>
+    <ul class="pts">
+      <li>extending the Thread class
+        <ul>
+          <li><code>class Thread extends Object implements Runnable</code></li>
+          <li>Constructors
+            <ul><li><code>Thread()</code> Allocates a new Thread object.</li><li><code>Thread(Runnable target)</code> Allocates a new Thread object.</li><li><code>Thread(Runnable target, String name)</code> Allocates a new Thread object.</li><li><code>Thread(String name)</code> Allocates a new Thread object.</li></ul></li>
+        </ul></li>
+      <li>must implement the run() method</li>
+      <li>thread ends when run() method finishes</li>
+      <li>call .start() to get the thread ready to run</li>
+    </ul>
+    <p style="font-size:.9rem;color:var(--muted)">Lecture 15 swaps the numbering: Runnable is "method 1" and extending Thread is "method 2" (Lecture 14 had them the other way round). The <code>name</code> in the constructors replaces the automatic names <code>Thread-0</code>, <code>Thread-1</code>…: <code>new Thread(out1, "greeter")</code>.</p>
+  </div>
+
+  <div class="slide">
+    <h3>Creating Threads Example 1 <span class="sn">8–9</span></h3>
+    <div class="code"><span class="code-label">slide 8</span><pre class="java">class Output extends Thread {
+    private String toSay;
+    public Output(String st) {
+        toSay = st;
+    }
+    public void run() {
+        try {
+            for(;;) {
+                System.out.println(toSay);
+                sleep(1000);
+            }
+        } catch(InterruptedException e) {
+            System.out.println(e);
+        }
+    }
+}</pre></div>
+    <div class="code"><span class="code-label">slide 9 · Example 1 (continued)</span><pre class="java">class Program {
+    public static void main(String [] args) {
+        Output thr1 = new Output("Hello");
+        Output thr2 = new Output("There");
+        thr1.start();
+        thr2.start();
+    }
+}</pre></div>
+    <ul class="pts">
+      <li>main thread is just another thread (happens to start first)</li>
+      <li>main thread can end before the others do</li>
+      <li>any thread can spawn more threads</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Creating Threads Example 2 <span class="sn">10–11</span></h3>
+    <div class="code"><span class="code-label">slide 10</span><pre class="java">class Output implements Runnable {
+    private String toSay;
+    public Output(String st) {
+        toSay = st;
+    }
+    public void run() {
+        try {
+            for(;;) {
+                System.out.println(toSay);
+                Thread.sleep(1000);
+            }
+        } catch(InterruptedException e) {
+            System.out.println(e);
+        }
+    }
+}</pre></div>
+    <div class="code"><span class="code-label">slide 11 · Example 2 (continued)</span><pre class="java">class Program {
+    public static void main(String [] args) {
+        Output out1 = new Output("Hello");
+        Output out2 = new Output("There");
+        Thread thr1 = new Thread(out1);
+        Thread thr2 = new Thread(out2);
+        thr1.start();
+        thr2.start();
+    }
+}</pre></div>
+    <ul class="pts"><li>main is a bit more complex</li><li>everything else identical for the most part</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>Advantage of Using Runnable <span class="sn">12</span></h3>
+    <ul class="pts"><li>remember - can only extend one class</li><li>implementing runnable allows class to extend something else</li></ul>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Example 1 can write plain <code>sleep(1000)</code> because <code>Output</code> <em>is</em> a Thread and inherits the static method; Example 2's Runnable must write <code>Thread.sleep(1000)</code>. <code>for(;;)</code> loops forever, so these programs never end on their own: stop them with NetBeans' red Stop button. Type straight quotes; the slides use curly “ ”. With Java 8 lambdas, Example 2 shrinks to <code>new Thread(() -&gt; System.out.println("Hi")).start();</code>, because Runnable has a single method.</span></aside>
+
+  <div class="demo" data-demo="race"></div>
+
+  <details class="orig" data-pages="6-12"></details>
+  <div class="quiz" data-quiz="create"></div>
+</section>
+
+<section class="sec" id="control" data-title="Controlling threads">
+  <div class="sec-head">
+    <p class="eyebrow">Slide 13</p>
+    <div class="sec-head-row"><h2>Controlling threads</h2><label class="done"><input type="checkbox" id="done-control"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div><code>start()</code> launches a thread; <code>join()</code> makes the current thread wait until another one finishes (try it in the demo above); <code>setPriority</code> is a hint about who should get the processor first. Lecture 15 drops the slide 13 lines about <code>stop()</code>, <code>suspend()</code> and <code>resume()</code>: they are deprecated because they can leave shared data half-changed or locked forever. To stop a thread politely, call <code>interrupt()</code> and let its <code>run()</code> finish (the <code>catch (InterruptedException e)</code> in the examples is exactly that).</div></aside>
+
+  <div class="slide">
+    <h3>Controlling Java Threads <span class="sn">13</span></h3>
+    <ul class="pts">
+      <li><i>_.start()</i>: begins a thread running</li>
+      <li><i>wait()</i> and <i>notify()</i>: for synchronization</li>
+      <li><i>_.join()</i>: wait for specific thread to finish</li>
+      <li><i>_.setPriority()</i>: 0 to 10 (MIN_PRIORITY to MAX_PRIORITY); 5 is default (NORM_PRIORITY)</li>
+    </ul>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span><code>Thread.MIN_PRIORITY</code> is actually <b>1</b>, not 0: the range is 1 to 10, and <code>setPriority(0)</code> throws <code>IllegalArgumentException</code>. <code>join()</code> throws <code>InterruptedException</code>, so it needs a try/catch. <code>wait()</code> and <code>notify()</code> belong to every <code>Object</code> (not just Thread) and must be called inside a <code>synchronized</code> block on that object.</span></aside>
+
+  <div class="slide">
+    <p class="added">Added · join and interrupt in code</p>
+    <div class="code"><pre class="java">Thread worker = new Thread(() -&gt; {
+    try {
+        while (true) { doSomeWork(); Thread.sleep(200); }
+    } catch (InterruptedException e) {
+        System.out.println("asked to stop, cleaning up");   // run() ends here
+    }
+});
+worker.start();
+// … later, e.g. in a Stop button:
+worker.interrupt();          // politely ask it to stop
+worker.join();               // wait until it really has (throws InterruptedException)</pre></div>
+  </div>
+
+  <details class="orig" data-pages="13"></details>
+  <div class="quiz" data-quiz="control"></div>
+</section>
+
+<section class="sec" id="edt" data-title="The Event Dispatch Thread">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 14–16</p>
+    <div class="sec-head-row"><h2>The Event Dispatch Thread</h2><label class="done"><input type="checkbox" id="done-edt"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Every Swing program has one special thread, the <b>Event Dispatch Thread (EDT)</b>, also called <code>AWT-EventQueue-0</code>. It takes events (clicks, keys, timer ticks, repaints) from a queue one at a time and runs your listener for each. Two rules follow:<ol><li><b>Only the EDT touches Swing components.</b> From any other thread, hand the job to the EDT with <code>SwingUtilities.invokeLater(…)</code>. Break this and you get <em>safety</em> failures: random glitches that are hard to reproduce.</li><li><b>Never do slow work on the EDT</b> (file or network I/O, big database queries, <code>sleep</code>). While your listener runs, nothing else can: the window stops repainting and stops reacting. That's a <em>liveness</em> failure: the "(Not Responding)" window.</li></ol>So: slow work goes on a background thread, and the result comes back to the EDT.</div></aside>
+
+  <div class="slide">
+    <h3>GUI programming is multithreaded <span class="sn">14</span></h3>
+    <p>Event-driven programming</p>
+    <ul class="pts">
+      <li>Event dispatch thread (EDT) handles all GUI events
+        <ul><li>Mouse events, keyboard events, timer events, etc.</li></ul></li>
+      <li>Program registers callbacks ("listeners")
+        <ul><li>Function objects invoked in response to events</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Ground rules for GUI programming <span class="sn">15</span></h3>
+    <ul class="pts">
+      <li>All GUI activity is on event dispatch thread</li>
+      <li>No other time-consuming activity on this thread
+        <ul><li>Blocking calls (e.g., I/O) absolutely forbidden</li></ul></li>
+      <li>Many GUI programs violate these rules
+        <ul><li>They are broken</li></ul></li>
+      <li>Violating rule 1 can cause safety failures</li>
+      <li>Violating rule 2 can cause liveness failures</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Ensuring all GUI activity is on EDT <span class="sn">16</span></h3>
+    <ul class="pts">
+      <li>Never make a Swing call from any other thread
+        <ul><li>Swing calls includes Swing constructors
+          <ul><li>If not on EDT, make Swing calls with invokeLater:</li></ul></li></ul></li>
+    </ul>
+    <div class="code"><pre class="java">public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -&gt; new Test().setVisible(true));
+}</pre></div>
+    <div class="fig-row">
+      <div style="flex:1 1 17rem;display:grid;gap:var(--s2);min-width:0">
+        <p><span class="verdict ok">✅ marked correct on the slide</span></p>
+        <div class="code"><pre class="java">public void actionPerformed(ActionEvent e)
+{
+      new Thread(new Runnable()
+      {
+            final String text = readHugeFile();
+            SwingUtilities.invokeLater(new Runnable()
+            {
+                  public void run()
+                  {
+                        textArea.setText(text);
+                  }
+            });
+      }).start();
+}</pre></div>
+      </div>
+      <div style="flex:1 1 17rem;display:grid;gap:var(--s2);min-width:0">
+        <p><span class="verdict bad">❌ marked wrong: blocks the EDT</span></p>
+        <div class="code"><pre class="java">public void actionPerformed(ActionEvent e)
+{
+      final String text = readHugeFile();
+      textArea.setText(text);
+}</pre></div>
+        <p><span class="verdict bad">❌ marked wrong</span></p>
+        <div class="code"><pre class="java">public void actionPerformed(ActionEvent e)
+{
+      new Thread(new Runnable()
+      {
+            final String text = readHugeFile();
+            textArea.setText(text);
+      }).start();
+}</pre></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>The first bad version does the slow <code>readHugeFile()</code> on the EDT, breaking rule 2 (the window freezes). The second wrong one moves the work to a new thread but then calls <code>textArea.setText</code> from that thread, breaking rule 1. As written on the slide, the ticked version won't compile: the anonymous <code>Runnable</code> needs its statements inside <code>public void run() { … }</code> (see the demo's code for the complete version). <code>Test</code> stands for your own JFrame class.</span></aside>
+
+  <div class="demo" data-demo="edt"></div>
+
+  <details class="orig" data-pages="14-16"></details>
+  <div class="quiz" data-quiz="edt"></div>
+</section>
+
+<section class="sec" id="invoke" data-title="invokeAndWait and invokeLater">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 17–20</p>
+    <div class="sec-head-row"><h2>invokeAndWait and invokeLater</h2><label class="done"><input type="checkbox" id="done-invoke"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Both methods take a <code>Runnable</code> and put it on the EDT's queue; the EDT runs it when its turn comes. No new thread is created. The difference is whether the caller waits:<ul><li><code>invokeLater(r)</code> returns <b>immediately</b>; <code>r</code> runs a moment later. Use this almost always.</li><li><code>invokeAndWait(r)</code> <b>blocks</b> the calling thread until <code>r</code> has finished on the EDT. Never call it from the EDT itself (it would wait for itself forever; Swing throws an Error instead).</li></ul></div></aside>
+
+  <div class="slide">
+    <h3>Callbacks execute on the EDT <span class="sn">17</span></h3>
+    <ul class="pts"><li>The SwingUtilities class has a static method available to use to put references to blocks of code onto the event queue:</li></ul>
+    <div class="code"><pre class="java">public static void invokeAndWait(Runnable target)
+throws InterruptedException, InvocationTargetException</pre></div>
+    <ul class="pts">
+      <li>The parameter target is a reference to an instance of Runnable.
+        <ul><li>In this case, the Runnable will not be passed to the constructor of Thread.</li><li>The Runnable interface is simply being used as a means to identify the entry point for the event thread. Just as a newly spawned thread will invoke run(), the event thread will invoke run() when it has processed all the other events pending in the queue.</li></ul></li>
+      <li>An InterruptedException is thrown if the thread that called invokeAndWait() is interrupted before the block of code referred to by target completes.</li>
+      <li>An InvocationTargetException (a class in the java.lang.reflect package) is thrown if an uncaught exception is thrown by the code inside run()</li>
+    </ul>
+    <div class="code"><pre class="java">public static void invokeLater(Runnable target)</pre></div>
+    <ul class="pts">
+      <li>it puts the request on the event queue and returns right away.</li>
+      <li>The invokeLater() method does not wait for the block of code inside the Runnable referred to by target to execute.
+        <ul><li>This allows the thread that posted the request to move on to other activities.</li></ul></li>
+      <li>a new thread is not created when Runnable is used with SwingUtilities.invokeLater() and SwingUtilities.invokeAndWait()
+        <ul><li>The event thread will end up calling the <code>run()</code> method of the <code>Runnable</code> when its turn comes up on the event queue.</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>inovkeAndWait Example <span class="sn">18</span></h3>
+    <div class="code"><span class="code-label">InvokeAndWaitDemo.java (the slide's two columns, in order)</span><pre class="java">import java.awt.*;
+import java.awt.event.*;
+import java.lang.reflect.*;
+import javax.swing.*;
+
+public class InvokeAndWaitDemo extends Object {
+   private static void print(String msg) {
+      String name = Thread.currentThread().getName();
+      System.out.println(name + ": " + msg);
+   }
+
+   public static void main(String[] args) {
+      final JLabel label = new JLabel("————");
+
+      JPanel panel = new JPanel(new FlowLayout());
+      panel.add(label);
+
+      JFrame f = new JFrame("InvokeAndWaitDemo");
+      f.setContentPane(panel);
+      f.setSize(300, 100);
+      f.setVisible(true);
+
+      try {
+         print("sleeping for 3 seconds");
+         Thread.sleep(3000);
+
+         print("creating code block for event thread");
+         Runnable setTextRun = new Runnable() {
+            public void run() {
+               print("about to do setText()");
+               label.setText("New text!");
+            }
+         };
+
+         print("about to invokeAndWait()");
+         SwingUtilities.invokeAndWait(setTextRun);
+         print("back from invokeAndWait()");
+      } catch ( InterruptedException ix ) {
+         print("interrupted while waiting on invokeAndWait()");
+      } catch ( InvocationTargetException x ) {
+         print("exception thrown from run()");
+      }
+   }
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>inovkeLater Example <span class="sn">19</span></h3>
+    <div class="code"><span class="code-label">InvokeLaterDemo.java</span><pre class="java">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class InvokeLaterDemo extends Object {
+    private static void print(String msg) {
+        String name = Thread.currentThread().getName();
+        System.out.println(name + ": " + msg);
+    }
+
+    public static void main(String[] args) {
+        final JLabel label = new JLabel("————");
+        JPanel panel = new JPanel(new FlowLayout());
+        panel.add(label);
+        JFrame f = new JFrame("InvokeLaterDemo");
+        f.setContentPane(panel);
+        f.setSize(300, 100);
+        f.setVisible(true);
+        try {
+            print("sleeping for 3 seconds");
+            Thread.sleep(3000);
+        } catch ( InterruptedException ix ) {
+            print("interrupted while sleeping");
+        }
+
+        print("creating code block for event thread");
+        Runnable setTextRun = new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(100); // for emphasis
+                    print("about to do setText()");
+                    label.setText("New text!");
+                } catch ( Exception x ) {
+                    x.printStackTrace();
+                }
+            }
+        };
+
+        print("about to invokeLater()");
+        SwingUtilities.invokeLater(setTextRun);
+        print("back from invokeLater()");
+    }
+}</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>"inovke" in both titles is a typo for "invoke". <code>extends Object</code> is what every class does anyway, so it can be left out. Both programs build the window on <code>main</code>, which slide 16 says to avoid; they get away with it because nothing is on screen until <code>setVisible(true)</code> (slide 20's first exception).</span></aside>
+
+  <div class="demo" data-demo="invoke"></div>
+
+  <div class="slide">
+    <h3>When invokeLater() Is Not Needed <span class="sn">20</span></h3>
+    <ul class="pts">
+      <li>It is not always necessary to use invokeLater() to interact with Swing components.</li>
+      <li>Any thread can safely interact with the components before they have been added to a visible container.
+        <ul><li>After the components have been drawn to the screen, only the event thread should make further changes to their appearance.</li></ul></li>
+      <li>There are a couple of exceptions to this restriction.
+        <ul>
+          <li>The adding and removing of event listeners can safely be done by any thread at any time.</li>
+          <li>any thread can invoke the repaint() method.</li>
+          <li>any method that explicitly indicates that it does not have to be called by the event thread is safe.
+            <ul><li>The API documentation for the setText() method of JTextComponent explicitly states that setText() can be safely called by any thread. The setText() method is inherited by JTextField (a subclass of JTextComponent), so any thread can safely invoke setText() on a JTextField component at any time. Threads and Swing</li></ul></li>
+        </ul></li>
+      <li>If you aren't sure whether a particular method on a Swing component can be invoked by any thread, use the invokeLater() mechanism to be safe.</li>
+    </ul>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>The "thread-safe setText" sentence was in older Java documentation and was later removed, so modern advice is simply the slide's last line: when in doubt, <code>invokeLater</code>. ("Threads and Swing" at the end of that bullet is the name of the source the slide quotes.)</span></aside>
+
+  <details class="orig" data-pages="17-20"></details>
+  <div class="quiz" data-quiz="invoke"></div>
+</section>
+
+<section class="sec" id="worker" data-title="SwingWorker">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 21–27</p>
+    <div class="sec-head-row"><h2>SwingWorker</h2><label class="done"><input type="checkbox" id="done-worker"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>SwingWorker packages "background work + safe UI update" into one class so you don't juggle threads and <code>invokeLater</code> yourself:<ul><li><code>doInBackground()</code> runs on a background thread. Put the slow work here; it returns the result (type <code>T</code>).</li><li>Inside it, <code>publish(v)</code> sends partial results (type <code>V</code>), and the EDT receives them in <code>process(List&lt;V&gt;)</code>: several at once if they piled up.</li><li>When it finishes, the EDT runs <code>done()</code>, where <code>get()</code> gives you the result.</li></ul>Start it with <code>execute()</code> (never call <code>doInBackground()</code> yourself), and make a new worker object every time.</div></aside>
+
+  <div class="slide">
+    <h3>Callbacks execute on the EDT <span class="sn">21</span></h3>
+    <ul class="pts">
+      <li>You are a guest on the Event Dispatch Thread!</li>
+      <li>Don't abuse the privilege</li>
+      <li>If you do, liveness will suffer
+        <ul><li>Your program will become non-responsive</li><li>Your users will become angry</li></ul></li>
+      <li>If &gt; a few ms of work to do, do it off the EDT
+        <ul><li>javax.swing.SwingWorker designed for this purpose</li></ul></li>
+      <li>Typical scenario:
+        <ul><li>long running task in a background thread</li><li>provide updates to the UI either when done, or <b>while processing</b>.</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>SwingWorker <span class="sn">22</span></h3>
+    <ul class="pts">
+      <li>SwingWorker is an abstract class which encapsulates:
+        <ul>
+          <li>One abstract method, doInBackground(), which defines the task that needs to run by an automatically-assigned background thread (no need to create this.)</li>
+          <li>Two methods, process() and done(), which will be automatically executed by the EDT (at proper times).</li>
+          <li>The doInBackground() method will return a final result and, optionally, publishes a sequence of interim results.</li>
+          <li>The EDT done() and process() methods are provided so that the EDT can display the final and interim results of doInBackground().</li>
+          <li>In addition, SwingWorker provides the following concrete methods:
+            <ul><li>publish(), which transfers interim objects from the worker thread in doInBackground() to the EDT in process().</li><li>get(), typically run in done(), which picks up the final result object created in doInBackground().</li><li>These two methods are final, i.e. not overridable.</li></ul></li>
+        </ul></li>
+      <li>SwingWorker is an abstract generic class SwingWorker &lt;T, V&gt;, where:
+        <ul><li>T is the type of the final result of (and return type of) doInBackground(), which can be accessed using get().</li><li>V is the type of the interim objects published by doInBackground(), which are further transferred to process().</li></ul></li>
+      <li>If your task doesn't directly return results, use type Void for the final and interim type variables.</li>
+      <li>Don't call doInBackground() directly; instead call execute() which causes a background thread to call doInBackground().</li>
+      <li>Don't try to execute() a SwingWorker instance more than once. Create a new one each time</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>SwingWorker <span class="sn">23</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>abstract T doInBackground()</code></td><td>Computes a result, or throws an exception if unable to do so.<br>• this method is executed only once and it is executed in a background thread</td></tr>
+          <tr><td><code>Void done()</code></td><td>Executed on the Event Dispatch Thread after the doInBackground method is finished.<br>• Executed on the Event Dispatch Thread after the doInBackground method is finished.<br>• The default implementation does nothing. Subclasses may override this method to perform completion actions on the Event Dispatch Thread.</td></tr>
+          <tr><td><code>void execute()</code></td><td>Schedules this SwingWorker for execution on a worker thread.<br>• Schedules this SwingWorker for execution on a worker thread.<br>• SwingWorker is only designed to be executed once. Executing a SwingWorker more than once will not result in invoking the doInBackground method twice.</td></tr>
+          <tr><td><code>T get()</code></td><td>Waits if necessary for the computation to complete, and then retrieves its result.</td></tr>
+          <tr><td><code>void process(List&lt;V&gt; chunks)</code></td><td>Receives data chunks from the publish method asynchronously on the Event Dispatch Thread.<br>• Receives data chunks from the publish method asynchronously on the Event Dispatch Thread.</td></tr>
+          <tr><td><code>final T get()</code>: throws <code>InterruptedException, ExecutionException</code></td><td>• Waits if necessary for the computation to complete, and then retrieves its result.<br>• calling get on the Event Dispatch Thread blocks all events, including repaints, from being processed until this SwingWorker is complete.</td></tr>
+          <tr><td><code>void publish(V... chunks)</code></td><td>Sends data chunks to the process(java.util.List&lt;V&gt;) method.<br>• Sends data chunks to the process(java.util.List&lt;V&gt;) method. This method is to be used from inside the doInBackground method to deliver intermediate results for processing on the Event Dispatch Thread inside the process method.<br>• Because the process method is invoked asynchronously on the Event Dispatch Thread multiple invocations to the publish method might occur before the process method is executed. For performance purposes all these invocations are coalesced into one invocation with concatenated arguments.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>SwingWorker Skeleton <span class="sn">24</span> <span class="added">New in L15</span></h3>
+    <div class="code"><pre class="java">SwingWorker&lt;Void, Integer&gt; worker = new SwingWorker&lt;Void, Integer&gt;() {
+    protected Void doInBackground() {
+        // Long task here
+        return null;
+    }
+
+    protected void process(java.util.List&lt;Integer&gt; chunks) {
+        // Update GUI safely
+    }
+
+    protected void done() {
+        // Update GUI safely after task completion
+    }
+};
+worker.execute();</pre></div>
+    <p style="font-size:.9rem;color:var(--muted)">An anonymous subclass, like the anonymous listeners of Lecture 4. <code>Void</code> (capital V) is the class used when there's no real result, which is why <code>doInBackground</code> must still <code>return null;</code>.</p>
+  </div>
+
+  <div class="slide">
+    <h3>The simplest SwingWorker <span class="sn">25</span></h3>
+    <p>The following example illustrates the simplest use case. Some processing is done in the background and when done you update a Swing component.</p>
+    <p>Say we want to find the "Meaning of Life" and display the result in a JLabel.</p>
+    <div class="code"><pre class="java">final JLabel label;
+class MeaningOfLifeFinder extends SwingWorker&lt;String, Object&gt; {
+    @Override
+    public String doInBackground() {
+        return findTheMeaningOfLife();
+    }
+
+    @Override
+    protected void done() {
+        try {
+            label.setText(get());
+        } catch (Exception ignore) {
+        }
+    }
+}
+
+(new MeaningOfLifeFinder()).execute();</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>The shape of every SwingWorker <span class="sn">26</span></h3>
+    <div class="code"><pre class="java">public ConcreteSwingWorker extends SwingWorker&lt;T,V&gt; {
+    @Override
+    protected T doInBackground() {
+        // Run by background thread
+        // Optionally calls publish(V ... chunk) repeatedly
+        // Finally, returns a T
+    }
+    @Override
+    protected void process(List&lt;V&gt; chunks) {
+        // Run by EDT
+        // Gets V's published by doInBackground
+    }
+    @Override
+    protected void done() {
+        // Typically, calls get() to retrieve
+        // final T returned by doInBackground()
+
+    }
+}</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span>Slides 25 and 26 have no title on the PDF; the headings here are the guide's. Slide 26 is a template: add the missing <code>class</code> keyword (<code>public class ConcreteSwingWorker extends …</code>) and replace <code>T</code> and <code>V</code> with real types, e.g. <code>SwingWorker&lt;String, Integer&gt;</code>. In slide 25, <code>findTheMeaningOfLife()</code> stands for your slow method, and <code>catch (Exception ignore) {}</code> hides any error from <code>doInBackground</code>; at least print it. The return type of <code>done()</code> is <code>void</code> (lowercase), not <code>Void</code>. Progress bars and <code>setProgress</code> come next.</span></aside>
+
+  <div class="slide">
+    <h3>Runnable vs SwingWorker <span class="sn">27</span> <span class="added">New in L15</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Runnable / Thread</th><th>SwingWorker</th></tr></thead>
+        <tbody>
+          <tr><td>Runs off EDT</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Update GUI safely</td><td>❌ (need invokeLater)</td><td>✅ (done() &amp; process())</td></tr>
+          <tr><td>Progress reporting</td><td>❌</td><td>✅ via publish() &amp; process()</td></tr>
+          <tr><td>Designed for Swing</td><td>❌</td><td>✅</td></tr>
+          <tr><td>Easy for long tasks</td><td>Medium</td><td>High</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · a complete worker with publish and process</p>
+    <div class="code"><pre class="java">class CountWorker extends SwingWorker&lt;String, Integer&gt; {   // T = String, V = Integer
+    protected String doInBackground() throws Exception {      // background thread
+        for (int i = 10; i &lt;= 100; i += 10) {
+            Thread.sleep(500);                                 // pretend to work
+            publish(i);                                        // send an interim result
+        }
+        return "Done!";
+    }
+    protected void process(List&lt;Integer&gt; chunks) {           // EDT: may get [30, 40] at once
+        label.setText(chunks.get(chunks.size() - 1) + "% complete");
+    }
+    protected void done() {                                    // EDT, after doInBackground
+        try { label.setText(get()); }
+        catch (Exception e) { label.setText("Failed: " + e.getMessage()); }
+        startButton.setEnabled(true);
+    }
+}
+// in the Start button's actionPerformed:
+startButton.setEnabled(false);
+new CountWorker().execute();                                   // a new object every time</pre></div>
+  </div>
+
+  <p class="expl">The live SwingWorker demo (publish, process, progress and done) is in the next section, after the progress-bar slides.</p>
+
+  <details class="orig" data-pages="21-27"></details>
+  <div class="quiz" data-quiz="worker"></div>
+</section>
+
+<section class="sec" id="progress" data-title="Progress bars and property changes">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 28–32 · New in Lecture 15</p>
+    <div class="sec-head-row"><h2>Progress bars and property changes</h2><label class="done"><input type="checkbox" id="done-progress"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A <code>JProgressBar</code> shows how far a task has got. Inside <code>doInBackground()</code>, call <code>setProgress(n)</code> with 0–100; that changes the worker's "progress" property, and every <code>PropertyChangeListener</code> added to the worker is told about it <em>on the EDT</em>, so the listener can safely call <code>progressBar.setValue(n)</code>. The same listener also hears the "state" property go PENDING → STARTED → DONE, which is handy for re-enabling the Start button.</div></aside>
+
+  <div class="slide">
+    <h3>JProgressBar <span class="sn">28</span></h3>
+    <ul class="pts">
+      <li>A Swing component to show task progress visually</li>
+      <li>Can be determinate (percentage known) or indeterminate (unknown length)</li>
+      <li>Constructors
+        <ul><li><code>JProgressBar()                // default horizontal bar</code></li><li><code>JProgressBar(int min, int max) // specify range, e.g., 0 to 100</code></li></ul></li>
+    </ul>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>setValue(int v)</code></td><td>Set current progress (0 to max)</td></tr>
+          <tr><td><code>getValue()</code></td><td>Get current progress</td></tr>
+          <tr><td><code>setStringPainted(boolean b)</code></td><td>Show % as string on bar</td></tr>
+          <tr><td><code>setIndeterminate(boolean b)</code></td><td>Show animated "unknown" progress</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="code"><pre class="java">JProgressBar progressBar = new JProgressBar(0, 100);
+progressBar.setValue(0);
+progressBar.setStringPainted(true);
+panel.add(progressBar);</pre></div>
+  </div>
+
+  <div class="demo" id="pbDemo">
+    <div class="demo-head"><h3>Try it: a JProgressBar on its own</h3><span class="added">Added</span></div>
+    <div class="ctrl">
+      <label>new JProgressBar(<input type="number" id="pbMin" value="0" style="width:4.5rem">, <input type="number" id="pbMax" value="100" style="width:4.5rem">)</label>
+      <label>setValue(<input type="range" id="pbVal" min="0" max="100" value="40"> <span id="pbValT">40</span>)</label>
+      <label><input type="checkbox" id="pbStr" checked> setStringPainted(true)</label>
+      <label><input type="checkbox" id="pbInd"> setIndeterminate(true)</label>
+    </div>
+    <div class="win" style="max-width:24rem"><div class="win-bar"><span>JProgressBar</span><i>–□×</i></div><div class="win-body"><div class="jprog" id="pbBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i><span></span></div></div></div>
+    <div class="java-line" id="pbInfo" aria-live="polite"></div>
+  </div>
+
+  <div class="slide">
+    <h3>SetProgress <span class="sn">29</span></h3>
+    <p><b><code>setProgress(int value)</code></b></p>
+    <ul class="pts">
+      <li><b>Purpose:</b>
+        <ul><li>Updates a <b>property of SwingWorker</b> called "progress"</li><li>Fires a <b>property change event</b> automatically</li><li>Not limited to progress bars — can communicate task progress to any GUI component</li></ul></li>
+      <li><b>Typical Uses:</b>
+        <ul><li>Update <b>JProgressBar</b></li><li>Update <b>labels</b> with % complete</li><li>Track <b>task completion</b> internally to enable/disable buttons</li></ul></li>
+    </ul>
+    <div class="code"><pre class="java">for (int i = 0; i &lt;= 100; i += 10) {
+    Thread.sleep(500); // simulate work
+    setProgress(i);    // fire property change event
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>PropertyChangeListener <span class="sn">30</span></h3>
+    <p><b><code>addPropertyChangeListener(PropertyChangeListener listener)</code></b></p>
+    <ul class="pts">
+      <li><b>Purpose:</b>
+        <ul><li>Listen to property changes in SwingWorker</li><li>Can react to any property, not just "progress"</li></ul></li>
+      <li><b>Common Properties:</b>
+        <ul><li>"progress" → 0–100, often for progress bars or status labels</li><li>"state" → PENDING, STARTED, DONE, useful for enabling/disabling components</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>PropertyChangeListener Example <span class="sn">31</span></h3>
+    <div class="code"><pre class="java">worker.addPropertyChangeListener(evt -&gt; {
+    switch(evt.getPropertyName()) {
+        case "progress":
+            int value = (Integer) evt.getNewValue();
+            progressBar.setValue(value);        // update progress bar
+            label.setText(value + "% complete"); // update label
+            break;
+        case "state":
+            if (evt.getNewValue() == SwingWorker.StateValue.DONE) {
+                startButton.setEnabled(true);   // re-enable start button
+            }
+            break;
+    }
+});</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>PropertyChangeEvent <span class="sn">32</span></h3>
+    <ul class="pts">
+      <li><b>Purpose:</b></li>
+      <li>Encapsulates information about <b>property changes</b></li>
+      <li>Key methods:
+        <ul><li><code>getPropertyName()</code> → name of property changed</li><li><code>getOldValue()</code> → previous value</li><li><code>getNewValue()</code> → new value</li></ul></li>
+    </ul>
+    <div class="code"><pre class="java">public void propertyChange(PropertyChangeEvent evt) {
+    if ("progress".equals(evt.getPropertyName())) {
+        int progress = (Integer) evt.getNewValue();
+        label.setText("Completed: " + progress + "%");
+    }
+}</pre></div>
+  </div>
+
+  <aside class="note"><b>Guide note</b><span><code>setProgress</code> only accepts 0 to 100 (anything else throws <code>IllegalArgumentException</code>) and is <code>protected</code>, so it's called from inside the worker. <code>Thread.sleep(500)</code> throws <code>InterruptedException</code>, which <code>doInBackground() throws Exception</code> lets through. <code>evt.getNewValue()</code> returns an <code>Object</code>, hence the <code>(Integer)</code> cast. The class names live in <code>java.beans</code>: <code>import java.beans.PropertyChangeListener;</code> and <code>import java.beans.PropertyChangeEvent;</code>. Comparing with <code>==</code> works for <code>StateValue.DONE</code> because it's an enum constant; for Strings use <code>.equals</code>, as slide 32 does.</span></aside>
+
+  <div class="demo" data-demo="worker"></div>
+
+  <div class="slide">
+    <p class="added">Added · slides 24, 29 and 31 put together into one working window</p>
+    <div class="code"><span class="code-label">ProgressDemo.java</span><pre class="java">import java.awt.*;
+import java.util.List;
+import javax.swing.*;
+
+public class ProgressDemo extends JFrame {
+    private JProgressBar progressBar = new JProgressBar(0, 100);
+    private JLabel label = new JLabel("0% complete");
+    private JButton startButton = new JButton("Start");
+
+    public ProgressDemo() {
+        super("Progress Demo");
+        progressBar.setStringPainted(true);
+        JPanel panel = new JPanel(new FlowLayout());
+        panel.add(startButton); panel.add(progressBar); panel.add(label);
+        add(panel);
+        startButton.addActionListener(e -&gt; start());
+        setSize(400, 120);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    private void start() {
+        startButton.setEnabled(false);
+        SwingWorker&lt;Void, Integer&gt; worker = new SwingWorker&lt;Void, Integer&gt;() {
+            protected Void doInBackground() throws Exception {
+                for (int i = 0; i &lt;= 100; i += 10) {
+                    Thread.sleep(500);   // simulate work
+                    setProgress(i);      // fire property change event
+                }
+                return null;
+            }
+            protected void done() { label.setText("Done!"); }
+        };
+        worker.addPropertyChangeListener(evt -&gt; {
+            switch (evt.getPropertyName()) {
+                case "progress":
+                    int value = (Integer) evt.getNewValue();
+                    progressBar.setValue(value);
+                    label.setText(value + "% complete");
+                    break;
+                case "state":
+                    if (evt.getNewValue() == SwingWorker.StateValue.DONE) startButton.setEnabled(true);
+                    break;
+            }
+        });
+        worker.execute();
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -&gt; new ProgressDemo().setVisible(true));
+    }
+}</pre></div>
+  </div>
+
+  <details class="orig" data-pages="28-32"></details>
+  <div class="quiz" data-quiz="progress"></div>
+</section>
+
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 15 – Threads</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 15 – Threads</em> (CS254, 32 slides). Slides 1–26 largely repeat Lecture 14 – Threads; 3, 6, 7, 24 and 27–32 are new. Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l15-done", "quizzes": {"what": [{"q": "A thread is…", "o": ["an individual, separate unit of execution that is part of a process", "a separate program", "a kind of variable", "a GUI component"], "a": 0, "e": "Slide 2."}, {"q": "Why does a Swing program need extra threads (slide 3)?", "o": ["Long tasks like DB queries or file I/O freeze the UI if they run on the EDT", "Swing can only draw with two threads", "main can't create windows", "To make the program use less memory"], "a": 0, "e": "Slide 3: run long tasks in a separate thread."}, {"q": "Which is listed as a disadvantage of threads?", "o": ["They can lead to deadlock", "They can't share resources", "They can't use several processors", "They need polling"], "a": 0, "e": "Slide 5; also: switching overhead."}, {"q": "\"No polling\" means a thread…", "o": ["doesn't keep checking whether there's work; it runs only when needed", "never stops", "doesn't print", "can't be interrupted"], "a": 0, "e": "Slide 4."}], "create": [{"q": "Which method contains the code a thread executes?", "o": ["run()", "start()", "main()", "execute()"], "a": 0, "e": "Slides 6–7."}, {"q": "What does <code>thr1.start()<\/code> do that <code>thr1.run()<\/code> doesn't?", "o": ["Creates a new thread that then calls run()", "Nothing, they're the same", "Runs run() twice", "Ends the thread"], "a": 0, "e": "Calling run() directly runs it on the current thread. Try it in the demo."}, {"q": "When does a thread end?", "o": ["When its run() method finishes", "When main ends", "After 1 second", "Never"], "a": 0, "e": "Slide 6."}, {"q": "With <code>class Output implements Runnable<\/code>, how do you start it?", "o": ["new Thread(new Output(\"Hello\")).start()", "new Output(\"Hello\").start()", "Runnable.start(out)", "out.run()"], "a": 0, "e": "Slide 11."}, {"q": "Why prefer implementing Runnable?", "o": ["Java allows only one superclass, so your class can still extend something else", "It's faster", "It doesn't need run()", "Thread is deprecated"], "a": 0, "e": "Slide 12."}, {"q": "Can main end before the threads it started?", "o": ["Yes; the program keeps running while other threads are alive", "No, main always ends last", "Only with join()", "Only on Windows"], "a": 0, "e": "Slide 9."}, {"q": "Why can Example 1 write plain <code>sleep(1000)<\/code>?", "o": ["Output extends Thread, so it inherits the static sleep method", "sleep is a keyword", "It imports java.lang.sleep", "It can't; it's a bug"], "a": 0, "e": "Example 2 needs Thread.sleep(1000)."}, {"q": "In Lecture 15, which is called \"method 1\"?", "o": ["Implementing the Runnable interface", "Extending the Thread class", "Using SwingWorker", "Calling run() directly"], "a": 0, "e": "Slide 6 (Lecture 14 numbered them the other way round)."}, {"q": "Which is NOT a Thread constructor listed on slide 7?", "o": ["Thread(int priority)", "Thread(Runnable target)", "Thread(Runnable target, String name)", "Thread(String name)"], "a": 0, "e": "Slide 7 lists Thread(), Thread(Runnable), Thread(Runnable, String), Thread(String)."}], "control": [{"q": "Which method waits for a specific thread to finish?", "o": ["join()", "wait()", "stop()", "sleep()"], "a": 0, "e": "Slide 13."}, {"q": "Which methods are deprecated?", "o": ["stop(), suspend() and resume()", "start() and run()", "join() and sleep()", "wait() and notify()"], "a": 0, "e": "Lecture 14 slide 13 lists them; Lecture 15 leaves them out because they shouldn't be used."}, {"q": "Default thread priority?", "o": ["5 (NORM_PRIORITY)", "0", "10", "1"], "a": 0, "e": "Slide 13. (MIN_PRIORITY is really 1, MAX_PRIORITY 10.)"}, {"q": "The polite way to ask a thread to stop is…", "o": ["interrupt(), then let its run() finish", "stop()", "suspend()", "setPriority(0)"], "a": 0, "e": "Added: stop() is deprecated and unsafe."}], "edt": [{"q": "Which thread handles all GUI events in Swing?", "o": ["The event dispatch thread (EDT)", "main", "The garbage collector", "A new thread per event"], "a": 0, "e": "Slide 14."}, {"q": "Doing slow I/O inside actionPerformed causes…", "o": ["a liveness failure: the window freezes", "a compile error", "a safety failure only", "nothing"], "a": 0, "e": "Slide 15: violating rule 2."}, {"q": "Calling textArea.setText from a background thread breaks…", "o": ["rule 1 (all GUI activity on the EDT): a safety failure", "rule 2 only", "no rule", "the Runnable interface"], "a": 0, "e": "Slides 15–16."}, {"q": "How should main() create and show the frame?", "o": ["SwingUtilities.invokeLater(() -> new Test().setVisible(true));", "new Test().setVisible(true); in a new Thread", "Thread.sleep then setVisible", "Test.run()"], "a": 0, "e": "Slide 16."}, {"q": "Do Swing constructors count as \"Swing calls\"?", "o": ["Yes", "No", "Only JFrame's", "Only after setVisible"], "a": 0, "e": "Slide 16."}], "invoke": [{"q": "Does invokeLater create a new thread?", "o": ["No; the EDT runs the Runnable when its turn comes", "Yes, one per call", "Yes, a daemon thread", "Only for long tasks"], "a": 0, "e": "Slide 17."}, {"q": "Which one returns before the code has run?", "o": ["invokeLater", "invokeAndWait", "both", "neither"], "a": 0, "e": "Slide 17."}, {"q": "In InvokeAndWaitDemo, \"back from invokeAndWait()\" prints…", "o": ["after \"about to do setText()\"", "before it", "never", "at the same moment"], "a": 0, "e": "invokeAndWait waits for run() to finish."}, {"q": "invokeAndWait throws InvocationTargetException when…", "o": ["the code inside run() throws an uncaught exception", "the caller is interrupted", "the label is null", "it's called from main"], "a": 0, "e": "Slide 17; InterruptedException is for the caller being interrupted."}, {"q": "Which of these may any thread do at any time (slide 20)?", "o": ["Add or remove event listeners, and call repaint()", "Call setVisible on a shown frame", "Change a label's text", "Resize a table"], "a": 0, "e": "Slide 20."}], "worker": [{"q": "Which SwingWorker method runs on a background thread?", "o": ["doInBackground()", "done()", "process()", "execute()"], "a": 0, "e": "Slide 22."}, {"q": "Which two methods run on the EDT?", "o": ["process() and done()", "doInBackground() and publish()", "execute() and get()", "run() and start()"], "a": 0, "e": "Slide 22."}, {"q": "In <code>SwingWorker&lt;String, Integer&gt;<\/code>, Integer is the type of…", "o": ["the interim values passed to publish/process", "the final result", "the progress", "the thread ID"], "a": 0, "e": "Slide 22: T = final result, V = interim."}, {"q": "How do you start a SwingWorker?", "o": ["worker.execute()", "worker.doInBackground()", "new Thread(worker).start()", "worker.run()"], "a": 0, "e": "Slide 22."}, {"q": "Calling execute() twice on the same worker…", "o": ["doesn't run doInBackground a second time", "runs it twice", "throws a compile error", "restarts it"], "a": 0, "e": "Slide 23: create a new one each time."}, {"q": "Calling get() on the EDT before the worker finishes…", "o": ["blocks all events, including repaints, until it completes", "returns null", "throws immediately", "is the recommended way"], "a": 0, "e": "Slide 23."}, {"q": "Why might process() receive [30, 40] in one call?", "o": ["Several publish calls happened before the EDT ran process, so they were coalesced", "A bug", "publish sends two at a time", "process runs twice"], "a": 0, "e": "Slide 23."}, {"q": "In the slide 24 skeleton, why does doInBackground() end with <code>return null;<\/code>?", "o": ["Its type is Void, which still needs a return value; null is the only Void value", "To stop the thread", "Because process() needs null", "It's a mistake"], "a": 0, "e": "SwingWorker<Void, Integer>."}, {"q": "Per slide 27, which can report progress without extra work?", "o": ["SwingWorker (publish/process, setProgress)", "Runnable / Thread", "both equally", "neither"], "a": 0, "e": "Runnable needs invokeLater for every GUI update."}], "progress": [{"q": "Which constructor makes a progress bar from 0 to 100?", "o": ["new JProgressBar(0, 100)", "new JProgressBar(100)", "new JProgressBar(\"0-100\")", "new JProgressBar(true)"], "a": 0, "e": "Slide 28."}, {"q": "Which method shows the percentage as text on the bar?", "o": ["setStringPainted(true)", "setIndeterminate(true)", "setValue(100)", "setText(\"%\")"], "a": 0, "e": "Slide 28."}, {"q": "Use an indeterminate bar when…", "o": ["you don't know how long the task will take", "the task is almost done", "the bar is vertical", "you have no SwingWorker"], "a": 0, "e": "Slide 28."}, {"q": "What does <code>setProgress(i)<\/code> do inside a SwingWorker?", "o": ["Updates the \"progress\" property and fires a property change event", "Moves the progress bar directly from the background thread", "Publishes a chunk to process()", "Ends the worker"], "a": 0, "e": "Slide 29."}, {"q": "Which property tells you the worker has finished?", "o": ["\"state\" with the value SwingWorker.StateValue.DONE", "\"progress\" = 0", "\"done\" = true", "\"finished\""], "a": 0, "e": "Slides 30–31."}, {"q": "Which method gives the new value in a PropertyChangeEvent?", "o": ["getNewValue()", "getValue()", "getProperty()", "getChange()"], "a": 0, "e": "Slide 32; also getPropertyName() and getOldValue()."}, {"q": "Why is <code>(Integer)<\/code> needed in <code>int value = (Integer) evt.getNewValue();<\/code>?", "o": ["getNewValue() returns Object", "progress is a String", "Java can't store ints", "It isn't needed"], "a": 0, "e": "Slides 31–32."}]}, "flashcards": [["Thread", "A separate unit of execution inside a process; threads in a process share its resources.", "Slide 2"], ["Advantages / disadvantages", "Easier (1 thread per task), better performance, shared resources, multiple CPUs. Cons: deadlock, switching overhead.", "Slides 4–5"], ["Method 1: implement Runnable (L15 numbering)", "A class whose instances run in a thread; define run(); new Thread(r).start().", "Slide 6"], ["Method 2: extend Thread", "Thread extends Object implements Runnable. Constructors: Thread(), Thread(Runnable), Thread(Runnable, String name), Thread(String name).", "Slide 7"], ["start() vs run()", "start() creates a new thread that calls run(); calling run() yourself runs it on the current thread.", "Slide 6 + guide"], ["Controlling threads", "start(), wait()/notify(), join(), setPriority(1–10, default 5); stop(), suspend(), resume() deprecated.", "Slide 13"], ["EDT", "Event Dispatch Thread: runs every GUI event and listener, one at a time.", "Slide 14"], ["Rule 1 (safety)", "All GUI activity on the EDT; from other threads use invokeLater.", "Slides 15–16"], ["Rule 2 (liveness)", "No time-consuming work (I/O, sleep) on the EDT, or the window freezes.", "Slides 15, 21"], ["invokeLater(r)", "Queues r for the EDT and returns at once. No new thread.", "Slide 17"], ["invokeAndWait(r)", "Queues r and waits until it has run. Throws InterruptedException, InvocationTargetException. Never from the EDT.", "Slide 17"], ["SwingWorker<T, V>", "doInBackground() (background) returns T; publish(V) → process(List<V>) (EDT); done() (EDT) uses get().", "Slides 22–25"], ["execute() / get()", "execute() starts the worker (once per object). get() waits for the result: call it in done(), not earlier on the EDT.", "Slides 23–24"], ["SwingWorker skeleton", "new SwingWorker<Void, Integer>() { doInBackground(){… return null;} process(List<Integer>){…} done(){…} }.execute();", "Slide 24"], ["Runnable vs SwingWorker", "Both run off the EDT; only SwingWorker updates the GUI safely (done/process), reports progress and is designed for Swing.", "Slide 27"], ["JProgressBar", "JProgressBar(min, max); setValue, getValue, setStringPainted(true) (shows %), setIndeterminate(true) (unknown length).", "Slide 28"], ["setProgress(int)", "Sets the worker's \"progress\" property (0–100) and fires a property change event.", "Slide 29"], ["PropertyChangeListener", "worker.addPropertyChangeListener(evt -> …); properties \"progress\" (0–100) and \"state\" (PENDING, STARTED, DONE).", "Slides 30–31"], ["PropertyChangeEvent", "getPropertyName(), getOldValue(), getNewValue().", "Slide 32"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+<script>
+// Shared demos for the two Threads lectures. Each demo renders into <div class="demo" data-demo="…">.
+(function () {
+  var esc = window.Guide.esc, J = window.Guide.java;
+  var C = { ev: "#9fd3ff", ok: "#7fd3ad", warn: "#f0b071", bad: "#ff8f86", dim: "#9aa4a8" };
+  function logger(el) { return function (t, c) { var d = document.createElement("div"); d.textContent = t; if (c) d.style.color = c; el.appendChild(d); while (el.childNodes.length > 200) el.removeChild(el.firstChild); el.scrollTop = el.scrollHeight; }; }
+  function q(root, k) { return root.querySelector('[data-k="' + k + '"]'); }
+  var ADDED = '<span class="added">Added</span>';
+
+  // ================= race: Example 1 / Example 2 =================
+  function race(root) {
+    root.innerHTML = '<div class="demo-head"><h3>Try it: run Example 1 and Example 2</h3>' + ADDED + '</div>' +
+      '<p class="expl" style="margin:0">Press <b>Run main()</b>. Each thread prints its word, then sleeps about a second; the exact order changes from run to run because the threads take turns. Then try <code>run()</code> instead of <code>start()</code>, or make main wait with <code>join()</code>.</p>' +
+      '<div class="ctrl"><label>Version <select data-k="ver"><option value="thread">extends Thread (Example 1)</option><option value="runnable">implements Runnable (Example 2)</option></select></label>' +
+      '<label><input type="checkbox" data-k="run"> call <code>run()</code> instead of <code>start()</code></label>' +
+      '<label><input type="checkbox" data-k="join"> main calls <code>thr1.join()</code> at the end</label></div>' +
+      '<div class="ctrl"><button class="btn solid" type="button" data-k="go">Run main()</button><button class="btn" type="button" data-k="int">thr1.interrupt()</button><button class="btn" type="button" data-k="stop">Stop the program</button></div>' +
+      '<div class="code"><pre class="java" data-k="code"></pre></div>' +
+      '<div class="lanes" data-k="lanes"></div>' +
+      '<div class="log wrap" data-k="log" style="height:9rem" aria-label="Console output"></div>';
+    var out = logger(q(root, "log")), timers = [], T = {};
+    var NAMES = ["main", "Thread-0", "Thread-1"];
+    function lanes() {
+      q(root, "lanes").innerHTML = NAMES.map(function (n) { return '<div class="lane" data-lane="' + n + '"><b>' + n + (n === "Thread-0" ? " (thr1)" : n === "Thread-1" ? " (thr2)" : "") + '</b><span class="st NEW">NEW</span><span class="ticks"></span></div>'; }).join("");
+    }
+    function state(n, s) { var l = root.querySelector('[data-lane="' + n + '"] .st'); l.className = "st " + s; l.textContent = s; T[n] = s; }
+    function tick(n, w) { var t = root.querySelector('[data-lane="' + n + '"] .ticks'), d = document.createElement("span"); d.className = "tick"; d.textContent = w[0]; d.title = w; t.appendChild(d); while (t.childNodes.length > 24) t.removeChild(t.firstChild); }
+    function code() {
+      var v = q(root, "ver").value, r = q(root, "run").checked, j = q(root, "join").checked, call = r ? "run" : "start";
+      q(root, "code").innerHTML = J(v === "thread"
+        ? 'Output thr1 = new Output("Hello");   // class Output extends Thread\nOutput thr2 = new Output("There");\nthr1.' + call + "();\nthr2." + call + "();" + (j ? "\nthr1.join();   // main waits here until thr1 ends" : "")
+        : 'Output out1 = new Output("Hello");   // class Output implements Runnable\nOutput out2 = new Output("There");\nThread thr1 = new Thread(out1);\nThread thr2 = new Thread(out2);\nthr1.' + call + "();\nthr2." + call + "();" + (j ? "\nthr1.join();   // main waits here until thr1 ends" : ""));
+    }
+    function clear() { timers.forEach(clearTimeout); timers = []; }
+    function later(f, ms) { timers.push(setTimeout(f, ms)); }
+    var alive = {};
+    function loop(thread, word, by) {
+      if (!alive[thread]) return;
+      state(by, "RUNNABLE"); out(word + "   ← printed by " + by); tick(by, word);
+      later(function () { if (alive[thread]) state(by, "TIMED_WAITING"); }, 60);
+      later(function () { loop(thread, word, by); }, 1000 + Math.round(Math.random() * 90 - 45));
+    }
+    function go() {
+      clear(); alive = {}; lanes(); q(root, "log").innerHTML = "";
+      var r = q(root, "run").checked, j = q(root, "join").checked;
+      state("main", "RUNNABLE"); out("main: two Output objects created (both threads NEW, not running yet)", C.dim);
+      if (r) {
+        out("main: thr1.run() is an ordinary method call: no new thread starts, main runs the for(;;) loop itself and never returns", C.warn);
+        alive.t1 = true; loop("t1", "Hello", "main");
+        later(function () { out('// "There" never prints: main is stuck inside thr1.run(), so it never reaches thr2.run()', C.bad); }, 3200);
+        return;
+      }
+      out("main: thr1.start() and thr2.start() → two new threads run(); start() returns at once", C.ev);
+      alive.t1 = alive.t2 = true;
+      later(function () { loop("t1", "Hello", "Thread-0"); }, 30 + Math.random() * 40);
+      later(function () { loop("t2", "There", "Thread-1"); }, 30 + Math.random() * 40);
+      later(function () {
+        if (j) { state("main", "WAITING"); out("main: thr1.join() → waiting for thr1 to finish (it never will on its own: try thr1.interrupt())", C.dim); }
+        else { state("main", "TERMINATED"); out("main: reached the end of main() and finished. The program keeps running because thr1 and thr2 are still alive.", C.dim); }
+      }, 120);
+    }
+    q(root, "go").addEventListener("click", go);
+    q(root, "int").addEventListener("click", function () {
+      if (q(root, "run").checked) { out("thr1.interrupt(): thr1 was never started, so there's no thread to interrupt (main is the one looping)", C.warn); return; }
+      if (!alive.t1) { out("thr1 isn't running", C.dim); return; }
+      alive.t1 = false; out("java.lang.InterruptedException: sleep interrupted   ← printed by Thread-0's catch block; run() ends", C.bad); state("Thread-0", "TERMINATED");
+      if (T.main === "WAITING") { state("main", "RUNNABLE"); out("main: thr1.join() returns, main ends", C.ok); later(function () { state("main", "TERMINATED"); }, 300); }
+    });
+    q(root, "stop").addEventListener("click", function () { clear(); alive = {}; NAMES.forEach(function (n) { if (T[n] && T[n] !== "NEW") state(n, "TERMINATED"); }); out("// program stopped (like the Stop button in NetBeans)", C.dim); });
+    ["ver", "run", "join"].forEach(function (k) { q(root, k).addEventListener("change", code); });
+    lanes(); code();
+  }
+
+  // ================= edt: freezing vs responsive =================
+  function edt(root) {
+    var MODES = [
+      { t: "readHugeFile() inside actionPerformed (on the EDT)", ok: false, code: "public void actionPerformed(ActionEvent e)\n{\n      final String text = readHugeFile();\n      textArea.setText(text);\n}" },
+      { t: "new Thread, then invokeLater for setText", ok: true, code: "public void actionPerformed(ActionEvent e)\n{\n   new Thread(new Runnable()\n   {\n      public void run()\n      {\n         final String text = readHugeFile();\n         SwingUtilities.invokeLater(new Runnable()\n         {\n            public void run()\n            {\n               textArea.setText(text);\n            }\n         });\n      }\n   }).start();\n}" },
+      { t: "new Thread, setText straight from that thread", ok: false, code: "public void actionPerformed(ActionEvent e)\n{\n   new Thread(new Runnable()\n   {\n      public void run()\n      {\n         final String text = readHugeFile();\n         textArea.setText(text);     // Swing call off the EDT\n      }\n   }).start();\n}" },
+      { t: "SwingWorker (doInBackground, then done)", ok: true, code: "public void actionPerformed(ActionEvent e)\n{\n   new SwingWorker<String, Void>() {\n      protected String doInBackground() { return readHugeFile(); }   // background thread\n      protected void done() {                                         // EDT\n         try { textArea.setText(get()); } catch (Exception ex) { }\n      }\n   }.execute();\n}" }
+    ];
+    root.innerHTML = '<div class="demo-head"><h3>Try it: freeze the window, then fix it</h3>' + ADDED + '</div>' +
+      '<p class="expl" style="margin:0">The clock is a Swing <code>Timer</code> on the EDT; <b>Click me</b> counts clicks. Press <b>Load huge file</b> (it takes 3 seconds), and while it loads keep clicking <b>Click me</b> and watch the clock.</p>' +
+      '<div class="ctrl"><label>actionPerformed does… <select data-k="mode">' + MODES.map(function (m, i) { return '<option value="' + i + '">' + (m.ok ? "✓ " : "✗ ") + m.t + "</option>"; }).join("") + '</select></label> <span data-k="verdict"></span></div>' +
+      '<div class="code"><pre class="java" data-k="code"></pre></div>' +
+      '<div class="win" data-k="win" style="max-width:26rem"><div class="win-bar"><span>Huge File Viewer<span class="nr" data-k="nr" hidden> (Not Responding)</span></span><i>–□×</i></div><div class="win-body" style="display:grid;gap:.4rem">' +
+      '<div class="row"><span data-k="clock" style="font:12px ui-monospace,monospace;min-width:7rem">Timer: 0.0 s</span><button type="button" class="jbtn" data-k="load">Load huge file</button><button type="button" class="jbtn" data-k="click">Click me (0)</button></div>' +
+      '<textarea data-k="ta" readonly aria-label="File contents"></textarea><span data-k="queue" style="font-size:11px;color:#56676f"></span></div></div>' +
+      '<div class="log wrap" data-k="log" style="height:8rem" aria-label="Thread log"></div>';
+    var out = logger(q(root, "log")), blocked = false, queued = 0, clicks = 0, t0 = Date.now(), loading = false;
+    function mode() { return MODES[+q(root, "mode").value]; }
+    function show() { var m = mode(); q(root, "code").innerHTML = J(m.code); q(root, "verdict").innerHTML = m.ok ? '<span class="verdict ok">correct</span>' : '<span class="verdict bad">wrong</span>'; }
+    q(root, "mode").addEventListener("change", show); show();
+    setInterval(function () { if (!blocked) q(root, "clock").textContent = "Timer: " + ((Date.now() - t0) / 1000).toFixed(1) + " s"; }, 100);
+    function freeze(on) { blocked = on; q(root, "win").classList.toggle("frozen", on); q(root, "nr").hidden = !on; q(root, "queue").textContent = on ? "EDT busy: events wait in the queue" : ""; }
+    function drain() { if (queued) { out("AWT-EventQueue-0: now handles the " + queued + " queued click(s) all at once", C.warn); clicks += queued; queued = 0; q(root, "click").textContent = "Click me (" + clicks + ")"; } }
+    var FILE = "Line 1 of a very large file…\nLine 2…\n… 200 MB later …\nThe end.";
+    q(root, "click").addEventListener("click", function () {
+      if (blocked) { queued++; q(root, "queue").textContent = "EDT busy: " + queued + " click(s) waiting in the event queue"; return; }
+      clicks++; this.textContent = "Click me (" + clicks + ")";
+    });
+    q(root, "load").addEventListener("click", function () {
+      if (blocked) { queued++; return; }
+      if (loading) return;
+      var i = +q(root, "mode").value; q(root, "ta").value = ""; loading = true;
+      if (i === 0) {
+        out("AWT-EventQueue-0: actionPerformed → readHugeFile() … the EDT is stuck for 3 s: no repaints, no clicks, no timer", C.bad);
+        freeze(true);
+        setTimeout(function () { q(root, "ta").value = FILE; out("AWT-EventQueue-0: textArea.setText(text); actionPerformed returns", C.ok); freeze(false); drain(); loading = false; }, 3000);
+        return;
+      }
+      if (i === 3) { out("AWT-EventQueue-0: new SwingWorker…execute() and return at once", C.ev); out("SwingWorker-pool-1-thread-1: doInBackground() → readHugeFile() …", C.dim); }
+      else { out("AWT-EventQueue-0: actionPerformed starts Thread-0 and returns at once", C.ev); out("Thread-0: readHugeFile() …", C.dim); }
+      q(root, "load").disabled = true; q(root, "ta").value = "(loading…)";
+      setTimeout(function () {
+        if (i === 1) { out("Thread-0: SwingUtilities.invokeLater(…) puts setText on the event queue", C.dim); setTimeout(function () { out("AWT-EventQueue-0: textArea.setText(text)", C.ok); q(root, "ta").value = FILE; q(root, "load").disabled = false; loading = false; }, 120); }
+        else if (i === 2) { out("Thread-0: textArea.setText(text)  ← a Swing call from a thread that isn't the EDT. It may look fine here, but it breaks rule 1 (safety): it can flicker, throw, or corrupt the component, and the bug is hard to reproduce", C.bad); q(root, "ta").value = FILE; q(root, "load").disabled = false; loading = false; }
+        else { out("AWT-EventQueue-0: done() → textArea.setText(get())", C.ok); q(root, "ta").value = FILE; q(root, "load").disabled = false; loading = false; }
+      }, 3000);
+    });
+  }
+
+  // ================= invokeAndWait vs invokeLater =================
+  function invoke(root) {
+    root.innerHTML = '<div class="demo-head"><h3>Try it: invokeAndWait vs invokeLater</h3>' + ADDED + '</div>' +
+      '<p class="expl" style="margin:0">Runs the main() of slide 18 or 19 in real time (including the 3-second sleep). Watch the order of the last lines and which thread prints each one.</p>' +
+      '<div class="ctrl"><label>Program <select data-k="prog"><option value="wait">InvokeAndWaitDemo (slide 18)</option><option value="later">InvokeLaterDemo (slide 19)</option></select></label>' +
+      '<label><input type="checkbox" data-k="boom"> make <code>run()</code> throw an exception</label><button class="btn solid" type="button" data-k="go">Run main()</button></div>' +
+      '<div class="win" style="max-width:20rem"><div class="win-bar"><span data-k="title">InvokeAndWaitDemo</span><i>–□×</i></div><div class="win-body" style="text-align:center;padding:.8rem"><span data-k="label">————</span></div></div>' +
+      '<div class="log wrap" data-k="log" style="height:9rem" aria-label="Console output"></div>';
+    var out = logger(q(root, "log")), timers = [];
+    function later(f, ms) { timers.push(setTimeout(f, ms)); }
+    q(root, "prog").addEventListener("change", function () { q(root, "title").textContent = this.value === "wait" ? "InvokeAndWaitDemo" : "InvokeLaterDemo"; });
+    q(root, "go").addEventListener("click", function () {
+      timers.forEach(clearTimeout); timers = []; q(root, "log").innerHTML = ""; q(root, "label").textContent = "————";
+      var w = q(root, "prog").value === "wait", boom = q(root, "boom").checked, t = 0;
+      function p(who, msg, c, dt) { t += dt; later(function () { out(who + ": " + msg, c || (who === "main" ? null : C.ev)); }, t); }
+      p("main", "sleeping for 3 seconds", null, 50);
+      t += 3000;
+      p("main", "creating code block for event thread", null, 0);
+      if (w) {
+        p("main", "about to invokeAndWait()", null, 250);
+        p("AWT-EventQueue-0", "about to do setText()", C.ev, 250);
+        if (boom) { p("main", "exception thrown from run()   (catch InvocationTargetException)", C.bad, 250); }
+        else { later(function () { q(root, "label").textContent = "New text!"; }, t + 50); p("main", "back from invokeAndWait()   ← only after setText() has finished", C.ok, 250); }
+      } else {
+        p("main", "about to invokeLater()", null, 250);
+        p("main", "back from invokeLater()   ← straight away; the code block hasn't run yet", C.ok, 80);
+        p("AWT-EventQueue-0", "about to do setText()   (after its Thread.sleep(100) \"for emphasis\")", C.ev, 170);
+        if (boom) p("AWT-EventQueue-0", "java.lang.RuntimeException … (x.printStackTrace() in run()'s own catch block; main never finds out)", C.bad, 100);
+        else later(function () { q(root, "label").textContent = "New text!"; }, t + 50);
+      }
+    });
+  }
+
+  // ================= SwingWorker with progress =================
+  function worker(root) {
+    root.innerHTML = '<div class="demo-head"><h3>Try it: a SwingWorker with publish, process, progress and done</h3>' + ADDED + '</div>' +
+      '<p class="expl" style="margin:0">The worker counts to 100 in steps of 10, sleeping 500 ms per step, calling <code>publish(i)</code> and <code>setProgress(i)</code>. The EDT runs <code>process()</code> with whatever chunks have piled up (sometimes two at once), and a <code>PropertyChangeListener</code> moves the bar.</p>' +
+      '<div class="ctrl"><label><input type="checkbox" data-k="sp" checked> setStringPainted(true)</label><label><input type="checkbox" data-k="ind"> setIndeterminate(true)</label></div>' +
+      '<div class="win" data-k="win" style="max-width:26rem"><div class="win-bar"><span>Worker Demo<span class="nr" data-k="nr" hidden> (Not Responding)</span></span><i>–□×</i></div><div class="win-body" style="display:grid;gap:.45rem">' +
+      '<div class="jprog" data-k="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i style="width:0%"></i><span>0%</span></div>' +
+      '<div class="row"><button type="button" class="jbtn" data-k="start">Start</button><span data-k="lbl" style="font-size:12px">0% complete</span></div>' +
+      '<div class="row"><button type="button" class="jbtn" data-k="again">worker.execute() again</button><button type="button" class="jbtn" data-k="get">get() on the EDT now</button></div></div></div>' +
+      '<div class="log wrap" data-k="log" style="height:10rem" aria-label="Worker log"></div>';
+    var out = logger(q(root, "log")), W = null, frozen = false;
+    var BG = "SwingWorker-pool-1-thread-1", EDT = "AWT-EventQueue-0";
+    function bar(v) {
+      var b = q(root, "bar"), sp = q(root, "sp").checked, ind = q(root, "ind").checked;
+      b.classList.toggle("ind", ind); b.querySelector("i").style.width = v + "%"; b.querySelector("span").textContent = sp ? (ind ? "" : v + "%") : ""; b.setAttribute("aria-valuenow", v);
+    }
+    ["sp", "ind"].forEach(function (k) { q(root, k).addEventListener("change", function () { bar(W ? W.progress : 0); }); });
+    function freeze(on) { frozen = on; q(root, "win").classList.toggle("frozen", on); q(root, "nr").hidden = !on; }
+    function edt(f) { if (frozen) { W.pending.push(f); } else f(); }
+    function start() {
+      if (W && W.state !== "DONE") { out("Start is disabled while the worker runs (re-enabled in the \"state\" listener when DONE, slide 31)", C.dim); return; }
+      W = { state: "PENDING", progress: 0, chunks: [], pending: [], timers: [] };
+      var w = W; q(root, "start").disabled = true; bar(0); q(root, "lbl").textContent = "0% complete";
+      out(EDT + ": worker = new Worker(); worker.addPropertyChangeListener(…); worker.execute()", C.ev);
+      function prop(name, o, n) { edt(function () { out(EDT + ': propertyChange "' + name + '": ' + o + " → " + n, C.dim); if (name === "progress") { bar(n); q(root, "lbl").textContent = n + "% complete"; } if (name === "state" && n === "DONE") q(root, "start").disabled = false; }); }
+      w.timers.push(setTimeout(function () { w.state = "STARTED"; prop("state", "PENDING", "STARTED"); out(BG + ": doInBackground() starts", C.ev); }, 50));
+      for (var s = 1; s <= 10; s++) (function (s) {
+        w.timers.push(setTimeout(function () {
+          var i = s * 10; out(BG + ": Thread.sleep(500) … publish(" + i + "); setProgress(" + i + ")"); w.chunks.push(i);
+          var old = w.progress; w.progress = i; prop("progress", old, i);
+        }, 50 + s * 500));
+      })(s);
+      // the EDT gets round to process() every ~800 ms, so publishes pile up and are coalesced
+      var pt = setInterval(function () {
+        if (!w.chunks.length) return;
+        edt(function () { if (!w.chunks.length) return; var c = w.chunks.splice(0); out(EDT + ": process(" + JSON.stringify(c) + ")" + (c.length > 1 ? "   ← " + c.length + " publish calls coalesced into one" : ""), C.ok); });
+      }, 800);
+      w.timers.push(setTimeout(function () {
+        clearInterval(pt);
+        if (w.chunks.length) edt(function () { var c = w.chunks.splice(0); if (c.length) out(EDT + ": process(" + JSON.stringify(c) + ")", C.ok); });
+        out(BG + ": doInBackground() returns", C.ev); w.state = "DONE";
+        edt(function () { out(EDT + ': done() → get() returns at once → label.setText("Done!")', C.ok); q(root, "lbl").textContent = "Done!"; });
+        prop("state", "STARTED", "DONE");
+        if (frozen) { out(EDT + ": get() finally returns; the frozen EDT catches up on everything that was queued", C.warn); freeze(false); var p = w.pending.splice(0); p.forEach(function (f) { f(); }); }
+      }, 50 + 10 * 500 + 150));
+    }
+    q(root, "start").addEventListener("click", start);
+    q(root, "again").addEventListener("click", function () {
+      if (!W) { out("No worker yet: press Start", C.dim); return; }
+      out(EDT + ": worker.execute() on the same object → nothing happens. A SwingWorker runs once; create a new one each time (slides 23–24)", C.warn);
+    });
+    q(root, "get").addEventListener("click", function () {
+      if (!W || W.state === "DONE") { out(EDT + ": get() → returns at once (the worker has finished or never started)", C.dim); return; }
+      out(EDT + ": get() called on the EDT while the worker is still running → the EDT blocks: no repaints, no process(), no progress until it's done", C.bad); freeze(true);
+    });
+  }
+
+  document.querySelectorAll(".demo[data-demo]").forEach(function (el) {
+    ({ race: race, edt: edt, invoke: invoke, worker: worker })[el.dataset.demo](el);
+  });
+})();
+
+// ---------- JProgressBar playground (Lecture 15, slide 28) ----------
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  if (!$("pbBar")) return;
+  function draw() {
+    var mn = parseInt($("pbMin").value, 10) || 0, mx = parseInt($("pbMax").value, 10);
+    if (isNaN(mx) || mx <= mn) mx = mn + 1;
+    var r = $("pbVal"); r.min = mn; r.max = mx; var v = Math.max(mn, Math.min(mx, +r.value)); r.value = v; $("pbValT").textContent = v;
+    var pct = Math.round((v - mn) * 100 / (mx - mn)), b = $("pbBar"), ind = $("pbInd").checked, str = $("pbStr").checked;
+    b.classList.toggle("ind", ind); b.querySelector("i").style.width = pct + "%";
+    b.querySelector("span").textContent = str && !ind ? pct + "%" : "";
+    b.setAttribute("aria-valuemin", mn); b.setAttribute("aria-valuemax", mx); b.setAttribute("aria-valuenow", v);
+    $("pbInfo").textContent = "getValue() = " + v + "   getPercentComplete() = " + (pct / 100).toFixed(2) + (str ? '   string shown: "' + (ind ? "" : pct + "%") + '"' : "") + (ind ? "   (indeterminate: the value is ignored while it animates)" : "");
+  }
+  ["pbMin", "pbMax", "pbVal", "pbStr", "pbInd"].forEach(function (id) { $(id).addEventListener("input", draw); $(id).addEventListener("change", draw); });
+  draw();
+})();
+
+</script>
+</body>
+</html>

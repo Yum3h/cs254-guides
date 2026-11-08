@@ -1,0 +1,1873 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 Events Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+pre.pickable .ln { cursor: pointer; }
+pre.pickable .ln:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+pre .ln.pick { background: color-mix(in srgb, var(--mark) 16%, transparent); }
+pre .ln.hit { background: color-mix(in srgb, var(--ok) 22%, transparent); box-shadow: inset 3px 0 var(--ok); }
+pre .ln.miss { background: color-mix(in srgb, var(--mark) 22%, transparent); box-shadow: inset 3px 0 var(--mark); }
+pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
+.bug-x { font-size: .9rem; border-left: 3px solid var(--line); padding: var(--s1) var(--s3); }
+.bug-x.hit { border-color: var(--ok); } .bug-x.miss { border-color: var(--mark); }
+.res-ok { color: var(--ok); font-weight: 600; } .res-bad { color: var(--bad); font-weight: 600; }
+
+/* L13: Swing component mock-ups (inside .win, always light) */
+.tree-view { background: #fff; padding: .4rem .3rem; font: 13px system-ui, "Segoe UI", sans-serif; color: #1c2328; min-height: 6rem; overflow-x: auto; }
+.tv-row { display: flex; align-items: center; white-space: nowrap; line-height: 1.6; }
+.tv-guide { font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace; color: #8b98a0; white-space: pre; }
+.tv-tog { width: 1.1rem; flex: none; border: 0; background: none; padding: 0; font-size: .72rem; color: #3c4a52; cursor: pointer; }
+.tv-tog.none { visibility: hidden; }
+.tv-ico { width: 16px; height: 14px; margin-right: .3rem; flex: none; }
+.tv-lbl { padding: 0 .3rem; border-radius: 2px; cursor: pointer; border: 1px solid transparent; }
+.tv-lbl.sel { background: #b8cfe5; border-color: #6d8fb5; }
+.tv-lbl.fresh { background: #fff2b3; }
+.tv-hline { border-top: 1px solid #8b98a0; margin: .1rem 0; }
+.sp-frame { display: flex; flex-direction: column; height: 18rem; background: var(--win-bg); }
+.sp { display: flex; flex: 1; min-height: 0; min-width: 0; }
+.sp.vert { flex-direction: column; }
+#sp2 { height: 100%; }
+.sp-a, .sp-b { overflow: auto; background: #fff; min-width: 0; min-height: 0; }
+.sp-a { flex: none; }
+.sp-b { flex: 1; }
+.sp-div { flex: none; background: #d5dde1; border: 1px solid #a9b4ba; display: flex; gap: 3px; cursor: col-resize; touch-action: none; }
+.sp:not(.vert) > .sp-div { flex-direction: column; align-items: center; padding-top: 3px; }
+.sp.vert > .sp-div { flex-direction: row; align-items: center; padding-left: 3px; cursor: row-resize; }
+.sp-div:focus-visible { outline: 2px solid #2a6ebb; }
+.sp-arrow { font-size: 9px; line-height: 1; padding: 1px; border: 0; background: none; color: #24323a; cursor: pointer; }
+.jlist { list-style: none; margin: 0; padding: 2px 0; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jlist li { padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+.jlist li.sel { background: #b8cfe5; }
+.pic { display: grid; place-items: center; }
+.ok-cyan { background: #00ffff; border: 1px solid #6b7b82; font: 600 13px system-ui, sans-serif; padding: .35rem; color: #1c2328; cursor: pointer; }
+.jtp { display: flex; flex-direction: column; height: 13rem; background: var(--win-bg); font: 12px system-ui, sans-serif; color: #1c2328; padding: 4px; }
+.jtp.pos-BOTTOM { flex-direction: column-reverse; }
+.jtp.pos-LEFT { flex-direction: row; }
+.jtp.pos-RIGHT { flex-direction: row-reverse; }
+.jtp-tabs { display: flex; flex-wrap: wrap; gap: 2px; min-width: 0; }
+.jtp.pos-LEFT .jtp-tabs, .jtp.pos-RIGHT .jtp-tabs { flex-direction: column; flex-wrap: nowrap; overflow: auto; max-width: 45%; }
+.jtp.scroll:not(.pos-LEFT):not(.pos-RIGHT) .jtp-tabs { flex-wrap: nowrap; overflow-x: auto; }
+.jtp-tab { border: 1px solid #9aa7ad; background: #dfe5e8; padding: 2px 9px; cursor: pointer; white-space: nowrap; font: inherit; color: inherit; }
+.jtp-tab.sel { background: #fff; font-weight: 600; }
+.jtp-page { flex: 1; border: 1px solid #9aa7ad; background: #eceff1; min-height: 0; min-width: 0; overflow: auto; }
+.jtp-empty { padding: .5rem; color: #7a868c; }
+.bl3 { display: grid; grid-template: auto 1fr auto / auto 1fr auto; height: 100%; gap: 2px; padding: 2px; }
+.bl3 .jbtn { font-weight: 600; }
+.tl-frame { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto; height: 14rem; background: var(--win-bg); }
+.tl-frame.drop { outline: 2px dashed #2a6ebb; outline-offset: -4px; }
+.tl-frame[data-dock="NORTH"] > .tl-bar { grid-area: 1 / 1 / 2 / 4; }
+.tl-frame[data-dock="SOUTH"] > .tl-bar { grid-area: 3 / 1 / 4 / 4; }
+.tl-frame[data-dock="WEST"] > .tl-bar { grid-area: 1 / 1 / 4 / 2; }
+.tl-frame[data-dock="EAST"] > .tl-bar { grid-area: 1 / 3 / 4 / 4; }
+.tl-center { grid-area: 2 / 2 / 3 / 3; background: #fff; margin: 4px; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tl-bar { display: flex; align-items: center; gap: 2px; padding: 2px; background: #e3e8eb; border: 1px solid #b6c0c5; }
+.tl-bar.vertical { flex-direction: column; }
+.tl-grip { width: 9px; align-self: stretch; min-height: 1.6rem; background-image: radial-gradient(#7d8a91 1px, transparent 1.3px); background-size: 4px 4px; cursor: grab; touch-action: none; }
+.tl-bar.vertical .tl-grip { width: auto; min-height: 9px; height: 9px; min-width: 1.6rem; }
+.tl-btn { min-width: 1.9rem; height: 1.9rem; border: 1px solid transparent; background: none; border-radius: 3px; cursor: pointer; font: 14px system-ui, sans-serif; color: #24323a; padding: 0 .35rem; }
+.tl-btn:hover:not(:disabled) { border-color: #8f9ba1; background: #f4f6f7; }
+.tl-btn:disabled { color: #a9b2b7; cursor: default; }
+.tl-sep { width: 1px; align-self: stretch; background: #9aa7ad; margin: 2px 4px; }
+.tl-bar.vertical .tl-sep { width: auto; height: 1px; margin: 4px 2px; }
+.tl-floatwin { max-width: 16rem; }
+.pp-area { position: relative; background: #fff; min-height: 9rem; padding: .2rem; outline: none; }
+.pp-area:focus-visible { outline: 2px solid #2a6ebb; }
+.jpopup { position: absolute; z-index: 5; background: #f4f6f7; border: 1px solid #8f9ba1; box-shadow: 2px 2px 6px rgba(0, 0, 0, .25); padding: 2px 0; min-width: 8rem; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jpopup button { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; text-align: left; border: 0; background: none; padding: 3px 12px; font: inherit; color: inherit; cursor: pointer; }
+.jpopup button:hover:not(:disabled), .jpopup button:focus-visible { background: #b8cfe5; outline: none; }
+.jpopup button:disabled { color: #a9b2b7; cursor: default; }
+.jpopup hr { border: 0; border-top: 1px solid #b6c0c5; margin: 2px 0; }
+.jpopup kbd { font: 11px system-ui, sans-serif; color: #56676f; }
+.ac-frame { background: var(--win-bg); outline: none; position: relative; }
+.ac-frame:focus-visible { outline: 2px solid #2a6ebb; }
+.ac-menubar { position: relative; background: #e3e8eb; border-bottom: 1px solid #b6c0c5; padding: 1px 2px; }
+.ac-menu { border: 0; background: none; padding: 2px 8px; font: 12px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.ac-menu[aria-expanded="true"] { background: #b8cfe5; }
+.ac-drop { top: 100%; left: 2px; }
+.ac-area { position: relative; background: #fff; margin: 4px; min-height: 7rem; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tv-row { align-items: stretch; }
+.tv-row > .tv-tog, .tv-row > .tv-ico, .tv-row > .tv-lbl { align-self: center; }
+.tv-g { display: inline-block; width: 16px; flex: none; }
+.tv-g.pipe { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat; }
+.tv-g.tee { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+.tv-g.elbow { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 50% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+
+/* L14 MDI: desktop pane, internal frames, card deck */
+.dsk { position: relative; height: 20rem; background: #5d7d8f; overflow: hidden; }
+.jif { position: absolute; display: flex; flex-direction: column; background: #eceff1; border: 1px solid #44525a; box-shadow: 2px 3px 8px rgba(0, 0, 0, .35); }
+.jif-bar { display: flex; align-items: center; gap: 3px; padding: 2px 4px; background: #c5ced3; font: 600 12px system-ui, sans-serif; color: #1c2328; cursor: move; user-select: none; touch-action: none; }
+.jif.sel { border-color: #1d4f8a; }
+.jif.sel .jif-bar { background: #8fb3d9; }
+.jif-bar span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jif-bar button { width: 18px; height: 16px; padding: 0; font: 11px/1 system-ui, sans-serif; border: 1px solid #6b7b82; background: #f4f6f7; color: #1c2328; cursor: pointer; flex: none; }
+.jif textarea { flex: 1; resize: none; border: 0; border-top: 1px solid #9aa7ad; font: 12px ui-monospace, Menlo, Consolas, monospace; padding: 4px; background: #fff; color: #1c2328; min-height: 0; width: 100%; }
+.jif-rs { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 55%, #6b7b82 55%, #6b7b82 62%, transparent 62%, transparent 78%, #6b7b82 78%, #6b7b82 85%, transparent 85%); }
+.jif-icon { position: absolute; bottom: 4px; display: flex; align-items: center; gap: 4px; width: 8.5rem; padding: 2px 4px; background: #c5ced3; border: 1px solid #44525a; font: 600 11px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.jif-icon span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dsk-outline { position: absolute; border: 2px dashed #fff; pointer-events: none; }
+.cards { background: var(--win-bg); padding: .6rem; font: 13px system-ui, sans-serif; color: #1c2328; }
+.card-page { background: #fff; border: 1px solid #b6c0c5; padding: .7rem; min-height: 9rem; display: grid; gap: .4rem; align-content: start; }
+.card-page h4 { font: 600 14px system-ui, sans-serif; }
+.card-page .tag { font: 11px ui-monospace, monospace; color: #7a868c; }
+.ways-host { position: relative; background: var(--win-bg); color: #1c2328; font: 12px system-ui, sans-serif; min-height: 15rem; padding: .5rem; color-scheme: light; }
+.ways-host pre { margin: 0; white-space: pre-wrap; font: 12px ui-monospace, monospace; }
+.dlg-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .28); display: grid; place-items: center; }
+
+/* Threads: lanes, progress bar, frozen window */
+.lanes { display: grid; gap: 4px; font: 12px var(--f-mono); }
+.lane { display: grid; grid-template-columns: minmax(0, 9.5rem) 7.5rem minmax(0, 1fr); gap: .5rem; align-items: center; }
+.lane > b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lane .st { font-size: 11px; padding: 1px 6px; border-radius: 99px; border: 1px solid var(--line); text-align: center; color: var(--muted); }
+.lane .st.RUNNABLE { color: var(--ok); border-color: var(--ok); }
+.lane .st.TIMED_WAITING, .lane .st.WAITING { color: var(--c-num); border-color: var(--c-num); }
+.lane .st.TERMINATED { color: var(--bad); border-color: var(--bad); }
+.lane .ticks { display: flex; gap: 2px; overflow: hidden; min-width: 0; justify-content: flex-end; }
+.tick { width: 1.15rem; height: 1.15rem; border-radius: 3px; display: grid; place-items: center; font-size: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
+@media (max-width: 520px) { .lane { grid-template-columns: minmax(0, 1fr) 7rem; } .lane .ticks { grid-column: 1 / -1; justify-content: flex-start; } }
+.jprog { position: relative; height: 18px; border: 1px solid #6b7b82; background: #fff; border-radius: 2px; overflow: hidden; }
+.jprog i { position: absolute; top: 0; bottom: 0; left: 0; background: #5b8fc7; }
+.jprog span { position: absolute; inset: 0; display: grid; place-items: center; font: 600 11px system-ui, sans-serif; color: #1c2328; }
+.jprog.ind i { width: 30% !important; animation: jprog-ind 1.2s linear infinite; }
+@keyframes jprog-ind { from { left: -30%; } to { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .jprog.ind i { animation: none; width: 100% !important; opacity: .45; } }
+.win.frozen .win-body { filter: grayscale(.7) brightness(.9); }
+.win .win-bar .nr { color: #b0261c; font-weight: 600; }
+.win-body .row { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+.win-body textarea { width: 100%; min-height: 4.5rem; font: 12px ui-monospace, monospace; border: 1px solid #9aa7ad; background: #fff; color: #1c2328; padding: 4px; resize: none; }
+.verdict { font: 600 .8rem var(--f-body); padding: .1rem .5rem; border-radius: 99px; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.jbtn:disabled { color: #9aa4a8; cursor: default; }
+
+/* Your lab answers */
+.mine { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ok); font-weight: 600; }
+.slide.answer { border-left: 3px solid var(--ok); padding-left: var(--s4); }
+.xpl { display: grid; gap: var(--s3); margin: 0; }
+.xpl > div { display: grid; gap: var(--s1); min-width: 0; }
+.xpl dt { min-width: 0; }
+.xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
+.xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L4 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 4 + Lab 4</p>
+  <h1>Event in Java, Part 1</h1>
+  <p class="lede">How a click becomes code: events, listeners, the delegation model and the ActionListener. Every slide of <em>Lecture 4 – Event</em> (29 slides) in order, with all code typed out and every diagram and screenshot, then Lab 4 with the project's answer file and a full solution. There's an event simulator to watch the source → event → listener chain happen.</p>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--mark)"></i><span class="k">Red text</span> was red on the slide</span>
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="mine">Your answer</span> your own lab code, exactly as in your zip</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<!-- ============ 1 ============ -->
+<section class="sec" id="events" data-title="What an event is">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–5</p>
+    <div class="sec-head-row"><h2>What an event is</h2><label class="done"><input type="checkbox" id="done-events"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>An <b>event</b> is "something happened": a click, a key press, the mouse moving. Java wraps each one in an object (an <code>ActionEvent</code>, a <code>KeyEvent</code>…). A <b>listener</b> is your object that waits for that kind of event and runs your code when it arrives. Your program doesn't decide the order things run in; the user does, by what they click. That's <b>event-driven programming</b>.</div></aside>
+
+  <div class="slide">
+    <h3>Event in Java, Part 1 <span class="sn">1</span></h3>
+    <figure><div class="plate"><img src="img/s1_event_model.png" width="434" alt="Diagram: Event Source creates an Event Object; a Listener Object registers with the Event Source and implements a Listener Interface with onEvent(EventObj); the source invokes the listener's onEvent(EventObj)"></div>
+    <figcaption>The whole lecture in one picture: the <b>Event Source</b> <i>creates</i> an <b>Event Object</b>; the <b>Listener Object</b> <i>registers</i> with the source and <i>implements</i> the <b>Listener Interface</b>; the source <i>invokes</i> the listener's <code>onEvent(EventObj)</code>.</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <h3>Event Handling in Java <span class="sn">2</span></h3>
+    <p>An <b>event is a change in the state of an object triggered by some action</b> such as Clicking a button, Moving the cursor, Pressing a key on the keyboard, Scrolling a page, etc. In Java, the <b>java.awt.event</b> package provides various event classes to handle these actions.</p>
+    <figure><div class="plate"><img src="img/s2_event_types.png" width="400" alt="Event Types splits into Foreground Events and Background Events"></div></figure>
+  </div>
+
+  <div class="slide">
+    <h3>Event Types <span class="sn">3</span></h3>
+    <p>Events in Java can be broadly classified into two categories based on how they are generated:</p>
+    <ol class="pts">
+      <li><b>Foreground Events:</b> Foreground events are the events that require user interaction to generate. Examples of these events include Button clicks, Scrolling the scrollbar, Moving the cursor, etc.</li>
+      <li><b>Background Events:</b> Events that don't require interactions of users to generate are known as background events. Examples of these events are operating system failures/interrupts, operation completion, etc.</li>
+    </ol>
+  </div>
+
+  <div class="slide">
+    <h3>Graphical events <span class="sn">4</span></h3>
+    <ul class="pts">
+      <li><b>event</b>: An object that represents a user's interaction with a GUI component; can be "handled" to create interactive components.</li>
+      <li><b>listener</b>: An object that waits for events and responds to them.
+        <ul><li>To handle an event, attach a <em>listener</em> to a component.</li><li>The listener will be notified when the event occurs (e.g. button click).</li></ul>
+      </li>
+    </ul>
+    <figure><div class="plate"><img src="img/s4_graphical_event.png" width="520" loading="lazy" alt="Four steps: 1 user interacts with page (clicks a Click me! button), 2 an event occurs, 3 a piece of code runs in response, 4 the page's appearance is updated as a result"></div><figcaption>① user interacts ② an "event" occurs ③ a piece of code runs in response ④ the page's appearance is updated as a result.</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <h3>Event-driven programming <span class="sn">5</span></h3>
+    <p><b>event-driven programming</b>: A style of coding where a program's overall flow of execution is dictated by events.</p>
+    <ul class="pts">
+      <li>Rather than a central "main" method that drives execution, the program loads and waits for user input events.</li>
+      <li>As each event occurs, the program runs particular code to respond.</li>
+      <li>The overall flow of what code is executed is determined by the series of events that occur, not a pre-determined order.</li>
+    </ul>
+    <figure><div class="plate"><img src="img/s5_event_architecture.png" width="400" loading="lazy" alt="Event Driven Architecture: an Event goes to an Event Listener and Generator (an ear), then to an Event Engine, which sends to three Clients"></div><figcaption>Event Driven Architecture: Event → Event Listener &amp; Generator → Event Engine → Clients.</figcaption></figure>
+  </div>
+
+  <details class="orig" data-pages="1-5"></details>
+  <div class="quiz" data-quiz="events"></div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section class="sec" id="model" data-title="Event hierarchy and delegation model">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 6–9</p>
+    <div class="sec-head-row"><h2>Event hierarchy and delegation model</h2><label class="done"><input type="checkbox" id="done-model"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Three roles, every time:<ul><li><b>Source</b>: the component the user touched (a JButton).</li><li><b>Event object</b>: the details of what happened (an ActionEvent).</li><li><b>Listener</b>: your object that handles it (an ActionListener).</li></ul>The source "delegates" the work to the listener. You connect them with <code>source.addXxxListener(listener)</code>, where Xxx is the event type. The names always match: <code>ActionEvent</code> ↔ <code>ActionListener</code> ↔ <code>addActionListener</code>.</div></aside>
+
+  <div class="slide">
+    <h3>Event hierarchy <span class="sn">6</span></h3>
+    <div class="code"><pre class="java">import java.awt.event.*;</pre></div>
+    <div class="fig-row">
+      <div class="code" style="flex:1 1 14rem"><span class="code-label">Event classes</span><pre class="plain-pre">EventObject
+   AWTEvent (AWT)
+      <b>ActionEvent</b>
+      TextEvent
+      ComponentEvent
+         FocusEvent
+         WindowEvent
+         InputEvent
+            •KeyEvent
+            •MouseEvent</pre></div>
+      <div class="code" style="flex:1 1 14rem"><span class="code-label">Listener interfaces</span><pre class="plain-pre">EventListener
+   AWTEventListener
+   <b>ActionListener</b>
+   TextListener
+   ComponentListener
+   FocusListener
+   WindowListener
+
+   KeyListener
+   MouseListener</pre></div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Event Delegation Model <span class="sn">7</span></h3>
+    <figure><div class="plate"><img src="img/s7_delegation.png" width="400" alt="Delegation Event Model consists of Sources and Listners"></div><figcaption>Delegation Event Model consists of Sources and Listeners.</figcaption></figure>
+    <p><b>Event Delegation Model</b><br>The Event Delegation Model consists of:</p>
+    <ol class="pts">
+      <li><b>Event Source</b>: The GUI component that generates the event (e.g., JButton, JTextField).</li>
+      <li><b>Event Object</b>: Contains details about the event (e.g., ActionEvent, MouseEvent).</li>
+      <li><b>Event Listener</b>: An interface that listens for specific events and handles them accordingly.</li>
+    </ol>
+  </div>
+
+  <div class="slide">
+    <h3>Registering the Source With Listener <span class="sn">8</span></h3>
+    <p>To handle events, the source must be registered with a listener. Java provides specific methods for registering listeners based on the type of event.</p>
+    <p><b>Syntax:</b></p>
+    <div class="code"><pre class="plain-pre">addTypeListener()</pre></div>
+    <p><b>For example,</b></p>
+    <ul class="pts"><li><code>addKeyListener()</code> for KeyEvent</li><li><code>addActionListener()</code> for ActionEvent</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>Types of Event Listeners <span class="sn">9</span></h3>
+    <p>Event listeners are represented by different interfaces, each of which is designed to process an equivalent event.</p>
+    <p>Note that event listeners are flexible in that a single listener can be registered to "listen" to multiple types of events. This means that, for a similar set of components that perform the same type of action, one event listener can handle all the events.</p>
+    <p>Here are some of the most common types:</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Listener</th><th>Listens for</th></tr></thead>
+        <tbody>
+          <tr><td class="mod">ActionListener</td><td>Listens for an <em>ActionEvent</em>, i.e. when a graphical element is clicked such as a button or item in a list.</td></tr>
+          <tr><td class="mod">ContainerListener</td><td>Listens for a <em>ContainerEvent</em>, which might occur if the user adds or removes an object from the interface.</td></tr>
+          <tr><td class="mod">KeyListener</td><td>Listens for a <em>KeyEvent</em> in which the user presses, types or releases a key.</td></tr>
+          <tr><td class="mod">WindowListener</td><td>Listens for a <em>WindowEvent</em>, for example, when a window is closed, activated or deactivated.</td></tr>
+          <tr><td class="mod">MouseListener</td><td>Listens for a <em>MouseEvent</em>, such as when a mouse is clicked or pressed.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="6-9"></details>
+  <div class="quiz" data-quiz="model"></div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section class="sec" id="action" data-title="Action events and ActionListener">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 10–16</p>
+    <div class="sec-head-row"><h2>Action events and ActionListener</h2><label class="done"><input type="checkbox" id="done-action"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>To make a button do something, three steps:
+    <ol style="margin:0;padding-left:1.2rem;display:grid;gap:.2rem"><li>Write a class that <code>implements ActionListener</code>.</li><li>Put your code in its one method, <code>actionPerformed(ActionEvent e)</code>.</li><li>Register it: <code>button.addActionListener(new YourListener());</code></li></ol>
+    You can also write the listener right inside the call as an <b>anonymous class</b>: <code>button.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) { … } });</code> (slide 16).</div></aside>
+
+  <div class="slide">
+    <h3>Action events <span class="sn">10</span></h3>
+    <p><b>action event</b>: An action that has occurred on a GUI component.</p>
+    <ul class="pts">
+      <li>The most common, general event type in Swing. Caused by:
+        <ul><li>button or menu clicks,</li><li>check box checking / unchecking,</li><li>pressing Enter in a text field, ...</li></ul>
+      </li>
+      <li>Represented by a class named <code>ActionEvent</code></li>
+      <li>Handled by objects that implement interface <code>ActionListener</code></li>
+    </ul>
+    <figure><div class="plate"><img src="img/s10_button_listener.jpg" width="420" alt="A red button sends an ActionEvent along a dotted arrow to an ActionListener"></div><figcaption>button ··· ActionEvent ···▶ ActionListener</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <h3>How to Write an Action Listener <span class="sn">11</span></h3>
+    <p>Action listeners are probably the easiest — and most common — event handlers to implement. You implement an action listener to define what should be done when a user performs certain operation.</p>
+    <p>An action event occurs, whenever an action is performed by the user. Examples: When the user clicks a <u>button</u>, chooses a <u>menu item</u>, presses Enter in a <u>text field</u>. The result is that an <code>actionPerformed</code> message is sent to all action listeners that are registered on the relevant component.</p>
+    <p>To write an Action Listener, follow the steps given below:</p>
+    <ol class="pts">
+      <li>Declare an event handler class and specify that the class either implements an ActionListener interface or extends a class that implements an ActionListener interface. For example:
+        <div class="code" style="margin-top:.3rem"><pre class="java">public class MyClass implements ActionListener {</pre></div></li>
+      <li>Register an instance of the event handler class as a listener on one or more components. For example:
+        <div class="code" style="margin-top:.3rem"><pre class="java">someComponent.addActionListener(instanceOfMyClass);</pre></div></li>
+      <li>Include code that implements the methods in listener interface. For example:
+        <div class="code" style="margin-top:.3rem"><pre class="java">public void actionPerformed(ActionEvent e) {
+    ...//code that reacts to the action...
+}</pre></div></li>
+    </ol>
+  </div>
+
+  <div class="slide">
+    <h3>Putting it together <span class="sn">12</span></h3>
+    <p>In general, to detect when the user clicks an onscreen button (or does the keyboard equivalent), a program must have an object that implements the ActionListener interface. The program must register this object as an action listener on the button (the event source), using the addActionListener method. When the user clicks the onscreen button, the button fires an action event. This results in the invocation of the action listener's actionPerformed method (the only method in the ActionListener interface). The single argument to the method is an ActionEvent object that gives information about the event and its source.</p>
+  </div>
+
+  <div class="slide">
+    <h3>Types of Events in Java GUI <span class="sn">13</span></h3>
+    <p>Java provides different types of events for handling user interactions. These events are defined in the <code>java.awt.event</code> and <code>javax.swing.event</code> packages.</p>
+    <h4>A. Action Events</h4>
+    <p>Triggered when a user interacts with a component like a button.</p>
+    <ul class="pts">
+      <li><b>Source</b>: JButton, JMenuItem, JTextField (on "Enter" key press)</li>
+      <li><b>Event Class</b>: ActionEvent</li>
+      <li><b>Listener Interface</b>: ActionListener</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Implementing a listener <span class="sn">14</span></h3>
+    <div class="code"><pre class="java">public class <b>name</b> implements ActionListener {
+    public void actionPerformed(ActionEvent event) {
+        <b>code to handle the event;</b>
+    }
+}</pre></div>
+    <p><code>JButton</code> and other graphical components have this method:</p>
+    <div class="code"><pre class="java">public void addActionListener(ActionListener al)</pre></div>
+    <p>Attaches the given listener to be notified of clicks and events that occur on this component.</p>
+  </div>
+
+  <div class="slide">
+    <h3>GUI event example <span class="sn">15</span></h3>
+    <div class="code"><pre class="java">public class MyGUI {
+    private JFrame frame;
+    private JButton doubleText;
+    private JTextField textfield;
+
+    public MyGUI() {
+        ...
+        doubleText.addActionListener(new DoubleTextListener());
+    }
+    ...
+
+    // When button is clicked, doubles the field's text.
+    private class DoubleTextListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            String text = textfield.getText();
+            textfield.setText(text + text);
+        }
+    }
+}</pre></div>
+    <p class="added">Added · Try it</p>
+    <div class="win" style="width:min(100%,22rem)"><div class="win-bar"><span>MyGUI</span><i>–□×</i></div>
+      <div class="win-body" style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center">
+        <label for="dtField" class="sr">textfield</label><input type="text" id="dtField" value="hi" style="font:inherit;padding:.15rem .3rem;border:1px solid #8f9ba1;flex:1 1 8rem;min-width:0;background:#fff;color:#1c2328">
+        <button type="button" class="jbtn" id="dtBtn">doubleText</button>
+        <button type="button" class="jbtn" id="dtReset">reset</button>
+      </div>
+    </div>
+    <aside class="note"><b>Guide note</b><span><code>DoubleTextListener</code> is a <em>private inner class</em>: a class inside MyGUI. That's why it can use <code>textfield</code> directly, even though it's private to MyGUI.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Anonymous listener <span class="sn">16–17</span></h3>
+    <div class="code"><pre class="java">public class ButtonExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Button Example");
+        JButton button = new JButton("Click Me");
+        button.setBounds(100, 50, 120, 30);
+
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Button Clicked!");
+            }
+        });
+
+        frame.add(button);
+        frame.setSize(300, 200);
+        frame.setLayout(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+    <p><b>Explanation</b></p>
+    <ol class="pts">
+      <li><code>JButton button = new JButton("Click Me");</code> → Creates a button.</li>
+      <li><code>button.addActionListener(...)</code> → Adds an action listener.</li>
+      <li><code>actionPerformed(ActionEvent e)</code> → Defines what happens when the button is clicked.</li>
+    </ol>
+    <figure><div class="plate"><img src="img/s17_button_example.png" width="300" loading="lazy" alt="Button Example window with a Click Me button and a Message dialog saying Button Clicked!"></div><figcaption>Slide 17: clicking "Click Me" opens the message.</figcaption></figure>
+    <aside class="note"><b>Guide note</b><span>Add <code>import javax.swing.*;</code> and <code>import java.awt.event.*;</code> at the top. <code>new ActionListener() { … }</code> creates an object of a class with no name (an <em>anonymous class</em>) on the spot.</span></aside>
+  </div>
+
+  <details class="orig" data-pages="10-17"></details>
+  <div class="quiz" data-quiz="action"></div>
+</section>
+
+<!-- ============ 4 simulator ============ -->
+<section class="sec" id="sim" data-title="Event simulator">
+  <div class="sec-head">
+    <p class="eyebrow">Added · interactive</p>
+    <div class="sec-head-row"><h2>Event simulator</h2><label class="done"><input type="checkbox" id="done-sim"> Studied</label></div>
+  </div>
+  <p class="lede">Register or unregister the listener, then click the buttons. The log shows what Java does at each step, and what <code>getSource()</code> and <code>getActionCommand()</code> return.</p>
+  <div class="demo">
+    <div class="ctrl">
+      <label><input type="checkbox" id="evOk" checked> button1.addActionListener(listener)</label>
+      <label><input type="checkbox" id="evCancel" checked> button2.addActionListener(listener)</label>
+    </div>
+    <div class="win" style="width:min(100%,20rem)"><div class="win-bar"><span>Multiple Buttons Example</span><i>–□×</i></div>
+      <div class="win-body" style="display:flex;gap:.6rem;justify-content:center;padding:1rem"><button type="button" class="jbtn" id="evB1">OK</button><button type="button" class="jbtn" id="evB2">Cancel</button></div>
+    </div>
+    <div class="log" id="evLog" aria-live="polite"></div>
+    <button class="btn" type="button" id="evClear" style="justify-self:start">Clear log</button>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section class="sec" id="multi" data-title="One listener, many components">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 18–26</p>
+    <div class="sec-head-row"><h2>One listener, many components</h2><label class="done"><input type="checkbox" id="done-multi"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>You don't need one listener per button. Register the <em>same</em> listener on several components, then inside <code>actionPerformed</code> find out who fired:<ul><li><code>e.getSource()</code> returns the component object, so compare with <code>==</code>.</li><li><code>e.getActionCommand()</code> returns a String: the button's text, or the text typed in a text field.</li></ul></div></aside>
+
+  <div class="slide">
+    <h3>Multiple Buttons <span class="sn">18–19</span></h3>
+    <div class="code"><pre class="java">import javax.swing.*;
+import java.awt.event.*;
+
+public class MultipleButtons extends JFrame {
+    private JButton button1, button2;
+
+    public MultipleButtons() {
+        setTitle("Multiple Buttons Example");
+        setSize(320, 200);
+        setLayout(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        initializeComponents();
+        setVisible(true);
+    }
+
+    private void initializeComponents() {
+        button1 = new JButton("OK");
+        button2 = new JButton("Cancel");
+
+        button1.setBounds(50, 50, 100, 30);
+        button2.setBounds(160, 50, 100, 30);
+
+        ActionListener listener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == button1) {
+                    JOptionPane.showMessageDialog(MultipleButtons.this, "OK Button Clicked!");
+                } else if (e.getSource() == button2) {
+                    JOptionPane.showMessageDialog(MultipleButtons.this, "Cancel Button Clicked!");
+                }
+            }
+        };
+
+        button1.addActionListener(listener);
+        button2.addActionListener(listener);
+
+        add(button1);
+        add(button2);
+    }
+
+    public static void main(String[] args) {
+        new MultipleButtons();
+    }
+}</pre></div>
+    <figure><div class="plate"><img src="img/s19_multiple_buttons.png" width="356" loading="lazy" alt="Multiple Buttons Example window with OK and Cancel; a Message dialog says Cancel Button Clicked!"></div><figcaption>Slide 19: clicking Cancel.</figcaption></figure>
+    <aside class="note"><b>Guide note</b><span>Inside the anonymous listener, plain <code>this</code> would mean the listener object. <code>MultipleButtons.this</code> means the outer window, which is what the dialog needs as its parent.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Simple JButton Example <span class="sn">20–22</span></h3>
+    <div class="code"><pre class="java">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class ButtonTest extends JFrame {
+   private JButton plainButton, fancyButton;
+
+   // set up GUI
+   public ButtonTest()
+   {
+      super( "Testing Buttons" );
+
+      // get content pane and set its layout
+      Container container = getContentPane();
+      container.setLayout( new FlowLayout() );
+
+      // create buttons
+      plainButton = new JButton( "Plain Button" );
+      container.add( plainButton );
+
+      Icon bug1 = new ImageIcon( "bug1.gif" );
+      Icon bug2 = new ImageIcon( "bug2.gif" );
+      fancyButton = new JButton( "Fancy Button", bug1 );
+      fancyButton.setRolloverIcon( bug2 );
+      container.add( fancyButton );
+
+      // create an instance of inner class ButtonHandler
+      // to use for button event handling
+      ButtonHandler handler = new ButtonHandler();
+      fancyButton.addActionListener( handler );
+      plainButton.addActionListener( handler );
+
+      setSize( 275, 100 );
+      setVisible( true );
+
+   } // end ButtonTest constructor
+
+   public static void main( String args[] )
+   {
+      ButtonTest application = new ButtonTest();
+      application.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+   }
+
+   // inner class for button event handling
+   private class ButtonHandler implements ActionListener {
+
+      // handle button event
+      public void actionPerformed( ActionEvent event )
+      {
+         JOptionPane.showMessageDialog( ButtonTest.this,
+            "You pressed: " + event.getActionCommand() );
+      }
+
+   } // end private inner class ButtonHandler
+
+} // end class ButtonTest</pre></div>
+    <figure><div class="plate"><img src="img/s22_buttontest_runs.jpg" width="440" loading="lazy" alt="Six screenshots: the Testing Buttons window with Plain Button and Fancy Button (the bug icon changes on rollover), and dialogs saying You pressed: Plain Button and You pressed: Fancy Button"></div><figcaption>Slide 22: hovering the fancy button swaps its bug icon; each click shows "You pressed: …".</figcaption></figure>
+    <aside class="note"><b>Guide note</b><span>This is the same program as the Lab 3 <em>ButtonTest.txt</em> file; the lab version uses <code>star2.png</code> as the normal icon instead of <code>bug1.gif</code>.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Simple JTextField Example <span class="sn">23–26</span></h3>
+    <div class="code"><pre class="java">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class TextFieldTest extends JFrame {
+   private JTextField textField1, textField2, textField3;
+   private JPasswordField passwordField;
+
+   // set up GUI
+   public TextFieldTest()
+   {
+      super( "Testing JTextField and JPasswordField" );
+
+      Container container = getContentPane();
+      container.setLayout( new FlowLayout() );
+
+      // construct textfield with default sizing
+      textField1 = new JTextField( 10 );
+      container.add( textField1 );
+
+      // construct textfield with default text
+      textField2 = new JTextField( "Enter text here" );
+      container.add( textField2 );
+
+      // construct textfield with default text,
+      textField3 = new JTextField( "Uneditable text field", 20 );
+      textField3.setEditable( false );
+      container.add( textField3 );
+
+      // construct passwordfield with default text
+      passwordField = new JPasswordField( "Hidden text" );
+      container.add( passwordField );
+
+      // register event handlers
+      TextFieldHandler handler = new TextFieldHandler();
+      textField1.addActionListener( handler );
+      textField2.addActionListener( handler );
+      textField3.addActionListener( handler );
+      passwordField.addActionListener( handler );
+
+      setSize( 325, 100 );
+      setVisible( true );
+
+   } // end constructor TextFieldTest
+
+   public static void main( String args[] ){
+      TextFieldTest application = new TextFieldTest();
+      application.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+   }
+
+   // private inner class for event handling
+   private class TextFieldHandler implements ActionListener {
+
+      // process textfield events
+      public void actionPerformed( ActionEvent event )
+      {
+         String string = "";
+
+         // user pressed Enter in JTextField textField1
+         if ( event.getSource() == textField1 )
+            string = "textField1: " + event.getActionCommand();
+
+         // user pressed Enter in JTextField textField2
+         else if ( event.getSource() == textField2 )
+            string = "textField2: " + event.getActionCommand();
+
+         // user pressed Enter in JTextField textField3
+         else if ( event.getSource() == textField3 )
+            string = "textField3: " + event.getActionCommand();
+
+         // user pressed Enter in JTextField passwordField
+         else if ( event.getSource() == passwordField ) {
+            string = "passwordField: " +
+               new String( passwordField.getPassword() );
+         }
+
+         JOptionPane.showMessageDialog( null, string );
+
+      } // end method actionPerformed
+
+   } // end private inner class TextFieldHandler
+
+} // end class TextFieldTest</pre></div>
+    <figure><div class="plate"><img src="img/s26_textfieldtest_runs.jpg" width="600" loading="lazy" alt="Screenshots of the Testing JTextField and JPasswordField window and the dialogs: textField1: hello, textField2: Enter text here, textField3: Uneditable text field, passwordField: Hidden text"></div><figcaption>Slide 26: pressing Enter in each field shows "textField1: hello", "textField2: Enter text here", "textField3: Uneditable text field" and "passwordField: Hidden text".</figcaption></figure>
+  </div>
+
+  <details class="orig" data-pages="18-26"></details>
+  <div class="quiz" data-quiz="multi"></div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section class="sec" id="userform" data-title="User Information Form">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 27–29</p>
+    <div class="sec-head-row"><h2>User Information Form</h2><label class="done"><input type="checkbox" id="done-userform"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>The last three slides only show screenshots of a finished form: text fields, a password field, radio buttons, check boxes, a scrolling text area, a list and a combo box. Pressing Submit collects every value into one message. It brings Lectures 2–4 together, and it's the same idea as Lab 4. The code below is one way to build it.</div></aside>
+
+  <div class="slide">
+    <h3>The form <span class="sn">27–28</span></h3>
+    <figure><div class="plate"><img src="img/s27_userform.jpg" width="560" loading="lazy" alt="User Information Form: Name, Password, Gender (Male, Female), Skills (Java, Python, C++), Address text area, Course List (Visual, Data Mining, Design), Department combo box showing CS, Submit and Clear buttons"></div><figcaption>Slide 27: Name, Password, Gender, Skills, Address, Course List, Department, Submit, Clear.</figcaption></figure>
+    <figure><div class="plate"><img src="img/s28_userform_dept.jpg" width="560" loading="lazy" alt="The same form with the Department combo box open showing CS, DMI, CE, EE"></div><figcaption>Slide 28: the Department drop-down holds CS, DMI, CE, EE.</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <h3>After pressing Submit <span class="sn">29</span></h3>
+    <figure><div class="plate"><img src="img/s29_userform_message.jpg" width="560" loading="lazy" alt="Form filled in: Ahmad, password, Male, Java and Python ticked, Amman, Data Mining selected, DMI; a Message dialog lists Name: Ahmad, Password: 123456, Gender: Male, Skills: Java Python, Address: Amman, Course: Data Mining, Department: DMI"></div><figcaption>The message lists Name: Ahmad · Password: 123456 · Gender: Male · Skills: Java Python · Address: Amman · Course: Data Mining · Department: DMI.</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · Code that produces these screens</p>
+    <details class="orig solid">
+      <summary>Show UserInfoForm.java</summary>
+      <div class="drawer-body">
+        <div class="code"><span class="code-label">UserInfoForm.java</span><pre class="java">import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class UserInfoForm extends JFrame implements ActionListener {
+
+    private JTextField nameField = new JTextField(15);
+    private JPasswordField passField = new JPasswordField(15);
+    private JRadioButton male = new JRadioButton("Male");
+    private JRadioButton female = new JRadioButton("Female");
+    private JCheckBox java = new JCheckBox("Java");
+    private JCheckBox python = new JCheckBox("Python");
+    private JCheckBox cpp = new JCheckBox("C++");
+    private JTextArea addressArea = new JTextArea(2, 15);
+    private JList&lt;String&gt; courseList =
+        new JList&lt;&gt;(new String[] {"Visual", "Data Mining", "Design", "Networks"});
+    private JComboBox&lt;String&gt; deptBox =
+        new JComboBox&lt;&gt;(new String[] {"CS", "DMI", "CE", "EE"});
+    private JButton submit = new JButton("Submit");
+    private JButton clear = new JButton("Clear");
+    private ButtonGroup genderGroup = new ButtonGroup();
+
+    public UserInfoForm() {
+        super("User Information Form");
+        setLayout(new GridLayout(8, 2, 5, 5));
+
+        genderGroup.add(male);
+        genderGroup.add(female);
+        JPanel genderPanel = new JPanel(new FlowLayout());
+        genderPanel.add(male);
+        genderPanel.add(female);
+
+        JPanel skillsPanel = new JPanel(new FlowLayout());
+        skillsPanel.add(java);
+        skillsPanel.add(python);
+        skillsPanel.add(cpp);
+
+        courseList.setVisibleRowCount(3);
+        courseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        add(new JLabel("Name:"));        add(nameField);
+        add(new JLabel("Password:"));    add(passField);
+        add(new JLabel("Gender:"));      add(genderPanel);
+        add(new JLabel("Skills:"));      add(skillsPanel);
+        add(new JLabel("Address:"));     add(new JScrollPane(addressArea));
+        add(new JLabel("Course List:")); add(new JScrollPane(courseList));
+        add(new JLabel("Department:"));  add(deptBox);
+        add(submit);                     add(clear);
+
+        submit.addActionListener(this);   // this window is the listener
+        clear.addActionListener(this);
+
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == submit) {
+            String skills = "";
+            if (java.isSelected())   skills += "Java ";
+            if (python.isSelected()) skills += "Python ";
+            if (cpp.isSelected())    skills += "C++ ";
+
+            String gender = male.isSelected() ? "Male"
+                          : female.isSelected() ? "Female" : "";
+
+            String course = courseList.getSelectedValue();   // null if nothing selected
+
+            JOptionPane.showMessageDialog(this,
+                "Name: " + nameField.getText() +
+                "\nPassword: " + new String(passField.getPassword()) +
+                "\nGender: " + gender +
+                "\nSkills: " + skills.trim() +
+                "\nAddress: " + addressArea.getText() +
+                "\nCourse: " + (course == null ? "" : course) +
+                "\nDepartment: " + deptBox.getSelectedItem());
+        } else if (e.getSource() == clear) {
+            nameField.setText("");
+            passField.setText("");
+            genderGroup.clearSelection();
+            java.setSelected(false);
+            python.setSelected(false);
+            cpp.setSelected(false);
+            addressArea.setText("");
+            courseList.clearSelection();
+            deptBox.setSelectedIndex(0);
+        }
+    }
+
+    public static void main(String[] args) {
+        new UserInfoForm();
+    }
+}</pre></div>
+        <p style="font-size:.9rem;color:var(--muted)">Here the frame itself <code>implements ActionListener</code>, so <code>addActionListener(this)</code> registers the window as the listener. That's a third way to write a listener, next to the inner class (slide 15) and the anonymous class (slide 16). <code>"\n"</code> starts a new line inside the dialog.</p>
+      </div>
+    </details>
+  </div>
+
+  <details class="orig" data-pages="27-29"></details>
+  <div class="quiz" data-quiz="userform"></div>
+</section>
+
+<!-- ============ 7 Lab 4 ============ -->
+<section class="sec" id="lab4" data-title="Lab 4: GUI with Action Listener">
+  <div class="sec-head">
+    <p class="eyebrow">Lab 4 · Abualhaj, Amer · plus the project file "Lab 4 Answer" (Dima Alshihan)</p>
+    <div class="sec-head-row"><h2>Lab 4: Introduction to GUI 2 with Action Listener</h2><label class="done"><input type="checkbox" id="done-lab4"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Task 1 is the form (like Lab 3, plus Address, a Department list, a Country combo box and Check / Clear buttons). Task 2 makes the buttons work: <b>Check</b> validates everything and shows a summary, <b>Clear</b> empties every field. Validation means: stop at the first problem and tell the user, otherwise show success.</div></aside>
+
+  <div class="slide">
+    <h3>Task 1</h3>
+    <p>Create a basic form, like the screen shot, as follows:</p>
+    <ol class="pts">
+      <li>Create a Project and name Sign Up
+        <ul>
+          <li>Add a title name it Sing Up</li>
+          <li>Add a heading Label: "Sign Up Form"</li>
+          <li>Add a Label Username, text field, Label password, password field, Label Confirm Password, Label Address</li>
+          <li>Add a Label and name it Gender the radio button like the example</li>
+          <li>Add Label Department, add List ("CS", "DMI", "CE", "EE"), add label Country and</li>
+          <li>Combo Box ("Jordan", "Qatar", "Oman", "Palestine", "UK")</li>
+          <li>Add Check Box then add value "read the police and agree"</li>
+          <li>Add two buttons "Check" and "Clear"</li>
+        </ul>
+      </li>
+    </ol>
+    <figure><div class="plate"><img src="img/lab4_signup.png" width="440" loading="lazy" alt="Sign UP window: Sign up Form heading, username, Password, Confirm Password and Address fields, Gender Male/Female, Department list showing CS, Country combo showing Jordan, a read the police and agree check box, Check and Clear buttons"></div><figcaption>Lab 4, page 1: the target form.</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <h3>Task 2</h3>
+    <p>Create a basic Dialog with two action listeners, like the screen shot, as follow:</p>
+    <p>When the <b>Check</b> button is clicked:</p>
+    <ul class="pts">
+      <li>Validate that all required fields are filled.</li>
+      <li>Ensure the password matches the confirm password.</li>
+      <li>Verify that the user agreed to the policy.</li>
+      <li>Display all information in a JOptionPane message box if successful.</li>
+    </ul>
+    <p>When you click on "<b>Clear</b>" button it will clear all entered values</p>
+    <div class="fig-row">
+      <figure style="flex:1 1 14rem"><div class="plate"><img src="img/lab4_cleared.png" width="300" loading="lazy" alt="The form with a Cleared dialog showing a warning icon and the text you pressed Clear button"></div><figcaption>Clear: a warning dialog titled "Cleared".</figcaption></figure>
+      <figure style="flex:1 1 10rem"><div class="plate"><img src="img/lab4_success.png" width="200" loading="lazy" alt="Success dialog: Username: User, Password: Pass, Address: Amman Str. 1 etc, Gender: Male, Department: CS, Country: Qatar, Agreed to Policy: Yes"></div><figcaption>Check: a "Success" dialog with every value.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Project file: Lab 4 Answer.txt</h3>
+    <p>The answer file in the project builds the <b>Register Form</b> layout (the Lab 3 window: Username, Password, Confirm Password, Gender, policy check box, Sign Up and Cancel). It has no listeners yet, so it covers the layout part only.</p>
+    <div class="code"><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+
+/**
+ *
+ * @author Dima.Alshihan
+ */
+public class reg {
+
+    public static void main(String[] args) {
+        // Create frame
+        JFrame frame = new JFrame("Register Form");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);
+        frame.setLayout(new BorderLayout(10, 10));
+
+        // ===== Top Panel =====
+        JPanel topPanel = new JPanel();
+        JLabel titleLabel = new JLabel("Register");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        topPanel.add(titleLabel);
+        frame.add(topPanel, BorderLayout.NORTH);
+
+        // ===== Center Panel =====
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new GridLayout(5, 2, 10, 10));
+
+        // Username
+        JLabel userLabel = new JLabel("Username:");
+        JTextField userText = new JTextField();
+
+        // Password
+        JLabel passLabel = new JLabel("Password:");
+        JPasswordField passField = new JPasswordField();
+
+        // Confirm Password
+        JLabel confirmLabel = new JLabel("Confirm Password:");
+        JPasswordField confirmField = new JPasswordField();
+
+        // Gender
+        JLabel genderLabel = new JLabel("Gender:");
+        JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JRadioButton maleButton = new JRadioButton("Male");
+        JRadioButton femaleButton = new JRadioButton("Female");
+        ButtonGroup genderGroup = new ButtonGroup();
+        genderGroup.add(maleButton);
+        genderGroup.add(femaleButton);
+        genderPanel.add(maleButton);
+        genderPanel.add(femaleButton);
+
+        // Policy Agreement
+        JCheckBox policyCheck = new JCheckBox("Read the policy and agree");
+
+        // Add components to center panel
+        centerPanel.add(userLabel);
+        centerPanel.add(userText);
+        centerPanel.add(passLabel);
+        centerPanel.add(passField);
+        centerPanel.add(confirmLabel);
+        centerPanel.add(confirmField);
+        centerPanel.add(genderLabel);
+        centerPanel.add(genderPanel);
+        centerPanel.add(new JLabel()); // empty cell for alignment
+        centerPanel.add(policyCheck);
+
+        frame.add(centerPanel, BorderLayout.CENTER);
+
+        // ===== Bottom Panel =====
+        JPanel bottomPanel = new JPanel(new FlowLayout());
+        JButton signUpButton = new JButton("Sign Up");
+        JButton cancelButton = new JButton("Cancel");
+        bottomPanel.add(signUpButton);
+        bottomPanel.add(cancelButton);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
+
+        // Final setup
+        frame.setVisible(true);
+    }
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span>Two details worth copying: <code>titleLabel.setFont(new Font("Arial", Font.BOLD, 24))</code> for the big heading, and the empty <code>new JLabel()</code> that fills a grid cell so the check box lands in the right column.</span></aside>
+  </div>
+
+  <div class="slide answer" id="lab4-answer">
+    <p class="mine">Your answer · Lab4.zip</p>
+    <h3>Your Lab 4 answer</h3>
+    <p>Your Lab 3 project (<code>Signup</code>, package <code>com.mycompany.signup</code>) grown into Lab 4: it adds Address, a Department list, a Country combo box, and listeners on both buttons. Still one file with everything in <code>main</code>. The code is exactly as in your zip.</p>
+    <div class="code"><span class="code-label">Signup.java</span><pre class="java">package com.mycompany.signup;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Signup {
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Register Form.");
+
+        JPanel panelnorth = new JPanel();
+        JPanel panelgrid = new JPanel(new GridLayout(7, 2));
+        JPanel genderpanel = new JPanel();
+        JPanel panelsouth = new JPanel();
+        JPanel paneldep = new JPanel();
+        JPanel panelcount = new JPanel();
+        JLabel label1 = new JLabel("Register");
+        JLabel label2 = new JLabel("Username");
+        JLabel label3 = new JLabel("Password");
+        JLabel label4 = new JLabel("Confirm Password");
+        JLabel label5 = new JLabel("Gender");
+        JLabel label6 = new JLabel("Department");
+        JLabel label7 = new JLabel("Country");
+        JLabel label8 = new JLabel("Address");
+        JTextField field = new JTextField();
+        JTextField address = new JTextField();
+        field.setSize(50, 50);
+        JPasswordField password = new JPasswordField();
+        JPasswordField confirmpassword = new JPasswordField();
+        JRadioButton male = new JRadioButton("Male");
+        JRadioButton female = new JRadioButton("Female");
+        ButtonGroup gender = new ButtonGroup();
+        gender.add(male);
+        gender.add(female);
+        JCheckBox checkbox = new JCheckBox("Read the policy and agree");
+        JButton button1 = new JButton("Sign up");
+        JButton button2 = new JButton("Cancel");
+        DefaultListModel&lt;String&gt; dep = new DefaultListModel&lt;&gt;();
+        DefaultComboBoxModel&lt;String&gt; count = new DefaultComboBoxModel&lt;&gt;();
+
+        dep.addElement("CS");
+        dep.addElement("DMI");
+        dep.addElement("CE");
+        dep.addElement("EE");
+        JList&lt;String&gt; department = new JList&lt;&gt;(dep);
+        department.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollpane = new JScrollPane(department);
+        scrollpane.setPreferredSize(new Dimension(100, 20));
+        count.addElement("Jordan");
+        count.addElement("Oman");
+        count.addElement("Palestine");
+        count.addElement("UK");
+        JComboBox&lt;String&gt; country = new JComboBox&lt;&gt;(count);
+
+        button1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String name = field.getText();
+                String Address = address.getText();
+                String Password=new String(password.getPassword());
+                String CPassword=new String(confirmpassword.getPassword());
+                String Gender = male.isSelected() ? "Male" : female.isSelected() ? "Female" : "notselected";
+                String Department = (String) department.getSelectedValue();
+                String countryname = (String) country.getSelectedItem();
+                String agreed;
+
+                
+                if (checkbox.isSelected()) {
+                    agreed = "Yes";
+                } else {
+                    agreed = "No";
+                }
+
+                if ( Password.equals(CPassword)) {
+                    JOptionPane.showMessageDialog(null, "UserName:" + name + "\n"
+                            + "Password: Pass \n" + "Address:" + Address + "\n"
+                            + "Gender:" + Gender + "\n" + "Department" + Department + "\n"
+                            + "Country:" + countryname + "\n" + "Agreed to Policy:" + agreed);
+                } else {
+                    JOptionPane.showMessageDialog(null, "This is wrong");
+                }
+
+            }
+        });
+
+        button2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "Cleared");
+                field.setText("");
+                password.setText("");
+                confirmpassword.setText("");
+                address.setText("");
+            }
+        });
+
+        genderpanel.add(male);
+        genderpanel.add(female);
+        panelnorth.add(label1);
+        panelgrid.add(label2);
+        panelgrid.add(field);
+        panelgrid.add(label3);
+        panelgrid.add(password);
+        panelgrid.add(label4);
+        panelgrid.add(confirmpassword);
+        panelgrid.add(label8);
+        panelgrid.add(address);
+        panelgrid.add(label5);
+        panelgrid.add(genderpanel);
+        paneldep.add(label6);
+        paneldep.add(scrollpane);
+        panelcount.add(label7);
+        panelcount.add(country);
+        panelgrid.add(paneldep);
+        panelgrid.add(panelcount);
+        panelgrid.add(checkbox);
+        panelsouth.add(button1);
+        panelsouth.add(button2);
+
+        frame.add(panelnorth, BorderLayout.NORTH);
+        frame.add(panelsouth, BorderLayout.SOUTH);
+        frame.add(panelgrid, BorderLayout.CENTER);
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);
+
+    }
+}</pre></div>
+    <figure><div class="plate"><img src="img/answer_lab4.png" width="500" loading="lazy" alt="The Register Form window from your Lab 4 code: Username, Password, Confirm Password and Address fields, Gender radio buttons, a one-row Department list showing CS with scroll arrows, a Country combo box showing Jordan, the policy check box, and Sign up and Cancel buttons."></div><figcaption>Your Lab 4 code, run as it is. The Department list shows one row at a time because its scroll pane is only 20 pixels high.</figcaption></figure>
+    <h4>Explained (what's new since Lab 3)</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">import java.awt.event.*;</pre></dt><dd>Brings in <code>ActionListener</code> and <code>ActionEvent</code>, which the buttons need.</dd></div>
+<div><dt><pre class="java">JPanel panelgrid = new JPanel(new GridLayout(7, 2));
+JPanel paneldep = new JPanel();
+JPanel panelcount = new JPanel();</pre></dt><dd>The grid now has 7 rows. Two extra FlowLayout panels each hold a label and its list or combo box, so "Department" and its list share one cell (and the same for Country).</dd></div>
+<div><dt><pre class="java">JLabel label6 = new JLabel("Department");
+JLabel label7 = new JLabel("Country");
+JLabel label8 = new JLabel("Address");
+JTextField address = new JTextField();</pre></dt><dd>The new labels and the Address field.</dd></div>
+<div><dt><pre class="java">DefaultListModel&lt;String&gt; dep = new DefaultListModel&lt;&gt;();
+DefaultComboBoxModel&lt;String&gt; count = new DefaultComboBoxModel&lt;&gt;();</pre></dt><dd><b>Models</b>: the data behind the list and the combo box (the same idea as MVC). <code>&lt;String&gt;</code> means they hold Strings; the empty <code>&lt;&gt;</code> lets Java fill in the type.</dd></div>
+<div><dt><pre class="java">dep.addElement("CS");
+...
+JList&lt;String&gt; department = new JList&lt;&gt;(dep);
+department.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);</pre></dt><dd>Adds the four departments to the model, makes a <code>JList</code> that shows them, and allows only one to be selected at a time.</dd></div>
+<div><dt><pre class="java">JScrollPane scrollpane = new JScrollPane(department);
+scrollpane.setPreferredSize(new Dimension(100, 20));</pre></dt><dd>Puts the list in a scroll pane so it gets scroll bars. 100 × 20 pixels is only one row high, so you see one department and scroll for the others (see the picture). FlowLayout respects preferred sizes, which is why this one works while <code>setSize</code> doesn't.</dd></div>
+<div><dt><pre class="java">count.addElement("Jordan");
+...
+JComboBox&lt;String&gt; country = new JComboBox&lt;&gt;(count);</pre></dt><dd>A drop-down list built from the country model.</dd></div>
+<div><dt><pre class="java">button1.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        ...
+    }
+});</pre></dt><dd>An <b>anonymous class</b> that implements <code>ActionListener</code>. Java calls its <code>actionPerformed</code> when the Sign up button is clicked. It can use <code>field</code>, <code>password</code> and the others because those variables are never reassigned.</dd></div>
+<div><dt><pre class="java">String name = field.getText();
+String Address = address.getText();</pre></dt><dd>Reads what the user typed.</dd></div>
+<div><dt><pre class="java">String Password=new String(password.getPassword());</pre></dt><dd><code>getPassword()</code> returns a <code>char[]</code>, not a String; <code>new String(...)</code> turns it into one so it can be compared with <code>equals</code>.</dd></div>
+<div><dt><pre class="java">String Gender = male.isSelected() ? "Male" : female.isSelected() ? "Female" : "notselected";</pre></dt><dd>Two <b>ternary operators</b> (<code>condition ? valueIfTrue : valueIfFalse</code>): "Male" if Male is selected, otherwise "Female" if Female is, otherwise "notselected".</dd></div>
+<div><dt><pre class="java">String Department = (String) department.getSelectedValue();
+String countryname = (String) country.getSelectedItem();</pre></dt><dd>The chosen department (or <code>null</code> if none is selected) and the chosen country. <code>getSelectedItem()</code> returns an <code>Object</code>, so the <code>(String)</code> cast is needed there; for the <code>JList&lt;String&gt;</code> it's optional.</dd></div>
+<div><dt><pre class="java">if (checkbox.isSelected()) {
+    agreed = "Yes";
+} else {
+    agreed = "No";
+}</pre></dt><dd>Turns the check box into "Yes" or "No" for the message.</dd></div>
+<div><dt><pre class="java">if ( Password.equals(CPassword)) {
+    JOptionPane.showMessageDialog(null, "UserName:" + name + "\n" + ...);
+} else {
+    JOptionPane.showMessageDialog(null, "This is wrong");
+}</pre></dt><dd>Strings are compared with <code>equals</code>, never <code>==</code>. If the passwords match it shows a summary (the password itself is shown as "Pass"), otherwise "This is wrong". Two empty passwords also count as equal, so an empty form shows the summary too. "Department" has no colon, so the line reads like <code>DepartmentCS</code>.</dd></div>
+<div><dt><pre class="java">button2.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        JOptionPane.showMessageDialog(frame, "Cleared");
+        field.setText("");
+        ...
+    }
+});</pre></dt><dd>Cancel shows "Cleared" and empties the four text fields with <code>setText("")</code>. The radio buttons, check box, list and combo box keep their values.</dd></div>
+<div><dt><pre class="java">paneldep.add(label6);
+paneldep.add(scrollpane);
+panelcount.add(label7);
+panelcount.add(country);
+panelgrid.add(paneldep);
+panelgrid.add(panelcount);
+panelgrid.add(checkbox);</pre></dt><dd>13 components go into the 7 × 2 grid: six label + component pairs, then the check box. The last cell stays empty.</dd></div>
+</dl>
+    <aside class="note"><b>Compared with the Lab 4 handout</b><span>The handout asks for a few things this answer doesn't do yet: the title "Sing Up" (sic), the heading "Sign Up Form", buttons named "Check" and "Clear", Qatar in the country list, checking that every required field is filled and that the policy is ticked, a "Success" title on the summary, and a warning dialog titled "Cleared". The full solution below shows each of these.</span></aside>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · Full Lab 4 solution (Task 1 + Task 2)</p>
+    <details class="orig solid">
+      <summary>Show SignUpForm.java</summary>
+      <div class="drawer-body">
+        <div class="code"><span class="code-label">SignUpForm.java</span><pre class="java">import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class SignUpForm extends JFrame {
+
+    private JTextField userField = new JTextField(15);
+    private JPasswordField passField = new JPasswordField(15);
+    private JPasswordField confirmField = new JPasswordField(15);
+    private JTextArea addressArea = new JTextArea(3, 15);
+    private JRadioButton male = new JRadioButton("Male");
+    private JRadioButton female = new JRadioButton("Female");
+    private ButtonGroup genderGroup = new ButtonGroup();
+    private JList&lt;String&gt; deptList = new JList&lt;&gt;(new String[] {"CS", "DMI", "CE", "EE"});
+    private JComboBox&lt;String&gt; countryBox =
+        new JComboBox&lt;&gt;(new String[] {"Jordan", "Qatar", "Oman", "Palestine", "UK"});
+    private JCheckBox policy = new JCheckBox("read the police and agree");
+    private JButton checkButton = new JButton("Check");
+    private JButton clearButton = new JButton("Clear");
+
+    public SignUpForm() {
+        super("Sign Up");
+        setLayout(new BorderLayout(10, 10));
+
+        // NORTH: heading
+        JPanel top = new JPanel();
+        top.add(new JLabel("Sign Up Form"));
+        add(top, BorderLayout.NORTH);
+
+        // CENTER: label | field rows
+        JPanel center = new JPanel(new GridLayout(7, 2, 10, 10));
+        center.add(new JLabel("Username:"));         center.add(userField);
+        center.add(new JLabel("Password:"));         center.add(passField);
+        center.add(new JLabel("Confirm Password:")); center.add(confirmField);
+        center.add(new JLabel("Address:"));          center.add(new JScrollPane(addressArea));
+
+        genderGroup.add(male);
+        genderGroup.add(female);
+        JPanel genderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        genderPanel.add(male);
+        genderPanel.add(female);
+        center.add(new JLabel("Gender:"));           center.add(genderPanel);
+
+        deptList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        deptList.setVisibleRowCount(2);
+        deptList.setSelectedIndex(0);
+        JPanel deptPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        deptPanel.add(new JLabel("Department:"));
+        deptPanel.add(new JScrollPane(deptList));
+        JPanel countryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        countryPanel.add(new JLabel("Country:"));
+        countryPanel.add(countryBox);
+        center.add(deptPanel);                       center.add(countryPanel);
+
+        center.add(policy);                          center.add(new JLabel());
+        add(center, BorderLayout.CENTER);
+
+        // SOUTH: buttons
+        JPanel bottom = new JPanel(new FlowLayout());
+        bottom.add(checkButton);
+        bottom.add(clearButton);
+        add(bottom, BorderLayout.SOUTH);
+
+        // Task 2: two action listeners
+        checkButton.addActionListener(new CheckListener());
+        clearButton.addActionListener(new ClearListener());
+
+        setSize(500, 450);
+        setLocationRelativeTo(null);       // centre on screen
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    // ----- Check button -----
+    private class CheckListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String user = userField.getText().trim();
+            String pass = new String(passField.getPassword());
+            String confirm = new String(confirmField.getPassword());
+            String address = addressArea.getText().trim();
+
+            // 1. required fields
+            if (user.isEmpty() || pass.isEmpty() || confirm.isEmpty() || address.isEmpty()
+                    || (!male.isSelected() &amp;&amp; !female.isSelected())
+                    || deptList.getSelectedValue() == null) {
+                JOptionPane.showMessageDialog(SignUpForm.this,
+                    "Please fill in all the fields.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // 2. passwords match
+            if (!pass.equals(confirm)) {
+                JOptionPane.showMessageDialog(SignUpForm.this,
+                    "Passwords do not match.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // 3. policy accepted
+            if (!policy.isSelected()) {
+                JOptionPane.showMessageDialog(SignUpForm.this,
+                    "You must agree to the policy.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // 4. success: show everything
+            String gender = male.isSelected() ? "Male" : "Female";
+            JOptionPane.showMessageDialog(SignUpForm.this,
+                "Username: " + user +
+                "\nPassword: " + pass +
+                "\nAddress: " + address +
+                "\nGender: " + gender +
+                "\nDepartment: " + deptList.getSelectedValue() +
+                "\nCountry: " + countryBox.getSelectedItem() +
+                "\nAgreed to Policy: Yes",
+                "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    // ----- Clear button -----
+    private class ClearListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            userField.setText("");
+            passField.setText("");
+            confirmField.setText("");
+            addressArea.setText("");
+            genderGroup.clearSelection();
+            deptList.setSelectedIndex(0);
+            countryBox.setSelectedIndex(0);
+            policy.setSelected(false);
+            JOptionPane.showMessageDialog(SignUpForm.this,
+                "you pressed Clear button", "Cleared", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        new SignUpForm();
+    }
+}</pre></div>
+        <ul class="pts" style="font-size:.92rem">
+          <li><b>Address is a JTextArea</b>: the Success screenshot shows a three-line address ("Amman / Str. 1 / etc").</li>
+          <li><b>The 4-argument showMessageDialog</b> sets the title and icon: <code>showMessageDialog(parent, message, "Success", JOptionPane.INFORMATION_MESSAGE)</code>. <code>WARNING_MESSAGE</code> gives the yellow triangle in the Cleared screenshot; <code>ERROR_MESSAGE</code> gives a red icon.</li>
+          <li><b><code>return;</code></b> stops <code>actionPerformed</code> at the first problem, so only one error shows at a time.</li>
+          <li><b>Compare Strings with <code>.equals</code></b>, never <code>==</code>.</li>
+          <li><b>Department</b>: the handout text says "List", but its screenshot looks like a spinner. A <code>JList</code> follows the text.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="demo" id="lab4demo">
+    <div class="demo-head"><h3>Try it: the Check button's validation</h3><span class="added">Added</span></div>
+    <div class="win" style="max-width:30rem"><div class="win-bar"><span>Sign Up</span><i>–□×</i></div>
+      <div class="win-body" style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:.35rem .6rem;align-items:center">
+        <label for="l4u">Username:</label><input id="l4u" type="text" style="font:inherit;border:1px solid #8f9ba1;padding:.1rem .3rem;min-width:0;background:#fff;color:#1c2328">
+        <label for="l4p">Password:</label><input id="l4p" type="password" style="font:inherit;border:1px solid #8f9ba1;padding:.1rem .3rem;min-width:0;background:#fff;color:#1c2328">
+        <label for="l4c">Confirm Password:</label><input id="l4c" type="password" style="font:inherit;border:1px solid #8f9ba1;padding:.1rem .3rem;min-width:0;background:#fff;color:#1c2328">
+        <label for="l4a">Address:</label><textarea id="l4a" rows="2" style="font:inherit;border:1px solid #8f9ba1;padding:.1rem .3rem;min-width:0;resize:vertical;background:#fff;color:#1c2328"></textarea>
+        <span>Gender:</span><span><label><input type="radio" name="l4g" value="Male"> Male</label> <label><input type="radio" name="l4g" value="Female"> Female</label></span>
+        <label for="l4d">Department:</label><select id="l4d"><option>CS</option><option>DMI</option><option>CE</option><option>EE</option></select>
+        <label for="l4k">Country:</label><select id="l4k"><option>Jordan</option><option>Qatar</option><option>Oman</option><option>Palestine</option><option>UK</option></select>
+        <span></span><label><input type="checkbox" id="l4pol"> read the police and agree</label>
+        <span></span><span style="display:flex;gap:.4rem"><button type="button" class="jbtn" id="l4check">Check</button><button type="button" class="jbtn" id="l4clear">Clear</button></span>
+      </div>
+    </div>
+    <div id="l4out" aria-live="polite"></div>
+  </div>
+
+  <details class="orig" data-imgs="img/slides/lab-1.jpg|Lab 4, page 1;img/slides/lab-2.jpg|Lab 4, page 2" data-label="Original lab pages (2)"></details>
+  <div class="quiz" data-quiz="lab4"></div>
+</section>
+
+<!-- ============ flashcards ============ -->
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 4 + Lab 4</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it. Each answer names the slide it comes from.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 4 – Event, Part 1</em> (CS254, 29 slides), <em>Lab 4: Introduction to GUI 2 with Action Listener</em>, and the project file <em>Lab 4 Answer.txt</em>. Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l4-done", "quizzes": {"events": [{"q": "Which package provides Java's event classes?", "o": ["java.awt.event", "java.io", "java.lang", "javax.sql"], "a": 0, "e": "Slide 2."}, {"q": "An operating-system interrupt is a…", "o": ["background event", "foreground event", "action event", "mouse event"], "a": 0, "e": "Slide 3: background events don't need user interaction."}, {"q": "In event-driven programming, what decides the order code runs in?", "o": ["The series of events that occur", "The order of methods in main", "Alphabetical order of method names", "The layout manager"], "a": 0, "e": "Slide 5."}, {"q": "A listener is…", "o": ["an object that waits for events and responds to them", "the component the user clicks", "the event's details", "a layout manager"], "a": 0, "e": "Slide 4."}], "model": [{"q": "In the delegation model, a JButton the user clicks is the…", "o": ["event source", "event object", "event listener", "event engine"], "a": 0, "e": "Slide 7."}, {"q": "Which method registers a listener for KeyEvents?", "o": ["addKeyListener()", "addActionListener()", "addKeyEvent()", "registerKey()"], "a": 0, "e": "Slide 8: addTypeListener()."}, {"q": "Which listener handles a window being closed or activated?", "o": ["WindowListener", "ContainerListener", "ActionListener", "FocusListener"], "a": 0, "e": "Slide 9."}, {"q": "In the event hierarchy, KeyEvent and MouseEvent extend…", "o": ["InputEvent", "ActionEvent", "TextEvent", "WindowEvent"], "a": 0, "e": "Slide 6."}], "action": [{"q": "How many methods does the ActionListener interface have?", "o": ["One: actionPerformed", "Two", "Five", "None"], "a": 0, "e": "Slide 12."}, {"q": "Which of these does NOT cause an ActionEvent?", "o": ["Moving the mouse over a button", "Clicking a button", "Pressing Enter in a text field", "Choosing a menu item"], "a": 0, "e": "Slide 10. Mouse movement is a MouseEvent."}, {"q": "In DoubleTextListener, the field contains \"ab\". After one click it contains…", "o": ["abab", "ab", "aabb", "ab ab"], "a": 0, "e": "Slide 15: textfield.setText(text + text)."}, {"q": "<code>new ActionListener() { public void actionPerformed(ActionEvent e) {...} }<\/code> is a…", "o": ["anonymous class", "constructor call on an interface's real class", "static method", "lambda-free compile error"], "a": 0, "e": "Slide 16."}, {"q": "What is the parameter of actionPerformed?", "o": ["An ActionEvent object", "The button's text", "An int code", "Nothing"], "a": 0, "e": "Slide 12."}], "multi": [{"q": "One listener is registered on two buttons. How does it tell which was clicked?", "o": ["e.getSource() == button1", "It can't", "e.getButtonNumber()", "By the click position"], "a": 0, "e": "Slide 18."}, {"q": "For a JTextField, <code>event.getActionCommand()<\/code> returns…", "o": ["the text in the field", "the field's variable name", "the field's index", "always null"], "a": 0, "e": "Slide 26: \"textField1: hello\"."}, {"q": "Inside an anonymous listener in MultipleButtons, what does <code>MultipleButtons.this<\/code> refer to?", "o": ["The outer JFrame", "The listener object", "button1", "The ActionEvent"], "a": 0, "e": "Slide 18."}, {"q": "Can you press Enter in the uneditable textField3 and get a dialog?", "o": ["Yes, it still fires an ActionEvent", "No, it can't get focus", "Only if setEditable(true)", "It throws an exception"], "a": 0, "e": "Slide 26 shows the \"textField3: Uneditable text field\" dialog."}], "userform": [{"q": "In the User Information Form, which component lets you tick several skills?", "o": ["JCheckBox", "JRadioButton", "JComboBox", "JLabel"], "a": 0, "e": "Slide 27: Java, Python, C++ check boxes."}, {"q": "Which component is the Department drop-down?", "o": ["JComboBox", "JList", "JTextArea", "JSlider"], "a": 0, "e": "Slide 28."}, {"q": "To clear the gender radio buttons in a ButtonGroup you call…", "o": ["genderGroup.clearSelection()", "male.setText(\"\")", "genderGroup.removeAll()", "male.setEnabled(false)"], "a": 0, "e": "ButtonGroup.clearSelection() (used in the added code)."}], "lab4": [{"q": "How do you compare the password and confirm-password text?", "o": ["pass.equals(confirm)", "pass == confirm", "pass.compare(confirm)", "pass = confirm"], "a": 0, "e": "Strings are compared with equals; == compares object references."}, {"q": "Which showMessageDialog call gives the yellow warning icon titled \"Cleared\"?", "o": ["showMessageDialog(frame, \"you pressed Clear button\", \"Cleared\", JOptionPane.WARNING_MESSAGE)", "showMessageDialog(frame, \"Cleared\")", "showWarningDialog(\"Cleared\")", "showConfirmDialog(frame, \"Cleared\")"], "a": 0, "e": "Lab 4, page 2."}, {"q": "Which three checks does Task 2 ask for?", "o": ["Required fields filled, passwords match, policy agreed", "Email format, age, country", "Username unique, password length, captcha", "None, just show the data"], "a": 0, "e": "Lab 4, Task 2."}]}, "flashcards": [["Event", "A change in the state of an object triggered by some action (click, key press, scroll…).", "Slide 2"], ["Foreground vs background events", "Foreground: need user interaction (clicks). Background: don't (OS interrupts, operation completion).", "Slide 3"], ["Listener", "An object that waits for events and responds to them. Attach it to a component.", "Slide 4"], ["Event-driven programming", "The program's flow is dictated by events, not a pre-determined order.", "Slide 5"], ["Delegation model", "Event Source (the component) → Event Object (details) → Event Listener (handles it).", "Slide 7"], ["Registering", "source.addTypeListener(listener), e.g. addActionListener, addKeyListener.", "Slide 8"], ["ActionListener", "Listens for ActionEvent: button/menu clicks, check box toggles, Enter in a text field.", "Slides 9–10"], ["actionPerformed", "The only method in ActionListener: public void actionPerformed(ActionEvent e).", "Slides 12, 14"], ["Three steps", "1. Class implements ActionListener. 2. Register: c.addActionListener(obj). 3. Write actionPerformed.", "Slide 11"], ["Inner-class listener", "private class XListener implements ActionListener inside the frame class; can use the frame's private fields.", "Slide 15"], ["Anonymous listener", "button.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) { … } });", "Slide 16"], ["getSource()", "Returns the component that fired the event. Compare with ==.", "Slides 18, 25"], ["getActionCommand()", "Button: its text. Text field: the text typed in it.", "Slides 22, 25"], ["Outer.this", "Inside an inner/anonymous class, ButtonTest.this means the outer window object.", "Slides 18, 22"], ["Event hierarchy", "EventObject → AWTEvent → ActionEvent, TextEvent, ComponentEvent → FocusEvent, WindowEvent, InputEvent → KeyEvent, MouseEvent.", "Slide 6"], ["Message types", "JOptionPane.INFORMATION_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE set the dialog icon.", "Lab 4"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = window.Guide.esc;
+
+  // ---- DoubleTextListener ----
+  $("dtBtn").addEventListener("click", function () { var f = $("dtField"); f.value = f.value + f.value; });
+  $("dtReset").addEventListener("click", function () { $("dtField").value = "hi"; });
+
+  // ---- event simulator ----
+  var log = $("evLog");
+  function out(t, cls) { var d = document.createElement("div"); d.textContent = t; if (cls) d.style.color = cls; log.appendChild(d); log.scrollTop = log.scrollHeight; }
+  function fire(name, reg, label) {
+    out("① user clicks " + name + ' ("' + label + '")', "#9fd3ff");
+    out("② " + name + " creates new ActionEvent(source = " + name + ', command = "' + label + '")');
+    if (!reg) { out("③ no listener registered on " + name + " → nothing happens", "#f0b071"); out(""); return; }
+    out("③ " + name + " calls listener.actionPerformed(e)");
+    out("   e.getSource() == " + name + "   → true");
+    out('   e.getActionCommand()          → "' + label + '"');
+    out('④ JOptionPane: "' + label + ' Button Clicked!"', "#7fd3ad");
+    out("");
+  }
+  $("evB1").addEventListener("click", function () { fire("button1", $("evOk").checked, "OK"); });
+  $("evB2").addEventListener("click", function () { fire("button2", $("evCancel").checked, "Cancel"); });
+  $("evOk").addEventListener("change", function () { out(($("evOk").checked ? "button1.addActionListener(listener);" : "button1.removeActionListener(listener);"), "#b9b9b9"); });
+  $("evCancel").addEventListener("change", function () { out(($("evCancel").checked ? "button2.addActionListener(listener);" : "button2.removeActionListener(listener);"), "#b9b9b9"); });
+  $("evClear").addEventListener("click", function () { log.innerHTML = ""; });
+  out("ActionListener listener = new ActionListener() { ... };", "#b9b9b9");
+  out("button1.addActionListener(listener);", "#b9b9b9");
+  out("button2.addActionListener(listener);", "#b9b9b9");
+  out("");
+
+  // ---- Lab 4 validation ----
+  var outBox = $("l4out");
+  function dialog(title, icon, lines) {
+    outBox.innerHTML = '<div class="win" style="width:min(100%,20rem);margin-top:.5rem"><div class="win-bar"><span>' + esc(title) +
+      '</span><i>×</i></div><div class="win-body" style="display:flex;gap:.6rem;align-items:flex-start"><span style="font-size:1.3rem">' + icon +
+      '</span><div style="white-space:pre-wrap">' + esc(lines) + "</div></div></div>";
+  }
+  $("l4check").addEventListener("click", function () {
+    var u = $("l4u").value.trim(), p = $("l4p").value, c = $("l4c").value, a = $("l4a").value.trim();
+    var g = document.querySelector('input[name="l4g"]:checked');
+    if (!u || !p || !c || !a || !g) return dialog("Error", "⛔", "Please fill in all the fields.");
+    if (p !== c) return dialog("Error", "⛔", "Passwords do not match.");
+    if (!$("l4pol").checked) return dialog("Error", "⛔", "You must agree to the policy.");
+    dialog("Success", "ℹ️", "Username: " + u + "\nPassword: " + p + "\nAddress: " + a + "\nGender: " + g.value +
+      "\nDepartment: " + $("l4d").value + "\nCountry: " + $("l4k").value + "\nAgreed to Policy: Yes");
+  });
+  $("l4clear").addEventListener("click", function () {
+    ["l4u", "l4p", "l4c", "l4a"].forEach(function (id) { $(id).value = ""; });
+    document.querySelectorAll('input[name="l4g"]').forEach(function (r) { r.checked = false; });
+    $("l4d").selectedIndex = 0; $("l4k").selectedIndex = 0; $("l4pol").checked = false;
+    dialog("Cleared", "⚠️", "you pressed Clear button");
+  });
+})();
+
+</script>
+</body>
+</html>

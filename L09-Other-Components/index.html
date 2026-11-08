@@ -1,0 +1,2239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 Other Components Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+pre.pickable .ln { cursor: pointer; }
+pre.pickable .ln:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+pre .ln.pick { background: color-mix(in srgb, var(--mark) 16%, transparent); }
+pre .ln.hit { background: color-mix(in srgb, var(--ok) 22%, transparent); box-shadow: inset 3px 0 var(--ok); }
+pre .ln.miss { background: color-mix(in srgb, var(--mark) 22%, transparent); box-shadow: inset 3px 0 var(--mark); }
+pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
+.bug-x { font-size: .9rem; border-left: 3px solid var(--line); padding: var(--s1) var(--s3); }
+.bug-x.hit { border-color: var(--ok); } .bug-x.miss { border-color: var(--mark); }
+.res-ok { color: var(--ok); font-weight: 600; } .res-bad { color: var(--bad); font-weight: 600; }
+
+/* L13: Swing component mock-ups (inside .win, always light) */
+.tree-view { background: #fff; padding: .4rem .3rem; font: 13px system-ui, "Segoe UI", sans-serif; color: #1c2328; min-height: 6rem; overflow-x: auto; }
+.tv-row { display: flex; align-items: center; white-space: nowrap; line-height: 1.6; }
+.tv-guide { font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace; color: #8b98a0; white-space: pre; }
+.tv-tog { width: 1.1rem; flex: none; border: 0; background: none; padding: 0; font-size: .72rem; color: #3c4a52; cursor: pointer; }
+.tv-tog.none { visibility: hidden; }
+.tv-ico { width: 16px; height: 14px; margin-right: .3rem; flex: none; }
+.tv-lbl { padding: 0 .3rem; border-radius: 2px; cursor: pointer; border: 1px solid transparent; }
+.tv-lbl.sel { background: #b8cfe5; border-color: #6d8fb5; }
+.tv-lbl.fresh { background: #fff2b3; }
+.tv-hline { border-top: 1px solid #8b98a0; margin: .1rem 0; }
+.sp-frame { display: flex; flex-direction: column; height: 18rem; background: var(--win-bg); }
+.sp { display: flex; flex: 1; min-height: 0; min-width: 0; }
+.sp.vert { flex-direction: column; }
+#sp2 { height: 100%; }
+.sp-a, .sp-b { overflow: auto; background: #fff; min-width: 0; min-height: 0; }
+.sp-a { flex: none; }
+.sp-b { flex: 1; }
+.sp-div { flex: none; background: #d5dde1; border: 1px solid #a9b4ba; display: flex; gap: 3px; cursor: col-resize; touch-action: none; }
+.sp:not(.vert) > .sp-div { flex-direction: column; align-items: center; padding-top: 3px; }
+.sp.vert > .sp-div { flex-direction: row; align-items: center; padding-left: 3px; cursor: row-resize; }
+.sp-div:focus-visible { outline: 2px solid #2a6ebb; }
+.sp-arrow { font-size: 9px; line-height: 1; padding: 1px; border: 0; background: none; color: #24323a; cursor: pointer; }
+.jlist { list-style: none; margin: 0; padding: 2px 0; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jlist li { padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+.jlist li.sel { background: #b8cfe5; }
+.pic { display: grid; place-items: center; }
+.ok-cyan { background: #00ffff; border: 1px solid #6b7b82; font: 600 13px system-ui, sans-serif; padding: .35rem; color: #1c2328; cursor: pointer; }
+.jtp { display: flex; flex-direction: column; height: 13rem; background: var(--win-bg); font: 12px system-ui, sans-serif; color: #1c2328; padding: 4px; }
+.jtp.pos-BOTTOM { flex-direction: column-reverse; }
+.jtp.pos-LEFT { flex-direction: row; }
+.jtp.pos-RIGHT { flex-direction: row-reverse; }
+.jtp-tabs { display: flex; flex-wrap: wrap; gap: 2px; min-width: 0; }
+.jtp.pos-LEFT .jtp-tabs, .jtp.pos-RIGHT .jtp-tabs { flex-direction: column; flex-wrap: nowrap; overflow: auto; max-width: 45%; }
+.jtp.scroll:not(.pos-LEFT):not(.pos-RIGHT) .jtp-tabs { flex-wrap: nowrap; overflow-x: auto; }
+.jtp-tab { border: 1px solid #9aa7ad; background: #dfe5e8; padding: 2px 9px; cursor: pointer; white-space: nowrap; font: inherit; color: inherit; }
+.jtp-tab.sel { background: #fff; font-weight: 600; }
+.jtp-page { flex: 1; border: 1px solid #9aa7ad; background: #eceff1; min-height: 0; min-width: 0; overflow: auto; }
+.jtp-empty { padding: .5rem; color: #7a868c; }
+.bl3 { display: grid; grid-template: auto 1fr auto / auto 1fr auto; height: 100%; gap: 2px; padding: 2px; }
+.bl3 .jbtn { font-weight: 600; }
+.tl-frame { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto; height: 14rem; background: var(--win-bg); }
+.tl-frame.drop { outline: 2px dashed #2a6ebb; outline-offset: -4px; }
+.tl-frame[data-dock="NORTH"] > .tl-bar { grid-area: 1 / 1 / 2 / 4; }
+.tl-frame[data-dock="SOUTH"] > .tl-bar { grid-area: 3 / 1 / 4 / 4; }
+.tl-frame[data-dock="WEST"] > .tl-bar { grid-area: 1 / 1 / 4 / 2; }
+.tl-frame[data-dock="EAST"] > .tl-bar { grid-area: 1 / 3 / 4 / 4; }
+.tl-center { grid-area: 2 / 2 / 3 / 3; background: #fff; margin: 4px; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tl-bar { display: flex; align-items: center; gap: 2px; padding: 2px; background: #e3e8eb; border: 1px solid #b6c0c5; }
+.tl-bar.vertical { flex-direction: column; }
+.tl-grip { width: 9px; align-self: stretch; min-height: 1.6rem; background-image: radial-gradient(#7d8a91 1px, transparent 1.3px); background-size: 4px 4px; cursor: grab; touch-action: none; }
+.tl-bar.vertical .tl-grip { width: auto; min-height: 9px; height: 9px; min-width: 1.6rem; }
+.tl-btn { min-width: 1.9rem; height: 1.9rem; border: 1px solid transparent; background: none; border-radius: 3px; cursor: pointer; font: 14px system-ui, sans-serif; color: #24323a; padding: 0 .35rem; }
+.tl-btn:hover:not(:disabled) { border-color: #8f9ba1; background: #f4f6f7; }
+.tl-btn:disabled { color: #a9b2b7; cursor: default; }
+.tl-sep { width: 1px; align-self: stretch; background: #9aa7ad; margin: 2px 4px; }
+.tl-bar.vertical .tl-sep { width: auto; height: 1px; margin: 4px 2px; }
+.tl-floatwin { max-width: 16rem; }
+.pp-area { position: relative; background: #fff; min-height: 9rem; padding: .2rem; outline: none; }
+.pp-area:focus-visible { outline: 2px solid #2a6ebb; }
+.jpopup { position: absolute; z-index: 5; background: #f4f6f7; border: 1px solid #8f9ba1; box-shadow: 2px 2px 6px rgba(0, 0, 0, .25); padding: 2px 0; min-width: 8rem; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jpopup button { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; text-align: left; border: 0; background: none; padding: 3px 12px; font: inherit; color: inherit; cursor: pointer; }
+.jpopup button:hover:not(:disabled), .jpopup button:focus-visible { background: #b8cfe5; outline: none; }
+.jpopup button:disabled { color: #a9b2b7; cursor: default; }
+.jpopup hr { border: 0; border-top: 1px solid #b6c0c5; margin: 2px 0; }
+.jpopup kbd { font: 11px system-ui, sans-serif; color: #56676f; }
+.ac-frame { background: var(--win-bg); outline: none; position: relative; }
+.ac-frame:focus-visible { outline: 2px solid #2a6ebb; }
+.ac-menubar { position: relative; background: #e3e8eb; border-bottom: 1px solid #b6c0c5; padding: 1px 2px; }
+.ac-menu { border: 0; background: none; padding: 2px 8px; font: 12px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.ac-menu[aria-expanded="true"] { background: #b8cfe5; }
+.ac-drop { top: 100%; left: 2px; }
+.ac-area { position: relative; background: #fff; margin: 4px; min-height: 7rem; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tv-row { align-items: stretch; }
+.tv-row > .tv-tog, .tv-row > .tv-ico, .tv-row > .tv-lbl { align-self: center; }
+.tv-g { display: inline-block; width: 16px; flex: none; }
+.tv-g.pipe { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat; }
+.tv-g.tee { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+.tv-g.elbow { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 50% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+
+/* L14 MDI: desktop pane, internal frames, card deck */
+.dsk { position: relative; height: 20rem; background: #5d7d8f; overflow: hidden; }
+.jif { position: absolute; display: flex; flex-direction: column; background: #eceff1; border: 1px solid #44525a; box-shadow: 2px 3px 8px rgba(0, 0, 0, .35); }
+.jif-bar { display: flex; align-items: center; gap: 3px; padding: 2px 4px; background: #c5ced3; font: 600 12px system-ui, sans-serif; color: #1c2328; cursor: move; user-select: none; touch-action: none; }
+.jif.sel { border-color: #1d4f8a; }
+.jif.sel .jif-bar { background: #8fb3d9; }
+.jif-bar span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jif-bar button { width: 18px; height: 16px; padding: 0; font: 11px/1 system-ui, sans-serif; border: 1px solid #6b7b82; background: #f4f6f7; color: #1c2328; cursor: pointer; flex: none; }
+.jif textarea { flex: 1; resize: none; border: 0; border-top: 1px solid #9aa7ad; font: 12px ui-monospace, Menlo, Consolas, monospace; padding: 4px; background: #fff; color: #1c2328; min-height: 0; width: 100%; }
+.jif-rs { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 55%, #6b7b82 55%, #6b7b82 62%, transparent 62%, transparent 78%, #6b7b82 78%, #6b7b82 85%, transparent 85%); }
+.jif-icon { position: absolute; bottom: 4px; display: flex; align-items: center; gap: 4px; width: 8.5rem; padding: 2px 4px; background: #c5ced3; border: 1px solid #44525a; font: 600 11px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.jif-icon span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dsk-outline { position: absolute; border: 2px dashed #fff; pointer-events: none; }
+.cards { background: var(--win-bg); padding: .6rem; font: 13px system-ui, sans-serif; color: #1c2328; }
+.card-page { background: #fff; border: 1px solid #b6c0c5; padding: .7rem; min-height: 9rem; display: grid; gap: .4rem; align-content: start; }
+.card-page h4 { font: 600 14px system-ui, sans-serif; }
+.card-page .tag { font: 11px ui-monospace, monospace; color: #7a868c; }
+.ways-host { position: relative; background: var(--win-bg); color: #1c2328; font: 12px system-ui, sans-serif; min-height: 15rem; padding: .5rem; color-scheme: light; }
+.ways-host pre { margin: 0; white-space: pre-wrap; font: 12px ui-monospace, monospace; }
+.dlg-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .28); display: grid; place-items: center; }
+
+/* Threads: lanes, progress bar, frozen window */
+.lanes { display: grid; gap: 4px; font: 12px var(--f-mono); }
+.lane { display: grid; grid-template-columns: minmax(0, 9.5rem) 7.5rem minmax(0, 1fr); gap: .5rem; align-items: center; }
+.lane > b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lane .st { font-size: 11px; padding: 1px 6px; border-radius: 99px; border: 1px solid var(--line); text-align: center; color: var(--muted); }
+.lane .st.RUNNABLE { color: var(--ok); border-color: var(--ok); }
+.lane .st.TIMED_WAITING, .lane .st.WAITING { color: var(--c-num); border-color: var(--c-num); }
+.lane .st.TERMINATED { color: var(--bad); border-color: var(--bad); }
+.lane .ticks { display: flex; gap: 2px; overflow: hidden; min-width: 0; justify-content: flex-end; }
+.tick { width: 1.15rem; height: 1.15rem; border-radius: 3px; display: grid; place-items: center; font-size: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
+@media (max-width: 520px) { .lane { grid-template-columns: minmax(0, 1fr) 7rem; } .lane .ticks { grid-column: 1 / -1; justify-content: flex-start; } }
+.jprog { position: relative; height: 18px; border: 1px solid #6b7b82; background: #fff; border-radius: 2px; overflow: hidden; }
+.jprog i { position: absolute; top: 0; bottom: 0; left: 0; background: #5b8fc7; }
+.jprog span { position: absolute; inset: 0; display: grid; place-items: center; font: 600 11px system-ui, sans-serif; color: #1c2328; }
+.jprog.ind i { width: 30% !important; animation: jprog-ind 1.2s linear infinite; }
+@keyframes jprog-ind { from { left: -30%; } to { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .jprog.ind i { animation: none; width: 100% !important; opacity: .45; } }
+.win.frozen .win-body { filter: grayscale(.7) brightness(.9); }
+.win .win-bar .nr { color: #b0261c; font-weight: 600; }
+.win-body .row { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+.win-body textarea { width: 100%; min-height: 4.5rem; font: 12px ui-monospace, monospace; border: 1px solid #9aa7ad; background: #fff; color: #1c2328; padding: 4px; resize: none; }
+.verdict { font: 600 .8rem var(--f-body); padding: .1rem .5rem; border-radius: 99px; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.jbtn:disabled { color: #9aa4a8; cursor: default; }
+
+/* Your lab answers */
+.mine { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ok); font-weight: 600; }
+.slide.answer { border-left: 3px solid var(--ok); padding-left: var(--s4); }
+.xpl { display: grid; gap: var(--s3); margin: 0; }
+.xpl > div { display: grid; gap: var(--s1); min-width: 0; }
+.xpl dt { min-width: 0; }
+.xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
+.xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L9 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 9 + Lab 7</p>
+  <h1>Other Components</h1>
+  <p class="lede">Menus, mnemonics and accelerators, JSlider, JEditorPane, scrolling, JFileChooser, JColorChooser and JDialog. Every slide of <em>Lecture 9 – Other components</em> (21 slides) in order with all code, then <em>Lab 7 (Part 2)</em>, the Student Data app with menus, a toolbar, an editor, a slider and dark mode, with a working mock-up and a full solution.</p>
+  <div class="legend">
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="mine">Your answer</span> your own lab code, exactly as in your zip</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<!-- ============ 1 menus ============ -->
+<section class="sec" id="menus" data-title="Menus">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–6</p>
+    <div class="sec-head-row"><h2>Menus</h2><label class="done"><input type="checkbox" id="done-menus"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A menu is three nested layers:<ul><li><b>JMenuBar</b>: the strip along the top. Attach it with <code>frame.setJMenuBar(bar)</code> (not <code>add</code>).</li><li><b>JMenu</b>: each word on the strip ("File", "Edit"). Add menus to the bar.</li><li><b>JMenuItem</b>: each command inside a menu ("Open", "Save"). Add items to menus; each item gets its own ActionListener, exactly like a button.</li></ul>A JMenu can go inside another JMenu to make a sub-menu. There are also check-box and radio-button menu items.</div></aside>
+
+  <div class="slide"><p class="divider">Other Components <span class="sn">1</span></p></div>
+
+  <div class="slide">
+    <h3>JMenu <span class="sn">2</span></h3>
+    <ul class="pts">
+      <li>Allows for performing actions without cluttering GUI</li>
+      <li>Can be used for <code>JFrame</code> or <code>JApplet</code> objects</li>
+      <li>Contained by menu bar
+        <ul><li><code>JMenuBar</code> (requires <code>setJMenuBar</code>)</li></ul></li>
+      <li>Comprised of menu items
+        <ul><li><code>JMenuItem</code></li><li><code>JCheckBoxMenuItem</code></li><li><code>JRadioButtonMenuItem</code></li></ul></li>
+      <li>When menu is clicked, expands to show menu items</li>
+      <li><code>JMenuItem</code> can be a <code>JMenu</code> to have a sub-menu</li>
+      <li><code>addActionListener</code> for each menu item</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>JMenuBar <span class="sn">3</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <p style="flex:2 1 14rem"><em>a drop-down menu of commands</em></p>
+      <figure style="flex:0 1 auto"><div class="plate"><img src="img/s3_menubar.png" width="204" alt="A menu bar with A Menu and Another Menu"></div></figure>
+    </div>
+    <ul class="pts"><li><code>public JMenuBar()</code></li><li><code>public void add(JMenu menu)</code></li></ul>
+    <p>Usage: in <code>JFrame</code>, the following method exists:</p>
+    <ul class="pts"><li><code>public void setJMenuBar(JMenuBar bar)</code></li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>JMenu <span class="sn">4</span></h3>
+    <div class="fig-row">
+      <div style="flex:2 1 16rem;min-width:0;display:grid;gap:.4rem">
+        <p><em>a sub-menu of commands with a JMenuBar</em></p>
+        <ul class="pts"><li><code>public JMenu(String text)</code></li><li><code>public void add(JMenuItem item)</code></li><li><code>public void addSeparator()</code></li><li><code>public void setMnemonic(int key)</code></li></ul>
+      </div>
+      <figure style="flex:0 1 auto"><div class="plate"><img src="img/s4_menu.png" width="73" alt="An open menu titled A Menu with items: A text-only item, Both text and icon, an icon-only item, A radio button item, Another one, A check box item"></div></figure>
+    </div>
+    <figure><div class="plate"><img src="img/s4_submenu.png" width="350" loading="lazy" alt="A submenu item with an arrow opening a second list: An item in the submenu, Another item"></div><figcaption>A JMenu inside a JMenu makes a sub-menu.</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <h3>JMenuItem <span class="sn">5</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <p style="flex:2 1 14rem"><em>an entry within a JMenu that can be clicked to execute a command</em></p>
+      <figure style="flex:0 1 auto"><div class="plate"><img src="img/s5_menuitem.png" width="252" alt="Menu items: A text-only menu item with the accelerator Alt+1, and Both text and icon"></div></figure>
+    </div>
+    <ul class="pts">
+      <li><code>public JMenuItem(String text)</code></li>
+      <li><code>public JMenuItem(String text, Icon icon)</code></li>
+      <li><code>public JMenuItem(String text, int mnemonic)</code></li>
+      <li><code>public void setAccelerator(KeyStroke ks)</code></li>
+      <li><code>public void setEnabled(boolean b)</code></li>
+      <li><code>public void setMnemonic(int mnemonic)</code></li>
+      <li><code>public void addActionListener(ActionListener al)</code></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>J(CheckBox|RadioButton)MenuItem <span class="sn">6</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <p style="flex:2 1 14rem"><em>a JMenuItem with a check box or radio circle</em></p>
+      <figure style="flex:0 1 auto"><div class="plate"><img src="img/s6_check_radio_items.png" width="185" alt="Menu with A radio button menu item (selected), Another one, A check box menu item, Another one"></div></figure>
+    </div>
+    <ul class="pts">
+      <li><code>public J_____MenuItem(String text)</code></li>
+      <li><code>public J_____MenuItem(String text, boolean selected)</code></li>
+      <li><code>public J_____MenuItem(String text, Icon icon)</code></li>
+      <li><code>public J_____MenuItem(String text, Icon icon, boolean selected)</code></li>
+      <li><code>public void addActionListener(ActionListener al)</code></li>
+      <li><code>public boolean isSelected()</code></li>
+      <li><code>public void setSelected(boolean b)</code></li>
+    </ul>
+    <p>Recall: in a <code>ButtonGroup</code>, the following method exists:</p>
+    <ul class="pts"><li><code>public void add(AbstractButton button)</code></li><li>These two classes extend <code>AbstractButton</code>.</li></ul>
+  </div>
+
+  <details class="orig" data-pages="1-6"></details>
+  <div class="quiz" data-quiz="menus"></div>
+</section>
+
+<!-- ============ 2 hotkeys + slider ============ -->
+<section class="sec" id="keys" data-title="Mnemonics, accelerators, JSlider">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 7–9</p>
+    <div class="sec-head-row"><h2>Mnemonics, accelerators, JSlider</h2><label class="done"><input type="checkbox" id="done-keys"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div><b>Mnemonic</b> = the underlined letter. Press Alt + that letter to open a menu or click a visible item. It only works for what's on screen right now. <b>Accelerator</b> = a shortcut that works from anywhere in the window, even with the menu closed (like Ctrl+S). It's shown at the right of the menu item. A <b>JSlider</b> picks a whole number from a range by dragging a thumb; listen to it with a <code>ChangeListener</code>.</div></aside>
+
+  <div class="slide">
+    <h3>Mnemonics <span class="sn">7</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <ul class="pts" style="flex:2 1 18rem">
+        <li><b>mnemonic:</b> A context-sensitive menu hotkey assigned to a specific button or other graphical component.
+          <ul><li>Usually visible as an underlined key, activated by pressing Alt+<em>key</em>.</li><li>Only works when input focus is on the appropriate component.</li><li><em>usage:</em> call <code>setMnemonic(char)</code> method
+            <ul><li>Menu items also have a constructor that takes a mnemonic.</li></ul></li></ul>
+        </li>
+      </ul>
+      <figure style="flex:0 1 auto"><div class="plate"><img src="img/s7_mnemonic.png" width="163" alt="A menu item Both text and icon with the B underlined"></div><figcaption>The underlined <u>B</u> is the mnemonic.</figcaption></figure>
+    </div>
+    <div class="code"><pre class="java">myQuitButton.setMnemonic('Q');
+JMenuItem myNewItem = new JMenuItem("New", 'N');
+// or: myNewItem.setMnemonic('N');</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Accelerators <span class="sn">8</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <ul class="pts" style="flex:2 1 18rem">
+        <li><b>accelerator:</b> A global hotkey that performs an action (ex: Alt-X to exit the program) even on components that aren't in focus / visible.
+          <ul>
+            <li>Can be run at any time in the application.</li>
+            <li>Can optionally include modifiers like Shift, Alt.</li>
+            <li>To create an accelerator:
+              <ul><li>Call the static <code>getKeyStroke</code> factory method of the <code>KeyStroke</code> class.</li><li>Pass its result to the <code>setAccelerator</code> method of the component.</li></ul></li>
+          </ul>
+        </li>
+      </ul>
+      <figure style="flex:0 1 auto"><div class="plate"><img src="img/s8_accelerator.png" width="241" alt="Menu item An item in the submenu with Alt+2 shown on the right"></div><figcaption>"Alt+2" on the right is the accelerator.</figcaption></figure>
+    </div>
+    <div class="code"><pre class="java">menuItem.setAccelerator(
+    KeyStroke.getKeyStroke('T',KeyEvent.ALT_MASK));</pre></div>
+    <aside class="note"><b>Guide note</b><span>In current Java, <code>ALT_MASK</code> is deprecated; the modern form is <code>KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.ALT_DOWN_MASK)</code>. Both work.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>JSlider <span class="sn">9</span></h3>
+    <ul class="pts">
+      <li>Enable users to select from range of integer values</li>
+      <li>Several features
+        <ul><li>Tick marks (major and minor)</li><li>Snap-to ticks</li><li>Orientation (horizontal and vertical)</li></ul></li>
+      <li><code>paint</code> draws on subclasses of <code>JFrame</code> and <code>Japplet</code></li>
+      <li><code>paintComponent</code> draws on subclasses of <code>JComponent</code></li>
+    </ul>
+    <figure><div class="plate"><img src="img/s9_slider_labels.png" width="440" alt="A horizontal JSlider with labels pointing to the thumb (the draggable knob) and a tick mark"></div><figcaption>The <b>thumb</b> is the part you drag; <b>tick marks</b> are the small lines underneath.</figcaption></figure>
+    <p class="added">Added · Code for a slider with ticks</p>
+    <div class="code"><pre class="java">JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 50, 25);   // orientation, min, max, value
+slider.setMajorTickSpacing(10);
+slider.setMinorTickSpacing(1);
+slider.setPaintTicks(true);
+slider.setPaintLabels(true);
+slider.setSnapToTicks(true);
+slider.addChangeListener(e -&gt; label.setText("value: " + slider.getValue()));</pre></div>
+  </div>
+
+  <div class="demo" id="mn">
+    <div class="demo-head"><h3>Try it: a menu with mnemonics, an accelerator and a slider</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">Click inside the window first. Then try <kbd>Alt</kbd>+<kbd>F</kbd> (mnemonic: opens File), <kbd>N</kbd> or <kbd>O</kbd> while it's open, and <kbd>Ctrl</kbd>+<kbd>S</kbd> (accelerator: works with the menu closed).</p>
+    <div class="win" id="mnWin" tabindex="0" style="max-width:26rem;outline-offset:2px">
+      <div class="win-bar"><span>Menu Demo</span><i>–□×</i></div>
+      <div id="mnBar" style="display:flex;gap:.2rem;background:#f2f4f5;border-bottom:1px solid #c3ccd0;padding:.1rem .3rem;position:relative"></div>
+      <div class="win-body" style="display:grid;gap:.5rem">
+        <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap"><input type="range" id="mnSl" min="0" max="50" value="25" step="1" list="mnTicks" style="flex:1 1 10rem"><span id="mnSlv">value: 25</span></div>
+        <datalist id="mnTicks"><option value="0"></option><option value="10"></option><option value="20"></option><option value="30"></option><option value="40"></option><option value="50"></option></datalist>
+      </div>
+    </div>
+    <div class="log" id="mnLog" style="height:6rem"></div>
+  </div>
+
+  <details class="orig" data-pages="7-9"></details>
+  <div class="quiz" data-quiz="keys"></div>
+</section>
+
+<!-- ============ 3 editor ============ -->
+<section class="sec" id="editor" data-title="JEditorPane and scrolling">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 10–17</p>
+    <div class="sec-head-row"><h2>JEditorPane and scrolling</h2><label class="done"><input type="checkbox" id="done-editor"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A <code>JEditorPane</code> is a mini text editor you get for free: cursor, typing, copy/paste. It can show plain text, HTML or RTF (<code>setContentType</code>), and load a whole file with <code>read(reader, null)</code>. Put it, or any big component, inside a <code>JScrollPane</code>; scroll bars then appear only when the content is bigger than the visible area (the <em>viewport</em>), unless you change the policy.</div></aside>
+
+  <div class="slide">
+    <h3>JEditorPane <span class="sn">10–11</span></h3>
+    <ul class="pts">
+      <li>Used to display text in a graphical component</li>
+      <li>Suited for displaying text read from files</li>
+      <li><code>JEditorPane</code> supplies the basic functions of a text editor automatically.
+        <ul><li>You can place the cursor, insert or delete text and also copy (using CNTR-C and CNTRV).</li></ul></li>
+    </ul>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th><th>Slide</th></tr></thead>
+        <tbody>
+          <tr><td><code>JEditorPane()</code></td><td>Creates an empty editor pane.</td><td>10</td></tr>
+          <tr><td><code>void read(Reader myReader, Object description)</code></td><td>reads the text supplied by myReader and displays it in the editor area. In the second argument description further information on the type of text can be given; we do not use this here, i.e. we set description = null.</td><td>10</td></tr>
+          <tr><td><code>getText()</code></td><td>returns the text currently displayed in the editor area as one string, including the line-end characters.</td><td>10</td></tr>
+          <tr><td><code>setText(String text)</code></td><td>Sets the text content of the editor pane.</td><td>11</td></tr>
+          <tr><td><code>getText(String text)</code></td><td>Gets the text content of the editor pane.</td><td>11</td></tr>
+          <tr><td><code>setContentType(String type)</code></td><td>Sets the content type of the editor pane (e.g., "text/plain," "text/html," "text/rtf").</td><td>11</td></tr>
+          <tr><td><code>getContentType()</code></td><td>Returns the content type of the editor pane.</td><td>11</td></tr>
+          <tr><td><code>setEditable(boolean editable)</code></td><td>Sets whether the editor pane is editable or not.</td><td>11</td></tr>
+          <tr><td><code>getSelectedText()</code></td><td>Returns the currently selected text.</td><td>11</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="note"><b>Guide note</b><span>Slide 11's <code>getText(String text)</code> is a typo; it takes no argument: <code>getText()</code>.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>JEditorPane example <span class="sn">12</span></h3>
+    <div class="code"><pre class="java">import java.awt.*;
+import javax.swing.*;
+
+public class JEditorPaneSetFontExample {
+    public static void main(String[] args)
+    {
+        // Create a JFrame
+        JFrame frame = new JFrame("JEditorPane setFont() Example");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+
+        // Create a JEditorPane
+        JEditorPane editorPane = new JEditorPane();
+        // Set content type to plain text
+        editorPane.setContentType("text/plain");
+
+        // Set text content
+        editorPane.setText("Test For EditorPane");
+
+        // Create a custom font
+        Font customFont = new Font("Serif", Font.BOLD, 16);
+
+        // Set the font for the editor pane
+        editorPane.setFont(customFont);
+
+        // Add the JEditorPane to the frame
+        frame.add(editorPane);
+
+        // Make the frame visible
+        frame.setVisible(true);
+    }
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>JEditorPane example 2 <span class="sn">13</span></h3>
+    <div class="code"><pre class="java">import SimpleFrame.SimpleFrame;
+
+import java.io.*;
+import javax.swing.*;
+import java.awt.*;
+
+public class TextDisplayFrame extends SimpleFrame
+{
+   private JEditorPane textDisplayPane;
+
+   public TextDisplayFrame(String filename)
+   {
+      textDisplayPane = new JEditorPane();
+      this.getContentPane().add(textDisplayPane,BorderLayout.CENTER);
+      this.setSize(200,160);
+
+      File readfile = new File(filename);
+
+      try{
+         FileReader fr = new FileReader(readfile);
+         textDisplayPane.read(fr,null);
+      }catch(IOException e){
+         System.out.println("Problems opening or reading "+readfile.getPath());
+      }
+
+   }
+}
+
+public class TextDisplayDriver
+{
+   // Adujust paths if necessary!!
+   private static String path = "./its/TestData/";
+   private static String fileName = "testtext1.txt";
+
+   public static void main(String[] args)
+   {
+      TextDisplayFrame TAF = new TextDisplayFrame(path+fileName);
+      TAF.showIt("Text Display");
+   }
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>JEditorPane example 3 <span class="sn">14</span></h3>
+    <div class="code"><pre class="java">import java.io.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class JEditorPaneSave implements ActionListener {
+   JFrame myFrame = null;
+   JEditorPane myPane = null;
+   public static void main(String[] a) {
+      (new JEditorPaneSave()).test();
+   }
+   private void test() {
+      myFrame = new JFrame("JEditorPane Save Test");
+      myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      myFrame.setSize(300,200);
+
+      myPane = new JEditorPane();
+      myPane.setContentType("text/plain");
+      myPane.setText(
+         "JEditorPane is a text component to edit various kinds of"
+         +" content.\n\nThis component uses implementations of the"
+         +" EditorKit to accomplish its behavior.");
+      myFrame.setContentPane(myPane);
+
+      JMenuBar myBar = new JMenuBar();
+      JMenu myMenu = getFileMenu();
+      myBar.add(myMenu);
+      myFrame.setJMenuBar(myBar);
+      myFrame.setVisible(true);
+   }
+   private JMenu getFileMenu() {
+      JMenu myMenu = new JMenu("File");
+      JMenuItem myItem = new JMenuItem("Open");
+      myItem.addActionListener(this);
+      myMenu.add(myItem);
+
+      myItem = new JMenuItem("Save");
+      myItem.addActionListener(this);
+      myMenu.add(myItem);
+      return myMenu;
+   }
+   public void actionPerformed(ActionEvent e) {
+      String cmd = e.getActionCommand();
+      try {
+         if (cmd.equals("Open")) {
+            FileReader in = new FileReader("JEditorPane.txt");
+            char[] buffer = new char[1024];
+            int n = in.read(buffer);
+            String text = new String(buffer, 0, n);
+            myPane.setText(text);
+            in.close();
+         } else if (cmd.equals("Save")) {
+            FileWriter out = new FileWriter("JEditorPane.txt");
+            out.write(myPane.getText());
+            out.close();
+         }
+      } catch (Exception f) {
+         f.printStackTrace();
+      }
+   }
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span>One listener (<code>this</code>) handles both menu items; <code>getActionCommand()</code> returns the item's text, "Open" or "Save". "Open" reads at most 1024 characters. Save first, otherwise there's no file to open.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Scrolling <span class="sn">15</span></h3>
+    <ul class="pts">
+      <li>To display long texts or large drawings that do not fit into the window.</li>
+      <li>Scrolling is implemented by class <code>JScrollPane</code></li>
+      <li>The scroll bars are on the right and at the bottom by default</li>
+      <li>The part where the component is displayed is called <em>viewport</em>.
+        <ul><li>If the whole component fits into the viewport the scroll bars disappear.</li></ul></li>
+      <li><code>setHorizontalScrollBarPolicy(int policy)</code> determines when the scroll bars are visible.
+        <ul><li>Class <code>JScrollPane</code> defines constant values for policy
+          <ul><li><code>HORIZONTAL_SCROLLBAR_ALWAYS</code>, <code>HORIZONTAL_SCROLLBAR_AS_NEEDED</code> and <code>HORIZONTAL_SCROLLBAR_NEVER</code></li></ul></li></ul></li>
+      <li><code>setVerticalScrollBarPolicy(int policy)</code> determines when the scroll bars are visible.
+        <ul><li>Policy has similar values to the ones for the horizontal scrollbar.</li></ul></li>
+    </ul>
+  </div>
+
+  <div class="demo" id="sp">
+    <div class="demo-head"><h3>Try it: viewport and scroll-bar policies</h3><span class="added">Added</span></div>
+    <div class="ctrl">
+      <label for="spH">horizontal <select id="spH"><option value="auto">AS_NEEDED</option><option value="scroll">ALWAYS</option><option value="hidden">NEVER</option></select></label>
+      <label for="spV">vertical <select id="spV"><option value="auto">AS_NEEDED</option><option value="scroll">ALWAYS</option><option value="hidden">NEVER</option></select></label>
+      <label for="spW">viewport width <input type="range" id="spW" min="120" max="340" value="200"></label>
+    </div>
+    <div id="spBox" style="width:200px;height:150px;border:1px solid #9aa7ad;background:#fff;color:#1c2328;max-width:100%">
+      <div style="width:250px;height:250px;position:relative;font:12px sans-serif">
+        <div style="position:absolute;inset:0;border:1px solid red"></div>
+        <span style="position:absolute;left:10px;top:228px;color:red">Border of preferred size.</span>
+      </div>
+    </div>
+    <pre class="plain-pre" id="spCode" style="margin:0"></pre>
+  </div>
+
+  <div class="slide">
+    <h3>JScrollPane with text example <span class="sn">16</span></h3>
+    <div class="code"><pre class="java">import SimpleFrame.SimpleFrame;
+import java.io.*;
+import java.awt.*;
+import javax.swing.*;
+
+public class TextDisplayScrollFrame extends SimpleFrame
+{
+   private JEditorPane TextDisplayPanel;
+
+   public TextDisplayScrollFrame(String filename)
+   {
+      TextDisplayPanel = new JEditorPane();
+
+      JScrollPane scrollPane = new JScrollPane(TextDisplayPanel);
+      this.getContentPane().add(scrollPane,BorderLayout.CENTER);
+
+      File readfile = new File(filename);
+
+      try{
+         FileReader fr = new FileReader(readfile);
+         TextDisplayPanel.read(fr,null);
+      }catch(IOException e){
+         System.out.println("Problems openeing or reading "+readfile.getName());
+      }
+   }
+}
+
+public class TextDisplayScrollDriver
+{
+   // This variable has to be set according to your system
+   private static String fileName = "testtext3.txt";
+
+   public static void main(String[] args)
+   {
+      TextDisplayScrollFrame TAF = new TextDisplayScrollFrame(fileName);
+      TAF.showIt("Text with scrolling");
+   }
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>JScrollPane with drawing example <span class="sn">17</span></h3>
+    <div class="code"><pre class="java">import SimpleFrame.SimpleFrame;
+import javax.swing.*;
+
+public class DrawingDisplayScrollFrame extends SimpleFrame {
+
+   public DrawingDisplayScrollFrame() {
+      DrawingDisplayScrollPanel drawPane = new DrawingDisplayScrollPanel();
+      JScrollPane scrollPane = new JScrollPane(drawPane);
+      this.getContentPane().add(scrollPane);
+      this.setSize(340,250);
+   }
+}
+
+public class DrawingDisplayScrollDriver {
+   public static void main(String[] args) {
+      DrawingDisplayScrollFrame ddsf =
+            new DrawingDisplayScrollFrame();
+      ddsf.showIt("Drawing with Scrolling",200,200);
+   }
+}
+
+import java.awt.*;
+import javax.swing.*;
+
+public class DrawingDisplayScrollPanel extends JPanel {
+
+   public DrawingDisplayScrollPanel() {
+      this.setBackground(Color.white);
+      this.setPreferredSize(new Dimension(250,250));
+   }
+
+   public void paintComponent(Graphics g){
+      super.paintComponent(g);
+      Color oldColor = g.getColor();
+      g.setColor(Color.red);
+      g.drawRect(0,0,249,249);
+      g.drawString("Border of preferred size.",10,240);
+      g.setColor(Color.blue);
+      g.fillOval(300,150,20,20);
+      g.drawString("This is outside the preffered size",260,180);
+      g.setColor(oldColor);
+   }
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span>The scroll pane uses the panel's <em>preferred size</em> (250 × 250), not what you draw. The blue dot at x = 300 is outside that size, so you can never scroll to it. Make the preferred size big enough for your drawing.</span></aside>
+  </div>
+
+  <details class="orig" data-pages="10-17"></details>
+  <div class="quiz" data-quiz="editor"></div>
+</section>
+
+<!-- ============ 4 dialogs ============ -->
+<section class="sec" id="dialogs" data-title="File, colour and custom dialogs">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 18–21</p>
+    <div class="sec-head-row"><h2>File, colour and custom dialogs</h2><label class="done"><input type="checkbox" id="done-dialogs"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Swing has ready-made dialogs for choosing a file (<code>JFileChooser</code>) and a colour (<code>JColorChooser</code>). Both are <em>modal</em>: your program waits on that line until the user closes the dialog, then gets the answer back (a constant plus the file, or a Color / null). For your own dialog, extend <code>JDialog</code>: it works like a small JFrame that belongs to a parent window.</div></aside>
+
+  <div class="slide">
+    <h3>File selection dialogues <span class="sn">18</span></h3>
+    <ul class="pts">
+      <li>File selection dialogues allow the user to select a file from the computer's mass storage (hard disk).
+        <ul><li>The file selected by the user is returned to the class that started the dialogue.</li></ul></li>
+      <li><code>JFileChooser</code>: The navigation in <code>JFileChooser</code> is (mostly) done as in the file selection dialogues of the operating system.
+        <ul><li>One can change directories, to choose a file from a list, or by typing its name into a text field.</li><li>There are buttons labelled 'Open' and 'Cancel'.
+          <ul><li>We do not have to implement any listener for these buttons. All the functions one expects from a file selection dialogue are supplied by <code>JFileChooser</code></li></ul></li></ul></li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>JFileChooser <span class="sn">19</span></h3>
+    <ul class="pts">
+      <li><code>JFileChooser(String startDirectory);</code>
+        <ul><li>generates a file selection dialogue which is not yet visible. When it becomes visible the files in startDirectory are listed, provided that this string specifies an existing directory.</li></ul></li>
+      <li><code>int showOpenDialog(Component parent);</code>
+        <ul><li>displays the file selection dialogue for opening files.</li><li>component parent is usually the component in which the showOpenDialog was called.</li><li>On closing, a file selection dialogue returns an integer value which is one of the following integer constants:</li><li>APPROVE_OPTION indicates that the 'Open' (or 'Save', in case of a save dialogue) button of the dialogue has been clicked.</li><li>CANCEL_OPTION indicates that the 'Cancel' button of the dialogue has been clicked.</li></ul></li>
+      <li><code>int showSaveDialog(Component parent);</code>
+        <ul><li>displays the file selection dialogue for saving files; the rest is as for showOpenDialog</li></ul></li>
+      <li><code>File getSelectedFile();</code>
+        <ul><li>returns the selected file in a variable of type File if APPROVE_OPTION has been selected.</li></ul></li>
+      <li>Only after the dialogue is closed can the parent component be used again.
+        <ul><li>This is to avoid unwanted interactions such as modifying a file in the parent frame while it is being saved.</li></ul></li>
+    </ul>
+    <p class="added">Added · Typical use</p>
+    <div class="code"><pre class="java">JFileChooser chooser = new JFileChooser(".");          // start in the current folder
+int result = chooser.showOpenDialog(this);              // waits here until closed
+if (result == JFileChooser.APPROVE_OPTION) {
+    File file = chooser.getSelectedFile();
+    try (FileReader fr = new FileReader(file)) {
+        editorPane.read(fr, null);                      // show it (slide 10)
+    } catch (IOException ex) {
+        JOptionPane.showMessageDialog(this, "Could not read " + file.getName());
+    }
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>JColorChooser <span class="sn">20</span></h3>
+    <div class="fig-row">
+      <div style="flex:2 1 16rem;min-width:0;display:grid;gap:.4rem">
+        <p><em>a dialog box that allows the user to choose a color from a palette</em></p>
+        <ul class="pts">
+          <li><code>public JColorChooser()</code></li>
+          <li><code>public JColorChooser(Color initial)</code></li>
+          <li><code>public Color showDialog(Component parent, String title, Color initialColor)</code>
+            <ul><li>returns <code>null</code> if user chooses the Cancel button</li></ul></li>
+        </ul>
+      </div>
+      <figure style="flex:1 1 12rem"><div class="plate"><img src="img/s20_colorchooser.png" width="260" loading="lazy" alt="JColorChooser dialog with a grid of colour swatches, recent colours, and a preview area"></div></figure>
+    </div>
+    <div class="code"><pre class="java">Color c = JColorChooser.showDialog(this, "Pick a colour", Color.WHITE);
+if (c != null) panel.setBackground(c);   // null means Cancel</pre></div>
+    <div class="demo" style="margin-top:.25rem">
+      <div class="ctrl"><label for="ccIn">Choose a colour <input type="color" id="ccIn" value="#1d5f6e"></label><code id="ccOut">panel.setBackground(new Color(29, 95, 110));</code></div>
+      <div id="ccPanel" style="height:3rem;border-radius:6px;border:1px solid var(--line);background:#1d5f6e"></div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>User-defined dialogues <span class="sn">21</span></h3>
+    <ul class="pts">
+      <li>Create your own dialogue class by extending the Swing class <code>JDialog</code>.</li>
+      <li>A <code>JDialog</code> is much like a <code>Jframe</code></li>
+      <li>A <code>JDialog</code> has a content pane into which further components are embedded.</li>
+    </ul>
+    <ul class="pts">
+      <li><code>JDialog(Frame parent, String title, boolean modal)</code></li>
+      <li><code>getContentPane.add(Component comp)</code></li>
+      <li><code>setVisible(boolean b)</code></li>
+      <li><code>pack()</code></li>
+    </ul>
+    <p class="added">Added · A small login dialog</p>
+    <div class="code"><pre class="java">public class LoginDialog extends JDialog {
+    private JTextField userField = new JTextField(12);
+    private boolean ok = false;
+
+    public LoginDialog(Frame parent) {
+        super(parent, "Login", true);          // modal: parent waits
+        JPanel p = new JPanel(new FlowLayout());
+        p.add(new JLabel("User:"));
+        p.add(userField);
+        JButton okButton = new JButton("OK");
+        okButton.addActionListener(e -&gt; { ok = true; setVisible(false); });
+        p.add(okButton);
+        getContentPane().add(p);
+        pack();
+        setLocationRelativeTo(parent);
+    }
+    public boolean isOk()       { return ok; }
+    public String getUser()     { return userField.getText(); }
+}
+
+// use it:
+LoginDialog d = new LoginDialog(frame);
+d.setVisible(true);                    // blocks until the dialog is hidden
+if (d.isOk()) System.out.println("Hello " + d.getUser());</pre></div>
+    <aside class="note"><b>Guide note</b><span><code>modal = true</code> means the parent window can't be used and <code>setVisible(true)</code> doesn't return until the dialog closes. The final project asks for dialog boxes; a custom JDialog is one way to show that.</span></aside>
+  </div>
+
+  <details class="orig" data-pages="18-21"></details>
+  <div class="quiz" data-quiz="dialogs"></div>
+</section>
+
+<!-- ============ 5 Lab 7 ============ -->
+<section class="sec" id="lab7a" data-title="Lab 7 (Part 1): colour sliders">
+  <div class="sec-head">
+    <p class="eyebrow">Lab 7 (Part 1) · your answer (Lab7.zip)</p>
+    <div class="sec-head-row"><h2>Lab 7 (Part 1): Colour sliders</h2><label class="done"><input type="checkbox" id="done-lab7a"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>The idea of this program: three sliders for red, green and blue. Moving any of them makes a colour from the three values and writes it in a text area, and <b>Tools → Save</b> adds the current colour to a table. The code is split into classes in the MVC style of Lecture 8: <code>Controllerview</code> is the window (the view), <code>Controller</code> is meant to hold the logic, and <code>Lab7</code> starts everything. It uses a menu bar and JSlider from this lecture and a JTable from Lecture 10. The Part 1 handout isn't in your project files, so this section explains your code. <b>As it is, the program stops with an error before the window opens</b>; the reason and the fix are below.</div></aside>
+
+  <div class="slide answer" id="lab7a-answer">
+    <p class="mine">Your answer · Lab7.zip</p>
+    <h3>Your Lab 7 (Part 1) answer</h3>
+    <p>Project <code>Lab7</code>, package <code>com.mycompany.lab7</code>, four files. The main class is <code>Lab7</code>. The code is exactly as in your zip.</p>
+    <div class="code"><span class="code-label">Lab7.java (main)</span><pre class="java">
+
+package com.mycompany.lab7;
+
+
+public class Lab7 {
+
+    public static void main(String[] args) {
+        Controllerview View= new Controllerview();
+        Controller cont= new Controller(View);
+        View.setVisible(true);
+    }
+}</pre></div>
+    <div class="code"><span class="code-label">Controllerview.java</span><pre class="java">
+
+package com.mycompany.lab7;
+
+import java.awt.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.table.*;
+
+
+public class Controllerview extends JFrame {
+     private JSlider slider1;
+     private JSlider slider2;
+     private JSlider slider3;
+     
+     private JMenuBar menu;
+     private JMenu tools;
+     private JMenu info;
+     private JMenu mode;
+     
+     private JMenuItem save;
+     private JMenuItem clear;
+     
+     private JTable table;
+     private DefaultTableModel tableModel;
+     
+     private JPanel panel;
+     private JTextArea area;
+     
+     private JScrollPane scroll;
+     
+    Controllerview(){
+        setSize(500,300);
+        setLayout(new GridLayout(3,2));
+        
+        panel = new JPanel();
+        
+        area=new JTextArea();
+        scroll= new JScrollPane(area);
+        scroll.setSize(new Dimension(200,200));
+        
+        ActionListener Alistener= e-&gt; savecolor();
+        menu= new JMenuBar();
+        menu.add(tools);
+        menu.add(info);
+        menu.add(mode);
+        tools.add(save);
+        tools.add(clear);
+        save.addActionListener(Alistener);
+        
+        
+        
+        tableModel = new DefaultTableModel(new String[]{"Red", "Green", "Blue"}, 0);
+        table = new JTable(tableModel);
+        JScrollPane tableScroll = new JScrollPane(table);
+        
+       
+        
+        
+    slider1.setName("Red");
+    slider2.setName("Blue");
+    slider3.setName("Green");
+    slider1.setMaximum(255);
+    slider2.setMaximum(255);
+    slider3.setMaximum(255);
+    slider1.setMinimum(0);
+    slider2.setMinimum(0);
+    slider3.setMinimum(0);
+    slider1.setMajorTickSpacing(10);
+    slider2.setMajorTickSpacing(10);
+    slider3.setMajorTickSpacing(10);
+    
+    
+    ChangeListener listener= e -&gt; Colorupdate();
+    slider1.addChangeListener(listener);
+    slider2.addChangeListener(listener);
+    slider3.addChangeListener(listener);
+        
+    this.setJMenuBar(menu);
+    
+    add(slider1);
+    add(slider2);
+    add(slider3);
+    
+    add(scroll);
+    
+    add(tableScroll);
+    
+    setVisible(true);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    void Colorupdate(){
+    int R= slider1.getValue();
+    int G=slider2.getValue();
+    int B=slider3.getValue();
+    Color newcolor= new Color(R,G,B);
+    this.setBackground(newcolor);
+    String stringcolor= "Red: "+ R +"Blue: "+G+ "Green "+ B;
+    area.append(stringcolor);
+    
+    }
+    
+    void savecolor(){
+    int R=slider1.getValue();
+    int G=slider2.getValue();
+    int B=slider3.getValue();
+    
+    tableModel.addColumn(new Object[]{R, G, B});
+    }
+    
+    
+}</pre></div>
+    <div class="code"><span class="code-label">Controller.java</span><pre class="java">
+
+package com.mycompany.lab7;
+
+public class Controller {
+    Controllerview view;
+    
+    Controller(Controllerview view){
+    this.view=view;
+    }
+}</pre></div>
+    <div class="code"><span class="code-label">Sliders.java</span><pre class="java">
+
+package com.mycompany.lab7;
+
+import java.awt.Color;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.ChangeListener;
+
+
+public class Sliders {
+    private JSlider slider;
+    
+    Sliders(){
+    slider=new JSlider();
+    slider.setMaximum(255);
+    slider.setMinimum(0);
+    slider.setMajorTickSpacing(10);
+    slider.setOrientation(SwingConstants.HORIZONTAL);
+    }
+    
+    void setcolor(Color col){
+    slider.setBackground(col);
+    }
+    
+   int getvalue(){
+   return slider.getValue();
+   }
+    
+   void setname(String name){
+   slider.setName(name);
+   }
+   
+   void setaction(ChangeListener e){
+   slider.addChangeListener( e);
+   
+   }
+   
+   
+            
+            }</pre></div>
+    <h4>Explained</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">Controllerview View= new Controllerview();
+Controller cont= new Controller(View);
+View.setVisible(true);</pre></dt><dd><code>main</code> creates the view (the window), then a controller that is given the view. The constructor already calls <code>setVisible(true)</code>, so the last line repeats it harmlessly.</dd></div>
+<div><dt><pre class="java">public class Controller {
+    Controllerview view;
+    Controller(Controllerview view){
+        this.view=view;
+    }
+}</pre></dt><dd>The controller keeps a reference to the view but has no methods yet. In MVC it's where the event handling would go; here the listeners are still inside the view.</dd></div>
+<div><dt><pre class="java">public class Sliders {
+    private JSlider slider;
+    Sliders(){ ... }
+    ...</pre></dt><dd>A small wrapper around one JSlider (0 to 255, horizontal) with helper methods to read its value, set its name and colour, and add a listener. Nothing uses this class yet: the view creates its own sliders.</dd></div>
+<div><dt><pre class="java">public class Controllerview extends JFrame {
+     private JSlider slider1;
+     ...
+     private JMenu tools;
+     ...
+     private JTable table;
+     private DefaultTableModel tableModel;</pre></dt><dd>The window. All its parts are <code>private</code> fields. Declaring a field only creates a name; until something like <code>new JMenu(...)</code> is assigned to it, a field that holds an object is <code>null</code>.</dd></div>
+<div><dt><pre class="java">setSize(500,300);
+setLayout(new GridLayout(3,2));</pre></dt><dd>A 500 × 300 window whose content is a 3 × 2 grid.</dd></div>
+<div><dt><pre class="java">panel = new JPanel();
+area=new JTextArea();
+scroll= new JScrollPane(area);
+scroll.setSize(new Dimension(200,200));</pre></dt><dd>A panel (never added to the window), a text area for the colour log inside a scroll pane. The layout decides the scroll pane's size, so <code>setSize</code> is ignored.</dd></div>
+<div><dt><pre class="java">ActionListener Alistener= e-&gt; savecolor();
+menu= new JMenuBar();
+menu.add(tools);
+...
+tools.add(save);
+tools.add(clear);
+save.addActionListener(Alistener);</pre></dt><dd>A <b>lambda</b> listener that calls <code>savecolor()</code>, a menu bar with three menus, and Save and Clear items in Tools. <b>This is where it crashes</b>: <code>tools</code>, <code>info</code>, <code>mode</code>, <code>save</code> and <code>clear</code> were never created, so <code>menu.add(tools)</code> passes <code>null</code>.</dd></div>
+<div><dt><pre class="java">tableModel = new DefaultTableModel(new String[]{"Red", "Green", "Blue"}, 0);
+table = new JTable(tableModel);
+JScrollPane tableScroll = new JScrollPane(table);</pre></dt><dd>A table model with three columns and 0 rows, a JTable that shows it, and a scroll pane so the headers appear (Lecture 10).</dd></div>
+<div><dt><pre class="java">slider1.setName("Red");
+...
+slider1.setMaximum(255);
+slider1.setMinimum(0);
+slider1.setMajorTickSpacing(10);</pre></dt><dd>Gives each slider a name and the range 0 to 255, the range of one colour channel. The three sliders were never created either, so this would be the next crash.</dd></div>
+<div><dt><pre class="java">ChangeListener listener= e -&gt; Colorupdate();
+slider1.addChangeListener(listener);
+...</pre></dt><dd>A <code>ChangeListener</code> runs every time a slider moves. One listener object is shared by all three sliders.</dd></div>
+<div><dt><pre class="java">this.setJMenuBar(menu);
+add(slider1);
+add(slider2);
+add(slider3);
+add(scroll);
+add(tableScroll);
+setVisible(true);</pre></dt><dd>Attaches the menu bar and fills 5 of the 6 grid cells: the three sliders, the text area and the table.</dd></div>
+<div><dt><pre class="java">void Colorupdate(){
+    int R= slider1.getValue();
+    int G=slider2.getValue();
+    int B=slider3.getValue();
+    Color newcolor= new Color(R,G,B);
+    this.setBackground(newcolor);
+    ...
+    area.append(stringcolor);
+}</pre></dt><dd>Reads the three sliders, makes a <code>Color</code> from red, green and blue (0–255 each), sets it as the background and adds a line of text to the log.</dd></div>
+<div><dt><pre class="java">void savecolor(){
+    ...
+    tableModel.addColumn(new Object[]{R, G, B});
+}</pre></dt><dd>Meant to store the current colour in the table (see point 2 below).</dd></div>
+</dl>
+    <h4>Why it stops, and the fix</h4>
+    <pre class="console"><span class="ttl">Output when you run it</span>Exception in thread "main" java.lang.NullPointerException: Cannot read field "parent" because "comp" is null
+	at java.desktop/java.awt.Container.addImpl(Container.java:1121)
+	at java.desktop/java.awt.Container.add(Container.java:440)
+	at java.desktop/javax.swing.JMenuBar.add(JMenuBar.java:208)
+	at com.mycompany.lab7.Controllerview.&lt;init&gt;(Controllerview.java:46)
+	at com.mycompany.lab7.Lab7.main(Lab7.java:8)</pre>
+    <p>Read the bottom line first: <code>Lab7.main</code> (line 8) called the Controllerview constructor, which at line 46 (<code>menu.add(tools);</code>) passed <code>null</code> to the menu bar. Adding these eight lines after <code>panel = new JPanel();</code> creates every missing object:</p>
+    <div class="code"><span class="code-label">Controllerview.java: lines to add (Added)</span><pre class="java">        panel = new JPanel();
+        tools = new JMenu("Tools");
+        info = new JMenu("Info");
+        mode = new JMenu("Mode");
+        save = new JMenuItem("Save");
+        clear = new JMenuItem("Clear");
+        slider1 = new JSlider();
+        slider2 = new JSlider();
+        slider3 = new JSlider();</pre></div>
+    <figure><div class="plate"><img src="img/answer_lab7p1_fixed.png" width="500" loading="lazy" alt="The window after adding the eight lines: Tools, Info and Mode menus, three sliders, a text area and an empty table with Red, Green and Blue columns."></div><figcaption>With the eight lines added, the window opens: three sliders, the text area and the table.</figcaption></figure>
+    <aside class="note"><b>Once it runs, four more things to fix</b><span>1. <code>this.setBackground(newcolor)</code> colours the JFrame itself, which is hidden behind its content pane, so nothing visibly changes; use <code>getContentPane().setBackground(newcolor)</code>. 2. <code>tableModel.addColumn(...)</code> adds a new <em>column</em> each time; to add the colour as a row use <code>tableModel.addRow(new Object[]{R, G, B})</code>. 3. <code>area.append(stringcolor)</code> puts every reading on the same line; add <code>"\n"</code> at the end. The names are also mixed up: <code>slider2</code> is named "Blue" but read into <code>G</code>, and the log prints <code>"Blue: "</code> in front of <code>G</code>. Keeping red, green, blue in the same order everywhere fixes that. 4. Tools → Clear has no listener, and the Info and Mode menus are empty.</span></aside>
+  </div>
+
+  <div class="quiz" data-quiz="lab7a"></div>
+</section>
+
+<section class="sec" id="lab7" data-title="Lab 7: Student Data app">
+  <div class="sec-head">
+    <p class="eyebrow">Lab 7 (Part 2) · Abualhaj, Amer</p>
+    <div class="sec-head-row"><h2>Lab 7: Student Data</h2><label class="done"><input type="checkbox" id="done-lab7"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>One window that uses this whole lecture: a menu bar with check-box items, a toolbar of buttons, a JEditorPane in a JScrollPane, and a JSlider with a live label. Several menu items and toolbar buttons do the same thing, so they share one listener. Dark mode means calling <code>setBackground</code>/<code>setForeground</code> on every component listed in step 7. Try the mock-up below, then read the solution.</div></aside>
+
+  <div class="slide">
+    <h3>Task</h3>
+    <ol class="pts">
+      <li><b>Create the main application frame</b>
+        <ul><li>Title: Student Data</li><li>Size: approximately 500 × 300</li><li>Use BorderLayout</li><li>Center the frame on the screen</li><li>Set the default close operation to exit the program</li></ul></li>
+      <li><b>Add a Menu Bar containing the following menus and items:</b>
+        <ul>
+          <li>File menu
+            <ul><li>new student or course</li><li>open file</li><li>close file</li></ul></li>
+          <li>Edit menu
+            <ul><li>insert</li><li>cut</li><li>copy</li><li>paste</li></ul></li>
+          <li>View menu
+            <ul><li>zoom in</li><li>zoom out</li><li>separator</li><li>dark mode (checkbox item)</li><li>synchronize (checkbox item)</li></ul></li>
+          <li>Help menu</li>
+          <li>about</li>
+        </ul></li>
+      <li><b>Add a Toolbar at the top of the frame:</b>
+        <ul><li>Buttons: new, open, save, cut, copy, paste</li><li>Use the built-in DefaultEditorKit actions for cut, copy, and paste</li></ul></li>
+      <li><b>Editor Area (Center Section)</b>
+        <ul><li>Add a JEditorPane with the initial text: "Your data"</li><li>Place it inside a JScrollPane</li><li>Enable horizontal and vertical scrollbars when needed</li><li>Add the scroll pane to the center of the frame</li></ul></li>
+      <li><b>Bottom Panel (Slider Section)</b>
+        <ul>
+          <li>Add a JSlider representing the midterm exam mark
+            <ul><li>Minimum: 0</li><li>Maximum: 50</li><li>Initial value: 25</li><li>Horizontal orientation</li><li>Major tick spacing: 10</li><li>Minor tick spacing: 1</li><li>Display ticks and labels</li></ul></li>
+          <li>Add a label showing the current slider value, e.g.:
+            <ul><li>"midterm exam mark: 25"</li></ul></li>
+          <li>Update the label whenever the slider value changes</li>
+        </ul></li>
+      <li><b>Functionality / Event Handling</b>
+        <ul>
+          <li>new student or course (menu) and new (toolbar button):
+            <ul><li>Show an option dialog with choices Student and Course</li></ul></li>
+          <li>open file (menu) and open (toolbar button):
+            <ul><li>Display a warning message:</li><li>"you have to save changes..."</li></ul></li>
+          <li>close file (menu):
+            <ul><li>Exit the program</li></ul></li>
+          <li>save (toolbar button):
+            <ul><li>Show a confirmation message:</li><li>"successfully saved"</li></ul></li>
+        </ul></li>
+      <li><b>Dark Mode Feature</b>
+        <ul>
+          <li>When dark mode is selected:
+            <ul><li>Switch all components to a dark background and light text</li></ul></li>
+          <li>When it is deselected:
+            <ul><li>Restore the default light mode</li></ul></li>
+          <li>Show a message when toggled:
+            <ul><li>"Dark mode on" or "Dark mode off"</li></ul></li>
+          <li>Apply the color changes to:
+            <ul><li>Content panel</li><li>Menu bar + menus + menu items</li><li>Toolbar + buttons</li><li>Editor pane (including text + caret)</li><li>Slider and label</li><li>Bottom panel</li></ul></li>
+        </ul></li>
+      <li><b>Main Method</b>
+        <ul><li>Create an instance of the frame to run the application.</li></ul></li>
+    </ol>
+    <figure><div class="plate"><img src="img/lab7_screens.png" width="560" loading="lazy" alt="Four numbered screenshots: 1 the Student Data window with File Edit View Help menus, a toolbar (new open save cut copy paste), an editor showing Your data..., and a slider 0–50 with label midterm exam mark: 32; 2 the File menu (new student or course, open file, close file); 3 the Edit menu (insert, cut, copy, paste); 4 the View menu (zoom in, zoom out, a separator, dark mode unchecked, synchronize checked)"></div>
+    <figcaption>Lab 7, page 3: ① the window ② File menu ③ Edit menu ④ View menu with check-box items.</figcaption></figure>
+  </div>
+
+  <div class="demo" id="sd">
+    <div class="demo-head"><h3>Try it: the Student Data mock-up</h3><span class="added">Added</span></div>
+    <div class="win" id="sdWin" style="max-width:32rem">
+      <div class="win-bar"><span>Student Data</span><i>–□×</i></div>
+      <div id="sdBar" style="display:flex;gap:.1rem;padding:.1rem .3rem;border-bottom:1px solid #c3ccd0;position:relative"></div>
+      <div id="sdTool" style="display:flex;gap:.2rem;padding:.25rem .3rem;border-bottom:1px solid #c3ccd0;flex-wrap:wrap"></div>
+      <textarea id="sdEd" aria-label="Editor pane" style="display:block;width:100%;height:7rem;border:0;border-bottom:1px solid #c3ccd0;padding:.3rem;font:13px sans-serif;resize:vertical">Your data....</textarea>
+      <div id="sdBottom" style="display:flex;gap:.6rem;align-items:center;justify-content:center;padding:.4rem;flex-wrap:wrap">
+        <input type="range" id="sdSl" min="0" max="50" value="25" list="sdTicks" style="flex:0 1 12rem;min-width:0" aria-label="midterm exam mark">
+        <datalist id="sdTicks"><option value="0"></option><option value="10"></option><option value="20"></option><option value="30"></option><option value="40"></option><option value="50"></option></datalist>
+        <b id="sdLbl" style="font-size:.85rem">midterm exam mark: 25</b>
+      </div>
+    </div>
+    <div id="sdDlg" aria-live="polite"></div>
+  </div>
+
+  <div class="slide answer" id="lab7-answer">
+    <p class="mine">Your answer · Lab7pt2.zip</p>
+    <h3>Your Lab 7 (Part 2) answer</h3>
+    <p>Project <code>mavenproject2</code>, package <code>com.mycompany.mavenproject2</code>, one file. The code is exactly as in your zip.</p>
+    <aside class="note"><b>Before you run it</b><span>The project's <code>pom.xml</code> names <code>com.mycompany.mavenproject2.Mavenproject2</code> as the main class, but that file isn't in the zip, so <kbd>F6</kbd> fails. Right-click <code>StudentDataFrame.java</code> → <b>Run File</b>, or change <code>&lt;exec.mainClass&gt;</code> in pom.xml to <code>com.mycompany.mavenproject2.StudentDataFrame</code>. The pom also sets <code>&lt;maven.compiler.release&gt;24&lt;/maven.compiler.release&gt;</code>, which needs JDK 24 or newer; with an older JDK, lower that number to your version (for example 21).</span></aside>
+    <div class="code"><span class="code-label">StudentDataFrame.java</span><pre class="java">
+
+
+package com.mycompany.mavenproject2;
+
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
+import java.awt.*;
+import java.awt.event.*;
+
+public class StudentDataFrame extends JFrame {
+
+    private JEditorPane editorPane;
+    private JLabel sliderLabel;
+    private JSlider slider;
+    private JCheckBoxMenuItem darkModeItem;
+
+    private Color lightBg = Color.WHITE;
+    private Color lightFg = Color.BLACK;
+    private Color darkBg = new Color(40, 40, 40);
+    private Color darkFg = new Color(230, 230, 230);
+
+    public StudentDataFrame() {
+        setTitle("Student Data");
+        setSize(500, 300);
+        setLayout(new BorderLayout());
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        createMenuBar();
+        createToolBar();
+        createEditor();
+        createBottomPanel();
+
+        setVisible(true);
+    }
+
+    private void createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+        JMenuItem newItem = new JMenuItem("New student or course");
+        JMenuItem openItem = new JMenuItem("Open file");
+        JMenuItem closeItem = new JMenuItem("Close file");
+
+        newItem.addActionListener(e -&gt; showNewDialog());
+        openItem.addActionListener(e -&gt; showOpenWarning());
+        closeItem.addActionListener(e -&gt; System.exit(0));
+
+        fileMenu.add(newItem);
+        fileMenu.add(openItem);
+        fileMenu.add(closeItem);
+
+        JMenu editMenu = new JMenu("Edit");
+        editMenu.add(new JMenuItem(new DefaultEditorKit.InsertContentAction()));
+        editMenu.add(new JMenuItem(new DefaultEditorKit.CutAction()));
+        editMenu.add(new JMenuItem(new DefaultEditorKit.CopyAction()));
+        editMenu.add(new JMenuItem(new DefaultEditorKit.PasteAction()));
+
+        JMenu viewMenu = new JMenu("View");
+        viewMenu.add(new JMenuItem("Zoom in"));
+        viewMenu.add(new JMenuItem("Zoom out"));
+        viewMenu.addSeparator();
+
+        darkModeItem = new JCheckBoxMenuItem("Dark mode");
+        JCheckBoxMenuItem syncItem = new JCheckBoxMenuItem("Synchronize");
+
+        darkModeItem.addActionListener(e -&gt; toggleDarkMode());
+
+        viewMenu.add(darkModeItem);
+        viewMenu.add(syncItem);
+
+        JMenu helpMenu = new JMenu("Help");
+        JMenuItem aboutItem = new JMenuItem("About");
+        helpMenu.add(aboutItem);
+
+        menuBar.add(fileMenu);
+        menuBar.add(editMenu);
+        menuBar.add(viewMenu);
+        menuBar.add(helpMenu);
+
+        setJMenuBar(menuBar);
+    }
+
+    private void createToolBar() {
+        JToolBar toolBar = new JToolBar();
+
+        JButton newBtn = new JButton("New");
+        JButton openBtn = new JButton("Open");
+        JButton saveBtn = new JButton("Save");
+        JButton cutBtn = new JButton(new DefaultEditorKit.CutAction());
+        JButton copyBtn = new JButton(new DefaultEditorKit.CopyAction());
+        JButton pasteBtn = new JButton(new DefaultEditorKit.PasteAction());
+
+        newBtn.addActionListener(e -&gt; showNewDialog());
+        openBtn.addActionListener(e -&gt; showOpenWarning());
+        saveBtn.addActionListener(e -&gt; JOptionPane.showMessageDialog(this, "successfully saved"));
+
+        toolBar.add(newBtn);
+        toolBar.add(openBtn);
+        toolBar.add(saveBtn);
+        toolBar.addSeparator();
+        toolBar.add(cutBtn);
+        toolBar.add(copyBtn);
+        toolBar.add(pasteBtn);
+
+        add(toolBar, BorderLayout.NORTH);
+    }
+
+    private void createEditor() {
+        editorPane = new JEditorPane();
+        editorPane.setText("Your data");
+
+        JScrollPane scrollPane = new JScrollPane(editorPane,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private void createBottomPanel() {
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+
+        slider = new JSlider(JSlider.HORIZONTAL, 0, 50, 25);
+        slider.setMajorTickSpacing(10);
+        slider.setMinorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+
+        sliderLabel = new JLabel("midterm exam mark: 25");
+
+        slider.addChangeListener(e -&gt; sliderLabel.setText("midterm exam mark: " + slider.getValue()));
+
+        bottomPanel.add(slider, BorderLayout.CENTER);
+        bottomPanel.add(sliderLabel, BorderLayout.SOUTH);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    private void showNewDialog() {
+        String[] options = {"Student", "Course"};
+        JOptionPane.showOptionDialog(this, "Create new:", "New",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                null, options, options[0]);
+    }
+
+    private void showOpenWarning() {
+        JOptionPane.showMessageDialog(this, "you have to save changes...",
+                "Warning", JOptionPane.WARNING_MESSAGE);
+    }
+
+    private void toggleDarkMode() {
+        boolean dark = darkModeItem.isSelected();
+        Color bg = dark ? darkBg : lightBg;
+        Color fg = dark ? darkFg : lightFg;
+
+        applyColors(this.getContentPane(), bg, fg);
+        editorPane.setCaretColor(fg);
+
+        JOptionPane.showMessageDialog(this, dark ? "Dark mode on" : "Dark mode off");
+    }
+
+    private void applyColors(Component comp, Color bg, Color fg) {
+        comp.setBackground(bg);
+        comp.setForeground(fg);
+        if (comp instanceof Container) {
+            for (Component c : ((Container) comp).getComponents()) {
+                applyColors(c, bg, fg);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(StudentDataFrame::new);
+    }
+}</pre></div>
+    <figure><div class="plate"><img src="img/answer_lab7p2.png" width="500" loading="lazy" alt="The Student Data window: File, Edit, View and Help menus; a toolbar with New, Open, Save, cut-to-clipboard, copy-to-clipboard and paste-from-clipboard buttons; an editor showing Your data; and a slider from 0 to 50 set at 25 with the label midterm exam mark: 25."></div><figcaption>Your Student Data window, run as it is.</figcaption></figure>
+    <h4>Explained</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">import javax.swing.text.DefaultEditorKit;</pre></dt><dd>Gives ready-made Cut, Copy, Paste and Insert actions for text components.</dd></div>
+<div><dt><pre class="java">private JEditorPane editorPane;
+private JLabel sliderLabel;
+private JSlider slider;
+private JCheckBoxMenuItem darkModeItem;
+
+private Color lightBg = Color.WHITE;
+...
+private Color darkBg = new Color(40, 40, 40);
+private Color darkFg = new Color(230, 230, 230);</pre></dt><dd>Fields for the parts that other methods need later, plus the four colours: white and black for light mode, dark grey and light grey for dark mode.</dd></div>
+<div><dt><pre class="java">setTitle("Student Data");
+setSize(500, 300);
+setLayout(new BorderLayout());
+setLocationRelativeTo(null);
+setDefaultCloseOperation(EXIT_ON_CLOSE);</pre></dt><dd>Step 1 of the task: title, size, BorderLayout, centred on the screen (after <code>setSize</code>, so the right size is centred), exit on close.</dd></div>
+<div><dt><pre class="java">createMenuBar();
+createToolBar();
+createEditor();
+createBottomPanel();
+setVisible(true);</pre></dt><dd>The constructor hands each area to its own method, then shows the window.</dd></div>
+<div><dt><pre class="java">JMenuItem newItem = new JMenuItem("New student or course");
+...
+newItem.addActionListener(e -&gt; showNewDialog());
+openItem.addActionListener(e -&gt; showOpenWarning());
+closeItem.addActionListener(e -&gt; System.exit(0));</pre></dt><dd>The File menu. Each listener is a lambda; the new and open items call the same methods as the toolbar's New and Open buttons, so the two places share one action.</dd></div>
+<div><dt><pre class="java">editMenu.add(new JMenuItem(new DefaultEditorKit.InsertContentAction()));
+editMenu.add(new JMenuItem(new DefaultEditorKit.CutAction()));
+...</pre></dt><dd>Menu items made from <b>Actions</b> (Lecture 13): the item already knows what to do, for whatever text component has the focus. Its text is the action's built-in name, so the menu shows "insert-content", "cut-to-clipboard" and so on.</dd></div>
+<div><dt><pre class="java">viewMenu.add(new JMenuItem("Zoom in"));
+viewMenu.add(new JMenuItem("Zoom out"));
+viewMenu.addSeparator();
+darkModeItem = new JCheckBoxMenuItem("Dark mode");
+JCheckBoxMenuItem syncItem = new JCheckBoxMenuItem("Synchronize");
+darkModeItem.addActionListener(e -&gt; toggleDarkMode());</pre></dt><dd>The View menu: two plain items, a separator line, and two <b>check-box menu items</b>, which show a tick when on. Only Dark mode has a listener.</dd></div>
+<div><dt><pre class="java">menuBar.add(fileMenu);
+...
+setJMenuBar(menuBar);</pre></dt><dd>Puts the four menus in the bar and attaches the bar to the window.</dd></div>
+<div><dt><pre class="java">JToolBar toolBar = new JToolBar();
+JButton newBtn = new JButton("New");
+...
+JButton cutBtn = new JButton(new DefaultEditorKit.CutAction());
+...
+saveBtn.addActionListener(e -&gt; JOptionPane.showMessageDialog(this, "successfully saved"));
+...
+add(toolBar, BorderLayout.NORTH);</pre></dt><dd>The toolbar at the top. Cut, Copy and Paste use the same built-in actions, which is why the buttons read "cut-to-clipboard" and so on (see the picture); <code>cutBtn.setText("Cut")</code> would give a short label. Save shows the confirmation message.</dd></div>
+<div><dt><pre class="java">editorPane = new JEditorPane();
+editorPane.setText("Your data");
+JScrollPane scrollPane = new JScrollPane(editorPane,
+        JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+        JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+add(scrollPane, BorderLayout.CENTER);</pre></dt><dd>The editor with its starting text, inside a scroll pane whose scroll bars appear only when the text doesn't fit. It goes in the centre.</dd></div>
+<div><dt><pre class="java">slider = new JSlider(JSlider.HORIZONTAL, 0, 50, 25);
+slider.setMajorTickSpacing(10);
+slider.setMinorTickSpacing(1);
+slider.setPaintTicks(true);
+slider.setPaintLabels(true);</pre></dt><dd>The constructor takes orientation, minimum, maximum and starting value. Big ticks every 10 (with numbers, because of <code>setPaintLabels</code>), small ticks every 1.</dd></div>
+<div><dt><pre class="java">slider.addChangeListener(e -&gt; sliderLabel.setText("midterm exam mark: " + slider.getValue()));</pre></dt><dd>A ChangeListener updates the label every time the slider moves.</dd></div>
+<div><dt><pre class="java">bottomPanel.add(slider, BorderLayout.CENTER);
+bottomPanel.add(sliderLabel, BorderLayout.SOUTH);
+add(bottomPanel, BorderLayout.SOUTH);</pre></dt><dd>Slider above its label in a BorderLayout panel at the bottom of the window.</dd></div>
+<div><dt><pre class="java">String[] options = {"Student", "Course"};
+JOptionPane.showOptionDialog(this, "Create new:", "New",
+        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+        null, options, options[0]);</pre></dt><dd><code>showOptionDialog</code> shows your own buttons. Its arguments: parent, message, title, option type, icon type, custom icon (<code>null</code> = default), the button texts, and the one selected first. It returns the index of the clicked button (not used here).</dd></div>
+<div><dt><pre class="java">JOptionPane.showMessageDialog(this, "you have to save changes...",
+        "Warning", JOptionPane.WARNING_MESSAGE);</pre></dt><dd>The warning for Open, with the yellow warning icon.</dd></div>
+<div><dt><pre class="java">boolean dark = darkModeItem.isSelected();
+Color bg = dark ? darkBg : lightBg;
+Color fg = dark ? darkFg : lightFg;
+applyColors(this.getContentPane(), bg, fg);
+editorPane.setCaretColor(fg);</pre></dt><dd>Checks whether the menu item is ticked and picks the colours with two ternaries. Then it recolours everything in the content pane and makes the text cursor (the caret) visible on the new background.</dd></div>
+<div><dt><pre class="java">private void applyColors(Component comp, Color bg, Color fg) {
+    comp.setBackground(bg);
+    comp.setForeground(fg);
+    if (comp instanceof Container) {
+        for (Component c : ((Container) comp).getComponents()) {
+            applyColors(c, bg, fg);
+        }
+    }
+}</pre></dt><dd>A <b>recursive</b> method: it colours one component, and if that component contains others, it calls itself on each of them. That way it reaches every component, however deeply nested (toolbar buttons, the editor inside its scroll pane, the slider and label).</dd></div>
+<div><dt><pre class="java">SwingUtilities.invokeLater(StudentDataFrame::new);</pre></dt><dd>Creates the window on Swing's event thread. <code>StudentDataFrame::new</code> is a <b>method reference</b>, a short way of writing <code>() -&gt; new StudentDataFrame()</code>.</dd></div>
+</dl>
+    <aside class="note"><b>Compared with the task</b><span>Everything is there except one part of dark mode: <code>applyColors</code> starts from the content pane, but <code>setJMenuBar</code> places the menu bar above the content pane, not inside it, so the menu bar and menus stay light. The task lists "Menu bar + menus + menu items". Adding <code>applyColors(getJMenuBar(), bg, fg);</code> recolours the bar and the menu titles; the items inside each menu live in its pop-up, which <code>menu.getMenuComponents()</code> returns. About, Zoom and Synchronize have no listeners, which the task doesn't ask for.</span></aside>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · Full solution</p>
+    <details class="orig solid">
+      <summary>Show StudentData.java</summary>
+      <div class="drawer-body">
+        <div class="code"><span class="code-label">StudentData.java</span><pre class="java">import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
+import java.awt.*;
+import java.awt.event.*;
+
+public class StudentData extends JFrame {
+
+    private JMenuBar menuBar = new JMenuBar();
+    private JToolBar toolBar = new JToolBar();
+    private JEditorPane editor = new JEditorPane("text/plain", "Your data");
+    private JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 50, 25);
+    private JLabel markLabel = new JLabel("midterm exam mark: 25");
+    private JPanel bottomPanel = new JPanel(new FlowLayout());
+    private JCheckBoxMenuItem darkItem = new JCheckBoxMenuItem("dark mode");
+    private JCheckBoxMenuItem syncItem = new JCheckBoxMenuItem("synchronize", true);
+
+    public StudentData() {
+        super("Student Data");
+        setLayout(new BorderLayout());
+
+        buildMenus();
+        buildToolbar();
+
+        // 4. editor in a scroll pane (scroll bars only when needed = the default policy)
+        JScrollPane scroll = new JScrollPane(editor,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        add(scroll, BorderLayout.CENTER);
+
+        // 5. slider + label
+        slider.setMajorTickSpacing(10);
+        slider.setMinorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        slider.addChangeListener(e -&gt; markLabel.setText("midterm exam mark: " + slider.getValue()));
+        bottomPanel.add(slider);
+        bottomPanel.add(markLabel);
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        setSize(500, 300);
+        setLocationRelativeTo(null);                       // centre on screen
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    // ---------- 2. menus ----------
+    private void buildMenus() {
+        JMenu file = new JMenu("File");
+        JMenuItem newItem = new JMenuItem("new student or course");
+        JMenuItem openItem = new JMenuItem("open file");
+        JMenuItem closeItem = new JMenuItem("close file");
+        newItem.addActionListener(e -&gt; newAction());
+        openItem.addActionListener(e -&gt; openAction());
+        closeItem.addActionListener(e -&gt; System.exit(0));
+        file.add(newItem); file.add(openItem); file.add(closeItem);
+
+        JMenu edit = new JMenu("Edit");
+        edit.add(new JMenuItem("insert"));
+        edit.add(menuAction(new DefaultEditorKit.CutAction(), "cut"));
+        edit.add(menuAction(new DefaultEditorKit.CopyAction(), "copy"));
+        edit.add(menuAction(new DefaultEditorKit.PasteAction(), "paste"));
+
+        JMenu view = new JMenu("View");
+        view.add(new JMenuItem("zoom in"));
+        view.add(new JMenuItem("zoom out"));
+        view.addSeparator();
+        view.add(darkItem);
+        view.add(syncItem);
+        darkItem.addActionListener(e -&gt; {
+            setDarkMode(darkItem.isSelected());
+            JOptionPane.showMessageDialog(this, darkItem.isSelected() ? "Dark mode on" : "Dark mode off");
+        });
+
+        JMenu help = new JMenu("Help");
+        JMenuItem about = new JMenuItem("about");
+        about.addActionListener(e -&gt; JOptionPane.showMessageDialog(this, "Student Data, CS254 Lab 7"));
+        help.add(about);
+
+        menuBar.add(file); menuBar.add(edit); menuBar.add(view); menuBar.add(help);
+        setJMenuBar(menuBar);
+    }
+
+    private JMenuItem menuAction(Action a, String text) {
+        JMenuItem item = new JMenuItem(a);
+        item.setText(text);
+        return item;
+    }
+
+    // ---------- 3. toolbar ----------
+    private void buildToolbar() {
+        JButton newB = new JButton("new");
+        JButton openB = new JButton("open");
+        JButton saveB = new JButton("save");
+        newB.addActionListener(e -&gt; newAction());          // same as the menu item
+        openB.addActionListener(e -&gt; openAction());
+        saveB.addActionListener(e -&gt; JOptionPane.showMessageDialog(this, "successfully saved"));
+
+        // built-in editing actions: they act on the focused text component
+        JButton cutB = new JButton(new DefaultEditorKit.CutAction());
+        JButton copyB = new JButton(new DefaultEditorKit.CopyAction());
+        JButton pasteB = new JButton(new DefaultEditorKit.PasteAction());
+        cutB.setText("cut"); copyB.setText("copy"); pasteB.setText("paste");
+
+        for (JButton b : new JButton[] {newB, openB, saveB, cutB, copyB, pasteB}) {
+            b.setFocusable(false);                         // keep focus in the editor for cut/copy/paste
+            toolBar.add(b);
+        }
+        add(toolBar, BorderLayout.NORTH);
+    }
+
+    // ---------- 6. shared actions ----------
+    private void newAction() {
+        String[] options = {"Student", "Course"};
+        int choice = JOptionPane.showOptionDialog(this, "Create a new:", "New",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, options, options[0]);
+        if (choice &gt;= 0) editor.setText("New " + options[choice] + "\n");
+    }
+
+    private void openAction() {
+        JOptionPane.showMessageDialog(this, "you have to save changes...",
+                "Warning", JOptionPane.WARNING_MESSAGE);
+    }
+
+    // ---------- 7. dark mode ----------
+    private void setDarkMode(boolean dark) {
+        Color bg = dark ? new Color(43, 43, 43) : null;    // null = back to the look-and-feel default
+        Color fg = dark ? new Color(230, 230, 230) : null;
+
+        paint(getContentPane(), bg, fg);
+        paint(menuBar, bg, fg);
+        for (int i = 0; i &lt; menuBar.getMenuCount(); i++) {
+            JMenu m = menuBar.getMenu(i);
+            paint(m, bg, fg);
+            m.setOpaque(dark);
+            for (Component c : m.getMenuComponents()) paint(c, bg, fg);
+        }
+        paint(toolBar, bg, fg);
+        for (Component c : toolBar.getComponents()) paint(c, bg, fg);
+
+        editor.setBackground(dark ? new Color(30, 30, 30) : Color.WHITE);
+        editor.setForeground(dark ? fg : Color.BLACK);
+        editor.setCaretColor(dark ? Color.WHITE : Color.BLACK);
+
+        paint(slider, bg, fg);
+        paint(markLabel, bg, fg);
+        paint(bottomPanel, bg, fg);
+        SwingUtilities.updateComponentTreeUI(this);         // redraw everything
+        editor.setBackground(dark ? new Color(30, 30, 30) : Color.WHITE);  // keep editor colours after the refresh
+        editor.setForeground(dark ? fg : Color.BLACK);
+    }
+
+    private void paint(Component c, Color bg, Color fg) {
+        c.setBackground(bg);
+        c.setForeground(fg);
+    }
+
+    public static void main(String[] args) {
+        new StudentData();
+    }
+}</pre></div>
+        <ul class="pts" style="font-size:.92rem">
+          <li><b>DefaultEditorKit actions</b> (step 3): <code>new JButton(new DefaultEditorKit.CutAction())</code> gives a button that already cuts from whatever text component has the focus; no listener needed. <code>setFocusable(false)</code> stops the button from stealing that focus.</li>
+          <li><b>showOptionDialog</b> (step 6) shows custom buttons ("Student", "Course") and returns the index of the one clicked, or -1 if the dialog is closed.</li>
+          <li><b>Shared listeners</b>: the File → "new student or course" item and the "new" toolbar button both call <code>newAction()</code>.</li>
+          <li>Calling <code>setBackground(null)</code> returns a component to its default colour, which is how light mode is restored.</li>
+          <li>Some look-and-feels (like Windows) ignore background colours on menus; the Metal default look-and-feel respects them.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <details class="orig" data-imgs="img/slides/lab-1.jpg|Lab 7 Part 2, page 1;img/slides/lab-2.jpg|Lab 7 Part 2, page 2;img/slides/lab-3.jpg|Lab 7 Part 2, page 3" data-label="Original lab pages (3)"></details>
+  <div class="quiz" data-quiz="lab7"></div>
+</section>
+
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 9 + Lab 7</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 9 – Other components</em> (CS254, 21 slides) and <em>Lab 7 Part 2</em> (Abualhaj, Amer, 3 pages). Lab 7 Part 1 is not among the uploaded files. Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l9-done", "quizzes": {"menus": [{"q": "How do you attach a JMenuBar to a JFrame?", "o": ["frame.setJMenuBar(bar)", "frame.add(bar)", "frame.addMenu(bar)", "bar.setFrame(frame)"], "a": 0, "e": "Slides 2–3."}, {"q": "What goes directly inside a JMenuBar?", "o": ["JMenu objects", "JMenuItem objects only", "JButtons", "JPanels"], "a": 0, "e": "Slide 3: public void add(JMenu menu)."}, {"q": "How do you make a sub-menu?", "o": ["Add a JMenu inside another JMenu", "Use JSubMenu", "Add a JMenuBar inside a JMenu", "Call setSubmenu(true)"], "a": 0, "e": "Slide 2."}, {"q": "Which method draws a dividing line in a menu?", "o": ["addSeparator()", "addLine()", "setDivider()", "add(null)"], "a": 0, "e": "Slide 4."}, {"q": "How do you check a JCheckBoxMenuItem's state?", "o": ["isSelected()", "getState()", "isChecked()", "getValue()"], "a": 0, "e": "Slide 6."}], "keys": [{"q": "Which works even when the menu is closed?", "o": ["An accelerator", "A mnemonic", "Both", "Neither"], "a": 0, "e": "Slide 8: a global hotkey."}, {"q": "How do you create an accelerator?", "o": ["item.setAccelerator(KeyStroke.getKeyStroke(...))", "item.setMnemonic(...)", "new Accelerator(...)", "item.addKeyListener(...)"], "a": 0, "e": "Slide 8."}, {"q": "A mnemonic is usually shown as…", "o": ["an underlined letter, activated with Alt+key", "text on the right of the item", "a tooltip", "an icon"], "a": 0, "e": "Slide 7."}, {"q": "Which listener reacts when a JSlider moves?", "o": ["ChangeListener", "ActionListener", "ItemListener", "MouseWheelListener"], "a": 0, "e": "Lecture 5, slide 33, and Lab 7."}], "editor": [{"q": "Which method loads a file's contents into a JEditorPane?", "o": ["read(reader, null)", "load(file)", "setFile(file)", "open(reader)"], "a": 0, "e": "Slide 10."}, {"q": "In JEditorPaneSave, how does one listener tell Open from Save?", "o": ["e.getActionCommand() returns the menu item's text", "e.getSource() == 1", "Two separate listeners", "By the mouse position"], "a": 0, "e": "Slide 14."}, {"q": "The part of a JScrollPane that shows the component is the…", "o": ["viewport", "frame", "canvas", "pane box"], "a": 0, "e": "Slide 15."}, {"q": "Why can't you scroll to the blue dot in DrawingDisplayScrollPanel?", "o": ["It's outside the panel's preferred size (250 × 250)", "Blue isn't visible", "Scrolling is off", "It's drawn before super.paintComponent"], "a": 0, "e": "Slide 17."}, {"q": "Which constant shows a horizontal scroll bar only when needed?", "o": ["HORIZONTAL_SCROLLBAR_AS_NEEDED", "HORIZONTAL_SCROLLBAR_ALWAYS", "HORIZONTAL_SCROLLBAR_NEVER", "HORIZONTAL_SCROLLBAR_AUTO"], "a": 0, "e": "Slide 15."}], "dialogs": [{"q": "What does showOpenDialog return when the user clicks Open?", "o": ["JFileChooser.APPROVE_OPTION", "The File", "true", "OPEN_OPTION"], "a": 0, "e": "Slide 19. Then call getSelectedFile()."}, {"q": "What does JColorChooser.showDialog return on Cancel?", "o": ["null", "Color.BLACK", "-1", "The initial colour"], "a": 0, "e": "Slide 20."}, {"q": "A modal JDialog means…", "o": ["the parent can't be used until the dialog closes", "it has no title bar", "it closes itself", "it can't contain components"], "a": 0, "e": "Slides 19 and 21."}, {"q": "Do you need to write listeners for JFileChooser's Open and Cancel buttons?", "o": ["No, JFileChooser handles them", "Yes, both", "Only Open", "Only Cancel"], "a": 0, "e": "Slide 18."}], "lab7": [{"q": "Which built-in class gives ready-made cut, copy and paste actions?", "o": ["DefaultEditorKit", "JToolBar", "Clipboard", "KeyStroke"], "a": 0, "e": "Lab 7 step 3."}, {"q": "Which JOptionPane method shows custom buttons \"Student\" and \"Course\"?", "o": ["showOptionDialog", "showMessageDialog", "showInputDialog", "showChoiceDialog"], "a": 0, "e": "Lab 7 step 6."}, {"q": "Which slider settings match the lab?", "o": ["min 0, max 50, value 25, major 10, minor 1", "min 0, max 100, value 50", "min 25, max 50", "min 0, max 50, major 1, minor 10"], "a": 0, "e": "Lab 7 step 5."}, {"q": "Which menu item type is \"dark mode\"?", "o": ["JCheckBoxMenuItem", "JRadioButtonMenuItem", "JMenu", "JButton"], "a": 0, "e": "Lab 7 step 2."}], "lab7a": [{"q": "Why does the Lab 7 (Part 1) answer stop with a NullPointerException?", "o": ["The menus, menu items and sliders are declared but never created, so they're null", "GridLayout(3, 2) has too few cells", "The table has 0 rows", "Controller has no methods"], "a": 0, "e": "Declaring a field doesn't create an object; menu.add(tools) receives null."}, {"q": "Which listener runs every time a JSlider moves?", "o": ["ChangeListener", "ActionListener", "ItemListener", "MouseMotionListener"], "a": 0, "e": "slider.addChangeListener(listener)."}, {"q": "How do you add the current colour to the table as a new row?", "o": ["tableModel.addRow(new Object[]{R, G, B})", "tableModel.addColumn(new Object[]{R, G, B})", "table.add(R, G, B)", "tableModel.setValueAt(R, G, B)"], "a": 0, "e": "addColumn adds a column; addRow adds a row."}, {"q": "Why does <code>this.setBackground(newcolor)<\/code> show no change in a JFrame?", "o": ["The frame is covered by its content pane; colour getContentPane() instead", "Colors need repaint() first", "JFrame has no background", "Only JPanel can have a colour"], "a": 0, "e": "getContentPane().setBackground(newcolor)."}]}, "flashcards": [["JMenuBar", "The menu strip. frame.setJMenuBar(bar); bar.add(menu).", "Slides 2–3"], ["JMenu", "A menu on the bar. add(JMenuItem), addSeparator(), setMnemonic(key). A JMenu inside a JMenu = sub-menu.", "Slide 4"], ["JMenuItem", "A command in a menu. Constructors with text, icon or mnemonic; setAccelerator, setEnabled, addActionListener.", "Slide 5"], ["Check/radio menu items", "JCheckBoxMenuItem, JRadioButtonMenuItem: isSelected(), setSelected(b). Radio items go in a ButtonGroup.", "Slide 6"], ["Mnemonic", "Underlined Alt+key; only for what's visible. setMnemonic('Q') or new JMenuItem(\"New\", 'N').", "Slide 7"], ["Accelerator", "Global hotkey: item.setAccelerator(KeyStroke.getKeyStroke('T', KeyEvent.ALT_MASK)).", "Slide 8"], ["JSlider", "Pick an integer from a range. Ticks (major/minor), snap-to ticks, orientation. Listen with ChangeListener.", "Slide 9"], ["JEditorPane", "Built-in text editor. setText, getText, setContentType, setEditable, getSelectedText, read(reader, null).", "Slides 10–11"], ["JScrollPane", "Adds scroll bars; the visible area is the viewport. Policies: ALWAYS, AS_NEEDED, NEVER.", "Slide 15"], ["JFileChooser", "showOpenDialog / showSaveDialog → APPROVE_OPTION or CANCEL_OPTION; then getSelectedFile().", "Slides 18–19"], ["JColorChooser", "JColorChooser.showDialog(parent, title, initial) → Color, or null on Cancel.", "Slide 20"], ["JDialog", "Your own dialog: extend JDialog(Frame parent, String title, boolean modal); add, pack, setVisible.", "Slide 21"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = window.Guide.esc;
+  function logger(el) { return function (t, c) { var d = document.createElement("div"); d.textContent = t; if (c) d.style.color = c; el.appendChild(d); el.scrollTop = el.scrollHeight; }; }
+  var C = { ev: "#9fd3ff", ok: "#7fd3ad", warn: "#f0b071", dim: "#9aa4a8" };
+
+  // ---------- generic menu bar builder ----------
+  // spec: [{title, mn, items:[{text, mn, acc, type:'item'|'check'|'sep'|'sub', checked, items, act}]}]
+  function MenuBar(host, spec, theme) {
+    var open = -1, self = this;
+    this.theme = theme || {};
+    function u(text, mn) { if (!mn) return esc(text); var i = text.toLowerCase().indexOf(mn.toLowerCase()); return i < 0 ? esc(text) : esc(text.slice(0, i)) + "<u>" + esc(text[i]) + "</u>" + esc(text.slice(i + 1)); }
+    function close() { open = -1; draw(); }
+    this.close = close;
+    function draw() {
+      var t = self.theme; host.innerHTML = "";
+      spec.forEach(function (m, i) {
+        var wrap = document.createElement("div"); wrap.style.position = "relative";
+        var b = document.createElement("button"); b.type = "button"; b.innerHTML = u(m.title, m.mn);
+        Object.assign(b.style, { font: "13px sans-serif", border: 0, padding: ".15rem .5rem", cursor: "default", background: i === open ? "#a8bfd6" : "transparent", color: t.fg || "#1c2328" });
+        b.addEventListener("click", function (e) { e.stopPropagation(); open = open === i ? -1 : i; draw(); });
+        wrap.appendChild(b);
+        if (i === open) {
+          var pop = document.createElement("div");
+          Object.assign(pop.style, { position: "absolute", left: 0, top: "100%", zIndex: 5, minWidth: "11rem", background: t.menuBg || "#eef1f3", color: t.fg || "#1c2328", border: "1px solid #8f9ba1", boxShadow: "2px 2px 6px rgba(0,0,0,.25)", padding: ".15rem 0" });
+          m.items.forEach(function (it) {
+            if (it.type === "sep") { var s = document.createElement("div"); s.style.cssText = "border-top:1px solid #9aa7ad;margin:.15rem 0"; pop.appendChild(s); return; }
+            var r = document.createElement("button"); r.type = "button";
+            Object.assign(r.style, { display: "flex", width: "100%", gap: ".5rem", alignItems: "center", font: "13px sans-serif", border: 0, background: "transparent", color: "inherit", padding: ".2rem .6rem", textAlign: "left", cursor: "default" });
+            var box = it.type === "check" ? (it.checked ? "☑" : "☐") : "";
+            r.innerHTML = '<span style="width:1rem">' + box + "</span><span style=\"flex:1\">" + u(it.text, it.mn) + "</span>" + (it.acc ? '<span style="font-size:11px;opacity:.7">' + esc(it.acc) + "</span>" : "");
+            r.addEventListener("mouseenter", function () { r.style.background = "#a8bfd6"; });
+            r.addEventListener("mouseleave", function () { r.style.background = "transparent"; });
+            r.addEventListener("click", function (e) { e.stopPropagation(); if (it.type === "check") it.checked = !it.checked; close(); it.act && it.act(it); });
+            pop.appendChild(r);
+          });
+          wrap.appendChild(pop);
+        }
+        host.appendChild(wrap);
+      });
+    }
+    this.openMenu = function (i) { open = i; draw(); };
+    this.isOpen = function () { return open; };
+    this.redraw = draw;
+    document.addEventListener("click", function () { if (open > -1) close(); });
+    draw();
+  }
+
+  // ---------- menu demo ----------
+  (function () {
+    var out = logger($("mnLog")), win = $("mnWin");
+    var spec = [
+      { title: "File", mn: "F", items: [
+        { text: "New", mn: "N", act: function () { out('actionPerformed: "New"  (new JMenuItem("New", \'N\'))', C.ev); } },
+        { text: "Open", mn: "O", act: function () { out('actionPerformed: "Open"', C.ev); } },
+        { text: "Save", mn: "S", acc: "Ctrl+S", act: function () { out('actionPerformed: "Save"', C.ev); } },
+        { type: "sep" },
+        { text: "Exit", mn: "x", act: function () { out('actionPerformed: "Exit" → System.exit(0)', C.warn); } }] },
+      { title: "View", mn: "V", items: [
+        { text: "Show grid", type: "check", checked: true, act: function (it) { out("JCheckBoxMenuItem isSelected() = " + it.checked, C.ok); } },
+        { text: "Status bar", type: "check", checked: false, act: function (it) { out("JCheckBoxMenuItem isSelected() = " + it.checked, C.ok); } }] }
+    ];
+    var bar = new MenuBar($("mnBar"), spec);
+    win.addEventListener("keydown", function (e) {
+      if (e.altKey && !e.ctrlKey) {
+        var k = e.key.toLowerCase();
+        spec.forEach(function (m, i) { if (m.mn.toLowerCase() === k) { e.preventDefault(); bar.openMenu(i); out("mnemonic Alt+" + m.mn + " → opens " + m.title, C.dim); } });
+        return;
+      }
+      var o = bar.isOpen();
+      if (o > -1 && !e.ctrlKey && !e.metaKey && e.key.length === 1) {
+        spec[o].items.forEach(function (it) { if (it.mn && it.mn.toLowerCase() === e.key.toLowerCase()) { e.preventDefault(); bar.close(); out("mnemonic " + it.mn.toUpperCase() + " (menu open) →", C.dim); it.act(it); } });
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); bar.close(); out("accelerator Ctrl+S (menu closed, works anywhere) →", C.dim); spec[0].items[2].act(); }
+      if (e.key === "Escape") bar.close();
+    });
+    $("mnSl").addEventListener("input", function () { $("mnSlv").textContent = "value: " + this.value; });
+    $("mnSl").addEventListener("change", function () { out("stateChanged → slider.getValue() = " + this.value, C.ok); });
+  })();
+
+  // ---------- scroll policies ----------
+  (function () {
+    var box = $("spBox");
+    function r() {
+      box.style.overflowX = $("spH").value; box.style.overflowY = $("spV").value; box.style.width = $("spW").value + "px";
+      var n = { auto: "AS_NEEDED", scroll: "ALWAYS", hidden: "NEVER" };
+      $("spCode").textContent = "scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_" + n[$("spH").value] + ");\n" +
+        "scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_" + n[$("spV").value] + ");\n" +
+        "// panel preferred size 250 x 250, viewport about " + $("spW").value + " x 150";
+    }
+    ["spH", "spV", "spW"].forEach(function (id) { $(id).addEventListener("input", r); });
+    r();
+  })();
+
+  // ---------- color chooser ----------
+  $("ccIn").addEventListener("input", function () {
+    var v = this.value; $("ccPanel").style.background = v;
+    var r = parseInt(v.substr(1, 2), 16), g = parseInt(v.substr(3, 2), 16), b = parseInt(v.substr(5, 2), 16);
+    $("ccOut").textContent = "panel.setBackground(new Color(" + r + ", " + g + ", " + b + "));";
+  });
+
+  // ---------- Student Data mock-up ----------
+  (function () {
+    var dlg = $("sdDlg"), ed = $("sdEd"), dark = false, bar;
+    function show(title, icon, text, buttons) {
+      dlg.innerHTML = '<div class="win" style="width:min(100%,19rem);margin-top:.5rem"><div class="win-bar"><span>' + esc(title) + '</span><i>×</i></div><div class="win-body" style="display:grid;gap:.5rem"><div style="display:flex;gap:.5rem;align-items:center"><span style="font-size:1.2rem">' + icon + "</span><span>" + esc(text) + '</span></div><div class="b" style="display:flex;gap:.4rem;justify-content:center"></div></div></div>';
+      var row = dlg.querySelector(".b");
+      (buttons || ["OK"]).forEach(function (t) {
+        var b = document.createElement("button"); b.type = "button"; b.className = "jbtn"; b.textContent = t;
+        b.addEventListener("click", function () { dlg.innerHTML = t === "Student" || t === "Course" ? '<p class="expl">showOptionDialog returned ' + (t === "Student" ? 0 : 1) + ' ("' + t + '")</p>' : ""; if (t === "Student" || t === "Course") ed.value = "New " + t + "\n"; });
+        row.appendChild(b);
+      });
+    }
+    function newA() { show("New", "❓", "Create a new:", ["Student", "Course"]); }
+    function openA() { show("Warning", "⚠️", "you have to save changes..."); }
+    function theme() {
+      var bg = dark ? "#2b2b2b" : "", fg = dark ? "#e6e6e6" : "";
+      $("sdBar").style.background = dark ? "#2b2b2b" : "#f2f4f5";
+      $("sdTool").style.background = dark ? "#2b2b2b" : "#eceff1";
+      $("sdBottom").style.background = dark ? "#2b2b2b" : "";
+      $("sdLbl").style.color = fg; $("sdSl").style.accentColor = dark ? "#8fb3d9" : "";
+      ed.style.background = dark ? "#1e1e1e" : "#fff"; ed.style.color = dark ? "#e6e6e6" : "#1c2328"; ed.style.caretColor = dark ? "#fff" : "#000";
+      document.querySelectorAll("#sdTool .jbtn").forEach(function (b) { b.style.background = dark ? "#3c3c3c" : ""; b.style.color = fg; b.style.borderColor = dark ? "#555" : ""; });
+      bar.theme = dark ? { fg: "#e6e6e6", menuBg: "#333" } : {}; bar.redraw();
+    }
+    var spec = [
+      { title: "File", items: [{ text: "new student or course", act: newA }, { text: "open file", act: openA }, { text: "close file", act: function () { show("Message", "ℹ️", "close file → System.exit(0): the program would end here."); } }] },
+      { title: "Edit", items: [{ text: "insert" }, { text: "cut", act: function () { cut(); } }, { text: "copy", act: function () { copy(); } }, { text: "paste", act: function () { paste(); } }] },
+      { title: "View", items: [{ text: "zoom in", act: function () { zoom(1); } }, { text: "zoom out", act: function () { zoom(-1); } }, { type: "sep" },
+        { text: "dark mode", type: "check", checked: false, act: function (it) { dark = it.checked; theme(); show("Message", "ℹ️", dark ? "Dark mode on" : "Dark mode off"); } },
+        { text: "synchronize", type: "check", checked: true }] },
+      { title: "Help", items: [{ text: "about", act: function () { show("About", "ℹ️", "Student Data, CS254 Lab 7"); } }] }
+    ];
+    bar = new MenuBar($("sdBar"), spec);
+    var clip = "";
+    function sel() { return ed.value.substring(ed.selectionStart, ed.selectionEnd); }
+    function cut() { clip = sel(); ed.setRangeText("", ed.selectionStart, ed.selectionEnd, "end"); ed.focus(); }
+    function copy() { clip = sel(); ed.focus(); }
+    function paste() { ed.setRangeText(clip, ed.selectionStart, ed.selectionEnd, "end"); ed.focus(); }
+    var size = 13; function zoom(d) { size = Math.max(9, Math.min(24, size + d * 2)); ed.style.fontSize = size + "px"; }
+    [["new", newA], ["open", openA], ["save", function () { show("Message", "ℹ️", "successfully saved"); }], ["cut", cut], ["copy", copy], ["paste", paste]].forEach(function (p) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "jbtn"; b.textContent = p[0];
+      b.addEventListener("mousedown", function (e) { e.preventDefault(); });   // like setFocusable(false): keep the editor's selection
+      b.addEventListener("click", p[1]); $("sdTool").appendChild(b);
+    });
+    $("sdSl").addEventListener("input", function () { $("sdLbl").textContent = "midterm exam mark: " + this.value; });
+    theme();
+  })();
+})();
+
+</script>
+</body>
+</html>

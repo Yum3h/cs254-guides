@@ -1,0 +1,2511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 Components Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+pre.pickable .ln { cursor: pointer; }
+pre.pickable .ln:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+pre .ln.pick { background: color-mix(in srgb, var(--mark) 16%, transparent); }
+pre .ln.hit { background: color-mix(in srgb, var(--ok) 22%, transparent); box-shadow: inset 3px 0 var(--ok); }
+pre .ln.miss { background: color-mix(in srgb, var(--mark) 22%, transparent); box-shadow: inset 3px 0 var(--mark); }
+pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
+.bug-x { font-size: .9rem; border-left: 3px solid var(--line); padding: var(--s1) var(--s3); }
+.bug-x.hit { border-color: var(--ok); } .bug-x.miss { border-color: var(--mark); }
+.res-ok { color: var(--ok); font-weight: 600; } .res-bad { color: var(--bad); font-weight: 600; }
+
+/* L13: Swing component mock-ups (inside .win, always light) */
+.tree-view { background: #fff; padding: .4rem .3rem; font: 13px system-ui, "Segoe UI", sans-serif; color: #1c2328; min-height: 6rem; overflow-x: auto; }
+.tv-row { display: flex; align-items: center; white-space: nowrap; line-height: 1.6; }
+.tv-guide { font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace; color: #8b98a0; white-space: pre; }
+.tv-tog { width: 1.1rem; flex: none; border: 0; background: none; padding: 0; font-size: .72rem; color: #3c4a52; cursor: pointer; }
+.tv-tog.none { visibility: hidden; }
+.tv-ico { width: 16px; height: 14px; margin-right: .3rem; flex: none; }
+.tv-lbl { padding: 0 .3rem; border-radius: 2px; cursor: pointer; border: 1px solid transparent; }
+.tv-lbl.sel { background: #b8cfe5; border-color: #6d8fb5; }
+.tv-lbl.fresh { background: #fff2b3; }
+.tv-hline { border-top: 1px solid #8b98a0; margin: .1rem 0; }
+.sp-frame { display: flex; flex-direction: column; height: 18rem; background: var(--win-bg); }
+.sp { display: flex; flex: 1; min-height: 0; min-width: 0; }
+.sp.vert { flex-direction: column; }
+#sp2 { height: 100%; }
+.sp-a, .sp-b { overflow: auto; background: #fff; min-width: 0; min-height: 0; }
+.sp-a { flex: none; }
+.sp-b { flex: 1; }
+.sp-div { flex: none; background: #d5dde1; border: 1px solid #a9b4ba; display: flex; gap: 3px; cursor: col-resize; touch-action: none; }
+.sp:not(.vert) > .sp-div { flex-direction: column; align-items: center; padding-top: 3px; }
+.sp.vert > .sp-div { flex-direction: row; align-items: center; padding-left: 3px; cursor: row-resize; }
+.sp-div:focus-visible { outline: 2px solid #2a6ebb; }
+.sp-arrow { font-size: 9px; line-height: 1; padding: 1px; border: 0; background: none; color: #24323a; cursor: pointer; }
+.jlist { list-style: none; margin: 0; padding: 2px 0; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jlist li { padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+.jlist li.sel { background: #b8cfe5; }
+.pic { display: grid; place-items: center; }
+.ok-cyan { background: #00ffff; border: 1px solid #6b7b82; font: 600 13px system-ui, sans-serif; padding: .35rem; color: #1c2328; cursor: pointer; }
+.jtp { display: flex; flex-direction: column; height: 13rem; background: var(--win-bg); font: 12px system-ui, sans-serif; color: #1c2328; padding: 4px; }
+.jtp.pos-BOTTOM { flex-direction: column-reverse; }
+.jtp.pos-LEFT { flex-direction: row; }
+.jtp.pos-RIGHT { flex-direction: row-reverse; }
+.jtp-tabs { display: flex; flex-wrap: wrap; gap: 2px; min-width: 0; }
+.jtp.pos-LEFT .jtp-tabs, .jtp.pos-RIGHT .jtp-tabs { flex-direction: column; flex-wrap: nowrap; overflow: auto; max-width: 45%; }
+.jtp.scroll:not(.pos-LEFT):not(.pos-RIGHT) .jtp-tabs { flex-wrap: nowrap; overflow-x: auto; }
+.jtp-tab { border: 1px solid #9aa7ad; background: #dfe5e8; padding: 2px 9px; cursor: pointer; white-space: nowrap; font: inherit; color: inherit; }
+.jtp-tab.sel { background: #fff; font-weight: 600; }
+.jtp-page { flex: 1; border: 1px solid #9aa7ad; background: #eceff1; min-height: 0; min-width: 0; overflow: auto; }
+.jtp-empty { padding: .5rem; color: #7a868c; }
+.bl3 { display: grid; grid-template: auto 1fr auto / auto 1fr auto; height: 100%; gap: 2px; padding: 2px; }
+.bl3 .jbtn { font-weight: 600; }
+.tl-frame { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto; height: 14rem; background: var(--win-bg); }
+.tl-frame.drop { outline: 2px dashed #2a6ebb; outline-offset: -4px; }
+.tl-frame[data-dock="NORTH"] > .tl-bar { grid-area: 1 / 1 / 2 / 4; }
+.tl-frame[data-dock="SOUTH"] > .tl-bar { grid-area: 3 / 1 / 4 / 4; }
+.tl-frame[data-dock="WEST"] > .tl-bar { grid-area: 1 / 1 / 4 / 2; }
+.tl-frame[data-dock="EAST"] > .tl-bar { grid-area: 1 / 3 / 4 / 4; }
+.tl-center { grid-area: 2 / 2 / 3 / 3; background: #fff; margin: 4px; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tl-bar { display: flex; align-items: center; gap: 2px; padding: 2px; background: #e3e8eb; border: 1px solid #b6c0c5; }
+.tl-bar.vertical { flex-direction: column; }
+.tl-grip { width: 9px; align-self: stretch; min-height: 1.6rem; background-image: radial-gradient(#7d8a91 1px, transparent 1.3px); background-size: 4px 4px; cursor: grab; touch-action: none; }
+.tl-bar.vertical .tl-grip { width: auto; min-height: 9px; height: 9px; min-width: 1.6rem; }
+.tl-btn { min-width: 1.9rem; height: 1.9rem; border: 1px solid transparent; background: none; border-radius: 3px; cursor: pointer; font: 14px system-ui, sans-serif; color: #24323a; padding: 0 .35rem; }
+.tl-btn:hover:not(:disabled) { border-color: #8f9ba1; background: #f4f6f7; }
+.tl-btn:disabled { color: #a9b2b7; cursor: default; }
+.tl-sep { width: 1px; align-self: stretch; background: #9aa7ad; margin: 2px 4px; }
+.tl-bar.vertical .tl-sep { width: auto; height: 1px; margin: 4px 2px; }
+.tl-floatwin { max-width: 16rem; }
+.pp-area { position: relative; background: #fff; min-height: 9rem; padding: .2rem; outline: none; }
+.pp-area:focus-visible { outline: 2px solid #2a6ebb; }
+.jpopup { position: absolute; z-index: 5; background: #f4f6f7; border: 1px solid #8f9ba1; box-shadow: 2px 2px 6px rgba(0, 0, 0, .25); padding: 2px 0; min-width: 8rem; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jpopup button { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; text-align: left; border: 0; background: none; padding: 3px 12px; font: inherit; color: inherit; cursor: pointer; }
+.jpopup button:hover:not(:disabled), .jpopup button:focus-visible { background: #b8cfe5; outline: none; }
+.jpopup button:disabled { color: #a9b2b7; cursor: default; }
+.jpopup hr { border: 0; border-top: 1px solid #b6c0c5; margin: 2px 0; }
+.jpopup kbd { font: 11px system-ui, sans-serif; color: #56676f; }
+.ac-frame { background: var(--win-bg); outline: none; position: relative; }
+.ac-frame:focus-visible { outline: 2px solid #2a6ebb; }
+.ac-menubar { position: relative; background: #e3e8eb; border-bottom: 1px solid #b6c0c5; padding: 1px 2px; }
+.ac-menu { border: 0; background: none; padding: 2px 8px; font: 12px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.ac-menu[aria-expanded="true"] { background: #b8cfe5; }
+.ac-drop { top: 100%; left: 2px; }
+.ac-area { position: relative; background: #fff; margin: 4px; min-height: 7rem; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tv-row { align-items: stretch; }
+.tv-row > .tv-tog, .tv-row > .tv-ico, .tv-row > .tv-lbl { align-self: center; }
+.tv-g { display: inline-block; width: 16px; flex: none; }
+.tv-g.pipe { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat; }
+.tv-g.tee { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+.tv-g.elbow { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 50% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+
+/* L14 MDI: desktop pane, internal frames, card deck */
+.dsk { position: relative; height: 20rem; background: #5d7d8f; overflow: hidden; }
+.jif { position: absolute; display: flex; flex-direction: column; background: #eceff1; border: 1px solid #44525a; box-shadow: 2px 3px 8px rgba(0, 0, 0, .35); }
+.jif-bar { display: flex; align-items: center; gap: 3px; padding: 2px 4px; background: #c5ced3; font: 600 12px system-ui, sans-serif; color: #1c2328; cursor: move; user-select: none; touch-action: none; }
+.jif.sel { border-color: #1d4f8a; }
+.jif.sel .jif-bar { background: #8fb3d9; }
+.jif-bar span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jif-bar button { width: 18px; height: 16px; padding: 0; font: 11px/1 system-ui, sans-serif; border: 1px solid #6b7b82; background: #f4f6f7; color: #1c2328; cursor: pointer; flex: none; }
+.jif textarea { flex: 1; resize: none; border: 0; border-top: 1px solid #9aa7ad; font: 12px ui-monospace, Menlo, Consolas, monospace; padding: 4px; background: #fff; color: #1c2328; min-height: 0; width: 100%; }
+.jif-rs { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 55%, #6b7b82 55%, #6b7b82 62%, transparent 62%, transparent 78%, #6b7b82 78%, #6b7b82 85%, transparent 85%); }
+.jif-icon { position: absolute; bottom: 4px; display: flex; align-items: center; gap: 4px; width: 8.5rem; padding: 2px 4px; background: #c5ced3; border: 1px solid #44525a; font: 600 11px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.jif-icon span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dsk-outline { position: absolute; border: 2px dashed #fff; pointer-events: none; }
+.cards { background: var(--win-bg); padding: .6rem; font: 13px system-ui, sans-serif; color: #1c2328; }
+.card-page { background: #fff; border: 1px solid #b6c0c5; padding: .7rem; min-height: 9rem; display: grid; gap: .4rem; align-content: start; }
+.card-page h4 { font: 600 14px system-ui, sans-serif; }
+.card-page .tag { font: 11px ui-monospace, monospace; color: #7a868c; }
+.ways-host { position: relative; background: var(--win-bg); color: #1c2328; font: 12px system-ui, sans-serif; min-height: 15rem; padding: .5rem; color-scheme: light; }
+.ways-host pre { margin: 0; white-space: pre-wrap; font: 12px ui-monospace, monospace; }
+.dlg-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .28); display: grid; place-items: center; }
+
+/* Threads: lanes, progress bar, frozen window */
+.lanes { display: grid; gap: 4px; font: 12px var(--f-mono); }
+.lane { display: grid; grid-template-columns: minmax(0, 9.5rem) 7.5rem minmax(0, 1fr); gap: .5rem; align-items: center; }
+.lane > b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lane .st { font-size: 11px; padding: 1px 6px; border-radius: 99px; border: 1px solid var(--line); text-align: center; color: var(--muted); }
+.lane .st.RUNNABLE { color: var(--ok); border-color: var(--ok); }
+.lane .st.TIMED_WAITING, .lane .st.WAITING { color: var(--c-num); border-color: var(--c-num); }
+.lane .st.TERMINATED { color: var(--bad); border-color: var(--bad); }
+.lane .ticks { display: flex; gap: 2px; overflow: hidden; min-width: 0; justify-content: flex-end; }
+.tick { width: 1.15rem; height: 1.15rem; border-radius: 3px; display: grid; place-items: center; font-size: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
+@media (max-width: 520px) { .lane { grid-template-columns: minmax(0, 1fr) 7rem; } .lane .ticks { grid-column: 1 / -1; justify-content: flex-start; } }
+.jprog { position: relative; height: 18px; border: 1px solid #6b7b82; background: #fff; border-radius: 2px; overflow: hidden; }
+.jprog i { position: absolute; top: 0; bottom: 0; left: 0; background: #5b8fc7; }
+.jprog span { position: absolute; inset: 0; display: grid; place-items: center; font: 600 11px system-ui, sans-serif; color: #1c2328; }
+.jprog.ind i { width: 30% !important; animation: jprog-ind 1.2s linear infinite; }
+@keyframes jprog-ind { from { left: -30%; } to { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .jprog.ind i { animation: none; width: 100% !important; opacity: .45; } }
+.win.frozen .win-body { filter: grayscale(.7) brightness(.9); }
+.win .win-bar .nr { color: #b0261c; font-weight: 600; }
+.win-body .row { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+.win-body textarea { width: 100%; min-height: 4.5rem; font: 12px ui-monospace, monospace; border: 1px solid #9aa7ad; background: #fff; color: #1c2328; padding: 4px; resize: none; }
+.verdict { font: 600 .8rem var(--f-body); padding: .1rem .5rem; border-radius: 99px; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.jbtn:disabled { color: #9aa4a8; cursor: default; }
+
+/* Your lab answers */
+.mine { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ok); font-weight: 600; }
+.slide.answer { border-left: 3px solid var(--ok); padding-left: var(--s4); }
+.xpl { display: grid; gap: var(--s3); margin: 0; }
+.xpl > div { display: grid; gap: var(--s1); min-width: 0; }
+.xpl dt { min-width: 0; }
+.xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
+.xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L3 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 3 + Lab 3</p>
+  <h1>GUI: Simple Components</h1>
+  <p class="lede">Buttons, labels, text fields, password fields, dialogs, check boxes, radio buttons, combo boxes and lists. Every slide of <em>Lecture 3 – GUI: Simple Components</em> (55 slides) in order, with the code typed out from the screenshots and every window image, then Lab 3 with both of its code files. Small live demos sit inside the topics they explain.</p>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--mark)"></i><span class="k">Red text</span> was red on the slide</span>
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="mine">Your answer</span> your own lab code, exactly as in your zip</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<!-- ============ 1 JButton ============ -->
+<section class="sec" id="button" data-title="Component properties and JButton">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–8</p>
+    <div class="sec-head-row"><h2>Component properties and JButton</h2><label class="done"><input type="checkbox" id="done-button"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Every component has <em>properties</em> (colour, font, size, enabled…) and you read or change each one with a pair of methods: <code>getX()</code>/<code>isX()</code> to read, <code>setX(...)</code> to change. A <code>JButton</code> is something to click. On its own a click does nothing; you attach an <code>ActionListener</code> to make it do something (that's Lecture 4). Watch slide 8: with a JFrame's default BorderLayout, two buttons added without a region both land in CENTER, so only the last one shows.</div></aside>
+
+  <div class="slide"><p class="divider">Introduction to JAVA GUI Programming <span class="sn">1</span></p></div>
+
+  <div class="slide">
+    <h3>Component properties <span class="sn">2</span></h3>
+    <p>Each has a <code>get</code> (or <code>is</code>) accessor and a <code>set</code> modifier method.<br>examples: <code>getColor</code>, <code>setFont</code>, <code>setEnabled</code>, <code>isVisible</code></p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>name</th><th>type</th><th>description</th></tr></thead>
+        <tbody>
+          <tr><td>background</td><td><code>Color</code></td><td>background color behind component</td></tr>
+          <tr><td>border</td><td><code>Border</code></td><td>border line around component</td></tr>
+          <tr><td>enabled</td><td><code>boolean</code></td><td>whether it can be interacted with</td></tr>
+          <tr><td>focusable</td><td><code>boolean</code></td><td>whether key text can be typed on it</td></tr>
+          <tr><td>font</td><td><code>Font</code></td><td>font used for text in component</td></tr>
+          <tr><td>foreground</td><td><code>Color</code></td><td>foreground color of component</td></tr>
+          <tr><td>height, width</td><td><code>int</code></td><td>component's current size in pixels</td></tr>
+          <tr><td>visible</td><td><code>boolean</code></td><td>whether component can be seen</td></tr>
+          <tr><td>tooltip text</td><td><code>String</code></td><td>text shown when hovering mouse</td></tr>
+          <tr><td>size, minimum / maximum / preferred size</td><td><code>Dimension</code></td><td>various sizes, size limits, or desired sizes that the component may take</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>JButton <span class="sn">3</span></h3>
+    <p>A JButton is a Swing component that represents a clickable button, used to trigger an action when clicked.</p>
+    <h4>Constructors of JButton</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Constructor</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>JButton()</code></td><td>Creates an empty button with no text or icon.</td></tr>
+          <tr><td><code>JButton(String text)</code></td><td>Creates a button with the specified text.</td></tr>
+          <tr><td><code>JButton(Icon icon)</code></td><td>Creates a button with an image icon.</td></tr>
+          <tr><td><code>JButton(String text, Icon icon)</code></td><td>Creates a button with both text and an image icon.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Common Properties of JButton <span class="sn">4</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Property</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>setText(String text)</code></td><td>Sets the text displayed on the button.</td></tr>
+          <tr><td><code>setIcon(Icon icon)</code></td><td>Sets an image as the button's icon.</td></tr>
+          <tr><td><code>setEnabled(boolean enabled)</code></td><td>Enables or disables the button.</td></tr>
+          <tr><td><code>setFont(Font font)</code></td><td>Sets the font style and size.</td></tr>
+          <tr><td><code>setBackground(Color color)</code></td><td>Sets the background color.</td></tr>
+          <tr><td><code>setForeground(Color color)</code></td><td>Sets the text color.</td></tr>
+          <tr><td><code>setToolTipText(String text)</code></td><td>Displays a tooltip when hovering over the button.</td></tr>
+          <tr><td><code>setMnemonic(char mnemonic)</code></td><td>Assigns a keyboard shortcut for the button.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Common Methods of JButton <span class="sn">5</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>addActionListener(ActionListener listener)</code></td><td>Registers an event listener for button clicks.</td></tr>
+          <tr><td><code>getText()</code></td><td>Returns the text of the button.</td></tr>
+          <tr><td><code>setBounds(int x, int y, int width, int height)</code></td><td>Sets the button position and size (when using null layout).</td></tr>
+          <tr><td><code>doClick()</code></td><td>Simulates a button click programmatically.</td></tr>
+          <tr><td><code>setVisible(boolean visible)</code></td><td>Shows or hides the button.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>One and two buttons with setBounds <span class="sn">6</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">import javax.swing.*;
+
+public class OneButtonExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("One Button Example");
+        JButton button = new JButton("Click Me");
+
+        button.setBounds(100, 100, 120, 40);
+
+        frame.add(button);
+        frame.setSize(300, 300);
+        frame.setLayout(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s6_one_button.png" width="200" alt="One Button Example window with a Click Me button in the middle"></div><figcaption>One Button Example</figcaption></figure>
+    </div>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">public class TwoButtonExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Two Button Example");
+        JButton btn1 = new JButton("Say Hello");
+        JButton btn2 = new JButton("Exit");
+
+        btn1.setBounds(50, 100, 120, 40);
+        btn2.setBounds(180, 100, 120, 40);
+
+        frame.add(btn1);
+        frame.add(btn2);
+        frame.setSize(350, 300);
+        frame.setLayout(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s6_two_button.png" width="230" alt="Two Button Example window with Say Hello and Exit buttons side by side"></div><figcaption>Two Button Example</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Three buttons <span class="sn">7</span></h3>
+    <div class="code"><pre class="java">import javax.swing.*;
+
+public class ThreeButtonExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Three Button Example");
+        JButton btn1 = new JButton("Greet");
+        JButton btn2 = new JButton("Clear");
+        JButton btn3 = new JButton("Exit");
+
+        btn1.setBounds(30, 100, 100, 40);
+        btn2.setBounds(140, 100, 100, 40);
+        btn3.setBounds(250, 100, 100, 40);
+
+        frame.add(btn1);
+        frame.add(btn2);
+        frame.add(btn3);
+        frame.setSize(400, 300);
+        frame.setLayout(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+    <figure><div class="plate"><img src="img/s7_three_button.png" width="300" loading="lazy" alt="Three Button Example window with Greet, Clear and Exit buttons in a row"></div><figcaption>The three <code>setBounds</code> calls are highlighted on the slide: each button is placed by hand at x = 30, 140 and 250.</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <h3>Simple JButton Example <span class="sn">8</span></h3>
+    <div class="code"><pre class="java">import java.awt.*;      // Where is the other button?
+import javax.swing.*;
+
+public class ButtonExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(new Dimension(300, 100));
+        frame.setTitle("A frame");
+
+        JButton button1 = new JButton();
+        button1.setText("I'm a button.");
+        button1.setBackground(Color.BLUE);
+        frame.add(button1);
+
+        JButton button2 = new JButton();
+        button2.setText("Click me!");
+        button2.setBackground(Color.RED);
+        frame.add(button2);
+
+        frame.setVisible(true);
+    }
+}</pre></div>
+    <figure><div class="plate"><img src="img/s8_a_frame.png" width="300" loading="lazy" alt="Window titled A frame filled completely by a red Click me! button"></div><figcaption>Only the red "Click me!" button appears.</figcaption></figure>
+    <aside class="note"><b>Answer to "Where is the other button?"</b><span>A JFrame uses BorderLayout. <code>frame.add(button)</code> with no region means CENTER, and CENTER holds one component, so <code>button2</code> covers <code>button1</code>. Fix it with <code>frame.setLayout(new FlowLayout());</code> or by adding them to different regions.</span></aside>
+  </div>
+
+  <details class="orig" data-pages="1-8"></details>
+  <div class="quiz" data-quiz="button"></div>
+</section>
+
+<!-- ============ 2 JLabel ============ -->
+<section class="sec" id="label" data-title="JLabel">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 9–16</p>
+    <div class="sec-head-row"><h2>JLabel</h2><label class="done"><input type="checkbox" id="done-label"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A <code>JLabel</code> shows text or a picture that the user can't edit: headings, field names ("Username:"), status messages. Two things trip people up:<ul><li>Alignment values live in <code>SwingConstants</code> (<code>LEFT</code>, <code>CENTER</code>, <code>RIGHT</code>, <code>TOP</code>, <code>BOTTOM</code>).</li><li>A label is see-through by default, so <code>setBackground</code> does nothing until you call <code>setOpaque(true)</code>.</li></ul></div></aside>
+
+  <div class="slide">
+    <h3>JLabel <span class="sn">9</span></h3>
+    <p>A JLabel is a Swing component used to display text, images, or both. It is non-editable and is commonly used for instructions, headings, or status messages in a GUI.</p>
+    <h4>Constructors of JLabel</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Constructor</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>JLabel()</code></td><td>Creates an empty label with no text or icon.</td></tr>
+          <tr><td><code>JLabel(String text)</code></td><td>Creates a label with the specified text.</td></tr>
+          <tr><td><code>JLabel(Icon icon)</code></td><td>Creates a label displaying an image.</td></tr>
+          <tr><td><code>JLabel(String text, int alignment)</code></td><td>Creates a label with text and alignment (e.g., <code>SwingConstants.CENTER</code>).</td></tr>
+          <tr><td><code>JLabel(String text, Icon icon, int alignment)</code></td><td>Creates a label with text, an icon, and alignment.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Common Properties of JLabel <span class="sn">10–11</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Property</th><th>Description</th><th>Slide</th></tr></thead>
+        <tbody>
+          <tr><td><code>setText(String text)</code></td><td>Changes the label's displayed text.</td><td>10</td></tr>
+          <tr><td><code>getText()</code></td><td>Returns the current text of the label.</td><td>10</td></tr>
+          <tr><td><code>setIcon(Icon icon)</code></td><td>Sets an image as the label's icon.</td><td>10</td></tr>
+          <tr><td><code>setHorizontalAlignment(int alignment)</code></td><td>Aligns text horizontally (LEFT, CENTER, RIGHT).</td><td>10</td></tr>
+          <tr><td><code>setVerticalAlignment(int alignment)</code></td><td>Aligns text vertically (TOP, CENTER, BOTTOM).</td><td>10</td></tr>
+          <tr><td><code>setFont(Font font)</code></td><td>Changes the font style and size.</td><td>11</td></tr>
+          <tr><td><code>setForeground(Color color)</code></td><td>Changes the text color.</td><td>11</td></tr>
+          <tr><td><code>setBackground(Color color)</code></td><td>Changes the background color.</td><td>11</td></tr>
+          <tr><td><code>setToolTipText(String text)</code></td><td>Displays a tooltip when hovering over the label.</td><td>11</td></tr>
+          <tr><td><code>*setOpaque(boolean opaque)</code></td><td>Enables background color changes. makes the label transparent if b is false and nontransparent if b is true</td><td>11</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The possible values of alignment can be found in the class <code>SwingConstants</code>, e.g. use <code>SwingConstants.CENTER</code> to centre the text in the label.</p>
+    <p>*Note that labels are transparent by default and their background color is not visible. One sees the background color of the parent component shining through. To change the background color of a label one has to first make it opaque (non-transparent) using the method <code>setOpaque</code>.</p>
+  </div>
+
+  <div class="slide">
+    <h3>Common Methods of JLabel <span class="sn">12</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>setText(String text)</code></td><td>Updates the label's text dynamically.</td></tr>
+          <tr><td><code>setIcon(Icon icon)</code></td><td>Changes the label's image.</td></tr>
+          <tr><td><code>setBounds(int x, int y, int width, int height)</code></td><td>Sets position and size (when using null layout).</td></tr>
+          <tr><td><code>setHorizontalTextPosition(int position)</code></td><td>Positions text relative to an icon.</td></tr>
+          <tr><td><code>setVerticalTextPosition(int position)</code></td><td>Positions text above, below, or beside an icon.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>One label <span class="sn">13</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">import javax.swing.*;
+
+public class OneLabelExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("One Label Example");
+        JLabel label = new JLabel("Welcome to Java Swing!", SwingConstants.CENTER);
+
+        label.setBounds(50, 50, 200, 30);
+
+        frame.add(label);
+        frame.setSize(300, 200);
+        frame.setLayout(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s13_one_label.png" width="230" loading="lazy" alt="One Label Example window showing Welcome to Java Swing!"></div><figcaption>One Label Example</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Three labels: colour, font and opaque background <span class="sn">14</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">import javax.swing.*;
+import java.awt.*;
+
+public class ThreeLabelExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Three Label Example");
+
+        JLabel label1 = new JLabel("Left Aligned");
+        JLabel label2 = new JLabel("Center Aligned", SwingConstants.CENTER);
+        JLabel label3 = new JLabel("Right Aligned", SwingConstants.RIGHT);
+
+        label1.setBounds(30, 50, 150, 30);
+        label2.setBounds(30, 100, 150, 30);
+        label3.setBounds(30, 150, 150, 30);
+
+        label1.setForeground(Color.RED);
+        label2.setFont(new Font("Arial", Font.BOLD, 14));
+        label3.setOpaque(true);
+        label3.setBackground(Color.LIGHT_GRAY);
+
+        frame.add(label1);
+        frame.add(label2);
+        frame.add(label3);
+        frame.setSize(250, 250);
+        frame.setLayout(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s14_three_label.png" width="180" loading="lazy" alt="Three Label Example: red Left Aligned, bold Center Aligned, and Right Aligned on a grey background"></div><figcaption>Red text, bold centred text, and a grey background that only shows because of <code>setOpaque(true)</code>.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Simple JLabel Example <span class="sn">15–16</span></h3>
+    <div class="code"><pre class="java">import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class LabelTest extends JFrame {
+   private JLabel label1, label2, label3;
+
+   // set up GUI
+   public LabelTest()
+   {
+      super( "Testing JLabel" );
+
+      // get content pane and set its layout
+      Container container = getContentPane();
+      container.setLayout( new FlowLayout() );
+
+      // JLabel constructor with a string argument
+      label1 = new JLabel( "Label with text" );
+      label1.setToolTipText( "This is label1" );
+      container.add( label1 );
+
+      // JLabel constructor with string, Icon and alignment arguments
+      Icon bug = new ImageIcon( "bug1.gif" );
+      label2 = new JLabel( "Label with text and icon", bug,
+         SwingConstants.LEFT );
+      label2.setToolTipText( "This is label2" );
+      container.add( label2 );
+
+      // JLabel constructor no arguments
+      label3 = new JLabel();
+      label3.setText( "Label with icon and text at bottom" );
+      label3.setIcon( bug );
+      label3.setHorizontalTextPosition( SwingConstants.CENTER );
+      label3.setVerticalTextPosition( SwingConstants.BOTTOM );
+      label3.setToolTipText( "This is label3" );
+      container.add( label3 );</pre></div>
+    <p class="added">Added · The end of the class, which the slides stop before</p>
+    <div class="code"><pre class="java">      setSize( 275, 170 );
+      setVisible( true );
+   } // end constructor
+
+   public static void main( String args[] )
+   {
+      LabelTest application = new LabelTest();
+      application.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+   }
+} // end class LabelTest</pre></div>
+    <aside class="note"><b>Guide note</b><span><code>bug1.gif</code> must sit in the project's working folder, or the icon silently shows nothing. Hover each label to see its tooltip.</span></aside>
+  </div>
+
+  <details class="orig" data-pages="9-16"></details>
+  <div class="quiz" data-quiz="label"></div>
+</section>
+
+<!-- ============ 3 null layout ============ -->
+<section class="sec" id="nulllayout" data-title="Null layout and setBounds">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 17–18</p>
+    <div class="sec-head-row"><h2>Null layout and setBounds</h2><label class="done"><input type="checkbox" id="done-nulllayout"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div><code>setLayout(null)</code> fires the layout manager. Now nobody positions or sizes your components, so each one starts at 0 × 0 pixels (invisible) until you call <code>setBounds(x, y, width, height)</code> on it. It gives you exact control, but the window won't adapt when resized. Prefer a layout manager.</div></aside>
+
+  <div class="slide">
+    <h3>Why components disappear without setBounds <span class="sn">17</span></h3>
+    <p>If you delete <code>setBounds()</code>, the labels (and buttons) will not be displayed because you are using <code>null</code> layout.</p>
+    <h4>Why Does This Happen?</h4>
+    <ul class="pts">
+      <li>By default, Swing components use <code>FlowLayout</code>, which arranges components in a row with automatic sizing.</li>
+      <li>However, when you set <code>frame.setLayout(null);</code>, <b>you must manually specify the position and size of each component using <code>setBounds(x, y, width, height)</code></b>.</li>
+      <li>Without <code>setBounds()</code>, the components will have a default size of <b>0x0 pixels</b>, making them invisible.</li>
+    </ul>
+    <h4>Solutions:</h4>
+    <ol class="pts">
+      <li><b>Use a Layout Manager</b> (recommended)<br>Instead of manually setting positions, use <code>BorderLayout</code>, <code>GridLayout</code>, or <code>BoxLayout</code> for automatic placement.</li>
+    </ol>
+    <div class="code"><pre class="java">JFrame frame = new JFrame("Three Label Example");
+
+JLabel label1 = new JLabel("Left Aligned");
+JLabel label2 = new JLabel("Center Aligned", SwingConstants.CENTER);
+JLabel label3 = new JLabel("Right Aligned", SwingConstants.RIGHT);
+
+
+frame.setLayout(new FlowLayout());
+
+label1.setForeground(Color.RED);
+label2.setFont(new Font("Arial", Font.BOLD, 14));
+label3.setBackground(Color.LIGHT_GRAY);
+
+frame.add(label1);
+frame.add(label2);
+frame.add(label3);
+frame.setSize(250, 250);
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+frame.setVisible(true);</pre></div>
+    <figure><div class="plate"><img src="img/s17_three_label_flow.png" width="487" loading="lazy" alt="Three Label Example with FlowLayout: Left Aligned, Center Aligned, Right Aligned in one row"></div><figcaption>With FlowLayout the three labels sit in one row, no <code>setBounds</code> needed.</figcaption></figure>
+    <aside class="note"><b>Guide note</b><span>Slide 17 says "by default, Swing components use FlowLayout". That's true for <code>JPanel</code>; a <code>JFrame</code>'s default is BorderLayout (slide 18 and Lecture 2). Also, this version leaves out <code>setOpaque(true)</code>, so the grey background of label3 won't show.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Meaning of <code>frame.setLayout(null);</code> <span class="sn">18</span></h3>
+    <p>The line <code>frame.setLayout(null);</code> in Java Swing <b>removes the default layout manager</b>, allowing you to <b>manually position and size components</b> using <code>setBounds(x, y, width, height)</code>.</p>
+    <h4>How It Works</h4>
+    <ol class="pts">
+      <li><b>Without <code>null</code> Layout (Using Default Layout Manager)</b>
+        <ul><li>The default layout manager (usually <code>BorderLayout</code> for <code>JFrame</code>) arranges components automatically.</li><li>Components <b>may not appear where expected</b> unless a layout manager is properly configured.</li></ul>
+      </li>
+      <li><b>With <code>null</code> Layout (<code>setLayout(null);</code>)</b>
+        <ul><li>The program does <b>not</b> automatically position components.</li><li><b>You must use <code>setBounds(x, y, width, height);</code></b> for each component.</li><li>If <code>setBounds()</code> is missing, components may not appear (default size is <b>0x0</b>).</li></ul>
+      </li>
+    </ol>
+    <div class="code"><span class="code-label">✅ With null Layout (Manual Positioning)</span><pre class="java">frame.setLayout(null);  // No layout manager
+button.setBounds(50, 50, 100, 30);  // Manual position and size</pre></div>
+    <div class="code"><span class="code-label">❌ Without null Layout (No setBounds(), Components May Not Appear)</span><pre class="java">frame.setLayout(null);  // But no setBounds()
+frame.add(button);  // Button has default size (0x0), may not be visible</pre></div>
+  </div>
+
+  <div class="demo" id="nl">
+    <div class="demo-head"><h3>Try it: setBounds on a null layout</h3><span class="added">Added</span></div>
+    <div class="ctrl">
+      <label for="nlX">x <input type="range" id="nlX" min="0" max="250" value="50"></label>
+      <label for="nlY">y <input type="range" id="nlY" min="0" max="150" value="50"></label>
+      <label for="nlW">width <input type="range" id="nlW" min="0" max="250" value="100"></label>
+      <label for="nlH">height <input type="range" id="nlH" min="0" max="120" value="30"></label>
+      <label><input type="checkbox" id="nlOn" checked> call setBounds</label>
+    </div>
+    <div style="overflow-x:auto">
+      <div class="win" style="width:316px">
+        <div class="win-bar"><span>Null Layout</span><i>–□×</i></div>
+        <div id="nlBody" style="position:relative;width:300px;height:200px;margin:0 auto;outline:1px dashed #9aa7ad"></div>
+      </div>
+    </div>
+    <div class="code"><pre class="plain-pre" id="nlCode"></pre></div>
+  </div>
+
+  <details class="orig" data-pages="17-18"></details>
+  <div class="quiz" data-quiz="nulllayout"></div>
+</section>
+
+<!-- ============ 4 text ============ -->
+<section class="sec" id="text" data-title="Text components">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 19–27</p>
+    <div class="sec-head-row"><h2>Text components</h2><label class="done"><input type="checkbox" id="done-text"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Pick by how much text you expect:<ul><li><b>JTextField</b>: one line (a name, a number). Read it with <code>getText()</code>.</li><li><b>JTextArea</b>: many lines (comments, notes). Wrap it in a <b>JScrollPane</b> and add the scroll pane, not the text area.</li><li><b>JPasswordField</b>: a text field that shows dots. Read it with <code>getPassword()</code>, which gives a <code>char[]</code>.</li><li><b>JFormattedTextField</b>: a text field that only accepts a set format (number, date, phone…).</li></ul></div></aside>
+
+  <div class="slide">
+    <h3>JTextField <span class="sn">19</span></h3>
+    <p>A JTextField is a component that allows the user to enter a single line of text.</p>
+    <p class="acc"><b>Properties:</b></p>
+    <ul class="pts" style="list-style:'- '"><li>text: The text content inside the field.</li><li>columns: The width of the text field in terms of characters.</li><li>editable: Specifies whether the text field is editable or not.</li></ul>
+    <p class="acc"><b>Methods:</b></p>
+    <ul class="pts" style="list-style:'- '"><li>setText(String text): Sets the text of the field.</li><li>getText(): Retrieves the current text.</li><li>setEditable(boolean editable): Enables or disables editing.</li></ul>
+    <p class="acc"><b>Example 1: Simple TextField</b></p>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">import javax.swing.*;
+public class TextFieldExample1 {
+   public static void main(String[] args) {
+      JFrame frame = new JFrame("TextField Example");
+      JTextField textField = new JTextField("Enter text here", 20);
+      frame.add(textField);
+      frame.setSize(300, 200);
+      frame.setLayout(new FlowLayout());
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.setVisible(true);
+   }
+}</pre></div>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s19_textfield.png" width="250" loading="lazy" alt="TextField Example window with a text field reading Enter text here"></div><figcaption>A 20-column field with starting text.</figcaption></figure>
+    </div>
+    <aside class="note"><b>Guide note</b><span><code>FlowLayout</code> lives in <code>java.awt</code>; add <code>import java.awt.*;</code> or this example won't compile. The same goes for slides 31 and 35.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>JTextArea (Multi-line Text Field) <span class="sn">20</span></h3>
+    <p>The JTextArea class in <b>Swing</b> is used for multi-line text input and editing. It extends JTextComponent.</p>
+    <h4>JTextArea Properties</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Property</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>text</code></td><td>Holds the text inside the text area.</td></tr>
+          <tr><td><code>rows</code></td><td>Defines the number of visible rows.</td></tr>
+          <tr><td><code>columns</code></td><td>Defines the number of visible columns.</td></tr>
+          <tr><td><code>editable</code></td><td>Determines if the text area is editable (<code>true</code>) or read-only (<code>false</code>).</td></tr>
+          <tr><td><code>lineWrap</code></td><td>Enables or disables automatic line wrapping.</td></tr>
+          <tr><td><code>wrapStyleWord</code></td><td>Ensures that lines wrap at word boundaries when <code>lineWrap</code> is <code>true</code>.</td></tr>
+          <tr><td><code>font</code></td><td>Sets the font style of the text.</td></tr>
+          <tr><td><code>background</code></td><td>Sets the background color.</td></tr>
+          <tr><td><code>foreground</code></td><td>Sets the text color.</td></tr>
+          <tr><td><code>caretPosition</code></td><td>Gets or sets the caret (cursor) position.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>JTextArea Common Methods <span class="sn">21</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>setText(String text)</code></td><td>Sets text in the <code>JTextArea</code>.</td></tr>
+          <tr><td><code>getText()</code></td><td>Returns the text inside the <code>JTextArea</code>.</td></tr>
+          <tr><td><code>append(String str)</code></td><td>Appends text at the end.</td></tr>
+          <tr><td><code>setEditable(boolean editable)</code></td><td>Enables or disables editing.</td></tr>
+          <tr><td><code>setLineWrap(boolean wrap)</code></td><td>Enables/disables automatic line wrapping.</td></tr>
+          <tr><td><code>setWrapStyleWord(boolean word)</code></td><td>Wraps at word boundaries when wrapping is enabled.</td></tr>
+          <tr><td><code>select(int start, int end)</code></td><td>Selects a portion of text.</td></tr>
+          <tr><td><code>replaceRange(String str, int start, int end)</code></td><td>Replaces text in a given range.</td></tr>
+          <tr><td><code>setCaretPosition(int position)</code></td><td>Moves the cursor to a specific position.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>JScrollPane <span class="sn">22</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <p style="flex:2 1 16rem"><em>a container that adds scrollbars around any other component</em></p>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s22_scrollpane.png" width="231" loading="lazy" alt="A text area about Linux with vertical and horizontal scrollbars"></div></figure>
+    </div>
+    <div class="code"><pre class="java">public JScrollPane(Component comp)</pre></div>
+    <p>Wraps the given component with scrollbars.</p>
+    <p>After constructing the scroll pane, you must add the scroll pane, not the original component, to the onscreen container:</p>
+    <div class="code"><pre class="java">myContainer.add(new JScrollPane(textarea),
+                BorderLayout.CENTER);</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>JTextArea in a JScrollPane <span class="sn">23</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">import javax.swing.*;
+import java.awt.*;
+
+public class JTextAreaExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("JTextArea Example");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JTextArea textArea = new JTextArea(10, 30);
+        textArea.setText("This is a JTextArea example.");
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+
+        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.setVisible(true);
+    }
+}</pre></div>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s23_textarea.png" width="240" loading="lazy" alt="JTextArea Example window: a large white text area with the text This is a JTextArea example."></div><figcaption>10 rows × 30 columns, filling the CENTER region.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>2. JPasswordField (Password Input Field) <span class="sn">24</span></h3>
+    <p>JPasswordField is a subclass of JTextField designed for password input. Unlike JTextField, it hides input characters.</p>
+    <h4>2.1 JPasswordField Properties</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Property</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>text</code></td><td>Holds the input text (not recommended for passwords).</td></tr>
+          <tr><td><code>echoChar</code></td><td>Defines the character used to mask input (default: <code>•</code>).</td></tr>
+          <tr><td><code>columns</code></td><td>Sets the width of the field in characters.</td></tr>
+          <tr><td><code>editable</code></td><td>Determines if the field is editable (<code>true</code> or <code>false</code>).</td></tr>
+          <tr><td><code>font</code></td><td>Sets the font style.</td></tr>
+          <tr><td><code>background</code></td><td>Sets the background color.</td></tr>
+          <tr><td><code>foreground</code></td><td>Sets the text color.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>2.2 JPasswordField Common Methods <span class="sn">25</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>setEchoChar(char c)</code></td><td>Sets the masking character.</td></tr>
+          <tr><td><code>getPassword()</code></td><td>Returns the password as a <code>char[]</code> (safer than <code>getText()</code>).</td></tr>
+          <tr><td><code>setText(String text)</code></td><td>Sets a default password (not recommended).</td></tr>
+          <tr><td><code>setEditable(boolean editable)</code></td><td>Enables or disables input.</td></tr>
+          <tr><td><code>setColumns(int columns)</code></td><td>Sets the width in terms of character count.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="pts">
+      <li>Setting echochar a value of 0 indicates that you wish to see the text as it is typed, similar to the behavior of a standard JTextField.</li>
+      <li><code>char getEchoChar()</code>: Returns the character to be used for echoing.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>JPasswordField example <span class="sn">26</span></h3>
+    <div class="code"><pre class="java">import javax.swing.*;
+import java.awt.*;
+
+public class JPasswordFieldExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("JPasswordField Example");
+        frame.setSize(350, 200);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new FlowLayout());
+
+        JLabel label = new JLabel("Enter Password:");
+        JPasswordField passwordField = new JPasswordField(15);
+        passwordField.setEchoChar('*');  // Masking with '*'
+
+        frame.add(label);
+        frame.add(passwordField);
+        frame.setVisible(true);
+    }
+}</pre></div>
+    <figure><div class="plate"><img src="img/s26_password.png" width="400" loading="lazy" alt="JPasswordField Example: Enter Password: field showing asterisks, and a Login button"></div><figcaption>Typed characters show as <code>*</code>. (The screenshot also has a Login button that the code doesn't create.)</figcaption></figure>
+  </div>
+
+  <div class="demo" id="pw">
+    <div class="demo-head"><h3>Try it: setEchoChar and getPassword</h3><span class="added">Added</span></div>
+    <div class="ctrl">
+      <label for="pwIn">Type a password <input type="text" id="pwIn" value="secret123" autocomplete="off"></label>
+      <label for="pwEcho">setEchoChar(
+        <select id="pwEcho"><option value="•">'•' (default)</option><option value="*">'*'</option><option value="#">'#'</option><option value="0">0</option></select>)
+      </label>
+    </div>
+    <div class="win" style="width:min(100%,22rem)"><div class="win-bar"><span>JPasswordField Example</span><i>–□×</i></div>
+      <div class="win-body" style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap"><span>Enter Password:</span><span id="pwShow" style="font-family:var(--f-mono);background:#fff;border:1px solid #8f9ba1;padding:.1rem .4rem;min-width:9rem"></span></div>
+    </div>
+    <div class="code"><pre class="plain-pre" id="pwCode"></pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>JFormattedTextField <span class="sn">27</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <p style="flex:2 1 16rem"><em>a text box that allows special formatting and can enforce constraints about allowable text</em><br><span class="k" style="font-family:'Comic Sans MS',cursive;font-size:1.3rem">"Do this!"</span> <span style="font-size:.85rem;color:var(--muted)">(handwritten on the slide)</span></p>
+      <figure style="flex:1 1 8rem"><div class="plate"><img src="img/s27_formatted.png" width="143" loading="lazy" alt="Five formatted fields: 12 345, 12,45, (123) 456-78-90, 12,45 руб., 45%"></div><figcaption>Number, decimal, phone mask, currency, percent.</figcaption></figure>
+    </div>
+    <div class="code"><pre class="java">public JFormattedTextField(Format format)</pre></div>
+    <p>Creates a new field that constrains itself to the given text format. (e.g. DateFormat, NumberFormat, CurrencyFormat, MaskFormat)</p>
+    <div class="code"><pre class="java">public Object getValue()
+public void getValue(Object value)</pre></div>
+    <p>The value currently set in the field, which may lag behind the text.</p>
+    <div class="code"><pre class="java">public void setFocusLostBehavior(int b)</pre></div>
+    <p>Sets what field should do if user stops editing and value is illegal.</p>
+    <aside class="note"><b>Guide note</b><span>The second method is really <code>setValue(Object value)</code>; the slide repeats "getValue". The masks themselves come from <code>MaskFormatter</code> (in <code>javax.swing.text</code>).</span></aside>
+    <p class="added">Added · A small program for the "Do this!" note</p>
+    <div class="code"><pre class="java">import javax.swing.*;
+import javax.swing.text.MaskFormatter;
+import java.awt.*;
+import java.text.NumberFormat;
+
+public class FormattedFieldExample {
+    public static void main(String[] args) throws Exception {
+        JFrame frame = new JFrame("JFormattedTextField Example");
+        frame.setLayout(new GridLayout(3, 2, 5, 5));
+
+        JFormattedTextField numberField =
+            new JFormattedTextField(NumberFormat.getIntegerInstance());
+        numberField.setValue(12345);
+
+        JFormattedTextField percentField =
+            new JFormattedTextField(NumberFormat.getPercentInstance());
+        percentField.setValue(0.45);                    // shows 45%
+
+        MaskFormatter phoneMask = new MaskFormatter("(###) ###-##-##");
+        JFormattedTextField phoneField = new JFormattedTextField(phoneMask);
+
+        frame.add(new JLabel("Number:"));  frame.add(numberField);
+        frame.add(new JLabel("Percent:")); frame.add(percentField);
+        frame.add(new JLabel("Phone:"));   frame.add(phoneField);
+
+        frame.setSize(320, 150);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+    <p style="font-size:.9rem;color:var(--muted)">In a mask, <code>#</code> means "one digit". Typing a letter in the phone field is refused, and <code>numberField.getValue()</code> returns a number, not text.</p>
+  </div>
+
+  <details class="orig" data-pages="19-27"></details>
+  <div class="quiz" data-quiz="text"></div>
+</section>
+
+<!-- ============ 5 JOptionPane ============ -->
+<section class="sec" id="dialogs" data-title="JOptionPane dialogs">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 28–29</p>
+    <div class="sec-head-row"><h2>JOptionPane dialogs</h2><label class="done"><input type="checkbox" id="done-dialogs"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Three ready-made pop-ups, each one line of code, all <code>static</code> (call them on the class, no <code>new</code>):<ul><li><b>showMessageDialog</b>: tells the user something. Returns nothing.</li><li><b>showConfirmDialog</b>: asks Yes / No / Cancel. Returns an <code>int</code> you compare with <code>JOptionPane.YES_OPTION</code>.</li><li><b>showInputDialog</b>: asks for text. Returns a <code>String</code>, or <code>null</code> if they pressed Cancel.</li></ul>The first argument is the parent window; <code>null</code> centres the dialog on the screen.</div></aside>
+
+  <div class="slide">
+    <h3>JOptionPane <span class="sn">28</span></h3>
+    <div class="code"><pre class="java">JOptionPane.showMessageDialog(parent, message);</pre></div>
+    <div class="code"><pre class="java">import javax.swing.*;
+
+JOptionPane.showMessageDialog(null,
+    "This candidate is a dog. Invalid vote.");</pre></div>
+    <div class="fig-row">
+      <div style="flex:2 1 14rem;display:grid;gap:var(--s2)">
+        <p><b>Advantages:</b></p><ul class="pts"><li>Simple; looks better than console.</li></ul>
+        <p><b>Disadvantages:</b></p><ul class="pts"><li>Created with static methods; not object-oriented.</li><li>Not powerful (just simple dialog boxes).</li></ul>
+      </div>
+      <figure style="flex:1 1 10rem"><div class="plate"><img src="img/s28_message.png" width="277" loading="lazy" alt="Message dialog with an information icon: This candidate is a dog. Invalid vote. and an OK button"></div></figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>More JOptionPane <span class="sn">29</span></h3>
+    <div class="code"><pre class="java">JOptionPane.showConfirmDialog(parent, message)</pre></div>
+    <div class="fig-row">
+      <p style="flex:2 1 14rem">Displays a message and list of choices Yes, No, Cancel.<br>Returns an <code>int</code> such as <code>JOptionPane.YES_OPTION</code> or <code>NO_OPTION</code> to indicate what button was pressed.</p>
+      <figure style="flex:1 1 10rem"><div class="plate"><img src="img/s29_confirm.png" width="268" loading="lazy" alt="Select an Option dialog: Erase your hard disk? with Yes, No and Cancel buttons"></div></figure>
+    </div>
+    <div class="code"><pre class="java">JOptionPane.showInputDialog(parent, message)</pre></div>
+    <div class="fig-row">
+      <p style="flex:2 1 14rem">Displays a message and text field for input.<br>Returns the value typed as a <code>String</code> (or <code>null</code> if user presses Cancel).</p>
+      <figure style="flex:1 1 10rem"><div class="plate"><img src="img/s29_input.png" width="297" loading="lazy" alt="Input dialog: What's yer name, pardner? with Marty typed, and OK and Cancel buttons"></div></figure>
+    </div>
+  </div>
+
+  <div class="demo" id="jop">
+    <div class="demo-head"><h3>Try it: the three dialogs</h3><span class="added">Added</span></div>
+    <div class="ctrl">
+      <button class="btn" type="button" data-d="msg">showMessageDialog</button>
+      <button class="btn" type="button" data-d="confirm">showConfirmDialog</button>
+      <button class="btn" type="button" data-d="input">showInputDialog</button>
+    </div>
+    <div id="jopStage" style="min-height:7.5rem;display:grid;place-items:center;background:var(--bg);border-radius:6px;padding:.75rem"></div>
+    <div class="code"><pre class="plain-pre" id="jopCode">// Click a button above</pre></div>
+  </div>
+
+  <details class="orig" data-pages="28-29"></details>
+  <div class="quiz" data-quiz="dialogs"></div>
+</section>
+
+<!-- ============ 6 choice buttons ============ -->
+<section class="sec" id="choices" data-title="Check boxes, radio buttons and icons">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 30–36</p>
+    <div class="sec-head-row"><h2>Check boxes, radio buttons and icons</h2><label class="done"><input type="checkbox" id="done-choices"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div><b>Check boxes</b> are independent: tick as many as you like ("Accept terms", "Subscribe"). <b>Radio buttons</b> are for "pick exactly one" (Male / Female). Radio buttons only behave that way once you put them in a <b>ButtonGroup</b>. The group is invisible bookkeeping: you still add each radio button to the panel yourself. Ask either one <code>isSelected()</code> to see if it's ticked.</div></aside>
+
+  <div class="slide">
+    <h3>JCheckBox <span class="sn">30</span></h3>
+    <p>A JCheckBox represents a checkbox that can be selected or deselected.</p>
+    <div class="code"><pre class="java">public JCheckBox(String text)
+public JCheckBox(String text, boolean checked)</pre></div>
+    <p class="acc"><b>Properties:</b></p>
+    <ul class="pts" style="list-style:'- '"><li>selected: Determines whether the checkbox is checked or not.</li><li>text: Label displayed next to the checkbox.</li></ul>
+    <p class="acc"><b>Methods:</b></p>
+    <ul class="pts" style="list-style:'- '"><li>setSelected(boolean selected): Selects or deselects the checkbox.</li><li>isSelected(): Checks if the checkbox is selected.</li><li>setText(String text): Sets the label of the checkbox.</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>JCheckBox example <span class="sn">31</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">import javax.swing.*;
+public class CheckBoxExample1 {
+   public static void main(String[] args) {
+      JFrame frame = new JFrame("Checkbox Example");
+      JCheckBox checkBox = new JCheckBox("Accept Terms");
+      frame.add(checkBox);
+      frame.setSize(300, 200);
+      frame.setLayout(new FlowLayout());
+
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.setVisible(true);
+   }
+}</pre></div>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s31_checkbox.png" width="250" loading="lazy" alt="Checkbox Example with an unticked Accept Terms box"></div><figcaption>As written: unticked.</figcaption></figure>
+    </div>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">checkBox.setSelected(true);</pre></div>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s31_checkbox_checked.png" width="250" loading="lazy" alt="Checkbox Example with Accept Terms ticked"></div><figcaption>After adding <code>setSelected(true)</code>: ticked.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>JRadioButton <span class="sn">32</span></h3>
+    <p>A <code>JRadioButton</code> is used to create a set of mutually exclusive selection buttons.</p>
+    <p><b>Properties:</b></p>
+    <ul class="pts"><li><code>selected</code>: Determines if the button is selected.</li><li><code>text</code>: The label displayed next to the button.</li></ul>
+    <p><b>Methods:</b></p>
+    <ul class="pts"><li><code>setSelected(boolean selected)</code>: Selects or deselects the button.</li><li><code>isSelected()</code>: Checks if the button is selected.</li><li><code>setText(String text)</code>: Sets the label of the radio button.</li></ul>
+    <div class="code"><pre class="java">public JRadioButton(String text)</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>ButtonGroup <span class="sn">33</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <p style="flex:2 1 16rem"><em>a logical collection to ensure that exactly one radio button from a group is checked at a time</em></p>
+      <figure style="flex:1 1 8rem"><div class="plate"><img src="img/s33_buttongroup.png" width="160" loading="lazy" alt="Radio buttons Bird, Cat, Dog (selected), Rabbit, Pig with a picture of a dog"></div><figcaption>Picking Dog un-picks the others.</figcaption></figure>
+    </div>
+    <div class="code"><pre class="java">public ButtonGroup()
+public void add(JRadioButton button)</pre></div>
+    <p>The <code>ButtonGroup</code> is not a graphical component, just a logical group; the <code>RadioButton</code>s themselves also need to be added to an onscreen container to be seen.</p>
+  </div>
+
+  <div class="demo" id="bg">
+    <div class="demo-head"><h3>Try it: with and without a ButtonGroup</h3><span class="added">Added</span></div>
+    <div class="ctrl"><label><input type="checkbox" id="bgOn" checked> put the radio buttons in a ButtonGroup</label></div>
+    <div class="win" style="width:min(100%,22rem)"><div class="win-bar"><span>RadioButton Example</span><i>–□×</i></div>
+      <div class="win-body" id="bgBody" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap"></div>
+    </div>
+    <p class="expl" id="bgNote"></p>
+  </div>
+
+  <div class="slide">
+    <h3>Icon <span class="sn">34</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <p style="flex:2 1 16rem"><em>a picture that can appear inside a component</em></p>
+      <figure style="flex:1 1 8rem"><div class="plate"><img src="img/s34_icon_button.png" width="123" loading="lazy" alt="A button with a yellow star icon above the text Middle button"></div></figure>
+    </div>
+    <div class="code"><pre class="java">public class ImageIcon implements Icon
+   public ImageIcon(String filename)
+   public ImageIcon(URL address)</pre></div>
+    <p>in <code>JButton</code>, <code>JRadioButton</code>, <code>JCheckBox</code>, <code>JLabel</code>, etc...</p>
+    <ul class="pts"><li>constructor that takes an <code>Icon</code></li></ul>
+    <div class="code"><pre class="java">public void setIcon(Icon)
+public void setSelectedIcon(Icon)
+public void setRolloverIcon(Icon)</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Radio buttons in a group <span class="sn">35</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 20rem"><pre class="java">import javax.swing.*;
+public class RadioButtonExample2 {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("RadioButton Example");
+        JRadioButton option1 = new JRadioButton("Option 1");
+        JRadioButton option2 = new JRadioButton("Option 2");
+        ButtonGroup group = new ButtonGroup();
+        group.add(option1);
+        group.add(option2);
+        frame.setLayout(new FlowLayout());
+        frame.add(option1);
+        frame.add(option2);
+        frame.setSize(300, 200);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s35_radio.png" width="250" loading="lazy" alt="RadioButton Example with Option 1 selected and Option 2 not"></div></figure>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Two Groups of Radio Buttons <span class="sn">36</span></h3>
+    <div class="code"><pre class="java">import javax.swing.*;
+import java.awt.*;
+
+public class TwoGroupsRadioButtonExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Two Groups of Radio Buttons");
+        frame.setLayout(new FlowLayout());
+
+        // Group 1
+        JRadioButton group1Option1 = new JRadioButton("Group 1 - Option 1");
+        JRadioButton group1Option2 = new JRadioButton("Group 1 - Option 2");
+        ButtonGroup group1 = new ButtonGroup();
+        group1.add(group1Option1);
+        group1.add(group1Option2);
+
+        // Group 2
+        JRadioButton group2Option1 = new JRadioButton("Group 2 - Option 1");
+        JRadioButton group2Option2 = new JRadioButton("Group 2 - Option 2");
+        ButtonGroup group2 = new ButtonGroup();
+        group2.add(group2Option1);
+        group2.add(group2Option2);
+
+        // Adding to frame
+        frame.add(group1Option1);
+        frame.add(group1Option2);
+        frame.add(group2Option1);
+        frame.add(group2Option2);
+
+        frame.setSize(400, 200);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+    <figure><div class="plate"><img src="img/s36_two_groups.png" width="388" loading="lazy" alt="Two Groups of Radio Buttons: Group 1 - Option 1 and Group 2 - Option 2 are both selected"></div><figcaption>One button can be selected in <em>each</em> group, so two are selected at once.</figcaption></figure>
+  </div>
+
+  <details class="orig" data-pages="30-36"></details>
+  <div class="quiz" data-quiz="choices"></div>
+</section>
+
+<!-- ============ 7 forms ============ -->
+<section class="sec" id="forms" data-title="Building forms with nested panels">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 37–40</p>
+    <div class="sec-head-row"><h2>Building forms with nested panels</h2><label class="done"><input type="checkbox" id="done-forms"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Real forms mix layouts. The recipe used on these slides (and in Lab 3):<ul><li>the frame uses <b>BorderLayout</b>,</li><li>a title panel with <b>FlowLayout</b> goes in NORTH,</li><li>a <b>GridLayout</b> panel with 2 columns (label | field) goes in CENTER,</li><li>a button panel with <b>FlowLayout</b> goes in SOUTH.</li></ul>When one grid cell needs two things (Male + Female), make a small panel for that cell.</div></aside>
+
+  <div class="slide">
+    <h3>Multi-Layout Example <span class="sn">37–38</span></h3>
+    <figure><div class="plate"><img src="img/s37_multilayout.png" width="440" loading="lazy" alt="Multi-Layout Example window: title User Information Form, then Name and Email fields, Gender with Male and Female radio buttons, Subscribe to Newsletter check box, and a Submit button"></div><figcaption>Slide 37: the window. Slide 38: the code below.</figcaption></figure>
+    <div class="code"><pre class="java">public class MultiLayoutExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Multi-Layout Example");
+        frame.setLayout(new BorderLayout(10, 10));
+
+        // Top Panel using FlowLayout
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        topPanel.add(new JLabel("User Information Form"));
+
+        // Center Panel using GridLayout
+        JPanel centerPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+        centerPanel.add(new JLabel("Name:"));
+        centerPanel.add(new JTextField(15));
+        centerPanel.add(new JLabel("Email:"));
+        centerPanel.add(new JTextField(15));
+        centerPanel.add(new JLabel("Gender:"));
+        JPanel genderPanel = new JPanel(new FlowLayout());
+        JRadioButton male = new JRadioButton("Male");
+        JRadioButton female = new JRadioButton("Female");
+        ButtonGroup genderGroup = new ButtonGroup();
+        genderGroup.add(male);
+        genderGroup.add(female);
+        genderPanel.add(male);
+        genderPanel.add(female);
+        centerPanel.add(genderPanel);
+        centerPanel.add(new JLabel("Subscribe to Newsletter:"));
+        centerPanel.add(new JCheckBox());
+
+        // Bottom Panel using FlowLayout
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JButton submitButton = new JButton("Submit");
+        bottomPanel.add(submitButton);
+
+        // Adding Panels to Frame
+        frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(centerPanel, BorderLayout.CENTER);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
+
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span>The slide starts at <code>public class</code>; add <code>import javax.swing.*;</code> and <code>import java.awt.*;</code> at the top.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Login Form Example <span class="sn">39–40</span></h3>
+    <figure><div class="plate"><img src="img/s39_login.png" width="440" loading="lazy" alt="Login Form Example window: Login Form title, Username and Password fields, Remember Me check box, Login and Cancel buttons"></div><figcaption>Slide 39: the window. Slide 40: the code below.</figcaption></figure>
+    <div class="code"><pre class="java">import javax.swing.*;
+import java.awt.*;
+public class LoginLayoutExample {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Login Form Example");
+        frame.setLayout(new BorderLayout(10, 10));
+        // Top Panel using FlowLayout
+        JPanel topPanel = new JPanel(new FlowLayout());
+        topPanel.add(new JLabel("Login Form"));
+        // Center Panel using GridLayout
+        JPanel centerPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+        centerPanel.add(new JLabel("Username:"));
+        centerPanel.add(new JTextField(15));
+        centerPanel.add(new JLabel("Password:"));
+        centerPanel.add(new JPasswordField(15));
+        centerPanel.add(new JLabel("Remember Me:"));
+        centerPanel.add(new JCheckBox());
+        // Bottom Panel using FlowLayout
+        JPanel bottomPanel = new JPanel(new FlowLayout());
+        JButton loginButton = new JButton("Login");
+        JButton cancelButton = new JButton("Cancel");
+        bottomPanel.add(loginButton);
+        bottomPanel.add(cancelButton);
+        // Adding Panels to Frame
+        frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(centerPanel, BorderLayout.CENTER);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
+        frame.setSize(350, 200);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+}</pre></div>
+  </div>
+
+  <details class="orig" data-pages="37-40"></details>
+  <div class="quiz" data-quiz="forms"></div>
+</section>
+
+<!-- ============ 8 combo ============ -->
+<section class="sec" id="combo" data-title="JComboBox and ComboBoxModel">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 41–45</p>
+    <div class="sec-head-row"><h2>JComboBox and ComboBoxModel</h2><label class="done"><input type="checkbox" id="done-combo"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A combo box is a drop-down: it shows one item and opens to let the user pick one. Fill it from an array, or with a <b>model</b> (<code>DefaultComboBoxModel</code>) that holds the items. Change the model (<code>addElement</code>, <code>removeElement</code>) and the combo box updates itself. Read the choice with <code>getSelectedItem()</code> or <code>getSelectedIndex()</code>.</div></aside>
+
+  <div class="slide">
+    <h3>JComboBox <span class="sn">41</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <p style="flex:2 1 16rem"><em>a drop-down list of selectable items</em></p>
+      <figure style="flex:1 1 9rem"><div class="plate"><img src="img/s41_combo.png" width="250" loading="lazy" alt="A combo box showing dd MMMMM yyyy with a drop-down arrow"></div></figure>
+    </div>
+    <div class="code"><pre class="java">public JComboBox()
+JComboBox(String[] listEntries)
+JComboBox(Vector[] listEntries)</pre></div>
+    <p>Constructs a combo box.</p>
+    <div class="code"><pre class="java">int getItemCount()
+setMaximumRowCount(int rowCount)
+public void addActionListener(ActionListener al)</pre></div>
+    <p>Causes an action event to be sent to listener <code>al</code> when the user selects or types a new item in the combo box.</p>
+    <ul class="pts"><li>Displays a <b>drop-down list</b> of selectable items.</li><li><b>Only one item</b> can be selected at a time.</li><li>Compact and saves space.</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>JComboBox (ComboBox) <span class="sn">42–43</span></h3>
+    <p>The JComboBox component is a drop-down list allowing the user to select a single item.</p>
+    <p class="acc"><b>Important Properties</b></p>
+    <ul class="pts">
+      <li>selectedItem: Returns or sets the currently selected item.</li>
+      <li>itemCount: Returns the total number of items in the combo box.</li>
+      <li>isEditable: Determines if the combo box allows text input.</li>
+    </ul>
+    <p class="acc"><b>Commonly Used Methods</b></p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>getSelectedIndex()</code></td><td>Returns the index of the selected item.</td></tr>
+          <tr><td><code>getSelectedItem()</code></td><td>Returns the currently selected item.</td></tr>
+          <tr><td><code>setSelectedIndex(int index)</code></td><td>Selects an item at the given index.</td></tr>
+          <tr><td><code>setSelectedItem(Object item)</code></td><td>Selects an item based on value.</td></tr>
+          <tr><td><code>addItem(Object item)</code></td><td>Adds a new item to the combo box.</td></tr>
+          <tr><td><code>removeItem(Object item)</code></td><td>Removes an item from the combo box.</td></tr>
+          <tr><td><code>removeAllItems()</code></td><td>Removes all items from the combo box.</td></tr>
+          <tr><td><code>insertItemAt(Object item, int index)</code></td><td>Inserts an item at a specific index.</td></tr>
+          <tr><td><code>getItemAt(int index)</code></td><td>Retrieves the item at the given index.</td></tr>
+          <tr><td><code>getItemCount()</code></td><td>Returns the total number of items.</td></tr>
+          <tr><td><code>setEditable(boolean editable)</code></td><td>Makes the combo box editable.</td></tr>
+          <tr><td><code>public void setEnabled(boolean enabled)</code></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>If editable, the user can type new arbitrary values into the box.</p>
+  </div>
+
+  <div class="slide">
+    <h3>ComboBoxModel <span class="sn">44</span></h3>
+    <ul class="pts">
+      <li>ComboBoxModel&lt;E&gt; is an interface in Swing that defines the data model for a JComboBox.
+        <ul><li>It specifies how combo box items are stored, retrieved, and selected.</li></ul>
+      </li>
+      <li>DefaultComboBoxModel&lt;E&gt; is the default data model used by JComboBox.
+        <ul><li>It stores the items displayed in the combo box and manages the selected item.</li></ul>
+      </li>
+      <li>It implements the MutableComboBoxModel&lt;E&gt; interface, which extends ComboBoxModel&lt;E&gt; and ListModel&lt;E&gt;
+        <ul><li>it's both editable and notifies the combo box of changes automatically.</li></ul>
+      </li>
+    </ul>
+    <div class="code"><pre class="java">DefaultComboBoxModel&lt;String&gt; model = new DefaultComboBoxModel&lt;&gt;();
+DefaultComboBoxModel&lt;String&gt; model = new DefaultComboBoxModel&lt;&gt;(
+    new String[] {"Apple", "Banana", "Cherry"}
+);</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>DefaultComboBoxModel example <span class="sn">45</span></h3>
+    <div class="code"><pre class="java">import javax.swing.*;
+
+public class ComboBoxModelExample {
+   public static void main(String[] args) {
+      // Create the combo box model
+      DefaultComboBoxModel&lt;String&gt; model = new DefaultComboBoxModel&lt;&gt;();
+      model.addElement("Apple");
+      model.addElement("Banana");
+      model.addElement("Cherry");
+
+      // Create the combo box using the model
+      JComboBox&lt;String&gt; comboBox = new JComboBox&lt;&gt;(model);
+
+      // Create and show the frame
+      JFrame frame = new JFrame("DefaultComboBoxModel Example");
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.add(comboBox);
+      frame.setSize(300, 150);
+      frame.setVisible(true);
+   }
+}</pre></div>
+  </div>
+
+  <details class="orig" data-pages="41-45"></details>
+  <div class="quiz" data-quiz="combo"></div>
+</section>
+
+<!-- ============ 9 JList ============ -->
+<section class="sec" id="list" data-title="JList and DefaultListModel">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 46–55</p>
+    <div class="sec-head-row"><h2>JList and DefaultListModel</h2><label class="done"><input type="checkbox" id="done-list"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A <code>JList</code> is a box that always shows several items (no drop-down) and lets the user select one or many, depending on its <em>selection mode</em>. Put it in a <code>JScrollPane</code> so long lists scroll. For a list that changes while the program runs, keep the items in a <code>DefaultListModel</code> and change the model; the JList redraws by itself.</div></aside>
+
+  <div class="slide">
+    <h3>JList <span class="sn">46</span></h3>
+    <div class="fig-row" style="align-items:center">
+      <p style="flex:2 1 16rem"><em>a list of selectable pre-defined text items</em></p>
+      <figure style="flex:1 1 8rem"><div class="plate"><img src="img/s46_jlist.png" width="109" loading="lazy" alt="A list showing January, February, March (selected), April with a scrollbar"></div></figure>
+    </div>
+    <div class="code"><pre class="java">public JList()</pre></div>
+    <p>Constructs an empty JList.</p>
+    <div class="code"><pre class="java">public JList(ListModel model)
+public JList(Object[] data)
+public JList(Vector data)</pre></div>
+    <p>Constructs a JList that displays the given data.</p>
+    <div class="code"><pre class="java">public void addListSelectionListener(
+      ListSelectionListener lsl)</pre></div>
+    <p>Adds the given listener to be informed when the selected index changes for this list.</p>
+    <ul class="pts"><li>Displays a <b>list of items</b> that can be <b>selected</b>.</li><li>Allows <b>single or multiple selections</b>.</li><li>Does <b>not have a dropdown feature</b> (it is always expanded).</li></ul>
+  </div>
+
+  <div class="slide">
+    <h3>List (ListBox) <span class="sn">47</span></h3>
+    <p>The JList component displays a list of items that can be selected.</p>
+    <p class="acc"><b>Important Properties</b></p>
+    <ul class="pts">
+      <li>selectionMode: Defines whether the list allows single or multiple selections.</li>
+      <li>visibleRowCount: Controls how many rows are visible at a time.</li>
+      <li>fixedCellHeight: Sets a fixed height for each row in the list.</li>
+      <li>fixedCellWidth: Sets a fixed width for each row in the list.</li>
+      <li>selectedIndex: Returns the index of the selected item.</li>
+      <li>selectedValue: Returns the actual selected item.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Commonly Used Methods <span class="sn">48</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>getSelectedIndex()</code></td><td>Returns the index of the selected item.</td></tr>
+          <tr><td><code>getSelectedValue()</code></td><td>Returns the selected item.</td></tr>
+          <tr><td><code>setSelectedIndex(int index)</code></td><td>Selects an item at the given index.</td></tr>
+          <tr><td><code>setListData(Object[] data)</code></td><td>Replaces the list's items with a new array.</td></tr>
+          <tr><td><code>setSelectionMode(int mode)</code></td><td>Sets the selection mode: SINGLE_SELECTION, SINGLE_INTERVAL_SELECTION, MULTIPLE_INTERVAL_SELECTION.</td></tr>
+          <tr><td><code>clearSelection()</code></td><td>Clears the current selection.</td></tr>
+          <tr><td><code>setEnabled(boolean enabled)</code></td><td>Enables or disables the list.</td></tr>
+          <tr><td><code>getSelectedValue()</code></td><td>Returns the first selected item (if single selection)</td></tr>
+          <tr><td><code>getSelectedValuesList()</code></td><td>Returns all selected items as a list</td></tr>
+          <tr><td><code>getSelectedIndices()</code></td><td>Returns the indices of all selected items as int[]</td></tr>
+          <tr><td><code>isSelectedIndex(int index)</code></td><td>Checks if a specific index is selected</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>JList and JComboBox together <span class="sn">49–50</span></h3>
+    <figure><div class="plate"><img src="img/s49_list_combo.png" width="560" loading="lazy" alt="JList &amp; JComboBox Example window: Select from List with Apple, Banana, Cherry, Mango, and Select from ComboBox showing Red"></div><figcaption>Slide 49: the window. Slide 50: the code (the slide draws an arrow at <code>setSelectionMode</code>).</figcaption></figure>
+    <div class="code"><pre class="java">public static void main(String[] args) {
+
+    JFrame frame = new JFrame("JList &amp; JComboBox Example");
+    frame.setSize(400, 300);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setLayout(new FlowLayout());
+
+    // **JList (ListBox)**
+    String[] listItems = {"Apple", "Banana", "Cherry", "Mango", "Orange"};
+    JList&lt;String&gt; listBox = new JList&lt;&gt;(listItems);
+    listBox.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);   // ←
+    JScrollPane listScrollPane = new JScrollPane(listBox);
+    listScrollPane.setPreferredSize(new Dimension(100, 80));
+
+    // **JComboBox (Drop-down)**
+    String[] comboItems = {"Red", "Green", "Blue", "Yellow"};
+    JComboBox&lt;String&gt; comboBox = new JComboBox&lt;&gt;(comboItems);
+
+    // **Add Components to JFrame**
+    frame.add(new JLabel("Select from List:"));
+    frame.add(listScrollPane);
+    frame.add(new JLabel("Select from ComboBox:"));
+    frame.add(comboBox);
+
+    // Make frame visible
+    frame.setVisible(true);
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>List Model <span class="sn">51</span></h3>
+    <ul class="pts">
+      <li>Interface ListModel&lt;E&gt;</li>
+      <li>DefaultListModel&lt;E&gt; is a class that implements the ListModel&lt;E&gt; interface
+        <ul><li>It stores elements in a list and automatically notifies any attached JList when items are added, removed, or changed.</li></ul>
+      </li>
+      <li>DefaultListModel() is the constructor which creates a list model without any entries.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>DefaultListModel example <span class="sn">52</span></h3>
+    <div class="code"><pre class="java">import javax.swing.*;
+
+public class ListExample {
+   public static void main(String[] args) {
+      // Create a DefaultListModel
+      DefaultListModel&lt;String&gt; model = new DefaultListModel&lt;&gt;();
+
+      // Add elements
+      model.addElement("Apple");
+      model.addElement("Banana");
+      model.addElement("Cherry");
+
+      // Create a JList using the model
+      JList&lt;String&gt; list = new JList&lt;&gt;(model);
+
+      // Add the list to a scroll pane
+      JScrollPane scrollPane = new JScrollPane(list);
+
+      // Create a frame
+      JFrame frame = new JFrame("DefaultListModel Example");
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.add(scrollPane);
+      frame.setSize(300, 200);
+      frame.setVisible(true);
+   }
+}</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>DefaultListModel: Commonly Used Methods <span class="sn">53–55</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Description</th><th>Example</th><th>Slide</th></tr></thead>
+        <tbody>
+          <tr><td><code>addElement(E element)</code></td><td>Adds an element to the <b>end</b> of the list.</td><td><code>model.addElement("Apple");</code></td><td>53</td></tr>
+          <tr><td><code>add(int index, E element)</code></td><td>Inserts an element at a specific position.</td><td><code>model.add(1, "Banana");</code></td><td>53</td></tr>
+          <tr><td><code>insertElementAt(E element, int index)</code></td><td>Same as <code>add(index, element)</code> — older method name.</td><td><code>model.insertElementAt("Cherry", 2);</code></td><td>53</td></tr>
+          <tr><td><code>removeElement(Object obj)</code></td><td>Removes the <b>first occurrence</b> of the specified object. Returns <code>true</code> if found and removed.</td><td><code>model.removeElement("Apple");</code></td><td>54</td></tr>
+          <tr><td><code>remove(int index)</code></td><td>Removes the element at the specified index.</td><td><code>model.remove(0);</code></td><td>54</td></tr>
+          <tr><td><code>removeElementAt(int index)</code></td><td>Same as <code>remove(index)</code> — older method name.</td><td><code>model.removeElementAt(2);</code></td><td>54</td></tr>
+          <tr><td><code>removeAllElements()</code></td><td>Removes <b>all items</b> from the list.</td><td><code>model.removeAllElements();</code></td><td>54</td></tr>
+          <tr><td><code>clear()</code></td><td>Also removes <b>all items</b> (same effect as <code>removeAllElements()</code>).</td><td><code>model.clear();</code></td><td>54</td></tr>
+          <tr><td><code>setElementAt(E element, int index)</code></td><td>Replaces the element at a specific position.</td><td><code>model.setElementAt("Orange", 1);</code></td><td>55</td></tr>
+          <tr><td><code>getElementAt(int index)</code></td><td>Returns the element at the given index.</td><td><code>String item = model.getElementAt(0);</code></td><td>55</td></tr>
+          <tr><td><code>get(int index)</code></td><td>Same as above (added for <code>ListModel</code> compatibility).</td><td><code>String item = (String) model.get(0);</code></td><td>55</td></tr>
+          <tr><td><code>contains(Object entry)</code></td><td>Returns <code>true</code> if the list contains the given object.</td><td><code>boolean hasItem = model.contains("Banana");</code></td><td>55</td></tr>
+          <tr><td><code>getSize()</code></td><td>Returns the total number of elements.</td><td><code>int count = model.getSize();</code></td><td>55</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="demo" id="lm">
+    <div class="demo-head"><h3>Try it: selection modes and the list model</h3><span class="added">Added</span></div>
+    <div class="ctrl">
+      <label for="lmMode">setSelectionMode(
+        <select id="lmMode">
+          <option value="single">SINGLE_SELECTION</option>
+          <option value="interval">SINGLE_INTERVAL_SELECTION</option>
+          <option value="multi" selected>MULTIPLE_INTERVAL_SELECTION</option>
+        </select>)</label>
+    </div>
+    <div class="ctrl">
+      <label for="lmText">item <input type="text" id="lmText" value="Mango" style="width:7rem"></label>
+      <button class="btn" type="button" id="lmAdd">addElement</button>
+      <button class="btn" type="button" id="lmRem">remove(selected index)</button>
+      <button class="btn" type="button" id="lmClear">clear()</button>
+    </div>
+    <div class="fig-row">
+      <div class="win" style="flex:0 0 12rem"><div class="win-bar"><span>DefaultListModel</span><i>–□×</i></div>
+        <div class="win-body"><div id="lmList" role="listbox" aria-label="Demo list" style="background:#fff;border:1px solid #8f9ba1;height:9rem;overflow:auto;user-select:none"></div></div>
+      </div>
+      <div style="flex:1 1 14rem;min-width:0;display:grid;gap:.5rem">
+        <p class="expl" style="margin:0">Click to select. Hold Ctrl (⌘ on Mac) to add items, Shift for a range.</p>
+        <div class="log" id="lmLog" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="46-55"></details>
+  <div class="quiz" data-quiz="list"></div>
+</section>
+
+<!-- ============ 10 Lab 3 ============ -->
+<section class="sec" id="lab3" data-title="Lab 3: Sign-Up form">
+  <div class="sec-head">
+    <p class="eyebrow">Lab 3 · Abualhaj, Amer · plus the lab's code files (Dima Alshihan)</p>
+    <div class="sec-head-row"><h2>Lab 3: Introduction to JAVA GUI Programming</h2><label class="done"><input type="checkbox" id="done-lab3"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Build the register form in the screenshot using the nested-panel recipe from slides 37–40: "Register" in NORTH, a 5 × 2 GridLayout of labels and fields in CENTER, and Sign Up / Cancel in SOUTH. No button has to do anything yet. The two code files from the lab (ButtonTest and TextFieldTest) give a first taste of making buttons and text fields react, which is Lecture 4's topic.</div></aside>
+
+  <div class="slide">
+    <h3>Task</h3>
+    <p>Create a basic Sign-Up form, similar to the screenshot, as follows:</p>
+    <ul class="pts">
+      <li>Create a Project and name it SignUp.</li>
+      <li>Add a title and name it Register Form.</li>
+      <li>Add a Label "Register" at the top.</li>
+      <li>In the center of the frame, use GridLayout (5 rows, 2 columns) to add the following:
+        <ul>
+          <li>Label "Username" and a Text Field beside it.</li>
+          <li>Label "Password" and a Password Field beside it.</li>
+          <li>Label "Confirm Password" and another Password Field beside it.</li>
+          <li>Label "Gender" and add two Radio Buttons: "Male" and "Female".</li>
+          <li>Add a Check Box with text "Read the policy and agree".</li>
+        </ul>
+      </li>
+      <li>At the bottom, add a panel with two buttons: "Sign Up" and "Cancel".</li>
+      <li>Arrange all components using panels with BorderLayout, FlowLayout, and GridLayout.</li>
+      <li>Set the frame size to 500 × 400 (optional) and make it visible.</li>
+    </ul>
+    <figure><div class="plate"><img src="img/lab3_register.png" width="480" loading="lazy" alt="Register Form window: Register title; username, Password and Confirm Password fields; Gender with Male and Female radio buttons; a read the police and agree check box; Sign Up and cancel buttons"></div><figcaption>Lab 3, page 2: the target window.</figcaption></figure>
+  </div>
+
+  <div class="slide answer" id="lab3-answer">
+    <p class="mine">Your answer · Lab3.zip</p>
+    <h3>Your Lab 3 answer</h3>
+    <p>NetBeans project <code>Signup</code>, package <code>com.mycompany.signup</code>, one file. Everything is inside <code>main</code>, like the slide examples. The code is exactly as in your zip.</p>
+    <div class="code"><span class="code-label">Signup.java</span><pre class="java">package com.mycompany.signup;
+
+import javax.swing.*;
+import java.awt.*;
+
+
+public class Signup {
+
+    public static void main(String[] args) {
+        JFrame frame=new JFrame("Register Form.");
+        
+        JPanel panelnorth=new JPanel();
+        JPanel panelgrid=new JPanel(new GridLayout(5,2));
+        JPanel genderpanel=new JPanel();
+        JPanel panelsouth=new JPanel();
+        JLabel label1=new JLabel("Register");
+        JLabel label2=new JLabel("Username");
+        JLabel label3=new JLabel("Password");
+        JLabel label4=new JLabel("Confirm Password");
+        JLabel label5=new JLabel("Gender");
+        JTextField field=new JTextField();
+        field.setSize(50,50);   
+        JPasswordField password=new JPasswordField();
+        JPasswordField confirmpassword=new JPasswordField();
+        JRadioButton male= new JRadioButton("Male");
+        JRadioButton female=new JRadioButton("Female");
+        ButtonGroup gender=new ButtonGroup();
+        gender.add(male);
+        gender.add(female);
+        JCheckBox checkbox=new JCheckBox("Read the policy and agree");
+        JButton button1 =new JButton("Sign up");
+        JButton button2 =new JButton("Cancel");
+        
+        genderpanel.add(male);
+        genderpanel.add(female);
+        panelnorth.add(label1);
+        panelgrid.add(label2);
+        panelgrid.add(field);
+        panelgrid.add(label3);
+        panelgrid.add(password);
+        panelgrid.add(label4);
+        panelgrid.add(confirmpassword);
+        panelgrid.add(label5);
+        panelgrid.add(genderpanel);
+        panelgrid.add(checkbox);
+        panelsouth.add(button1);
+        panelsouth.add(button2);
+        
+        frame.add(panelnorth,BorderLayout.NORTH);
+        frame.add(panelsouth,BorderLayout.SOUTH);
+        frame.add(panelgrid,BorderLayout.CENTER);
+        
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);
+        
+
+        
+        
+        
+        
+        
+    }
+}</pre></div>
+    <figure><div class="plate"><img src="img/answer_lab3.png" width="500" loading="lazy" alt="The Register Form window from your Lab 3 code: Register at the top, Username, Password and Confirm Password with fields, Gender with Male and Female, the policy check box, and Sign up and Cancel buttons."></div><figcaption>Your Lab 3 code, run as it is.</figcaption></figure>
+    <h4>Explained</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">import javax.swing.*;
+import java.awt.*;</pre></dt><dd><code>*</code> imports every class of a package: <code>javax.swing</code> for the <code>J...</code> components, <code>java.awt</code> for the layouts (<code>GridLayout</code>, <code>BorderLayout</code>).</dd></div>
+<div><dt><pre class="java">JFrame frame=new JFrame("Register Form.");</pre></dt><dd>Creates the window. The String is the text in the title bar.</dd></div>
+<div><dt><pre class="java">JPanel panelnorth=new JPanel();
+JPanel genderpanel=new JPanel();
+JPanel panelsouth=new JPanel();</pre></dt><dd>Three panels. A <code>JPanel</code> made without a layout uses <b>FlowLayout</b> by default (components in a centred row), so this is where the task's FlowLayout comes from.</dd></div>
+<div><dt><pre class="java">JPanel panelgrid=new JPanel(new GridLayout(5,2));</pre></dt><dd>The middle of the form: a <b>GridLayout</b> with 5 rows and 2 columns. Cells are filled left to right, top to bottom, in the order you call <code>add</code>.</dd></div>
+<div><dt><pre class="java">JLabel label1=new JLabel("Register");
+...
+JLabel label5=new JLabel("Gender");</pre></dt><dd>The five pieces of text that can't be edited.</dd></div>
+<div><dt><pre class="java">JTextField field=new JTextField();
+field.setSize(50,50);</pre></dt><dd>The username box. <code>setSize</code> has no effect here: the GridLayout decides every cell's size when the window is laid out, so the field always fills its cell.</dd></div>
+<div><dt><pre class="java">JPasswordField password=new JPasswordField();
+JPasswordField confirmpassword=new JPasswordField();</pre></dt><dd>Password boxes: like a text field, but they show dots instead of the letters.</dd></div>
+<div><dt><pre class="java">JRadioButton male= new JRadioButton("Male");
+JRadioButton female=new JRadioButton("Female");
+ButtonGroup gender=new ButtonGroup();
+gender.add(male);
+gender.add(female);</pre></dt><dd>Two radio buttons joined in a <code>ButtonGroup</code>, so choosing one unselects the other. The group itself is invisible and is never added to a panel.</dd></div>
+<div><dt><pre class="java">JCheckBox checkbox=new JCheckBox("Read the policy and agree");
+JButton button1 =new JButton("Sign up");
+JButton button2 =new JButton("Cancel");</pre></dt><dd>The check box and the two buttons. They don't do anything yet; reacting to clicks is Lecture 4.</dd></div>
+<div><dt><pre class="java">genderpanel.add(male);
+genderpanel.add(female);</pre></dt><dd>A grid cell holds only one component, so both radio buttons go into one small panel, which then fills one cell.</dd></div>
+<div><dt><pre class="java">panelnorth.add(label1);
+panelgrid.add(label2);
+panelgrid.add(field);
+...
+panelgrid.add(genderpanel);
+panelgrid.add(checkbox);</pre></dt><dd>Fills the panels. The grid gets 9 components: four rows of label + component, then the check box in row 5, column 1. The tenth cell stays empty.</dd></div>
+<div><dt><pre class="java">panelsouth.add(button1);
+panelsouth.add(button2);</pre></dt><dd>Both buttons side by side in the bottom panel.</dd></div>
+<div><dt><pre class="java">frame.add(panelnorth,BorderLayout.NORTH);
+frame.add(panelsouth,BorderLayout.SOUTH);
+frame.add(panelgrid,BorderLayout.CENTER);</pre></dt><dd>A frame's content pane uses <b>BorderLayout</b> by default. This puts the title panel at the top, the buttons at the bottom and the grid in the middle, where it takes all the remaining space.</dd></div>
+<div><dt><pre class="java">frame.setVisible(true);
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+frame.setSize(500, 400);</pre></dt><dd>Shows the window, makes × end the program, and sets the size to 500 × 400. Because <code>setVisible</code> comes first, the window appears at its tiny starting size and then grows; it's usually too fast to see, but calling <code>setSize</code> before <code>setVisible</code> avoids it.</dd></div>
+</dl>
+    <aside class="note"><b>Compared with the task</b><span>Every item is there. Two small text differences: the title is <code>"Register Form."</code> with an extra full stop, and the button says "Sign up" where the task writes "Sign Up". FlowLayout and BorderLayout are used through their defaults (<code>new JPanel()</code> and the frame's content pane); if your TA wants to see them written out, use <code>new JPanel(new FlowLayout())</code> and <code>frame.setLayout(new BorderLayout());</code>.</span></aside>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · Lab 3 solution</p>
+    <details class="orig solid">
+      <summary>Show the solution: SignUp.java (one class, with its main at the bottom)</summary>
+      <div class="drawer-body">
+        <div class="code"><span class="code-label">SignUp.java</span><pre class="java">import javax.swing.*;
+import java.awt.*;
+
+public class SignUp extends JFrame {
+
+    public SignUp() {
+        super("Register Form");
+        setLayout(new BorderLayout(10, 10));
+
+        // NORTH: the heading
+        JPanel topPanel = new JPanel(new FlowLayout());
+        topPanel.add(new JLabel("Register"));
+
+        // CENTER: 5 rows x 2 columns
+        JPanel centerPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        centerPanel.add(new JLabel("Username:"));
+        centerPanel.add(new JTextField(15));
+        centerPanel.add(new JLabel("Password:"));
+        centerPanel.add(new JPasswordField(15));
+        centerPanel.add(new JLabel("Confirm Password:"));
+        centerPanel.add(new JPasswordField(15));
+
+        centerPanel.add(new JLabel("Gender:"));
+        JRadioButton male = new JRadioButton("Male");
+        JRadioButton female = new JRadioButton("Female");
+        ButtonGroup genderGroup = new ButtonGroup();   // only one can be picked
+        genderGroup.add(male);
+        genderGroup.add(female);
+        JPanel genderPanel = new JPanel(new FlowLayout());   // two buttons in one cell
+        genderPanel.add(male);
+        genderPanel.add(female);
+        centerPanel.add(genderPanel);
+
+        centerPanel.add(new JCheckBox("Read the policy and agree"));
+        centerPanel.add(new JLabel(""));               // empty cell to finish the 5 x 2 grid
+
+        // SOUTH: the buttons
+        JPanel bottomPanel = new JPanel(new FlowLayout());
+        bottomPanel.add(new JButton("Sign Up"));
+        bottomPanel.add(new JButton("Cancel"));
+
+        add(topPanel, BorderLayout.NORTH);
+        add(centerPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        setSize(500, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new SignUp();
+    }
+}</pre></div>
+      </div>
+    </details>
+  </div>
+
+  <div class="slide">
+    <h3>Lab 3 code: ButtonTest.java</h3>
+    <p>From the project file <em>Lab 3 ButtonTest.txt</em>. This is example code handed out with the lab, not the solution to the task above. It's a complete program on its own: its <code>main</code> is inside the class, right after the constructor. A plain button and a "fancy" button with an icon that changes when the mouse rolls over it. Clicking either shows which one you pressed.</p>
+    <div class="code"><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.simpleexample;
+
+/**
+ *
+ * @author Dima.Alshihan
+ */
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class ButtonTest extends JFrame{
+private JButton plainButton, fancyButton;
+
+// set up GUI
+public ButtonTest()
+{
+    super( "Testing Buttons" );
+
+    // get content pane and set its layout
+    Container container= getContentPane();
+    container.setLayout( new FlowLayout() );
+
+    // create buttons
+    plainButton= new JButton( "Plain Button" );
+    container.add( plainButton);
+    Icon s1 = new ImageIcon( "star2.png" );
+    Icon bug2 = new ImageIcon( "bug2.gif" );
+    fancyButton= new JButton( "Fancy Button", s1 );
+    fancyButton.setRolloverIcon( bug2 );
+    container.add( fancyButton);
+
+
+    // create an instance of inner class ButtonHandler
+    // to use for button event handling
+    ButtonHandler handler = new ButtonHandler();
+    fancyButton.addActionListener( handler );
+    plainButton.addActionListener( handler );
+
+    setSize( 275, 100 );
+    setVisible( true );
+} // end ButtonTestconstructor
+
+public static void main( String args[] )
+{
+    ButtonTest application = new ButtonTest();
+    application.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
+}
+
+
+// inner class for button event handling
+private class ButtonHandler implements ActionListener {
+    // handle button event
+    public void actionPerformed( ActionEvent event )
+    {
+        JOptionPane.showMessageDialog( ButtonTest.this, "You pressed: " + event.getActionCommand() );
+    }
+} // end private inner class ButtonHandler
+
+} // end class ButtonTest</pre></div>
+    <aside class="note"><b>How it works</b><span>
+      <code>ButtonHandler</code> is a private <em>inner class</em> that implements <code>ActionListener</code>. One handler object is registered on both buttons with <code>addActionListener</code>. When either is clicked, Java calls <code>actionPerformed</code>; <code>event.getActionCommand()</code> returns the clicked button's text ("Plain Button" or "Fancy Button"). <code>ButtonTest.this</code> means "the outer ButtonTest window", used as the dialog's parent. <code>star2.png</code> and <code>bug2.gif</code> must be in the project folder.
+    </span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Lab 3 code: TextFieldTest.java</h3>
+    <p>From the project file <em>Lab 3 -TextFieldTest.txt</em>. Also example code from the lab, and also a complete program with its own <code>main</code> inside the class. Four fields; pressing <kbd>Enter</kbd> in any of them shows its text in a dialog.</p>
+    <div class="code"><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.simpleexample;
+
+/**
+ *
+ * @author Dima.Alshihan
+ */
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class TextFieldTest extends JFrame{
+private JTextField textField1, textField2, textField3;
+private JPasswordField passwordField;
+// set up GUI
+public TextFieldTest()
+{
+    super( "Testing JTextFieldand JPasswordField" );
+
+    Container container= getContentPane();
+    container.setLayout( new FlowLayout() );
+
+    // construct textfieldwith default sizing
+    textField1 = new JTextField( 10 );
+    container.add( textField1 );
+
+    // construct textfieldwith default text
+    textField2 = new JTextField( "Enter text here" );
+    container.add( textField2 );
+
+    // construct textfieldwith default text,
+    textField3 = new JTextField( "Uneditabletext field", 20 );
+    textField3.setEditable( false );
+    container.add( textField3 );
+
+    // construct passwordfieldwith default text
+    passwordField= new JPasswordField( "Hidden text" );
+    container.add( passwordField);
+
+    // register event handlers
+    TextFieldHandler handler = new TextFieldHandler();
+    textField1.addActionListener( handler );
+    textField2.addActionListener( handler );
+    textField3.addActionListener( handler );
+    passwordField.addActionListener( handler );
+
+    setSize( 325, 100 );
+    setVisible( true );
+} // end constructor TextFieldTest
+
+public static void main( String args[] ){
+TextFieldTest application = new TextFieldTest();
+application.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
+}
+
+// private inner class for event handling
+private class TextFieldHandler implements ActionListener {
+// process textfieldevents
+public void actionPerformed( ActionEvent event )
+{
+    String string= "";
+// user pressed Enter in JTextFieldtextField1
+    if ( event.getSource() == textField1 )
+    string = "textField1: " + event.getActionCommand();
+// user pressed Enter in JTextFieldtextField2
+    else if ( event.getSource() == textField2 )
+    string = "textField2: " + event.getActionCommand();
+// user pressed Enter in JTextFieldtextField3
+    else if ( event.getSource() == textField3 )
+    string = "textField3: " + event.getActionCommand();
+// user pressed Enter in JTextFieldpasswordField
+    else if ( event.getSource() == passwordField) {
+    string = "passwordField: " +
+    new String( passwordField.getPassword() );
+    }
+    JOptionPane.showMessageDialog( null, string );
+} // end method actionPerformed
+} // end private inner class TextFieldHandler
+} // end class TextFieldTest</pre></div>
+    <aside class="note"><b>How it works</b><span>
+      A text field fires an <code>ActionEvent</code> when the user presses Enter in it. <code>event.getSource()</code> returns the component that fired, so the <code>if / else if</code> chain finds which field it was. For a text field, <code>getActionCommand()</code> is the text typed in it. The password is read with <code>getPassword()</code> (a <code>char[]</code>) and turned into a String with <code>new String(...)</code>. <code>textField3</code> is not editable, but pressing Enter in it still fires the event.
+    </span></aside>
+  </div>
+
+  <details class="orig" data-imgs="img/slides/lab-1.jpg|Lab 3, page 1;img/slides/lab-2.jpg|Lab 3, page 2" data-label="Original lab pages (2)"></details>
+  <div class="quiz" data-quiz="lab3"></div>
+</section>
+
+<!-- ============ flashcards ============ -->
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 3 + Lab 3</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it. Each answer names the slide it comes from.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Source: <em>Lecture 3 – GUI: Simple Components</em> (CS254, 55 slides), <em>Lab 3: Introduction to JAVA GUI Programming</em>, and the lab files <em>Lab 3 ButtonTest.txt</em> and <em>Lab 3 -TextFieldTest.txt</em>. Your "Studied" ticks are saved in this browser only.</span>
+  <span><a href="../index.html">All CS254 lectures ↗</a></span>
+</footer>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l3-done", "quizzes": {"button": [{"q": "Which method makes a button react to a click?", "o": ["addActionListener(...)", "doClick()", "setEnabled(true)", "setMnemonic(...)"], "a": 0, "e": "Slide 5. doClick() only simulates a click from code."}, {"q": "Which JButton method assigns a keyboard shortcut?", "o": ["setMnemonic(char)", "setToolTipText(String)", "setIcon(Icon)", "setFocusable(boolean)"], "a": 0, "e": "Slide 4."}, {"q": "On slide 8, why does only \"Click me!\" appear?", "o": ["Both buttons go to CENTER of the frame's BorderLayout, so the second covers the first", "button1 has no text", "Blue buttons are invisible", "setVisible(true) was called too early"], "a": 0, "e": "JFrame's default layout is BorderLayout; add() with no region uses CENTER."}, {"q": "How do you read a property such as visibility?", "o": ["isVisible()", "getVisible()", "visible()", "checkVisible()"], "a": 0, "e": "Slide 2: each property has a get (or is) accessor and a set method."}], "label": [{"q": "You call <code>label.setBackground(Color.RED)<\/code> but nothing changes. Why?", "o": ["Labels are transparent by default; call setOpaque(true) first", "Labels can't have colours", "You must use setForeground instead", "You must call repaint() twice"], "a": 0, "e": "Slide 11."}, {"q": "Where do LEFT, CENTER and RIGHT alignment values come from?", "o": ["SwingConstants", "BorderLayout", "FlowLayout", "Color"], "a": 0, "e": "Slide 10."}, {"q": "Which method puts a label's text below its icon?", "o": ["setVerticalTextPosition(SwingConstants.BOTTOM)", "setVerticalAlignment(SwingConstants.BOTTOM)", "setIcon(BOTTOM)", "setBounds(0, 0, 0, 100)"], "a": 0, "e": "Slides 12 and 16."}, {"q": "Can the user edit a JLabel's text?", "o": ["No, it is non-editable", "Yes, by clicking it", "Only if setEditable(true)", "Only when it has an icon"], "a": 0, "e": "Slide 9."}], "nulllayout": [{"q": "With <code>setLayout(null)<\/code> and no setBounds, a component is…", "o": ["0 × 0 pixels, so invisible", "centred automatically", "stretched to fill the frame", "placed in NORTH"], "a": 0, "e": "Slides 17–18."}, {"q": "What does <code>setBounds(50, 50, 100, 30)<\/code> set?", "o": ["x = 50, y = 50, width = 100, height = 30", "width = 50, height = 50, x = 100, y = 30", "four margins", "the window's size"], "a": 0, "e": "setBounds(x, y, width, height)."}, {"q": "Which approach do the slides recommend?", "o": ["Use a layout manager", "Always use null layout", "Use setLocation only", "Use JWindow"], "a": 0, "e": "Slide 17: Use a Layout Manager (recommended)."}], "text": [{"q": "Which component is for one line of text?", "o": ["JTextField", "JTextArea", "JScrollPane", "JLabel"], "a": 0, "e": "Slide 19."}, {"q": "After <code>new JScrollPane(textArea)<\/code>, what do you add to the frame?", "o": ["The scroll pane", "The text area", "Both", "Neither; it adds itself"], "a": 0, "e": "Slide 22: add the scroll pane, not the original component."}, {"q": "Which method returns a JPasswordField's content in the recommended way?", "o": ["getPassword(), returning char[]", "getText(), returning String", "getEchoChar()", "getValue()"], "a": 0, "e": "Slide 25: safer than getText()."}, {"q": "<code>setEchoChar((char) 0)<\/code> makes the field…", "o": ["show the text as typed", "show zeros", "refuse input", "use the default dot"], "a": 0, "e": "Slide 25."}, {"q": "What does <code>setWrapStyleWord(true)<\/code> do?", "o": ["Wraps lines at word boundaries (when lineWrap is true)", "Turns line wrapping on", "Makes the text bold", "Adds a scrollbar"], "a": 0, "e": "Slides 20–21."}, {"q": "JPasswordField is a subclass of…", "o": ["JTextField", "JTextArea", "JLabel", "JFormattedTextField"], "a": 0, "e": "Slide 24."}], "dialogs": [{"q": "What does <code>showInputDialog<\/code> return if the user presses Cancel?", "o": ["null", "an empty String", "-1", "CANCEL_OPTION"], "a": 0, "e": "Slide 29."}, {"q": "What type does <code>showConfirmDialog<\/code> return?", "o": ["int", "boolean", "String", "void"], "a": 0, "e": "Slide 29: an int such as JOptionPane.YES_OPTION."}, {"q": "Which is a disadvantage of JOptionPane listed on slide 28?", "o": ["Created with static methods; not object-oriented", "Looks worse than the console", "Needs a database", "Only works with null layout"], "a": 0, "e": "Slide 28."}], "choices": [{"q": "What does a ButtonGroup do?", "o": ["Makes sure only one radio button in it is selected at a time", "Draws a border around buttons", "Lays buttons out in a row", "Adds the buttons to the frame"], "a": 0, "e": "Slide 33."}, {"q": "Is a ButtonGroup visible on screen?", "o": ["No, it's a logical group; the radio buttons must be added to a container", "Yes, as a panel", "Yes, as a border", "Only with FlowLayout"], "a": 0, "e": "Slide 33."}, {"q": "On slide 36 there are two ButtonGroups. How many radio buttons can be selected at once?", "o": ["Two, one per group", "One", "Four", "None"], "a": 0, "e": "The screenshot shows one selected in each group."}, {"q": "Which method changes a button's icon when the mouse is over it?", "o": ["setRolloverIcon(Icon)", "setSelectedIcon(Icon)", "setIcon(Icon)", "setToolTipText(String)"], "a": 0, "e": "Slide 34; used in the Lab 3 ButtonTest."}, {"q": "How do you check whether a JCheckBox is ticked?", "o": ["isSelected()", "getText()", "isEnabled()", "getState()"], "a": 0, "e": "Slide 30."}], "forms": [{"q": "In MultiLayoutExample, why are Male and Female put in their own JPanel?", "o": ["Each GridLayout cell holds one component, so both buttons go in a panel that fills one cell", "Radio buttons can't be added to a GridLayout", "To make them invisible", "Because ButtonGroup needs a panel"], "a": 0, "e": "Slide 38."}, {"q": "Which layout does LoginLayoutExample use for the label/field rows?", "o": ["GridLayout(3, 2, 10, 10)", "FlowLayout()", "BorderLayout(10, 10)", "null"], "a": 0, "e": "Slide 40."}], "combo": [{"q": "How many items can be selected in a JComboBox at once?", "o": ["Only one", "As many as you like", "Two", "Depends on the selection mode"], "a": 0, "e": "Slide 41."}, {"q": "Which method makes a combo box accept typed values?", "o": ["setEditable(true)", "setEnabled(true)", "setMaximumRowCount(5)", "addItem(...)"], "a": 0, "e": "Slide 43."}, {"q": "What is DefaultComboBoxModel?", "o": ["The default data model that stores a JComboBox's items and selection", "A layout manager", "A dialog box", "An interface with no implementation"], "a": 0, "e": "Slide 44."}], "list": [{"q": "What's the main visual difference between JList and JComboBox?", "o": ["JList is always expanded; JComboBox drops down", "JList can't scroll", "JComboBox allows multiple selection", "They look the same"], "a": 0, "e": "Slides 41 and 46."}, {"q": "Which selection mode allows Ctrl-clicking several separate items?", "o": ["MULTIPLE_INTERVAL_SELECTION", "SINGLE_SELECTION", "SINGLE_INTERVAL_SELECTION", "None"], "a": 0, "e": "Slide 48."}, {"q": "Which method returns the indices of all selected items?", "o": ["getSelectedIndices()", "getSelectedIndex()", "getSelectedValue()", "getSize()"], "a": 0, "e": "Slide 48."}, {"q": "<code>model.removeElement(\"Apple\")<\/code> removes…", "o": ["the first occurrence of \"Apple\"", "every \"Apple\"", "the item at index 0", "all items"], "a": 0, "e": "Slide 54."}, {"q": "Why use DefaultListModel instead of a String array?", "o": ["Changes to the model automatically update the JList", "Arrays can't be shown in a JList", "It makes the list read-only", "It sorts items"], "a": 0, "e": "Slide 51."}], "lab3": [{"q": "In TextFieldTest, how does the handler know which field fired?", "o": ["event.getSource() == textField1 (and so on)", "event.getActionCommand() == \"textField1\"", "Each field has its own class", "It checks the cursor position"], "a": 0, "e": "Lab 3 TextFieldTest."}, {"q": "In ButtonTest, what does <code>event.getActionCommand()<\/code> return for a button?", "o": ["The button's text", "The button's index", "The window title", "null"], "a": 0, "e": "It shows \"You pressed: Plain Button\" or \"Fancy Button\"."}, {"q": "When does a JTextField fire an ActionEvent?", "o": ["When the user presses Enter in it", "On every key press", "When the mouse enters it", "When it loses focus"], "a": 0, "e": "Lab 3 TextFieldTest."}]}, "flashcards": [["Property accessors", "Each property has a get (or is) accessor and a set modifier: getColor, setFont, setEnabled, isVisible.", "Slide 2"], ["JButton constructors", "JButton(), JButton(String), JButton(Icon), JButton(String, Icon).", "Slide 3"], ["doClick()", "Simulates a button click from code.", "Slide 5"], ["setMnemonic(char)", "Assigns a keyboard shortcut to a button.", "Slide 4"], ["JLabel", "Displays text, an image or both. Non-editable. Used for instructions, headings and status messages.", "Slide 9"], ["SwingConstants", "Holds alignment values: LEFT, CENTER, RIGHT, TOP, BOTTOM.", "Slide 10"], ["setOpaque(true)", "Labels are transparent by default; make them opaque before setBackground shows.", "Slide 11"], ["setLayout(null)", "Removes the layout manager. Every component then needs setBounds(x, y, w, h) or it is 0 × 0.", "Slides 17–18"], ["JTextField", "One line of text. setText, getText, setEditable; columns = width in characters.", "Slide 19"], ["JTextArea", "Multi-line text. append, setLineWrap, setWrapStyleWord, replaceRange, setCaretPosition.", "Slides 20–21"], ["JScrollPane", "Wraps any component with scrollbars. Add the scroll pane, not the component.", "Slide 22"], ["JPasswordField", "Subclass of JTextField that hides input. getPassword() returns char[]. Echo char default •.", "Slides 24–25"], ["setEchoChar(0)", "Shows the text as typed, like a normal JTextField.", "Slide 25"], ["JFormattedTextField", "Text box that enforces a format: DateFormat, NumberFormat, CurrencyFormat, MaskFormat.", "Slide 27"], ["showMessageDialog", "JOptionPane.showMessageDialog(parent, message): shows a message. Returns nothing.", "Slide 28"], ["showConfirmDialog", "Yes / No / Cancel. Returns an int like JOptionPane.YES_OPTION or NO_OPTION.", "Slide 29"], ["showInputDialog", "Asks for text. Returns the String typed, or null if Cancel.", "Slide 29"], ["JCheckBox", "Independent on/off box. setSelected, isSelected, setText.", "Slides 30–31"], ["JRadioButton", "Mutually exclusive choice, once placed in a ButtonGroup.", "Slide 32"], ["ButtonGroup", "Logical (not visible) group: exactly one radio button selected at a time. Still add each button to a container.", "Slide 33"], ["ImageIcon", "A picture for JButton, JRadioButton, JCheckBox, JLabel. setIcon, setSelectedIcon, setRolloverIcon.", "Slide 34"], ["Form recipe", "Frame BorderLayout; title panel (FlowLayout) NORTH; GridLayout label|field panel CENTER; button panel SOUTH.", "Slides 37–40"], ["JComboBox", "Drop-down list; only one item selected. getSelectedItem, getSelectedIndex, addItem, setEditable.", "Slides 41–43"], ["DefaultComboBoxModel", "Default data model for JComboBox; implements MutableComboBoxModel; notifies the combo box of changes.", "Slide 44"], ["JList", "Always-expanded list; single or multiple selection; no drop-down.", "Slide 46"], ["Selection modes", "SINGLE_SELECTION, SINGLE_INTERVAL_SELECTION, MULTIPLE_INTERVAL_SELECTION.", "Slide 48"], ["DefaultListModel", "Implements ListModel; stores items and automatically tells the JList when they change.", "Slide 51"], ["remove vs removeElement", "remove(int index) removes by position; removeElement(Object) removes the first match.", "Slide 54"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = window.Guide.esc;
+
+  // ---- null layout / setBounds ----
+  (function () {
+    var body = $("nlBody"), code = $("nlCode");
+    var b = document.createElement("button"); b.type = "button"; b.className = "jbtn"; b.textContent = "Click Me"; b.tabIndex = -1;
+    b.style.position = "absolute"; b.style.overflow = "hidden"; b.style.padding = "0";
+    body.appendChild(b);
+    function r() {
+      var on = $("nlOn").checked, x = +$("nlX").value, y = +$("nlY").value, w = +$("nlW").value, h = +$("nlH").value;
+      if (!on) { x = 0; y = 0; w = 0; h = 0; }
+      Object.assign(b.style, { left: x + "px", top: y + "px", width: w + "px", height: h + "px", border: w && h ? "" : "0" });
+      code.textContent = "frame.setLayout(null);\n" +
+        (on ? "button.setBounds(" + x + ", " + y + ", " + w + ", " + h + ");" : "// no setBounds() call") +
+        "\nframe.add(button);\n" +
+        (!on ? "// button is 0 x 0 pixels, so you see nothing" : (w === 0 || h === 0 ? "// width or height is 0, so you see nothing" : ""));
+    }
+    ["nlX", "nlY", "nlW", "nlH", "nlOn"].forEach(function (id) { $(id).addEventListener("input", r); });
+    r();
+  })();
+
+  // ---- password echo char ----
+  (function () {
+    function r() {
+      var t = $("pwIn").value, e = $("pwEcho").value;
+      $("pwShow").textContent = e === "0" ? t : t.replace(/./g, e) || " ";
+      $("pwCode").textContent =
+        "passwordField.setEchoChar(" + (e === "0" ? "(char) 0" : "'" + e + "'") + ");" + (e === "0" ? "   // 0 = show the text as typed" : "") +
+        "\nchar[] pw = passwordField.getPassword();   // {" + t.split("").map(function (c) { return "'" + c + "'"; }).join(", ") + "}" +
+        "\nString s = new String(pw);                 // \"" + t + "\"";
+    }
+    $("pwIn").addEventListener("input", r); $("pwEcho").addEventListener("change", r); r();
+  })();
+
+  // ---- JOptionPane simulator ----
+  (function () {
+    var stage = $("jopStage"), code = $("jopCode");
+    function dialog(title, icon, msg, buttons, input, onDone) {
+      stage.innerHTML = "";
+      var w = document.createElement("div"); w.className = "win"; w.style.width = "min(100%, 20rem)";
+      w.innerHTML = '<div class="win-bar"><span>' + esc(title) + '</span><i>×</i></div>' +
+        '<div class="win-body" style="display:grid;gap:.6rem"><div style="display:flex;gap:.6rem;align-items:center"><span style="font-size:1.4rem">' + icon + "</span><span>" + esc(msg) + "</span></div>" +
+        (input ? '<input type="text" id="jopIn" value="Marty" style="font:inherit;padding:.2rem .3rem;border:1px solid #8f9ba1">' : "") +
+        '<div class="jop-btns" style="display:flex;gap:.4rem;justify-content:center"></div></div>';
+      var row = w.querySelector(".jop-btns");
+      buttons.forEach(function (bt) {
+        var b = document.createElement("button"); b.type = "button"; b.className = "jbtn"; b.textContent = bt[0];
+        b.addEventListener("click", function () { onDone(bt[1], input ? $("jopIn").value : null); });
+        row.appendChild(b);
+      });
+      stage.appendChild(w);
+    }
+    var D = {
+      msg: function () {
+        code.textContent = 'JOptionPane.showMessageDialog(null,\n    "This candidate is a dog. Invalid vote.");\n// waiting for OK...';
+        dialog("Message", "ℹ️", "This candidate is a dog. Invalid vote.", [["OK", 0]], false, function () {
+          stage.innerHTML = '<p class="expl">Dialog closed. showMessageDialog returns nothing (void).</p>';
+          code.textContent = 'JOptionPane.showMessageDialog(null,\n    "This candidate is a dog. Invalid vote.");\n// returns void';
+        });
+      },
+      confirm: function () {
+        code.textContent = 'int choice = JOptionPane.showConfirmDialog(null, "Erase your hard disk?");\n// waiting...';
+        dialog("Select an Option", "❓", "Erase your hard disk?", [["Yes", "YES_OPTION (0)"], ["No", "NO_OPTION (1)"], ["Cancel", "CANCEL_OPTION (2)"]], false, function (v) {
+          stage.innerHTML = '<p class="expl">You clicked a button; the method returned an int.</p>';
+          code.textContent = 'int choice = JOptionPane.showConfirmDialog(null, "Erase your hard disk?");\n// choice == JOptionPane.' + v +
+            '\nif (choice == JOptionPane.YES_OPTION) { ... }';
+        });
+      },
+      input: function () {
+        code.textContent = 'String name = JOptionPane.showInputDialog(null, "What\'s yer name, pardner?");\n// waiting...';
+        dialog("Input", "❓", "What's yer name, pardner?", [["OK", "ok"], ["Cancel", "cancel"]], true, function (v, text) {
+          stage.innerHTML = '<p class="expl">' + (v === "ok" ? "OK returns the typed text." : "Cancel returns null, so check for null before using it.") + "</p>";
+          code.textContent = 'String name = JOptionPane.showInputDialog(null, "What\'s yer name, pardner?");\n// name == ' + (v === "ok" ? '"' + text + '"' : "null");
+        });
+      }
+    };
+    document.querySelectorAll("#jop [data-d]").forEach(function (b) { b.addEventListener("click", function () { D[b.dataset.d](); }); });
+    stage.innerHTML = '<p class="expl">Pick a dialog to open it here.</p>';
+  })();
+
+  // ---- ButtonGroup ----
+  (function () {
+    var body = $("bgBody"), on = $("bgOn"), note = $("bgNote"), state = [true, false], names = ["Option 1", "Option 2"];
+    function r() {
+      body.innerHTML = "";
+      names.forEach(function (n, i) {
+        var l = document.createElement("label"); l.style.display = "inline-flex"; l.style.gap = ".3rem"; l.style.alignItems = "center";
+        var inp = document.createElement("input"); inp.type = "checkbox"; inp.checked = state[i]; inp.style.borderRadius = "50%";
+        inp.style.appearance = "none"; inp.style.width = "14px"; inp.style.height = "14px"; inp.style.border = "1px solid #556"; inp.style.background = state[i] ? "radial-gradient(#223 0 3px, #fff 4px)" : "#fff"; inp.style.margin = "0";
+        inp.setAttribute("aria-label", n);
+        inp.addEventListener("change", function () {
+          if (on.checked) { state = names.map(function (_, k) { return k === i; }); }
+          else { state[i] = !state[i] ? true : (inp.checked); }
+          r();
+        });
+        l.appendChild(inp); l.appendChild(document.createTextNode(n)); body.appendChild(l);
+      });
+      var c = state.filter(Boolean).length;
+      note.textContent = on.checked
+        ? "In a ButtonGroup: selecting one radio button deselects the other. Exactly one stays selected."
+        : "No ButtonGroup: each radio button acts on its own, so both can be selected (" + c + " selected now).";
+    }
+    on.addEventListener("change", function () { if (on.checked) { var f = state.indexOf(true); state = names.map(function (_, k) { return k === (f < 0 ? 0 : f); }); } r(); });
+    r();
+  })();
+
+  // ---- JList selection mode + DefaultListModel ----
+  (function () {
+    var items = ["Apple", "Banana", "Cherry"], sel = [], anchor = -1;
+    var list = $("lmList"), log = $("lmLog"), mode = $("lmMode");
+    function out(line) { var d = document.createElement("div"); d.textContent = line; log.appendChild(d); log.scrollTop = log.scrollHeight; }
+    function report() {
+      sel.sort(function (a, b) { return a - b; });
+      out("getSelectedIndices() → [" + sel.join(", ") + "]   getSelectedValue() → " + (sel.length ? '"' + items[sel[0]] + '"' : "null"));
+    }
+    function draw() {
+      list.innerHTML = "";
+      items.forEach(function (t, i) {
+        var d = document.createElement("div"); d.textContent = t; d.setAttribute("role", "option");
+        var on = sel.indexOf(i) > -1; d.setAttribute("aria-selected", on);
+        Object.assign(d.style, { padding: "1px 6px", cursor: "default", background: on ? "#b8cfe5" : "transparent", color: "#1c2328" });
+        d.addEventListener("click", function (e) {
+          var m = mode.value, multi = e.ctrlKey || e.metaKey, range = e.shiftKey && anchor > -1;
+          if (m === "single") sel = [i];
+          else if (range) { var a = Math.min(anchor, i), z = Math.max(anchor, i); var r = []; for (var k = a; k <= z; k++) r.push(k); sel = m === "multi" && multi ? Array.from(new Set(sel.concat(r))) : r; }
+          else if (multi && m === "multi") { sel = on ? sel.filter(function (x) { return x !== i; }) : sel.concat([i]); anchor = i; }
+          else if (multi && m === "interval") { sel = [i]; anchor = i; }
+          else { sel = [i]; anchor = i; }
+          draw(); report();
+        });
+        list.appendChild(d);
+      });
+    }
+    mode.addEventListener("change", function () { sel = sel.slice(0, 1); draw(); out("listBox.setSelectionMode(ListSelectionModel." + mode.options[mode.selectedIndex].text + ");"); });
+    $("lmAdd").addEventListener("click", function () {
+      var t = $("lmText").value.trim(); if (!t) return;
+      items.push(t); draw(); out('model.addElement("' + t + '");   // getSize() → ' + items.length);
+    });
+    $("lmRem").addEventListener("click", function () {
+      if (!sel.length) { out("// nothing selected: getSelectedIndex() → -1"); return; }
+      var i = Math.min.apply(null, sel), t = items[i];
+      items.splice(i, 1); sel = []; draw(); out("model.remove(" + i + ");   // removed \"" + t + "\", getSize() → " + items.length);
+    });
+    $("lmClear").addEventListener("click", function () { items = []; sel = []; draw(); out("model.clear();   // getSize() → 0"); });
+    draw();
+    out('DefaultListModel<String> model = new DefaultListModel<>();');
+    out('model.addElement("Apple"); model.addElement("Banana"); model.addElement("Cherry");');
+  })();
+})();
+
+</script>
+</body>
+</html>
