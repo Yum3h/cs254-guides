@@ -1442,7 +1442,7 @@ slider.addChangeListener(new ChangeListener() {
   <div class="slide" id="lab5-solution">
     <p class="added">Added · Full solution (Parts 1–4)</p>
     <h3>The full solution</h3>
-    <p>One NetBeans project <code>Lab5</code>, package <code>com.mycompany.lab5</code>, one class with everything inside <code>main</code>, like the slide examples. I ran it and checked every part: hovering, the coordinates, both click messages, blocking <code>!</code> and <code>@</code>, and the live search. Typing "m" and then "mo" gives exactly the handout's results.</p>
+    <p>One NetBeans project <code>Lab5</code>, package <code>com.mycompany.lab5</code>, one class with everything inside <code>main</code>, like the slide examples. It uses exactly the listeners the handout names: <b>MouseListener</b>, <b>MouseMotionListener</b> and <b>KeyListener</b>, each written out in full (no adapter classes, and no ActionListener, which this handout never asks for). I ran it and checked every part: hovering, the coordinates, both click messages, blocking <code>!</code> and <code>@</code>, and the live search. Typing "m" and then "mo" gives exactly the handout's results.</p>
     <div class="code"><span class="code-label">Lab5.java</span><pre class="java">package com.mycompany.lab5;
 
 import javax.swing.*;
@@ -1453,6 +1453,7 @@ import java.util.ArrayList;
 public class Lab5 {
 
     public static void main(String[] args) {
+        // Part 1: GUI Components and Design
         JFrame frame = new JFrame("Search and Add");
         JPanel panel = new JPanel();
 
@@ -1465,11 +1466,12 @@ public class Lab5 {
         JTextArea logArea = new JTextArea(12, 38);
         JScrollPane scroll = new JScrollPane(logArea);
 
+        // Part 4: ArrayList to store names
         ArrayList&lt;String&gt; names = new ArrayList&lt;&gt;();
         Color normalColor = addButton.getBackground();
 
-        // Part 2.1: MouseListener on both buttons
-        MouseAdapter hover = new MouseAdapter() {
+        // Part 2.1 + 2.3: MouseListener on both buttons
+        MouseListener buttonListener = new MouseListener() {
             public void mouseEntered(MouseEvent e) {
                 JButton b = (JButton) e.getSource();
                 String name = (b == addButton) ? "Add" : "Search";
@@ -1481,39 +1483,43 @@ public class Lab5 {
                 JButton b = (JButton) e.getSource();
                 String name = (b == addButton) ? "Add" : "Search";
                 b.setBackground(normalColor);
-                b.setText(name + " Exited");
+                b.setText(name);
+            }
+
+            public void mouseClicked(MouseEvent e) {
+                JButton b = (JButton) e.getSource();
+                if (b == addButton) {
+                    String name = nameField.getText().trim();
+                    if (!name.isEmpty()) {
+                        names.add(name);
+                    }
+                    JOptionPane.showMessageDialog(frame, "You clicked the Add button");
+                } else {
+                    JOptionPane.showMessageDialog(frame, "You clicked the Search button");
+                }
+            }
+
+            public void mousePressed(MouseEvent e) {
+            }
+
+            public void mouseReleased(MouseEvent e) {
             }
         };
-        addButton.addMouseListener(hover);
-        searchButton.addMouseListener(hover);
+        addButton.addMouseListener(buttonListener);
+        searchButton.addMouseListener(buttonListener);
 
-        // Part 2.2: MouseMotionListener shows the mouse position
-        panel.addMouseMotionListener(new MouseMotionAdapter() {
+        // Part 2.2: MouseMotionListener shows the mouse coordinates
+        panel.addMouseMotionListener(new MouseMotionListener() {
             public void mouseMoved(MouseEvent e) {
                 mouseLabel.setText("X: " + e.getX() + " , Y: " + e.getY());
             }
-        });
 
-        // Part 2.3 + Part 4: what happens when a button is clicked
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String name = nameField.getText().trim();
-                if (!name.isEmpty()) {
-                    names.add(name);
-                    nameField.setText("");
-                }
-                JOptionPane.showMessageDialog(frame, "You clicked the Add button");
-            }
-        });
-
-        searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "You clicked the Search button");
+            public void mouseDragged(MouseEvent e) {
             }
         });
 
         // Part 3 + Part 4: KeyListener on the text field
-        nameField.addKeyListener(new KeyAdapter() {
+        nameField.addKeyListener(new KeyListener() {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
                 if (!Character.isLetterOrDigit(c) &amp;&amp; c != ' ' &amp;&amp; !Character.isISOControl(c)) {
@@ -1530,6 +1536,9 @@ public class Lab5 {
                         logArea.append(n + "\n");
                     }
                 }
+            }
+
+            public void keyPressed(KeyEvent e) {
             }
         });
 
@@ -1549,7 +1558,7 @@ public class Lab5 {
 }</pre></div>
     <div class="fig-row">
       <figure style="flex:1 1 14rem"><div class="plate"><img src="img/sol_lab5_form.png" width="300" loading="lazy" alt="The solution&#x27;s window at start: Enter Name field, Add and Search buttons, X: 20 , Y: 330, Log: and an empty text area."></div><figcaption>At start.</figcaption></figure>
-      <figure style="flex:1 1 14rem"><div class="plate"><img src="img/sol_lab5_hover.png" width="300" loading="lazy" alt="The mouse is on Search: green Search Entered button, Add Exited, and the coordinates label wrapped down next to Log:."></div><figcaption>Mouse on Search (Part 2).</figcaption></figure>
+      <figure style="flex:1 1 14rem"><div class="plate"><img src="img/sol_lab5_hover.png" width="300" loading="lazy" alt="The mouse is on Search: green Search Entered button, Add back to its normal text, and Log: wrapped down next to the text area."></div><figcaption>Mouse on Search (Part 2).</figcaption></figure>
       <figure style="flex:1 1 14rem"><div class="plate"><img src="img/sol_lab5_search.png" width="300" loading="lazy" alt="Enter Name holds mo and the text area shows Search results: mohammad, mohd."></div><figcaption>Typing "mo" after adding six names (Part 4).</figcaption></figure>
       <figure style="flex:1 1 14rem"><div class="plate"><img src="img/sol_lab5_special.png" width="300" loading="lazy" alt="A message dialog over the window: Don&#x27;t enter special characters like ! @ #."></div><figcaption>Typing ! (Part 3).</figcaption></figure>
     </div>
@@ -1570,38 +1579,49 @@ JTextArea logArea = new JTextArea(12, 38);
 JScrollPane scroll = new JScrollPane(logArea);</pre></dt><dd><b>Part 1.</b> Every component in the screenshot, in order. <code>20</code> is the field's width in columns; <code>12, 38</code> are the text area's rows and columns. The scroll pane gives the Log its border and scroll bars when the list gets long.</dd></div>
 <div><dt><pre class="java">ArrayList&lt;String&gt; names = new ArrayList&lt;&gt;();
 Color normalColor = addButton.getBackground();</pre></dt><dd><b>Part 4:</b> "Create an ArrayList to store names". <code>normalColor</code> saves the buttons' default colour so it can be put back when the mouse leaves.</dd></div>
-<div><dt><pre class="java">MouseAdapter hover = new MouseAdapter() {
+<div><dt><pre class="java">MouseListener buttonListener = new MouseListener() {
     public void mouseEntered(MouseEvent e) { ... }
     public void mouseExited(MouseEvent e) { ... }
+    public void mouseClicked(MouseEvent e) { ... }
+    public void mousePressed(MouseEvent e) {
+    }
+    public void mouseReleased(MouseEvent e) {
+    }
 };
-addButton.addMouseListener(hover);
-searchButton.addMouseListener(hover);</pre></dt><dd><b>Part 2.1:</b> "Apply MouseListener to both buttons". <code>MouseAdapter</code> is a class that already implements <code>MouseListener</code> with empty methods, so you only write the two you need (Lecture 6). One listener object is added to both buttons.</dd></div>
+addButton.addMouseListener(buttonListener);
+searchButton.addMouseListener(buttonListener);</pre></dt><dd><b>Part 2.1:</b> "Apply MouseListener to both buttons". This is an anonymous class that implements the <code>MouseListener</code> interface (Lecture 6). An interface makes you write <b>all five</b> of its methods, so <code>mousePressed</code> and <code>mouseReleased</code> are there but empty. The same listener object is added to both buttons.</dd></div>
 <div><dt><pre class="java">JButton b = (JButton) e.getSource();
 String name = (b == addButton) ? "Add" : "Search";</pre></dt><dd><code>getSource()</code> returns the button the mouse is on, cast to <code>JButton</code>. The ternary picks its name, so one listener works for both buttons.</dd></div>
 <div><dt><pre class="java">b.setBackground(Color.GREEN);
 b.setText(name + " Entered");</pre></dt><dd><b>"When the mouse enters a button: change its background color, change its text (e.g., "Add Entered")".</b></dd></div>
 <div><dt><pre class="java">b.setBackground(normalColor);
-b.setText(name + " Exited");</pre></dt><dd><b>"When the mouse exits: reset color and text".</b> The colour goes back to the saved default. The text becomes "Add Exited", as in the handout's screenshots; if your TA wants the original text back instead, use <code>b.setText(name);</code>.</dd></div>
-<div><dt><pre class="java">panel.addMouseMotionListener(new MouseMotionAdapter() {
-    public void mouseMoved(MouseEvent e) {
-        mouseLabel.setText("X: " + e.getX() + " , Y: " + e.getY());
-    }
-});</pre></dt><dd><b>Part 2.2:</b> "Display the mouse coordinates (X, Y) in the label when the mouse moves". <code>mouseMoved</code> runs on every movement (without a button pressed; dragging calls <code>mouseDragged</code>). <code>getX()</code> and <code>getY()</code> are measured from the panel's top-left corner.</dd></div>
-<div><dt><pre class="java">addButton.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent e) {
+b.setText(name);</pre></dt><dd><b>"When the mouse exits: reset color and text".</b> The colour goes back to the saved default and the text back to "Add" or "Search". (The handout's screenshots show "Add Exited" at this point; if your TA wants that, write <code>b.setText(name + " Exited");</code> instead.)</dd></div>
+<div><dt><pre class="java">public void mouseClicked(MouseEvent e) {
+    JButton b = (JButton) e.getSource();
+    if (b == addButton) {
         String name = nameField.getText().trim();
         if (!name.isEmpty()) {
             names.add(name);
-            nameField.setText("");
         }
         JOptionPane.showMessageDialog(frame, "You clicked the Add button");
-    }
-});</pre></dt><dd><b>Part 2.3:</b> "Show a message dialog indicating which button was clicked", and <b>Part 4:</b> "When the user clicks Add: store the entered name in the list". <code>trim()</code> removes spaces at the ends, so an empty box adds nothing. The box is emptied, ready for the next name.</dd></div>
-<div><dt><pre class="java">searchButton.addActionListener(new ActionListener() {
-    public void actionPerformed(ActionEvent e) {
+    } else {
         JOptionPane.showMessageDialog(frame, "You clicked the Search button");
     }
-});</pre></dt><dd><b>Part 2.3</b> for the Search button. The handout gives Search no other job: searching happens automatically while typing (Part 4).</dd></div>
+}</pre></dt><dd><b>Part 2.3:</b> "When a button is clicked: show a message dialog indicating which button was clicked". This is in the handout's mouse part, so it goes in the MouseListener's <code>mouseClicked</code>. <b>Part 4:</b> "When the user clicks Add: store the entered name in the list": the Add branch adds the name to the ArrayList first. <code>trim()</code> removes spaces at the ends, and the <code>isEmpty()</code> check stops a blank name from being stored.</dd></div>
+<div><dt><pre class="java">panel.addMouseMotionListener(new MouseMotionListener() {
+    public void mouseMoved(MouseEvent e) {
+        mouseLabel.setText("X: " + e.getX() + " , Y: " + e.getY());
+    }
+
+    public void mouseDragged(MouseEvent e) {
+    }
+});</pre></dt><dd><b>Part 2.2:</b> "Apply MouseMotionListener: display the mouse coordinates (X, Y) in the label when the mouse moves". The interface has two methods: <code>mouseMoved</code> runs on every movement with no button pressed, and <code>mouseDragged</code> (left empty) runs when a button is held down. <code>getX()</code> and <code>getY()</code> are measured from the panel's top-left corner.</dd></div>
+<div><dt><pre class="java">nameField.addKeyListener(new KeyListener() {
+    public void keyTyped(KeyEvent e) { ... }
+    public void keyReleased(KeyEvent e) { ... }
+    public void keyPressed(KeyEvent e) {
+    }
+});</pre></dt><dd><b>Part 3:</b> "Apply KeyListener to the TextField". The <code>KeyListener</code> interface has three methods. <code>keyTyped</code> does Part 3, <code>keyReleased</code> does the Part 4 search, and <code>keyPressed</code> is left empty.</dd></div>
 <div><dt><pre class="java">public void keyTyped(KeyEvent e) {
     char c = e.getKeyChar();
     if (!Character.isLetterOrDigit(c) &amp;&amp; c != ' ' &amp;&amp; !Character.isISOControl(c)) {
@@ -1632,14 +1652,15 @@ frame.setVisible(true);</pre></dt><dd>Adds the components in the screenshot's or
     <h3>Good to know for this lab</h3>
     <ul class="pts">
       <li><b>The coordinates only change over the empty grey area.</b> Buttons, the text field and the text area have their own mouse listeners, so Java sends the mouse events to them instead of the panel. The handout's numbers (X: 5, Y: 2 and so on) come from the panel's empty space too.</li>
-      <li><b>MouseAdapter or MouseListener?</b> Both count as "applying a MouseListener": <code>addMouseListener</code> takes either. If you write <code>new MouseListener()</code> yourself, Java makes you include all five methods (<code>mouseClicked</code>, <code>mousePressed</code>, <code>mouseReleased</code>, <code>mouseEntered</code>, <code>mouseExited</code>), even empty ones. The same goes for <code>KeyAdapter</code> (three methods) and <code>MouseMotionAdapter</code> (two).</li>
+      <li><b>Why the empty methods?</b> <code>MouseListener</code> (5 methods), <code>MouseMotionListener</code> (2) and <code>KeyListener</code> (3) are interfaces, and a class that implements an interface must write every one of its methods, even the ones it doesn't use. Leave out an empty one and NetBeans shows an error.</li>
+      <li><b>mouseClicked needs a clean click.</b> It runs only when the mouse button is pressed and released in the same spot. If the mouse moves while you click, there is no click event and no message; just click again.</li>
       <li><b>Local variables inside anonymous classes</b> must never be given a new value (they are "effectively final"). That is why the name is read inside each listener instead of being kept in a variable that changes.</li>
     </ul>
   </div>
 
   <div class="demo" id="sa">
     <div class="demo-head"><h3>Try it: Search and Add</h3><span class="added">Added</span></div>
-    <p>Move the mouse over the grey area (or tap it), hover the buttons, add a few names, then type part of a name. Try typing <code>!</code>, <code>@</code> or <code>#</code> too.</p>
+    <p>Move the mouse over the grey area (or tap it) and hover the buttons. Type a name and click Add; clear the box and add a few more, then type part of a name. Try typing <code>!</code>, <code>@</code> or <code>#</code> too.</p>
     <div class="win" style="max-width:36rem"><div class="win-bar"><span>Search and Add</span><i>–□×</i></div>
       <div class="win-body" id="saPanel" style="position:relative;display:flex;flex-wrap:wrap;gap:.4rem .5rem;align-items:center;justify-content:center;align-content:flex-start;min-height:15rem">
         <label for="saName" style="font-weight:700">Enter Name:</label>
@@ -2344,7 +2365,7 @@ if(result == JOptionPane.YES_OPTION){
 
 </main>
 
-<script type="application/json" id="guide-data">{"key": "cs254-l5-done", "quizzes": {"window": [{"q": "Which window method can stop the window from closing (e.g. ask \"Are you sure?\")?", "o": ["windowClosing", "windowClosed", "windowDeactivated", "windowIconified"], "a": 0, "e": "Slide 10."}, {"q": "How many methods does WindowListener have?", "o": ["7", "3", "5", "1"], "a": 0, "e": "Slides 4 and 8."}, {"q": "Why use WindowAdapter instead of WindowListener?", "o": ["You only override the methods you need", "It's faster", "It works on JButton too", "It has more methods"], "a": 0, "e": "Slides 5 and 7."}, {"q": "A class extends WindowAdapter. Can it also extend JFrame?", "o": ["No, Java allows only one superclass", "Yes", "Only if JFrame is abstract", "Only with implements"], "a": 0, "e": "Slide 7: a class extending an adapter cannot extend another class."}, {"q": "Clicking the Minimize button fires…", "o": ["windowIconified", "windowDeiconified", "windowClosed", "windowOpened"], "a": 0, "e": "Slide 12."}, {"q": "Switching to the window with Alt+Tab fires…", "o": ["windowActivated", "windowDeiconified", "windowOpened", "windowClosing"], "a": 0, "e": "Slide 11."}], "key": [{"q": "Pressing and releasing Shift alone fires…", "o": ["keyPressed and keyReleased only", "keyTyped only", "all three", "nothing"], "a": 0, "e": "Slides 16–17: keyTyped only fires for character keys."}, {"q": "Which method is best for detecting the right-arrow key?", "o": ["keyPressed with getKeyCode() == KeyEvent.VK_RIGHT", "keyTyped with getKeyChar() == '→'", "actionPerformed", "focusGained"], "a": 0, "e": "Slides 15 and 18."}, {"q": "Which abstract class implements KeyListener with empty bodies?", "o": ["KeyAdapter", "KeyEvent", "InputEvent", "KeyStroke"], "a": 0, "e": "Slide 13."}, {"q": "In KeyDemo, why is the text area disabled?", "o": ["So the frame keeps the keyboard focus and receives the key events", "To hide it", "Text areas can't show key info otherwise", "To make it bold"], "a": 0, "e": "Slide 19: addKeyListener(this) is on the frame."}, {"q": "Which method tells you if Ctrl or Shift was held?", "o": ["getModifiersEx()", "getKeyChar()", "isActionKey()", "getSource()"], "a": 0, "e": "Slide 15: use *_MASK with it."}], "focus": [{"q": "Focus is…", "o": ["the current target of keyboard input", "the window size", "the selected list item", "the mouse position"], "a": 0, "e": "Slide 22."}, {"q": "In the focus example, what happens to a text field when it gains focus?", "o": ["Its background becomes LIGHT_GRAY", "Its text is cleared", "It becomes disabled", "It turns red"], "a": 0, "e": "Slide 23."}, {"q": "When does a ComponentEvent occur?", "o": ["When a component is resized, moved, shown or hidden", "When a key is pressed", "When text changes", "When a list selection changes"], "a": 0, "e": "Slide 24."}], "listsel": [{"q": "Which method do you write in a ListSelectionListener?", "o": ["valueChanged", "actionPerformed", "itemStateChanged", "stateChanged"], "a": 0, "e": "Slide 25."}, {"q": "Why check <code>!evt.getValueIsAdjusting()<\/code>?", "o": ["To react once, after the series of selection changes finishes", "To check if the list is editable", "To prevent a crash on empty lists", "To allow multiple selection"], "a": 0, "e": "Slide 26."}, {"q": "Is valueChanged called if the user clicks an item that's already selected?", "o": ["No", "Yes, every click", "Only with SINGLE_SELECTION", "Only on double-click"], "a": 0, "e": "Slide 26."}, {"q": "In ListTransferFrame, selecting a state already in the right list…", "o": ["removes it from the right list", "adds it twice", "does nothing", "clears both lists"], "a": 0, "e": "Slide 28: contains → removeElement, else addElement."}], "more": [{"q": "Which DocumentListener method is never called for a JTextField?", "o": ["changedUpdate", "insertUpdate", "removeUpdate", "All are called"], "a": 0, "e": "Slide 30."}, {"q": "How do you attach a DocumentListener to a JTextField?", "o": ["field.getDocument().addDocumentListener(...)", "field.addDocumentListener(...)", "field.addActionListener(...)", "new Document(field)"], "a": 0, "e": "Slide 29."}, {"q": "ItemListener is used with…", "o": ["JCheckBox and JComboBox", "JFrame", "JTextArea", "JLabel"], "a": 0, "e": "Slide 31."}, {"q": "Which method tells you whether an item was selected or deselected?", "o": ["getStateChange()", "getItem()", "getSource()", "isAdjusting()"], "a": 0, "e": "Slide 32: compare with ItemEvent.SELECTED / DESELECTED."}, {"q": "Which listener does a JSlider use?", "o": ["ChangeListener", "ActionListener", "ItemListener", "DocumentListener"], "a": 0, "e": "Slide 33."}], "lab5": [{"q": "Which method runs when the mouse pointer moves onto a button?", "o": ["mouseEntered", "mouseMoved", "mouseClicked", "mousePressed"], "a": 0, "e": "MouseListener.mouseEntered; mouseExited runs when it leaves."}, {"q": "Which listener shows the X and Y position while the mouse moves (no button pressed)?", "o": ["MouseMotionListener, in mouseMoved", "MouseMotionListener, in mouseDragged", "MouseListener, in mouseEntered", "ActionListener"], "a": 0, "e": "mouseDragged is for moving with a button held down."}, {"q": "In <code>keyTyped<\/code>, how do you stop a typed <code>!<\/code> from appearing in the text field?", "o": ["e.consume()", "return;", "nameField.setText(\"\")", "e.getKeyChar() = ' '"], "a": 0, "e": "consume() cancels the key event, so the character is never inserted."}, {"q": "Why does the live search run in <code>keyReleased<\/code> instead of <code>keyTyped<\/code>?", "o": ["In keyTyped the new character isn't in the field yet", "keyTyped doesn't work on JTextField", "keyReleased runs before keyTyped", "keyTyped can't read the text"], "a": 0, "e": "By the time the key is released, getText() includes the new letter."}, {"q": "Typing \"m\" shows Ahmad, Omar, Samer, Adam, mohammad and mohd. Which check gives that?", "o": ["n.toLowerCase().contains(text)", "n.startsWith(text)", "n.equals(text)", "n.endsWith(text)"], "a": 0, "e": "Every one of those names contains an m somewhere; startsWith would only find mohammad and mohd."}], "lab5x": [{"q": "In Lab 5, what does <code>e.consume()<\/code> in keyTyped do?", "o": ["Stops the typed character from reaching the text field", "Clears the field", "Closes the window", "Selects all text"], "a": 0, "e": "It cancels the key event, so @ and # never appear."}, {"q": "<code>(e) -&gt; { ... }<\/code> passed to addListSelectionListener is a…", "o": ["lambda expression", "generic type", "anonymous array", "constructor"], "a": 0, "e": "A short way to create an object of a one-method interface."}, {"q": "Why does the country ItemListener check <code>ItemEvent.SELECTED<\/code>?", "o": ["A combo-box change fires DESELECTED then SELECTED; this reacts once", "SELECTED is the only event a combo fires", "To ignore keyboard input", "To check the policy box"], "a": 0, "e": "Slide 32 and the Lab 5 code."}, {"q": "Why can Cancel crash the Lab 5 program?", "o": ["clearSelection() fires valueChanged with a null selection, and switch(null) throws NullPointerException", "Cancel has no listener", "The frame closes", "The password field is null"], "a": 0, "e": "Add if (Selected == null) return; at the start of the lambda."}]}, "flashcards": [["Adapter class", "Implements a listener interface with empty methods, so you override only what you need: WindowAdapter, KeyAdapter, FocusAdapter, MouseAdapter, ComponentAdapter.", "Slides 5, 7"], ["Listener vs Adapter", "Listener: interface, implement ALL methods, can still extend another class. Adapter: class, override only needed methods, uses up your one superclass.", "Slide 7"], ["WindowListener (7)", "windowOpened, windowClosing, windowClosed, windowIconified, windowDeiconified, windowActivated, windowDeactivated.", "Slides 4, 8"], ["windowClosing vs windowClosed", "Closing: user clicks X; you can cancel. Closed: already closed and released; for cleanup.", "Slide 10"], ["windowDeiconified vs windowActivated", "Deiconified: restored from minimised. Activated: gains focus (click or Alt+Tab).", "Slide 11"], ["windowIconified vs windowDeactivated", "Iconified: minimised to the taskbar. Deactivated: loses focus to another window.", "Slide 12"], ["KeyListener (3)", "keyPressed, keyReleased, keyTyped. Register with addKeyListener.", "Slides 13–14"], ["keyPressed vs keyTyped", "Pressed: any key, use getKeyCode() + VK_*. Typed: character keys only, use getKeyChar().", "Slides 16–17"], ["VK_ constants", "KeyEvent.VK_A … VK_Z, VK_0 … VK_9, VK_F1 …, VK_UP, VK_LEFT, VK_TAB, VK_SPACE, VK_ENTER.", "Slide 15"], ["Modifier masks", "SHIFT_DOWN_MASK, CTRL_DOWN_MASK, ALT_DOWN_MASK, used with getModifiersEx().", "Slide 15"], ["Action key", "A key that produces no character: arrows, F-keys, Home, End… isActionKey() returns true.", "Slide 20"], ["FocusListener", "focusGained, focusLost. Focus = current target of keyboard input.", "Slide 22"], ["ComponentListener", "componentHidden, componentMoved, componentResized, componentShown.", "Slide 24"], ["ListSelectionListener", "valueChanged(ListSelectionEvent). Check !getValueIsAdjusting() to react once.", "Slides 25–26"], ["DocumentListener", "insertUpdate, removeUpdate, changedUpdate (styled docs only). Via getDocument().addDocumentListener.", "Slides 29–30"], ["ItemListener", "itemStateChanged(ItemEvent). getStateChange() == ItemEvent.SELECTED or DESELECTED. JCheckBox, JComboBox.", "Slides 31–32"], ["ChangeListener", "stateChanged(ChangeEvent). JSlider, JSpinner, JTabbedPane, JColorChooser.", "Slide 33"], ["e.consume()", "Cancels a key event so the character never reaches the component.", "Lab 5"], ["Lambda listener", "deptList.addListSelectionListener(e -> { … }); works for any one-method listener interface.", "Lab 5"], ["mouseEntered / mouseExited", "MouseListener methods that run when the pointer moves onto / off a component. Lab 5: turn the button green and set \"Add Entered\", then reset.", "Lab 5"], ["mouseMoved vs mouseDragged", "MouseMotionListener: mouseMoved = moving with no button down; mouseDragged = moving with a button held. e.getX(), e.getY() give the position.", "Lab 5"], ["keyTyped vs keyReleased", "keyTyped: block a character with e.consume() (it isn't in the field yet). keyReleased: the field already holds the new text, so search there.", "Lab 5"]]}</script>
+<script type="application/json" id="guide-data">{"key": "cs254-l5-done", "quizzes": {"window": [{"q": "Which window method can stop the window from closing (e.g. ask \"Are you sure?\")?", "o": ["windowClosing", "windowClosed", "windowDeactivated", "windowIconified"], "a": 0, "e": "Slide 10."}, {"q": "How many methods does WindowListener have?", "o": ["7", "3", "5", "1"], "a": 0, "e": "Slides 4 and 8."}, {"q": "Why use WindowAdapter instead of WindowListener?", "o": ["You only override the methods you need", "It's faster", "It works on JButton too", "It has more methods"], "a": 0, "e": "Slides 5 and 7."}, {"q": "A class extends WindowAdapter. Can it also extend JFrame?", "o": ["No, Java allows only one superclass", "Yes", "Only if JFrame is abstract", "Only with implements"], "a": 0, "e": "Slide 7: a class extending an adapter cannot extend another class."}, {"q": "Clicking the Minimize button fires…", "o": ["windowIconified", "windowDeiconified", "windowClosed", "windowOpened"], "a": 0, "e": "Slide 12."}, {"q": "Switching to the window with Alt+Tab fires…", "o": ["windowActivated", "windowDeiconified", "windowOpened", "windowClosing"], "a": 0, "e": "Slide 11."}], "key": [{"q": "Pressing and releasing Shift alone fires…", "o": ["keyPressed and keyReleased only", "keyTyped only", "all three", "nothing"], "a": 0, "e": "Slides 16–17: keyTyped only fires for character keys."}, {"q": "Which method is best for detecting the right-arrow key?", "o": ["keyPressed with getKeyCode() == KeyEvent.VK_RIGHT", "keyTyped with getKeyChar() == '→'", "actionPerformed", "focusGained"], "a": 0, "e": "Slides 15 and 18."}, {"q": "Which abstract class implements KeyListener with empty bodies?", "o": ["KeyAdapter", "KeyEvent", "InputEvent", "KeyStroke"], "a": 0, "e": "Slide 13."}, {"q": "In KeyDemo, why is the text area disabled?", "o": ["So the frame keeps the keyboard focus and receives the key events", "To hide it", "Text areas can't show key info otherwise", "To make it bold"], "a": 0, "e": "Slide 19: addKeyListener(this) is on the frame."}, {"q": "Which method tells you if Ctrl or Shift was held?", "o": ["getModifiersEx()", "getKeyChar()", "isActionKey()", "getSource()"], "a": 0, "e": "Slide 15: use *_MASK with it."}], "focus": [{"q": "Focus is…", "o": ["the current target of keyboard input", "the window size", "the selected list item", "the mouse position"], "a": 0, "e": "Slide 22."}, {"q": "In the focus example, what happens to a text field when it gains focus?", "o": ["Its background becomes LIGHT_GRAY", "Its text is cleared", "It becomes disabled", "It turns red"], "a": 0, "e": "Slide 23."}, {"q": "When does a ComponentEvent occur?", "o": ["When a component is resized, moved, shown or hidden", "When a key is pressed", "When text changes", "When a list selection changes"], "a": 0, "e": "Slide 24."}], "listsel": [{"q": "Which method do you write in a ListSelectionListener?", "o": ["valueChanged", "actionPerformed", "itemStateChanged", "stateChanged"], "a": 0, "e": "Slide 25."}, {"q": "Why check <code>!evt.getValueIsAdjusting()<\/code>?", "o": ["To react once, after the series of selection changes finishes", "To check if the list is editable", "To prevent a crash on empty lists", "To allow multiple selection"], "a": 0, "e": "Slide 26."}, {"q": "Is valueChanged called if the user clicks an item that's already selected?", "o": ["No", "Yes, every click", "Only with SINGLE_SELECTION", "Only on double-click"], "a": 0, "e": "Slide 26."}, {"q": "In ListTransferFrame, selecting a state already in the right list…", "o": ["removes it from the right list", "adds it twice", "does nothing", "clears both lists"], "a": 0, "e": "Slide 28: contains → removeElement, else addElement."}], "more": [{"q": "Which DocumentListener method is never called for a JTextField?", "o": ["changedUpdate", "insertUpdate", "removeUpdate", "All are called"], "a": 0, "e": "Slide 30."}, {"q": "How do you attach a DocumentListener to a JTextField?", "o": ["field.getDocument().addDocumentListener(...)", "field.addDocumentListener(...)", "field.addActionListener(...)", "new Document(field)"], "a": 0, "e": "Slide 29."}, {"q": "ItemListener is used with…", "o": ["JCheckBox and JComboBox", "JFrame", "JTextArea", "JLabel"], "a": 0, "e": "Slide 31."}, {"q": "Which method tells you whether an item was selected or deselected?", "o": ["getStateChange()", "getItem()", "getSource()", "isAdjusting()"], "a": 0, "e": "Slide 32: compare with ItemEvent.SELECTED / DESELECTED."}, {"q": "Which listener does a JSlider use?", "o": ["ChangeListener", "ActionListener", "ItemListener", "DocumentListener"], "a": 0, "e": "Slide 33."}], "lab5": [{"q": "If you write <code>new MouseListener() { ... }<\/code>, how many methods must it contain?", "o": ["5, even the ones you leave empty", "Only the ones you use", "2", "1"], "a": 0, "e": "mouseClicked, mousePressed, mouseReleased, mouseEntered and mouseExited: an interface's methods must all be written."}, {"q": "Which method runs when the mouse pointer moves onto a button?", "o": ["mouseEntered", "mouseMoved", "mouseClicked", "mousePressed"], "a": 0, "e": "MouseListener.mouseEntered; mouseExited runs when it leaves."}, {"q": "Which listener shows the X and Y position while the mouse moves (no button pressed)?", "o": ["MouseMotionListener, in mouseMoved", "MouseMotionListener, in mouseDragged", "MouseListener, in mouseEntered", "ActionListener"], "a": 0, "e": "mouseDragged is for moving with a button held down."}, {"q": "In <code>keyTyped<\/code>, how do you stop a typed <code>!<\/code> from appearing in the text field?", "o": ["e.consume()", "return;", "nameField.setText(\"\")", "e.getKeyChar() = ' '"], "a": 0, "e": "consume() cancels the key event, so the character is never inserted."}, {"q": "Why does the live search run in <code>keyReleased<\/code> instead of <code>keyTyped<\/code>?", "o": ["In keyTyped the new character isn't in the field yet", "keyTyped doesn't work on JTextField", "keyReleased runs before keyTyped", "keyTyped can't read the text"], "a": 0, "e": "By the time the key is released, getText() includes the new letter."}, {"q": "Typing \"m\" shows Ahmad, Omar, Samer, Adam, mohammad and mohd. Which check gives that?", "o": ["n.toLowerCase().contains(text)", "n.startsWith(text)", "n.equals(text)", "n.endsWith(text)"], "a": 0, "e": "Every one of those names contains an m somewhere; startsWith would only find mohammad and mohd."}], "lab5x": [{"q": "In Lab 5, what does <code>e.consume()<\/code> in keyTyped do?", "o": ["Stops the typed character from reaching the text field", "Clears the field", "Closes the window", "Selects all text"], "a": 0, "e": "It cancels the key event, so @ and # never appear."}, {"q": "<code>(e) -&gt; { ... }<\/code> passed to addListSelectionListener is a…", "o": ["lambda expression", "generic type", "anonymous array", "constructor"], "a": 0, "e": "A short way to create an object of a one-method interface."}, {"q": "Why does the country ItemListener check <code>ItemEvent.SELECTED<\/code>?", "o": ["A combo-box change fires DESELECTED then SELECTED; this reacts once", "SELECTED is the only event a combo fires", "To ignore keyboard input", "To check the policy box"], "a": 0, "e": "Slide 32 and the Lab 5 code."}, {"q": "Why can Cancel crash the Lab 5 program?", "o": ["clearSelection() fires valueChanged with a null selection, and switch(null) throws NullPointerException", "Cancel has no listener", "The frame closes", "The password field is null"], "a": 0, "e": "Add if (Selected == null) return; at the start of the lambda."}]}, "flashcards": [["Adapter class", "Implements a listener interface with empty methods, so you override only what you need: WindowAdapter, KeyAdapter, FocusAdapter, MouseAdapter, ComponentAdapter.", "Slides 5, 7"], ["Listener vs Adapter", "Listener: interface, implement ALL methods, can still extend another class. Adapter: class, override only needed methods, uses up your one superclass.", "Slide 7"], ["WindowListener (7)", "windowOpened, windowClosing, windowClosed, windowIconified, windowDeiconified, windowActivated, windowDeactivated.", "Slides 4, 8"], ["windowClosing vs windowClosed", "Closing: user clicks X; you can cancel. Closed: already closed and released; for cleanup.", "Slide 10"], ["windowDeiconified vs windowActivated", "Deiconified: restored from minimised. Activated: gains focus (click or Alt+Tab).", "Slide 11"], ["windowIconified vs windowDeactivated", "Iconified: minimised to the taskbar. Deactivated: loses focus to another window.", "Slide 12"], ["KeyListener (3)", "keyPressed, keyReleased, keyTyped. Register with addKeyListener.", "Slides 13–14"], ["keyPressed vs keyTyped", "Pressed: any key, use getKeyCode() + VK_*. Typed: character keys only, use getKeyChar().", "Slides 16–17"], ["VK_ constants", "KeyEvent.VK_A … VK_Z, VK_0 … VK_9, VK_F1 …, VK_UP, VK_LEFT, VK_TAB, VK_SPACE, VK_ENTER.", "Slide 15"], ["Modifier masks", "SHIFT_DOWN_MASK, CTRL_DOWN_MASK, ALT_DOWN_MASK, used with getModifiersEx().", "Slide 15"], ["Action key", "A key that produces no character: arrows, F-keys, Home, End… isActionKey() returns true.", "Slide 20"], ["FocusListener", "focusGained, focusLost. Focus = current target of keyboard input.", "Slide 22"], ["ComponentListener", "componentHidden, componentMoved, componentResized, componentShown.", "Slide 24"], ["ListSelectionListener", "valueChanged(ListSelectionEvent). Check !getValueIsAdjusting() to react once.", "Slides 25–26"], ["DocumentListener", "insertUpdate, removeUpdate, changedUpdate (styled docs only). Via getDocument().addDocumentListener.", "Slides 29–30"], ["ItemListener", "itemStateChanged(ItemEvent). getStateChange() == ItemEvent.SELECTED or DESELECTED. JCheckBox, JComboBox.", "Slides 31–32"], ["ChangeListener", "stateChanged(ChangeEvent). JSlider, JSpinner, JTabbedPane, JColorChooser.", "Slide 33"], ["e.consume()", "Cancels a key event so the character never reaches the component.", "Lab 5"], ["Lambda listener", "deptList.addListSelectionListener(e -> { … }); works for any one-method listener interface.", "Lab 5"], ["mouseEntered / mouseExited", "MouseListener methods that run when the pointer moves onto / off a component. Lab 5: turn the button green and set \"Add Entered\", then reset the colour and text.", "Lab 5"], ["mouseMoved vs mouseDragged", "MouseMotionListener: mouseMoved = moving with no button down; mouseDragged = moving with a button held. e.getX(), e.getY() give the position.", "Lab 5"], ["keyTyped vs keyReleased", "keyTyped: block a character with e.consume() (it isn't in the field yet). keyReleased: the field already holds the new text, so search there.", "Lab 5"]]}</script>
 <script>
 (function () {
   var DATA = {};
@@ -2763,7 +2784,7 @@ if(result == JOptionPane.YES_OPTION){
     $("saOk").addEventListener("click", function () { msg.hidden = true; name.focus(); });
     function hover(b, label) {
       b.addEventListener("mouseenter", function () { b.style.background = "#00ff00"; b.textContent = label + " Entered"; out("mouseEntered → setBackground(Color.GREEN), setText(\"" + label + " Entered\")", C.ev); });
-      b.addEventListener("mouseleave", function () { b.style.background = ""; b.textContent = label + " Exited"; out("mouseExited  → normal colour, setText(\"" + label + " Exited\")", C.dim); });
+      b.addEventListener("mouseleave", function () { b.style.background = ""; b.textContent = label; out("mouseExited  → setBackground(normalColor), setText(\"" + label + "\")", C.dim); });
     }
     hover(add, "Add"); hover(search, "Search");
     function moved(e) {
@@ -2775,11 +2796,11 @@ if(result == JOptionPane.YES_OPTION){
     panel.addEventListener("pointerdown", moved);
     add.addEventListener("click", function () {
       var n = name.value.trim();
-      if (n) { names.push(n); name.value = ""; out("actionPerformed (Add) → names.add(\"" + n + "\") → " + JSON.stringify(names), C.ok); }
-      else out("actionPerformed (Add) → box is empty, nothing stored", C.dim);
+      if (n) { names.push(n); out("mouseClicked (Add) → names.add(\"" + n + "\") → " + JSON.stringify(names), C.ok); }
+      else out("mouseClicked (Add) → box is empty, nothing stored", C.dim);
       dialog("You clicked the Add button");
     });
-    search.addEventListener("click", function () { out("actionPerformed (Search)", C.ok); dialog("You clicked the Search button"); });
+    search.addEventListener("click", function () { out("mouseClicked (Search)", C.ok); dialog("You clicked the Search button"); });
     name.addEventListener("beforeinput", function (e) {
       if (!e.data) return;
       var bad = e.data.split("").filter(function (c) { return !/[\p{L}\p{N} ]/u.test(c); });
