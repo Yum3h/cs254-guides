@@ -440,6 +440,60 @@ pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
 .xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
 .xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
 
+/* course example programs */
+.ex-shots { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: flex-start; }
+.ex-shots figure { flex: 0 1 auto; }
+.ex-shots figure img { max-width: 100%; }
+.drill-link { margin: 0; font-weight: 600; }
+.drill-link a { text-decoration: none; }
+.drill-link a:hover { text-decoration: underline; }
+
+/* practice page: drills */
+.quote { margin: 0; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--r) var(--r) 0; padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.quote p, .quote ul { margin: 0; }
+.quote ul { padding-left: 1.1rem; display: grid; gap: var(--s1); }
+.quote footer { font-size: .82rem; color: var(--muted); }
+.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: var(--s2); }
+.sec-note { margin: 0; color: var(--muted); font-size: .92rem; }
+.drill { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); scroll-margin-top: 4rem; }
+.drill-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.drill-head h3 { font-size: 1.05rem; }
+.drill-score { font: 500 .78rem var(--f-mono); color: var(--muted); }
+.drill-score.full { color: var(--ok); }
+.drill-from, .drill-note { margin: 0; font-size: .85rem; color: var(--muted); }
+.drill-task { margin: 0; }
+.drill-code pre { line-height: 1.75; }
+.blank { font: inherit; font-size: inherit; line-height: 1.3; color: var(--ink); background: var(--surface); border: 1px dashed var(--accent); border-radius: 4px; padding: 0 .25ch; margin: 0; max-width: 100%; vertical-align: baseline; box-sizing: content-box; }
+textarea.blank { display: inline-block; vertical-align: top; resize: vertical; white-space: pre; overflow-x: auto; }
+.blank::placeholder { color: var(--muted); opacity: .8; }
+.blank:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-style: solid; }
+.blank.ok { border: 1px solid var(--ok); background: var(--ok-soft); }
+.blank.bad { border: 1px solid var(--bad); background: var(--bad-soft); }
+.blank.shown { border: 1px solid var(--box); }
+.drill-actions { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.drill-sum { margin: 0; font-weight: 600; }
+.drill-fb { margin: 0; padding-left: 1.6rem; display: grid; gap: var(--s1); font-size: .9rem; }
+.drill-fb li.ok::marker { color: var(--ok); font-weight: 600; }
+.drill-fb li.bad::marker { color: var(--bad); font-weight: 600; }
+.drill-fb li b { font-weight: 600; }
+.drill-fb li.ok b { color: var(--ok); }
+.drill-fb li.bad b { color: var(--bad); }
+.drill-fb code { overflow-wrap: anywhere; }
+.drill-out summary { cursor: pointer; font-size: .88rem; color: var(--accent); }
+.dprog { display: grid; gap: var(--s2); }
+.dprog-sum { margin: 0; }
+.dprog-row { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.dchip { font: 500 .8rem var(--f-mono); padding: .25rem .6rem; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); text-decoration: none; background: var(--bg); }
+.dchip span { color: var(--accent); }
+.dchip.full { border-color: var(--ok); background: var(--ok-soft); }
+.mcq-h { font-size: 1rem; margin-top: var(--s2); }
+table.ref td.mod { white-space: normal; min-width: 9rem; }
+table.ref td code { white-space: normal; overflow-wrap: anywhere; }
+.foot { padding-block: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+.exam-link { margin: 0; font-weight: 600; display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); }
+.exam-link a { text-decoration: none; }
+.exam-link a:hover { text-decoration: underline; }
+
 </style>
 
 </head>
@@ -457,7 +511,8 @@ pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
 <header class="top">
   <p class="eyebrow">CS254 Visual Programming · Lecture 3 + Lab 3</p>
   <h1>GUI: Simple Components</h1>
-  <p class="lede">Buttons, labels, text fields, password fields, dialogs, check boxes, radio buttons, combo boxes and lists. Every slide of <em>Lecture 3 – GUI: Simple Components</em> (55 slides) in order, with the code typed out from the screenshots and every window image, then Lab 3 with both of its code files. Small live demos sit inside the topics they explain.</p>
+  <p class="lede">Buttons, labels, text fields, password fields, dialogs, check boxes, radio buttons, combo boxes and lists. Every slide of <em>Lecture 3 – GUI: Simple Components</em> (57 slides) in order, with the code typed out from the screenshots and every window image, then Lab 3 with both of its code files. Small live demos sit inside the topics they explain.</p>
+  <p class="exam-link"><a href="../Practice/index.html#drills-l3">Exam practice: 3 code-completion drills for this lecture</a> · <a href="#course-ex">the course example programs</a></p>
   <div class="legend">
     <span><i class="sw" style="background:var(--mark)"></i><span class="k">Red text</span> was red on the slide</span>
     <span><span class="sn">12</span> slide number</span>
@@ -1580,7 +1635,7 @@ public class ComboBoxModelExample {
 <!-- ============ 9 JList ============ -->
 <section class="sec" id="list" data-title="JList and DefaultListModel">
   <div class="sec-head">
-    <p class="eyebrow">Slides 46–55</p>
+    <p class="eyebrow">Slides 46–57</p>
     <div class="sec-head-row"><h2>JList and DefaultListModel</h2><label class="done"><input type="checkbox" id="done-list"> Studied</label></div>
   </div>
   <aside class="plain"><b>In plain words</b><div>A <code>JList</code> is a box that always shows several items (no drop-down) and lets the user select one or many, depending on its <em>selection mode</em>. Put it in a <code>JScrollPane</code> so long lists scroll. For a list that changes while the program runs, keep the items in a <code>DefaultListModel</code> and change the model; the JList redraws by itself.</div></aside>
@@ -1593,6 +1648,8 @@ public class ComboBoxModelExample {
     </div>
     <div class="code"><pre class="java">public JList()</pre></div>
     <p>Constructs an empty JList.</p>
+    <div class="code"><pre class="java">public JList(String[] entries)</pre></div>
+    <p>creates a list which contains the strings of array entries. The first string is the first, i.e. top-most, list entry.</p>
     <div class="code"><pre class="java">public JList(ListModel model)
 public JList(Object[] data)
 public JList(Vector data)</pre></div>
@@ -1618,7 +1675,34 @@ public JList(Vector data)</pre></div>
   </div>
 
   <div class="slide">
-    <h3>Commonly Used Methods <span class="sn">48</span></h3>
+    <h3>Jlist <span class="sn">48</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>void setListData(String[] entries)</code></td><td>sets the list entries to the strings in array <code>entries</code>. The first string is the first, i.e. top-most, list entry.</td></tr>
+          <tr><td><code>void setSelectionMode(int selectionMode)</code></td><td>sets the way in which the user is allowed to select list entries.
+            <ul class="pts">
+              <li><code>SINGLE_SELECTION</code> – only one list entry can be selected, if a new one is selected the old selection is dropped;</li>
+              <li><code>SINGLE_INTERVAL_SELECTION</code> – one group of adjacent entries can be selected;</li>
+              <li><code>MULTIPLE_INTERVAL_SELECTION</code> – arbitrary combinations of entries can be selected. (The default value)</li>
+            </ul>
+            The three constants are defined in class <code>ListSelectionModel</code>.</td></tr>
+          <tr><td><code>void getSelectionMode()</code></td><td>determines which selection mode is currently used. The returned integer value is one of those described for method <code>setSelectionMode</code> above.</td></tr>
+          <tr><td><code>void setVisibleRowCount(int rowNo)</code></td><td>sets the number of rows visible of the list. This adjusts the height of the graphical component such that <code>rowNo</code> shows how many rows are displayed.</td></tr>
+          <tr><td><code>int getSelectedIndex()</code></td><td>returns the index of the (first) selected entry or <b>−1</b> if no entry is selected.</td></tr>
+          <tr><td><code>int[] getSelectedIndices()</code></td><td>returns the indices of the selected entries in an integer array.</td></tr>
+          <tr><td><code>Object getSelectedValue()</code></td><td>returns the (first) selected entry (not the index but the entry itself) or <code>null</code> if nothing is selected.</td></tr>
+          <tr><td><code>Object[] getSelectedValues()</code></td><td>returns the selected entries (not the indices but the entries themselves), or <code>null</code> if nothing is selected.</td></tr>
+          <tr><td><code>void setModel(ListModel lModel)</code></td><td>Sets the model that represents the contents or "value" of the list, notifies property change listeners, and then clears the list's selection.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="note"><b>Guide note</b><span>Two details the slide leaves out: <code>getSelectionMode()</code> actually returns an <code>int</code> (the slide prints <code>void</code>), and <code>getSelectedValues()</code> is an old method; newer Java code uses <code>getSelectedValuesList()</code> (slide 49), which returns a <code>List</code>. Watch the "nothing selected" results: <code>getSelectedIndex()</code> gives <b>−1</b> and <code>getSelectedValue()</code> gives <b>null</b>, so check for them before using the result.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Commonly Used Methods <span class="sn">49</span></h3>
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>Method</th><th>What it does</th></tr></thead>
@@ -1640,8 +1724,8 @@ public JList(Vector data)</pre></div>
   </div>
 
   <div class="slide">
-    <h3>JList and JComboBox together <span class="sn">49–50</span></h3>
-    <figure><div class="plate"><img src="img/s49_list_combo.png" width="560" loading="lazy" alt="JList &amp; JComboBox Example window: Select from List with Apple, Banana, Cherry, Mango, and Select from ComboBox showing Red"></div><figcaption>Slide 49: the window. Slide 50: the code (the slide draws an arrow at <code>setSelectionMode</code>).</figcaption></figure>
+    <h3>JList and JComboBox together <span class="sn">50–51</span></h3>
+    <figure><div class="plate"><img src="img/s49_list_combo.png" width="560" loading="lazy" alt="JList &amp; JComboBox Example window: Select from List with Apple, Banana, Cherry, Mango, and Select from ComboBox showing Red"></div><figcaption>Slide 50: the window. Slide 51: the code (the slide draws an arrow at <code>setSelectionMode</code>).</figcaption></figure>
     <div class="code"><pre class="java">public static void main(String[] args) {
 
     JFrame frame = new JFrame("JList &amp; JComboBox Example");
@@ -1672,7 +1756,7 @@ public JList(Vector data)</pre></div>
   </div>
 
   <div class="slide">
-    <h3>List Model <span class="sn">51</span></h3>
+    <h3>List Model <span class="sn">52</span></h3>
     <ul class="pts">
       <li>Interface ListModel&lt;E&gt;</li>
       <li>DefaultListModel&lt;E&gt; is a class that implements the ListModel&lt;E&gt; interface
@@ -1683,7 +1767,28 @@ public JList(Vector data)</pre></div>
   </div>
 
   <div class="slide">
-    <h3>DefaultListModel example <span class="sn">52</span></h3>
+    <h3>List Model <span class="sn">53</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>DefaultListModel()</code></td><td>DefaultListModel() is the constructor which creates a list model without any entries.</td></tr>
+          <tr><td><code>int size()</code></td><td>size() returns the number of entries currently in the list model.</td></tr>
+          <tr><td><code>boolean contains(Object entry)</code></td><td>contains(Object entry) returns true if object entry is in the list model, and false otherwise.</td></tr>
+          <tr><td><code>Object get(int position)</code></td><td>get(int position) returns the list entry at position position. Throws an exception if position is negative or greater than or equal to the current number of list entries. As the return type is Object, an explicit cast to the correct type might be needed.</td></tr>
+          <tr><td><code>void insertElementAt(Object entry, int position)</code></td><td>insertElementAt(Object entry, int position) adds entry entry at position position to the list model. Throws an exception if position is an invalid index.</td></tr>
+          <tr><td><code>void addElement(Object entry)</code></td><td>addElement(Object entry) adds an entry at the end of the list.</td></tr>
+          <tr><td><code>void removeElementAt(int position)</code></td><td>removeElementAt(int position) removes the entry at position position. Throws an exception if position is an invalid index. The remaining list entries are renumbered to maintain a consecutive indexing.</td></tr>
+          <tr><td><code>boolean removeElement(Object entry)</code></td><td>removeElement(Object entry) removes the entry entry. If successful true is returned, otherwise false is returned.</td></tr>
+          <tr><td><code>void removeAllElements()</code></td><td>removeAllElements() removes all entries from the list model.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="plain"><b>In plain words</b><div>Positions start at 0. When you remove an entry from the middle, the ones after it move up one place, so a saved index can point at a different item afterwards. A common pattern: <code>if (!model.contains(name)) model.addElement(name);</code> adds a name only once.</div></aside>
+  </div>
+
+  <div class="slide">
+    <h3>DefaultListModel example <span class="sn">54</span></h3>
     <div class="code"><pre class="java">import javax.swing.*;
 
 public class ListExample {
@@ -1713,24 +1818,24 @@ public class ListExample {
   </div>
 
   <div class="slide">
-    <h3>DefaultListModel: Commonly Used Methods <span class="sn">53–55</span></h3>
+    <h3>DefaultListModel: Commonly Used Methods <span class="sn">55–57</span></h3>
     <div class="tbl-wrap">
       <table>
         <thead><tr><th>Method</th><th>Description</th><th>Example</th><th>Slide</th></tr></thead>
         <tbody>
-          <tr><td><code>addElement(E element)</code></td><td>Adds an element to the <b>end</b> of the list.</td><td><code>model.addElement("Apple");</code></td><td>53</td></tr>
-          <tr><td><code>add(int index, E element)</code></td><td>Inserts an element at a specific position.</td><td><code>model.add(1, "Banana");</code></td><td>53</td></tr>
-          <tr><td><code>insertElementAt(E element, int index)</code></td><td>Same as <code>add(index, element)</code> — older method name.</td><td><code>model.insertElementAt("Cherry", 2);</code></td><td>53</td></tr>
-          <tr><td><code>removeElement(Object obj)</code></td><td>Removes the <b>first occurrence</b> of the specified object. Returns <code>true</code> if found and removed.</td><td><code>model.removeElement("Apple");</code></td><td>54</td></tr>
-          <tr><td><code>remove(int index)</code></td><td>Removes the element at the specified index.</td><td><code>model.remove(0);</code></td><td>54</td></tr>
-          <tr><td><code>removeElementAt(int index)</code></td><td>Same as <code>remove(index)</code> — older method name.</td><td><code>model.removeElementAt(2);</code></td><td>54</td></tr>
-          <tr><td><code>removeAllElements()</code></td><td>Removes <b>all items</b> from the list.</td><td><code>model.removeAllElements();</code></td><td>54</td></tr>
-          <tr><td><code>clear()</code></td><td>Also removes <b>all items</b> (same effect as <code>removeAllElements()</code>).</td><td><code>model.clear();</code></td><td>54</td></tr>
-          <tr><td><code>setElementAt(E element, int index)</code></td><td>Replaces the element at a specific position.</td><td><code>model.setElementAt("Orange", 1);</code></td><td>55</td></tr>
-          <tr><td><code>getElementAt(int index)</code></td><td>Returns the element at the given index.</td><td><code>String item = model.getElementAt(0);</code></td><td>55</td></tr>
-          <tr><td><code>get(int index)</code></td><td>Same as above (added for <code>ListModel</code> compatibility).</td><td><code>String item = (String) model.get(0);</code></td><td>55</td></tr>
-          <tr><td><code>contains(Object entry)</code></td><td>Returns <code>true</code> if the list contains the given object.</td><td><code>boolean hasItem = model.contains("Banana");</code></td><td>55</td></tr>
-          <tr><td><code>getSize()</code></td><td>Returns the total number of elements.</td><td><code>int count = model.getSize();</code></td><td>55</td></tr>
+          <tr><td><code>addElement(E element)</code></td><td>Adds an element to the <b>end</b> of the list.</td><td><code>model.addElement("Apple");</code></td><td>55</td></tr>
+          <tr><td><code>add(int index, E element)</code></td><td>Inserts an element at a specific position.</td><td><code>model.add(1, "Banana");</code></td><td>55</td></tr>
+          <tr><td><code>insertElementAt(E element, int index)</code></td><td>Same as <code>add(index, element)</code> — older method name.</td><td><code>model.insertElementAt("Cherry", 2);</code></td><td>55</td></tr>
+          <tr><td><code>removeElement(Object obj)</code></td><td>Removes the <b>first occurrence</b> of the specified object. Returns <code>true</code> if found and removed.</td><td><code>model.removeElement("Apple");</code></td><td>56</td></tr>
+          <tr><td><code>remove(int index)</code></td><td>Removes the element at the specified index.</td><td><code>model.remove(0);</code></td><td>56</td></tr>
+          <tr><td><code>removeElementAt(int index)</code></td><td>Same as <code>remove(index)</code> — older method name.</td><td><code>model.removeElementAt(2);</code></td><td>56</td></tr>
+          <tr><td><code>removeAllElements()</code></td><td>Removes <b>all items</b> from the list.</td><td><code>model.removeAllElements();</code></td><td>56</td></tr>
+          <tr><td><code>clear()</code></td><td>Also removes <b>all items</b> (same effect as <code>removeAllElements()</code>).</td><td><code>model.clear();</code></td><td>56</td></tr>
+          <tr><td><code>setElementAt(E element, int index)</code></td><td>Replaces the element at a specific position.</td><td><code>model.setElementAt("Orange", 1);</code></td><td>57</td></tr>
+          <tr><td><code>getElementAt(int index)</code></td><td>Returns the element at the given index.</td><td><code>String item = model.getElementAt(0);</code></td><td>57</td></tr>
+          <tr><td><code>get(int index)</code></td><td>Same as above (added for <code>ListModel</code> compatibility).</td><td><code>String item = (String) model.get(0);</code></td><td>57</td></tr>
+          <tr><td><code>contains(Object entry)</code></td><td>Returns <code>true</code> if the list contains the given object.</td><td><code>boolean hasItem = model.contains("Banana");</code></td><td>57</td></tr>
+          <tr><td><code>getSize()</code></td><td>Returns the total number of elements.</td><td><code>int count = model.getSize();</code></td><td>57</td></tr>
         </tbody>
       </table>
     </div>
@@ -1763,11 +1868,625 @@ public class ListExample {
     </div>
   </div>
 
-  <details class="orig" data-pages="46-55"></details>
+  <details class="orig" data-pages="46-57"></details>
   <div class="quiz" data-quiz="list"></div>
 </section>
 
 <!-- ============ 10 Lab 3 ============ -->
+<section class="sec" id="course-ex" data-title="Course example programs">
+  <div class="sec-head">
+    <p class="eyebrow">Added · from Lecture3_Examples.zip</p>
+    <div class="sec-head-row"><h2>Course example programs</h2><label class="done"><input type="checkbox" id="done-course-ex"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>The example project for this lecture (<code>Lecture3_Examples.zip</code>, package <code>com.mycompany.componentsexamples</code>). Every program was compiled and run here. The screenshots are its real windows (title bar drawn in); a few runs also show what happens after a click or with a commented-out line restored, and those captions say so. <b>Full code</b> is each file exactly as in the zip.</div></aside>
+
+
+  <div class="slide ex" id="ex-compex">
+    <p class="added">Example · ComponentsExamples.java</p>
+    <h3>ComponentsExamples: where did the button go?</h3>
+    <p>Slide 8's puzzle again, with the fix. Both buttons are first added with plain <code>add</code>, so both go to CENTER and button2 replaces button1. The last two lines add them again with a region. Adding a component that's already in the frame moves it, so button2 ends up EAST, button1 WEST, and CENTER is left empty.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 226px)"><div class="plate"><img src="img/ex/compex-0.png" width="200" loading="lazy" alt="ComponentsExamples: where did the button go?: WEST: “I am a button” (red). EAST: “click me” (blue). The gap between them is the empty CENTER."></div><figcaption>WEST: “I am a button” (red). EAST: “click me” (blue). The gap between them is the empty CENTER.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">frame1.setVisible(true);
+frame1.setSize(200, 200);</pre></dt><dd>The frame is shown first and filled afterwards. It works here because the window lays itself out when it actually appears, but the safe habit is: add everything, then <code>setVisible(true)</code> last.</dd></div>
+<div><dt><pre class="java">frame1.add(button1);
+frame1.add(button2);</pre></dt><dd>No region → CENTER for both. CENTER holds one component, so only button2 would show.</dd></div>
+<div><dt><pre class="java">frame1.add(button2,BorderLayout.EAST);
+frame1.add(button1,BorderLayout.WEST);</pre></dt><dd>Adding them again with a region moves them: each button gets its own region and both show.</dd></div>
+<div><dt><pre class="java">button1.setBackground(Color.red);</pre></dt><dd>Background colour; the <code>Color</code> constants come from <code>java.awt</code>.</dd></div>
+<div><dt><pre class="java">//frame1.getContentPane().add(button2, BorderLayout.NORTH);
+//frame1.getContentPane().add(button1, BorderLayout.SOUTH);</pre></dt><dd>The commented-out alternative uses NORTH and SOUTH. <code>frame1.add(…)</code> and <code>frame1.getContentPane().add(…)</code> do the same thing.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">ComponentsExamples.java (30 lines)</span><pre class="java">package com.mycompany.componentsexamples;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class ComponentsExamples {
+
+    public static void main(String[] args) {
+        JFrame frame1 = new JFrame();
+        frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame1.setVisible(true);
+        frame1.setSize(200, 200);
+        frame1.setTitle("A frame");
+
+        JButton button1 = new JButton("I am a button");
+        button1.setBackground(Color.red);
+
+        JButton button2 = new JButton("click me");
+        button2.setBackground(Color.blue);
+
+        frame1.add(button1);
+        frame1.add(button2);
+
+        //frame1.getContentPane().add(button2, BorderLayout.NORTH);
+        //frame1.getContentPane().add(button1, BorderLayout.SOUTH);
+
+        frame1.add(button2,BorderLayout.EAST); 
+        frame1.add(button1,BorderLayout.WEST);
+    }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-label">
+    <p class="added">Example · LabelTest.java</p>
+    <h3>LabelTest: three ways to build a JLabel</h3>
+    <p>The slide 15–16 program, but in the zip three things are commented out: <code>setLayout(new FlowLayout())</code> and the icon lines (the image file isn't in the zip). With the content pane's default BorderLayout, all three labels go to CENTER and each replaces the last, so the window shows only label3, at the left edge, halfway down.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 376px)"><div class="plate"><img src="img/ex/label-0.png" width="350" loading="lazy" alt="LabelTest: three ways to build a JLabel: As in the zip: only label3 shows."></div><figcaption>As in the zip: only label3 shows.</figcaption></figure>
+    <figure style="width:min(100%, 286px)"><div class="plate"><img src="img/ex/label-0z.png" width="260" loading="lazy" alt="LabelTest: three ways to build a JLabel: Zoomed in: label3, the last label added to CENTER."></div><figcaption>Zoomed in: label3, the last label added to CENTER.</figcaption></figure>
+    <figure style="width:min(100%, 376px)"><div class="plate"><img src="img/ex/label-1-0.png" width="350" loading="lazy" alt="LabelTest: three ways to build a JLabel: With the commented-out lines put back (FlowLayout, plus a stand-in java.png in the project folder): all three labels in a row."></div><figcaption>With the commented-out lines put back (FlowLayout, plus a stand-in java.png in the project folder): all three labels in a row.</figcaption></figure>
+    <figure style="width:min(100%, 526px)"><div class="plate"><img src="img/ex/label-1-0z.png" width="500" loading="lazy" alt="LabelTest: three ways to build a JLabel: Close-up: label3&#x27;s text sits above its icon. The code says SwingConstants.TOP, even though the text says “at bottom”."></div><figcaption>Close-up: label3's text sits <em>above</em> its icon. The code says <code>SwingConstants.TOP</code>, even though the text says “at bottom”.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">label1 = new JLabel("Label with text");
+label1.setToolTipText("This is label1");</pre></dt><dd>Text-only constructor. The tooltip appears when the mouse rests on the label.</dd></div>
+<div><dt><pre class="java">label2 = new JLabel("Label with text and icon");//, bug,
+       // SwingConstants.RIGHT);</pre></dt><dd>Uncommented, this is the three-argument constructor: text, icon, horizontal alignment.</dd></div>
+<div><dt><pre class="java">label3 = new JLabel();
+label3.setText("Label with icon and text at bottom");</pre></dt><dd>No-argument constructor, then setters: whatever a constructor can set, a setter can set later.</dd></div>
+<div><dt><pre class="java">label3.setHorizontalTextPosition(SwingConstants.CENTER);
+label3.setVerticalTextPosition(SwingConstants.TOP);</pre></dt><dd>Where the text sits relative to the icon. TOP puts it above; for text below the icon use <code>SwingConstants.BOTTOM</code>.</dd></div>
+<div><dt><pre class="java">setSize(700, 700);
+setVisible(true);
+container.setLayout(null);</pre></dt><dd><code>setLayout(null)</code> comes after the window is shown, so the labels keep the positions the first layout gave them and nothing moves when you resize the window.</dd></div>
+</dl>
+    <aside class="note"><b>Good to know</b><span>Image files are found relative to the folder the program runs from. In NetBeans that's the project folder (the one with <code>pom.xml</code>), not <code>src</code>. A missing file gives no error, just an empty icon.</span></aside>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">LabelTest.java (49 lines)</span><pre class="java">package com.mycompany.componentsexamples;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class LabelTest extends JFrame {
+
+    private JLabel label1, label2, label3;
+
+    // set up GUI
+    public LabelTest() {
+        super("Testing JLabel");
+        // get content pane and set its layout
+        Container container = getContentPane();
+        //container.setLayout(new FlowLayout());
+
+        // JLabel constructor with a string argument
+        label1 = new JLabel("Label with text");
+        label1.setToolTipText("This is label1");
+        container.add(label1);
+
+        // JLabel constructor with string, Icon and alignment arguments
+        //Icon bug = new ImageIcon("java.png");
+        label2 = new JLabel("Label with text and icon");//, bug,
+               // SwingConstants.RIGHT);
+        label2.setToolTipText("This is label2");
+        container.add(label2);
+
+        // JLabel constructor no arguments                        
+        label3 = new JLabel();
+        label3.setText("Label with icon and text at bottom");
+        //label3.setIcon(bug);
+        label3.setHorizontalTextPosition(SwingConstants.CENTER);
+        label3.setVerticalTextPosition(SwingConstants.TOP);
+        label3.setToolTipText("This is label3");
+        container.add(label3);
+
+        setSize(700, 700);
+        setVisible(true);
+        container.setLayout(null);
+
+    } // end constructor
+
+    public static void main(String args[]) {
+        LabelTest application = new LabelTest();
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+} // end class LabelTest</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l3-label">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-button">
+    <p class="added">Example · ButtonTest.java</p>
+    <h3>ButtonTest: a plain button and an icon button, one handler</h3>
+    <p>Two buttons share one <code>ActionListener</code>, written as a private inner class (events are Lecture 4's topic; this program is in both zips). Each button gets an action command, "plain" or "fancy", and the handler shows it in a message dialog.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/button-0.png" width="300" loading="lazy" alt="ButtonTest: a plain button and an icon button, one handler: As in the zip: java.png and swing.png aren&#x27;t included, so the icon is empty (no error), and the text even gets cut to “Butto...”."></div><figcaption>As in the zip: java.png and swing.png aren't included, so the icon is empty (no error), and the text even gets cut to “Butto...”.</figcaption></figure>
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/button-1-0.png" width="300" loading="lazy" alt="ButtonTest: a plain button and an icon button, one handler: With two stand-in images saved as java.png and swing.png in the project folder. With the mouse over Button 2, the rollover icon replaces the first one."></div><figcaption>With two stand-in images saved as java.png and swing.png in the project folder. With the mouse over Button 2, the rollover icon replaces the first one.</figcaption></figure>
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/button-2-1.png" width="262" loading="lazy" alt="ButtonTest: a plain button and an icon button, one handler: After clicking Button 1: the dialog shows its action command, “plain”, not its text."></div><figcaption>After clicking Button 1: the dialog shows its action command, “plain”, not its text.</figcaption></figure>
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/button-3-1.png" width="262" loading="lazy" alt="ButtonTest: a plain button and an icon button, one handler: After clicking Button 2: “fancy”."></div><figcaption>After clicking Button 2: “fancy”.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">plainButton.setActionCommand("plain");</pre></dt><dd>Without this, <code>getActionCommand()</code> would return the button's text, "Button 1".</dd></div>
+<div><dt><pre class="java">Icon bug1 = new ImageIcon("java.png");
+Icon bug2 = new ImageIcon("swing.png");
+fancyButton = new JButton("Button 2", bug1);
+fancyButton.setRolloverIcon(bug2);</pre></dt><dd>A button with text and an icon; the rollover icon is shown while the mouse is over it.</dd></div>
+<div><dt><pre class="java">ButtonHandler handler = new ButtonHandler();
+fancyButton.addActionListener(handler);
+plainButton.addActionListener(handler);</pre></dt><dd>One handler object, registered on both buttons.</dd></div>
+<div><dt><pre class="java">private class ButtonHandler implements ActionListener {
+    public void actionPerformed(ActionEvent event) {</pre></dt><dd>The inner class implements <code>ActionListener</code>, so it must write <code>actionPerformed</code>.</dd></div>
+<div><dt><pre class="java">JOptionPane.showMessageDialog(ButtonTest.this,
+        "You pressed: " + event.getActionCommand());</pre></dt><dd><code>ButtonTest.this</code> is the outer frame object (plain <code>this</code> would be the handler). As the parent, it centres the dialog on the frame.</dd></div>
+<div><dt><pre class="java">application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</pre></dt><dd>Called from <code>main</code> on the finished object; same effect as calling it in the constructor.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">ButtonTest.java (57 lines)</span><pre class="java">package com.mycompany.componentsexamples;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class ButtonTest extends JFrame {
+
+    private JButton plainButton, fancyButton;
+
+    // set up GUI
+    public ButtonTest() {
+        super("Testing Buttons");
+
+        // get content pane and set its layout
+        Container container = getContentPane();
+        container.setLayout(new FlowLayout());
+
+        // create buttons
+        plainButton = new JButton("Button 1");
+        plainButton.setActionCommand("plain");
+        container.add(plainButton);
+        Icon bug1 = new ImageIcon("java.png");
+        Icon bug2 = new ImageIcon("swing.png");
+        fancyButton = new JButton("Button 2", bug1);
+        fancyButton.setRolloverIcon(bug2);
+        fancyButton.setActionCommand("fancy");
+        container.add(fancyButton);
+
+        // create an instance of inner class ButtonHandler
+        // to use for button event handling               
+        ButtonHandler handler = new ButtonHandler();
+        fancyButton.addActionListener(handler);
+        plainButton.addActionListener(handler);
+
+        setSize(400, 400);
+        setVisible(true);
+
+    } // end ButtonTest constructor
+
+    public static void main(String args[]) {
+        ButtonTest application = new ButtonTest();
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    // inner class for button event handling
+    private class ButtonHandler implements ActionListener {
+
+        // handle button event
+        public void actionPerformed(ActionEvent event) {
+            JOptionPane.showMessageDialog(ButtonTest.this,
+                    "You pressed: " + event.getActionCommand());
+        }
+
+    } // end private inner class ButtonHandler
+
+} // end class ButtonTest</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l4-button">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-hotel">
+    <p class="added">Example · HotelBookingForm.java</p>
+    <h3>HotelBookingForm: a complete form from nested layouts</h3>
+    <p>Dr. Amani's form example. A main panel with BorderLayout (title NORTH, form CENTER, buttons SOUTH), a 6 × 2 GridLayout for the label/field pairs, and small FlowLayout panels for the radio buttons and the buttons: the same plan as slides 37–40. The buttons don't do anything yet; Lecture 4's <code>HotelBookingEvents</code> adds the listeners. A welcome dialog opens on top of the form.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 446px)"><div class="plate"><img src="img/ex/hotel-0.png" width="420" loading="lazy" alt="HotelBookingForm: a complete form from nested layouts: 6 rows × 2 columns in CENTER, title in NORTH, buttons in SOUTH: 10 px between columns, 15 px between rows, 15 px empty border around it all."></div><figcaption>6 rows × 2 columns in CENTER, title in NORTH, buttons in SOUTH: 10 px between columns, 15 px between rows, 15 px empty border around it all.</figcaption></figure>
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/hotel-1.png" width="262" loading="lazy" alt="HotelBookingForm: a complete form from nested layouts: The dialog: title “Welcome”, INFORMATION_MESSAGE icon."></div><figcaption>The dialog: title “Welcome”, INFORMATION_MESSAGE icon.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">JPanel mainPanel = new JPanel(
+    new BorderLayout(10, 10)
+);
+mainPanel.setBorder(
+    BorderFactory.createEmptyBorder(15, 15, 15, 15)
+);</pre></dt><dd>A layout can be passed straight to the <code>JPanel</code> constructor. <code>BorderLayout(10, 10)</code> leaves 10 px between regions. The empty border is padding: top, left, bottom, right.</dd></div>
+<div><dt><pre class="java">JLabel titleLabel = new JLabel(
+    "Hotel Room Booking",
+    SwingConstants.CENTER
+);
+titleLabel.setFont(
+    new Font("Arial", Font.BOLD, 20)
+);</pre></dt><dd>Centred title text. <code>Font(name, style, size)</code>.</dd></div>
+<div><dt><pre class="java">JPanel formPanel = new JPanel(
+    new GridLayout(6, 2, 10, 15)
+);</pre></dt><dd>6 rows, 2 columns, 10 px horizontal gap, 15 px vertical gap. GridLayout fills left to right, so the adds go label, field, label, field…</dd></div>
+<div><dt><pre class="java">JComboBox&lt;String&gt; roomComboBox =
+    new JComboBox&lt;&gt;(roomTypes);</pre></dt><dd>A combo box built from a <code>String[]</code>.</dd></div>
+<div><dt><pre class="java">ButtonGroup bedGroup = new ButtonGroup();
+bedGroup.add(singleBed);
+bedGroup.add(doubleBed);</pre></dt><dd>The group makes the radio buttons exclusive. A ButtonGroup isn't a component: each radio button still has to be added to a panel (<code>bedPanel</code>).</dd></div>
+<div><dt><pre class="java">JTextArea requestsArea = new JTextArea(4, 20);
+requestsArea.setLineWrap(true);
+requestsArea.setWrapStyleWord(true);
+
+JScrollPane requestsScrollPane =
+    new JScrollPane(requestsArea);</pre></dt><dd>4 rows × 20 columns, long lines wrap at word boundaries. The <em>scroll pane</em>, not the text area, is what gets added to the form.</dd></div>
+<div><dt><pre class="java">add(mainPanel);
+setVisible(true);</pre></dt><dd>Everything goes into one main panel, the panel goes into the frame, then the frame is shown.</dd></div>
+<div><dt><pre class="java">JOptionPane.showMessageDialog(
+    this,
+    "Welcome to Hotel Booking!",
+    "Welcome",
+    JOptionPane.INFORMATION_MESSAGE
+);</pre></dt><dd>Four-argument version: parent, message, title, message type (which icon).</dd></div>
+</dl>
+    <aside class="note"><b>Good to know</b><span><code>setLocationRelativeTo(null)</code> centres the window on the screen. Call it after <code>setSize</code>; before it, there's no size to centre.</span></aside>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">HotelBookingForm.java (147 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.componentsexamples;
+
+/**
+ *
+ * @author amani
+ */
+
+import javax.swing.*;
+import java.awt.*;
+
+public class HotelBookingForm extends JFrame {
+
+    public HotelBookingForm() {
+
+        setTitle("Hotel Room Booking");
+        setSize(520, 520);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Main panel
+        JPanel mainPanel = new JPanel(
+            new BorderLayout(10, 10)
+        );
+        mainPanel.setBorder(
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        );
+
+        // Title
+        JLabel titleLabel = new JLabel(
+            "Hotel Room Booking",
+            SwingConstants.CENTER
+        );
+        titleLabel.setFont(
+            new Font("Arial", Font.BOLD, 20)
+        );
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+        // Form panel
+        JPanel formPanel = new JPanel(
+            new GridLayout(6, 2, 10, 15)
+        );
+
+        // Guest name
+        JLabel nameLabel = new JLabel("Guest Name:");
+        JTextField nameField = new JTextField();
+
+        // Number of nights
+        JLabel nightsLabel = new JLabel("Number of Nights:");
+        JTextField nightsField = new JTextField();
+
+        // Room type
+        JLabel roomLabel = new JLabel("Room Type:");
+        String[] roomTypes = {
+            "Single", "Double", "Suite", "Deluxe"
+        };
+        JComboBox&lt;String&gt; roomComboBox =
+            new JComboBox&lt;&gt;(roomTypes);
+
+        // Bed preference
+        JLabel bedLabel = new JLabel("Bed Preference:");
+
+        JRadioButton singleBed =
+            new JRadioButton("Single Bed");
+        JRadioButton doubleBed =
+            new JRadioButton("Double Bed");
+
+        ButtonGroup bedGroup = new ButtonGroup();
+        bedGroup.add(singleBed);
+        bedGroup.add(doubleBed);
+
+        JPanel bedPanel = new JPanel(
+            new FlowLayout(FlowLayout.LEFT)
+        );
+        bedPanel.add(singleBed);
+        bedPanel.add(doubleBed);
+
+        // Additional requests
+        JLabel requestsLabel =
+            new JLabel("Special Requests:");
+
+        JTextArea requestsArea = new JTextArea(4, 20);
+        requestsArea.setLineWrap(true);
+        requestsArea.setWrapStyleWord(true);
+
+        JScrollPane requestsScrollPane =
+            new JScrollPane(requestsArea);
+
+        // Breakfast option
+        JLabel breakfastLabel =
+            new JLabel("Additional Services:");
+
+        JCheckBox breakfastCheckBox =
+            new JCheckBox("Include Breakfast");
+
+        // Add components
+        formPanel.add(nameLabel);
+        formPanel.add(nameField);
+
+        formPanel.add(nightsLabel);
+        formPanel.add(nightsField);
+
+        formPanel.add(roomLabel);
+        formPanel.add(roomComboBox);
+
+        formPanel.add(bedLabel);
+        formPanel.add(bedPanel);
+
+        formPanel.add(requestsLabel);
+        formPanel.add(requestsScrollPane);
+
+        formPanel.add(breakfastLabel);
+        formPanel.add(breakfastCheckBox);
+
+        mainPanel.add(formPanel, BorderLayout.CENTER);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel(
+            new FlowLayout()
+        );
+
+        JButton bookButton = new JButton("Book Room");
+        JButton clearButton = new JButton("Clear");
+
+        buttonPanel.add(bookButton);
+        buttonPanel.add(clearButton);
+
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(mainPanel);
+        setVisible(true);
+
+        JOptionPane.showMessageDialog(
+            this,
+            "Welcome to Hotel Booking!",
+            "Welcome",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+
+    public static void main(String[] args) {
+        HotelBookingForm hbf = new HotelBookingForm();
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l3-hotel">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-feedback">
+    <p class="added">Example · CustomerFeedbackForm.java</p>
+    <h3>CustomerFeedbackForm: same plan, different parts</h3>
+    <p>Built exactly like the hotel form. What's different: the combo box gets its items through a <code>DefaultComboBoxModel</code>, the radio-button panel has a lowered bevel border, and the dialog uses <code>QUESTION_MESSAGE</code>.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 446px)"><div class="plate"><img src="img/ex/feedback-0.png" width="420" loading="lazy" alt="CustomerFeedbackForm: same plan, different parts: The feedback form. The bevel border makes the Satisfaction panel look pressed in."></div><figcaption>The feedback form. The bevel border makes the Satisfaction panel look pressed in.</figcaption></figure>
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/feedback-1.png" width="262" loading="lazy" alt="CustomerFeedbackForm: same plan, different parts: QUESTION_MESSAGE gives the question-mark icon."></div><figcaption>QUESTION_MESSAGE gives the question-mark icon.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">DefaultComboBoxModel dcbm = new DefaultComboBoxModel(services);
+JComboBox&lt;String&gt; serviceComboBox =
+    new JComboBox&lt;&gt;(dcbm);</pre></dt><dd>The model holds the items and the combo box shows them (slides 44–45). Through the model you can change the list later, e.g. <code>dcbm.addElement("Billing")</code>.</dd></div>
+<div><dt><pre class="java">satisfactionPanel.setBorder(BorderFactory.createLoweredBevelBorder());</pre></dt><dd><code>BorderFactory</code> makes borders: empty, line, bevel, titled, …</dd></div>
+<div><dt><pre class="java">JOptionPane.QUESTION_MESSAGE</pre></dt><dd>The message types: <code>ERROR_MESSAGE</code>, <code>INFORMATION_MESSAGE</code>, <code>WARNING_MESSAGE</code>, <code>QUESTION_MESSAGE</code>, <code>PLAIN_MESSAGE</code>.</dd></div>
+</dl>
+    <aside class="note"><b>Good to know</b><span><code>DefaultComboBoxModel</code> is used without <code>&lt;String&gt;</code> here, so the compiler prints a note about “unchecked or unsafe operations”. It's only a warning; <code>new DefaultComboBoxModel&lt;&gt;(services)</code> makes it go away.</span></aside>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">CustomerFeedbackForm.java (163 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.componentsexamples;
+
+/**
+ *
+ * @author amani
+ */
+
+import javax.swing.*;
+import java.awt.*;
+
+public class CustomerFeedbackForm extends JFrame {
+
+    public CustomerFeedbackForm() {
+
+        setTitle("Customer Feedback");
+        setSize(520, 520);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Main panel
+        JPanel mainPanel = new JPanel(
+            new BorderLayout(10, 10)
+        );
+        mainPanel.setBorder(
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        );
+
+        // Title
+        JLabel titleLabel = new JLabel(
+            "Customer Feedback Form",
+            SwingConstants.CENTER
+        );
+        titleLabel.setFont(
+            new Font("Arial", Font.BOLD, 20)
+        );
+
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+        // Form panel
+        JPanel formPanel = new JPanel(
+            new GridLayout(6, 2, 10, 15)
+        );
+
+        // Customer name
+        JLabel nameLabel = new JLabel("Customer Name:");
+        JTextField nameField = new JTextField();
+
+        // Email
+        JLabel emailLabel = new JLabel("Email:");
+        JTextField emailField = new JTextField();
+
+        // Service category
+        JLabel serviceLabel = new JLabel("Service:");
+
+        
+        String[] services = {
+            "Technical Support",
+            "Delivery",
+            "Customer Service",
+            "Product Quality"
+        };
+        DefaultComboBoxModel dcbm = new DefaultComboBoxModel(services);
+        JComboBox&lt;String&gt; serviceComboBox =
+            new JComboBox&lt;&gt;(dcbm);
+
+        // Satisfaction
+        JLabel satisfactionLabel =
+            new JLabel("Satisfaction:");
+
+        JRadioButton satisfiedButton =
+            new JRadioButton("Satisfied");
+        JRadioButton unsatisfiedButton =
+            new JRadioButton("Unsatisfied");
+
+        ButtonGroup satisfactionGroup =
+            new ButtonGroup();
+
+        satisfactionGroup.add(satisfiedButton);
+        satisfactionGroup.add(unsatisfiedButton);
+
+        JPanel satisfactionPanel = new JPanel(
+            new FlowLayout(FlowLayout.LEFT)
+        );
+        satisfactionPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+        satisfactionPanel.add(satisfiedButton);
+        satisfactionPanel.add(unsatisfiedButton);
+
+        // Comments
+        JLabel commentsLabel =
+            new JLabel("Comments:");
+
+        JTextArea commentsArea =
+            new JTextArea(4, 20);
+
+        commentsArea.setLineWrap(true);
+        commentsArea.setWrapStyleWord(true);
+
+        JScrollPane commentsScrollPane =
+            new JScrollPane(commentsArea);
+
+        // Follow-up
+        JLabel followUpLabel =
+            new JLabel("Contact Preference:");
+
+        JCheckBox contactCheckBox =
+            new JCheckBox("Contact me for follow-up");
+
+        // Add components
+        formPanel.add(nameLabel);
+        formPanel.add(nameField);
+
+        formPanel.add(emailLabel);
+        formPanel.add(emailField);
+
+        formPanel.add(serviceLabel);
+        formPanel.add(serviceComboBox);
+
+        formPanel.add(satisfactionLabel);
+        formPanel.add(satisfactionPanel);
+
+        formPanel.add(commentsLabel);
+        formPanel.add(commentsScrollPane);
+
+        formPanel.add(followUpLabel);
+        formPanel.add(contactCheckBox);
+
+        mainPanel.add(formPanel, BorderLayout.CENTER);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel(
+            new FlowLayout()
+        );
+
+        JButton submitButton =
+            new JButton("Submit Feedback");
+
+        JButton clearButton =
+            new JButton("Clear");
+
+        buttonPanel.add(submitButton);
+        buttonPanel.add(clearButton);
+
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(mainPanel);
+        setVisible(true);
+
+        JOptionPane.showMessageDialog(
+            this,
+            "We value your feedback!",
+            "Welcome",
+            JOptionPane.QUESTION_MESSAGE
+        );
+    }
+
+    public static void main(String[] args) {
+        CustomerFeedbackForm cff = new CustomerFeedbackForm();
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l3-feedback">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+</section>
+
 <section class="sec" id="lab3" data-title="Lab 3: Sign-Up form">
   <div class="sec-head">
     <p class="eyebrow">Lab 3 · Abualhaj, Amer · plus the lab's code files (Dima Alshihan)</p>
@@ -2159,13 +2878,13 @@ public void actionPerformed( ActionEvent event )
 </section>
 
 <footer class="foot">
-  <span>Source: <em>Lecture 3 – GUI: Simple Components</em> (CS254, 55 slides), <em>Lab 3: Introduction to JAVA GUI Programming</em>, and the lab files <em>Lab 3 ButtonTest.txt</em> and <em>Lab 3 -TextFieldTest.txt</em>. Your "Studied" ticks are saved in this browser only.</span>
+  <span>Source: <em>Lecture 3 – GUI: Simple Components</em> (CS254, 57 slides), <em>Lab 3: Introduction to JAVA GUI Programming</em>, and the lab files <em>Lab 3 ButtonTest.txt</em> and <em>Lab 3 -TextFieldTest.txt</em>. Your "Studied" ticks are saved in this browser only.</span>
   <span><a href="../index.html">All CS254 lectures ↗</a></span>
 </footer>
 
 </main>
 
-<script type="application/json" id="guide-data">{"key": "cs254-l3-done", "quizzes": {"button": [{"q": "Which method makes a button react to a click?", "o": ["addActionListener(...)", "doClick()", "setEnabled(true)", "setMnemonic(...)"], "a": 0, "e": "Slide 5. doClick() only simulates a click from code."}, {"q": "Which JButton method assigns a keyboard shortcut?", "o": ["setMnemonic(char)", "setToolTipText(String)", "setIcon(Icon)", "setFocusable(boolean)"], "a": 0, "e": "Slide 4."}, {"q": "On slide 8, why does only \"Click me!\" appear?", "o": ["Both buttons go to CENTER of the frame's BorderLayout, so the second covers the first", "button1 has no text", "Blue buttons are invisible", "setVisible(true) was called too early"], "a": 0, "e": "JFrame's default layout is BorderLayout; add() with no region uses CENTER."}, {"q": "How do you read a property such as visibility?", "o": ["isVisible()", "getVisible()", "visible()", "checkVisible()"], "a": 0, "e": "Slide 2: each property has a get (or is) accessor and a set method."}], "label": [{"q": "You call <code>label.setBackground(Color.RED)<\/code> but nothing changes. Why?", "o": ["Labels are transparent by default; call setOpaque(true) first", "Labels can't have colours", "You must use setForeground instead", "You must call repaint() twice"], "a": 0, "e": "Slide 11."}, {"q": "Where do LEFT, CENTER and RIGHT alignment values come from?", "o": ["SwingConstants", "BorderLayout", "FlowLayout", "Color"], "a": 0, "e": "Slide 10."}, {"q": "Which method puts a label's text below its icon?", "o": ["setVerticalTextPosition(SwingConstants.BOTTOM)", "setVerticalAlignment(SwingConstants.BOTTOM)", "setIcon(BOTTOM)", "setBounds(0, 0, 0, 100)"], "a": 0, "e": "Slides 12 and 16."}, {"q": "Can the user edit a JLabel's text?", "o": ["No, it is non-editable", "Yes, by clicking it", "Only if setEditable(true)", "Only when it has an icon"], "a": 0, "e": "Slide 9."}], "nulllayout": [{"q": "With <code>setLayout(null)<\/code> and no setBounds, a component is…", "o": ["0 × 0 pixels, so invisible", "centred automatically", "stretched to fill the frame", "placed in NORTH"], "a": 0, "e": "Slides 17–18."}, {"q": "What does <code>setBounds(50, 50, 100, 30)<\/code> set?", "o": ["x = 50, y = 50, width = 100, height = 30", "width = 50, height = 50, x = 100, y = 30", "four margins", "the window's size"], "a": 0, "e": "setBounds(x, y, width, height)."}, {"q": "Which approach do the slides recommend?", "o": ["Use a layout manager", "Always use null layout", "Use setLocation only", "Use JWindow"], "a": 0, "e": "Slide 17: Use a Layout Manager (recommended)."}], "text": [{"q": "Which component is for one line of text?", "o": ["JTextField", "JTextArea", "JScrollPane", "JLabel"], "a": 0, "e": "Slide 19."}, {"q": "After <code>new JScrollPane(textArea)<\/code>, what do you add to the frame?", "o": ["The scroll pane", "The text area", "Both", "Neither; it adds itself"], "a": 0, "e": "Slide 22: add the scroll pane, not the original component."}, {"q": "Which method returns a JPasswordField's content in the recommended way?", "o": ["getPassword(), returning char[]", "getText(), returning String", "getEchoChar()", "getValue()"], "a": 0, "e": "Slide 25: safer than getText()."}, {"q": "<code>setEchoChar((char) 0)<\/code> makes the field…", "o": ["show the text as typed", "show zeros", "refuse input", "use the default dot"], "a": 0, "e": "Slide 25."}, {"q": "What does <code>setWrapStyleWord(true)<\/code> do?", "o": ["Wraps lines at word boundaries (when lineWrap is true)", "Turns line wrapping on", "Makes the text bold", "Adds a scrollbar"], "a": 0, "e": "Slides 20–21."}, {"q": "JPasswordField is a subclass of…", "o": ["JTextField", "JTextArea", "JLabel", "JFormattedTextField"], "a": 0, "e": "Slide 24."}], "dialogs": [{"q": "What does <code>showInputDialog<\/code> return if the user presses Cancel?", "o": ["null", "an empty String", "-1", "CANCEL_OPTION"], "a": 0, "e": "Slide 29."}, {"q": "What type does <code>showConfirmDialog<\/code> return?", "o": ["int", "boolean", "String", "void"], "a": 0, "e": "Slide 29: an int such as JOptionPane.YES_OPTION."}, {"q": "Which is a disadvantage of JOptionPane listed on slide 28?", "o": ["Created with static methods; not object-oriented", "Looks worse than the console", "Needs a database", "Only works with null layout"], "a": 0, "e": "Slide 28."}], "choices": [{"q": "What does a ButtonGroup do?", "o": ["Makes sure only one radio button in it is selected at a time", "Draws a border around buttons", "Lays buttons out in a row", "Adds the buttons to the frame"], "a": 0, "e": "Slide 33."}, {"q": "Is a ButtonGroup visible on screen?", "o": ["No, it's a logical group; the radio buttons must be added to a container", "Yes, as a panel", "Yes, as a border", "Only with FlowLayout"], "a": 0, "e": "Slide 33."}, {"q": "On slide 36 there are two ButtonGroups. How many radio buttons can be selected at once?", "o": ["Two, one per group", "One", "Four", "None"], "a": 0, "e": "The screenshot shows one selected in each group."}, {"q": "Which method changes a button's icon when the mouse is over it?", "o": ["setRolloverIcon(Icon)", "setSelectedIcon(Icon)", "setIcon(Icon)", "setToolTipText(String)"], "a": 0, "e": "Slide 34; used in the Lab 3 ButtonTest."}, {"q": "How do you check whether a JCheckBox is ticked?", "o": ["isSelected()", "getText()", "isEnabled()", "getState()"], "a": 0, "e": "Slide 30."}], "forms": [{"q": "In MultiLayoutExample, why are Male and Female put in their own JPanel?", "o": ["Each GridLayout cell holds one component, so both buttons go in a panel that fills one cell", "Radio buttons can't be added to a GridLayout", "To make them invisible", "Because ButtonGroup needs a panel"], "a": 0, "e": "Slide 38."}, {"q": "Which layout does LoginLayoutExample use for the label/field rows?", "o": ["GridLayout(3, 2, 10, 10)", "FlowLayout()", "BorderLayout(10, 10)", "null"], "a": 0, "e": "Slide 40."}], "combo": [{"q": "How many items can be selected in a JComboBox at once?", "o": ["Only one", "As many as you like", "Two", "Depends on the selection mode"], "a": 0, "e": "Slide 41."}, {"q": "Which method makes a combo box accept typed values?", "o": ["setEditable(true)", "setEnabled(true)", "setMaximumRowCount(5)", "addItem(...)"], "a": 0, "e": "Slide 43."}, {"q": "What is DefaultComboBoxModel?", "o": ["The default data model that stores a JComboBox's items and selection", "A layout manager", "A dialog box", "An interface with no implementation"], "a": 0, "e": "Slide 44."}], "list": [{"q": "What's the main visual difference between JList and JComboBox?", "o": ["JList is always expanded; JComboBox drops down", "JList can't scroll", "JComboBox allows multiple selection", "They look the same"], "a": 0, "e": "Slides 41 and 46."}, {"q": "Which selection mode allows Ctrl-clicking several separate items?", "o": ["MULTIPLE_INTERVAL_SELECTION", "SINGLE_SELECTION", "SINGLE_INTERVAL_SELECTION", "None"], "a": 0, "e": "Slide 48."}, {"q": "Which method returns the indices of all selected items?", "o": ["getSelectedIndices()", "getSelectedIndex()", "getSelectedValue()", "getSize()"], "a": 0, "e": "Slide 48."}, {"q": "<code>model.removeElement(\"Apple\")<\/code> removes…", "o": ["the first occurrence of \"Apple\"", "every \"Apple\"", "the item at index 0", "all items"], "a": 0, "e": "Slide 54."}, {"q": "Why use DefaultListModel instead of a String array?", "o": ["Changes to the model automatically update the JList", "Arrays can't be shown in a JList", "It makes the list read-only", "It sorts items"], "a": 0, "e": "Slide 51."}], "lab3": [{"q": "In TextFieldTest, how does the handler know which field fired?", "o": ["event.getSource() == textField1 (and so on)", "event.getActionCommand() == \"textField1\"", "Each field has its own class", "It checks the cursor position"], "a": 0, "e": "Lab 3 TextFieldTest."}, {"q": "In ButtonTest, what does <code>event.getActionCommand()<\/code> return for a button?", "o": ["The button's text", "The button's index", "The window title", "null"], "a": 0, "e": "It shows \"You pressed: Plain Button\" or \"Fancy Button\"."}, {"q": "When does a JTextField fire an ActionEvent?", "o": ["When the user presses Enter in it", "On every key press", "When the mouse enters it", "When it loses focus"], "a": 0, "e": "Lab 3 TextFieldTest."}]}, "flashcards": [["Property accessors", "Each property has a get (or is) accessor and a set modifier: getColor, setFont, setEnabled, isVisible.", "Slide 2"], ["JButton constructors", "JButton(), JButton(String), JButton(Icon), JButton(String, Icon).", "Slide 3"], ["doClick()", "Simulates a button click from code.", "Slide 5"], ["setMnemonic(char)", "Assigns a keyboard shortcut to a button.", "Slide 4"], ["JLabel", "Displays text, an image or both. Non-editable. Used for instructions, headings and status messages.", "Slide 9"], ["SwingConstants", "Holds alignment values: LEFT, CENTER, RIGHT, TOP, BOTTOM.", "Slide 10"], ["setOpaque(true)", "Labels are transparent by default; make them opaque before setBackground shows.", "Slide 11"], ["setLayout(null)", "Removes the layout manager. Every component then needs setBounds(x, y, w, h) or it is 0 × 0.", "Slides 17–18"], ["JTextField", "One line of text. setText, getText, setEditable; columns = width in characters.", "Slide 19"], ["JTextArea", "Multi-line text. append, setLineWrap, setWrapStyleWord, replaceRange, setCaretPosition.", "Slides 20–21"], ["JScrollPane", "Wraps any component with scrollbars. Add the scroll pane, not the component.", "Slide 22"], ["JPasswordField", "Subclass of JTextField that hides input. getPassword() returns char[]. Echo char default •.", "Slides 24–25"], ["setEchoChar(0)", "Shows the text as typed, like a normal JTextField.", "Slide 25"], ["JFormattedTextField", "Text box that enforces a format: DateFormat, NumberFormat, CurrencyFormat, MaskFormat.", "Slide 27"], ["showMessageDialog", "JOptionPane.showMessageDialog(parent, message): shows a message. Returns nothing.", "Slide 28"], ["showConfirmDialog", "Yes / No / Cancel. Returns an int like JOptionPane.YES_OPTION or NO_OPTION.", "Slide 29"], ["showInputDialog", "Asks for text. Returns the String typed, or null if Cancel.", "Slide 29"], ["JCheckBox", "Independent on/off box. setSelected, isSelected, setText.", "Slides 30–31"], ["JRadioButton", "Mutually exclusive choice, once placed in a ButtonGroup.", "Slide 32"], ["ButtonGroup", "Logical (not visible) group: exactly one radio button selected at a time. Still add each button to a container.", "Slide 33"], ["ImageIcon", "A picture for JButton, JRadioButton, JCheckBox, JLabel. setIcon, setSelectedIcon, setRolloverIcon.", "Slide 34"], ["Form recipe", "Frame BorderLayout; title panel (FlowLayout) NORTH; GridLayout label|field panel CENTER; button panel SOUTH.", "Slides 37–40"], ["JComboBox", "Drop-down list; only one item selected. getSelectedItem, getSelectedIndex, addItem, setEditable.", "Slides 41–43"], ["DefaultComboBoxModel", "Default data model for JComboBox; implements MutableComboBoxModel; notifies the combo box of changes.", "Slide 44"], ["JList", "Always-expanded list; single or multiple selection; no drop-down.", "Slide 46"], ["Selection modes", "SINGLE_SELECTION, SINGLE_INTERVAL_SELECTION, MULTIPLE_INTERVAL_SELECTION.", "Slide 48"], ["DefaultListModel", "Implements ListModel; stores items and automatically tells the JList when they change.", "Slide 51"], ["remove vs removeElement", "remove(int index) removes by position; removeElement(Object) removes the first match.", "Slide 54"]]}</script>
+<script type="application/json" id="guide-data">{"key": "cs254-l3-done", "quizzes": {"button": [{"q": "Which method makes a button react to a click?", "o": ["addActionListener(...)", "doClick()", "setEnabled(true)", "setMnemonic(...)"], "a": 0, "e": "Slide 5. doClick() only simulates a click from code."}, {"q": "Which JButton method assigns a keyboard shortcut?", "o": ["setMnemonic(char)", "setToolTipText(String)", "setIcon(Icon)", "setFocusable(boolean)"], "a": 0, "e": "Slide 4."}, {"q": "On slide 8, why does only \"Click me!\" appear?", "o": ["Both buttons go to CENTER of the frame's BorderLayout, so the second covers the first", "button1 has no text", "Blue buttons are invisible", "setVisible(true) was called too early"], "a": 0, "e": "JFrame's default layout is BorderLayout; add() with no region uses CENTER."}, {"q": "How do you read a property such as visibility?", "o": ["isVisible()", "getVisible()", "visible()", "checkVisible()"], "a": 0, "e": "Slide 2: each property has a get (or is) accessor and a set method."}], "label": [{"q": "You call <code>label.setBackground(Color.RED)<\/code> but nothing changes. Why?", "o": ["Labels are transparent by default; call setOpaque(true) first", "Labels can't have colours", "You must use setForeground instead", "You must call repaint() twice"], "a": 0, "e": "Slide 11."}, {"q": "Where do LEFT, CENTER and RIGHT alignment values come from?", "o": ["SwingConstants", "BorderLayout", "FlowLayout", "Color"], "a": 0, "e": "Slide 10."}, {"q": "Which method puts a label's text below its icon?", "o": ["setVerticalTextPosition(SwingConstants.BOTTOM)", "setVerticalAlignment(SwingConstants.BOTTOM)", "setIcon(BOTTOM)", "setBounds(0, 0, 0, 100)"], "a": 0, "e": "Slides 12 and 16."}, {"q": "Can the user edit a JLabel's text?", "o": ["No, it is non-editable", "Yes, by clicking it", "Only if setEditable(true)", "Only when it has an icon"], "a": 0, "e": "Slide 9."}], "nulllayout": [{"q": "With <code>setLayout(null)<\/code> and no setBounds, a component is…", "o": ["0 × 0 pixels, so invisible", "centred automatically", "stretched to fill the frame", "placed in NORTH"], "a": 0, "e": "Slides 17–18."}, {"q": "What does <code>setBounds(50, 50, 100, 30)<\/code> set?", "o": ["x = 50, y = 50, width = 100, height = 30", "width = 50, height = 50, x = 100, y = 30", "four margins", "the window's size"], "a": 0, "e": "setBounds(x, y, width, height)."}, {"q": "Which approach do the slides recommend?", "o": ["Use a layout manager", "Always use null layout", "Use setLocation only", "Use JWindow"], "a": 0, "e": "Slide 17: Use a Layout Manager (recommended)."}], "text": [{"q": "Which component is for one line of text?", "o": ["JTextField", "JTextArea", "JScrollPane", "JLabel"], "a": 0, "e": "Slide 19."}, {"q": "After <code>new JScrollPane(textArea)<\/code>, what do you add to the frame?", "o": ["The scroll pane", "The text area", "Both", "Neither; it adds itself"], "a": 0, "e": "Slide 22: add the scroll pane, not the original component."}, {"q": "Which method returns a JPasswordField's content in the recommended way?", "o": ["getPassword(), returning char[]", "getText(), returning String", "getEchoChar()", "getValue()"], "a": 0, "e": "Slide 25: safer than getText()."}, {"q": "<code>setEchoChar((char) 0)<\/code> makes the field…", "o": ["show the text as typed", "show zeros", "refuse input", "use the default dot"], "a": 0, "e": "Slide 25."}, {"q": "What does <code>setWrapStyleWord(true)<\/code> do?", "o": ["Wraps lines at word boundaries (when lineWrap is true)", "Turns line wrapping on", "Makes the text bold", "Adds a scrollbar"], "a": 0, "e": "Slides 20–21."}, {"q": "JPasswordField is a subclass of…", "o": ["JTextField", "JTextArea", "JLabel", "JFormattedTextField"], "a": 0, "e": "Slide 24."}], "dialogs": [{"q": "What does <code>showInputDialog<\/code> return if the user presses Cancel?", "o": ["null", "an empty String", "-1", "CANCEL_OPTION"], "a": 0, "e": "Slide 29."}, {"q": "What type does <code>showConfirmDialog<\/code> return?", "o": ["int", "boolean", "String", "void"], "a": 0, "e": "Slide 29: an int such as JOptionPane.YES_OPTION."}, {"q": "Which is a disadvantage of JOptionPane listed on slide 28?", "o": ["Created with static methods; not object-oriented", "Looks worse than the console", "Needs a database", "Only works with null layout"], "a": 0, "e": "Slide 28."}], "choices": [{"q": "What does a ButtonGroup do?", "o": ["Makes sure only one radio button in it is selected at a time", "Draws a border around buttons", "Lays buttons out in a row", "Adds the buttons to the frame"], "a": 0, "e": "Slide 33."}, {"q": "Is a ButtonGroup visible on screen?", "o": ["No, it's a logical group; the radio buttons must be added to a container", "Yes, as a panel", "Yes, as a border", "Only with FlowLayout"], "a": 0, "e": "Slide 33."}, {"q": "On slide 36 there are two ButtonGroups. How many radio buttons can be selected at once?", "o": ["Two, one per group", "One", "Four", "None"], "a": 0, "e": "The screenshot shows one selected in each group."}, {"q": "Which method changes a button's icon when the mouse is over it?", "o": ["setRolloverIcon(Icon)", "setSelectedIcon(Icon)", "setIcon(Icon)", "setToolTipText(String)"], "a": 0, "e": "Slide 34; used in the Lab 3 ButtonTest."}, {"q": "How do you check whether a JCheckBox is ticked?", "o": ["isSelected()", "getText()", "isEnabled()", "getState()"], "a": 0, "e": "Slide 30."}], "forms": [{"q": "In MultiLayoutExample, why are Male and Female put in their own JPanel?", "o": ["Each GridLayout cell holds one component, so both buttons go in a panel that fills one cell", "Radio buttons can't be added to a GridLayout", "To make them invisible", "Because ButtonGroup needs a panel"], "a": 0, "e": "Slide 38."}, {"q": "Which layout does LoginLayoutExample use for the label/field rows?", "o": ["GridLayout(3, 2, 10, 10)", "FlowLayout()", "BorderLayout(10, 10)", "null"], "a": 0, "e": "Slide 40."}], "combo": [{"q": "How many items can be selected in a JComboBox at once?", "o": ["Only one", "As many as you like", "Two", "Depends on the selection mode"], "a": 0, "e": "Slide 41."}, {"q": "Which method makes a combo box accept typed values?", "o": ["setEditable(true)", "setEnabled(true)", "setMaximumRowCount(5)", "addItem(...)"], "a": 0, "e": "Slide 43."}, {"q": "What is DefaultComboBoxModel?", "o": ["The default data model that stores a JComboBox's items and selection", "A layout manager", "A dialog box", "An interface with no implementation"], "a": 0, "e": "Slide 44."}], "list": [{"q": "What's the main visual difference between JList and JComboBox?", "o": ["JList is always expanded; JComboBox drops down", "JList can't scroll", "JComboBox allows multiple selection", "They look the same"], "a": 0, "e": "Slides 41 and 46."}, {"q": "Which selection mode allows Ctrl-clicking several separate items?", "o": ["MULTIPLE_INTERVAL_SELECTION", "SINGLE_SELECTION", "SINGLE_INTERVAL_SELECTION", "None"], "a": 0, "e": "Slide 49."}, {"q": "Which method returns the indices of all selected items?", "o": ["getSelectedIndices()", "getSelectedIndex()", "getSelectedValue()", "getSize()"], "a": 0, "e": "Slide 49."}, {"q": "<code>model.removeElement(\"Apple\")<\/code> removes…", "o": ["the first occurrence of \"Apple\"", "every \"Apple\"", "the item at index 0", "all items"], "a": 0, "e": "Slide 56."}, {"q": "Why use DefaultListModel instead of a String array?", "o": ["Changes to the model automatically update the JList", "Arrays can't be shown in a JList", "It makes the list read-only", "It sorts items"], "a": 0, "e": "Slide 52."}, {"q": "What does <code>getSelectedIndex()<\/code> return when nothing is selected?", "o": ["−1", "0", "null", "It throws an exception"], "a": 0, "e": "Slide 48. getSelectedValue() returns null in the same situation."}, {"q": "Which selection mode lets the user select one group of <em>adjacent<\/em> entries?", "o": ["SINGLE_INTERVAL_SELECTION", "SINGLE_SELECTION", "MULTIPLE_INTERVAL_SELECTION", "ADJACENT_SELECTION"], "a": 0, "e": "Slide 48. MULTIPLE_INTERVAL_SELECTION (the default) allows any combination."}, {"q": "Where are the selection-mode constants defined?", "o": ["ListSelectionModel", "JList", "DefaultListModel", "ListModel"], "a": 0, "e": "Slide 48: list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);"}, {"q": "<code>model.removeElement(\"Kiwi\")<\/code> when \"Kiwi\" is not in the model…", "o": ["returns false", "throws an exception", "removes the last entry", "returns -1"], "a": 0, "e": "Slide 53: if successful true is returned, otherwise false."}, {"q": "Why might <code>model.get(0)<\/code> need a cast?", "o": ["Its return type is Object", "It returns an index", "It returns a JList", "It always returns a String[]"], "a": 0, "e": "Slide 53: as the return type is Object, an explicit cast to the correct type might be needed."}], "lab3": [{"q": "In TextFieldTest, how does the handler know which field fired?", "o": ["event.getSource() == textField1 (and so on)", "event.getActionCommand() == \"textField1\"", "Each field has its own class", "It checks the cursor position"], "a": 0, "e": "Lab 3 TextFieldTest."}, {"q": "In ButtonTest, what does <code>event.getActionCommand()<\/code> return for a button?", "o": ["The button's text", "The button's index", "The window title", "null"], "a": 0, "e": "It shows \"You pressed: Plain Button\" or \"Fancy Button\"."}, {"q": "When does a JTextField fire an ActionEvent?", "o": ["When the user presses Enter in it", "On every key press", "When the mouse enters it", "When it loses focus"], "a": 0, "e": "Lab 3 TextFieldTest."}]}, "flashcards": [["Property accessors", "Each property has a get (or is) accessor and a set modifier: getColor, setFont, setEnabled, isVisible.", "Slide 2"], ["JButton constructors", "JButton(), JButton(String), JButton(Icon), JButton(String, Icon).", "Slide 3"], ["doClick()", "Simulates a button click from code.", "Slide 5"], ["setMnemonic(char)", "Assigns a keyboard shortcut to a button.", "Slide 4"], ["JLabel", "Displays text, an image or both. Non-editable. Used for instructions, headings and status messages.", "Slide 9"], ["SwingConstants", "Holds alignment values: LEFT, CENTER, RIGHT, TOP, BOTTOM.", "Slide 10"], ["setOpaque(true)", "Labels are transparent by default; make them opaque before setBackground shows.", "Slide 11"], ["setLayout(null)", "Removes the layout manager. Every component then needs setBounds(x, y, w, h) or it is 0 × 0.", "Slides 17–18"], ["JTextField", "One line of text. setText, getText, setEditable; columns = width in characters.", "Slide 19"], ["JTextArea", "Multi-line text. append, setLineWrap, setWrapStyleWord, replaceRange, setCaretPosition.", "Slides 20–21"], ["JScrollPane", "Wraps any component with scrollbars. Add the scroll pane, not the component.", "Slide 22"], ["JPasswordField", "Subclass of JTextField that hides input. getPassword() returns char[]. Echo char default •.", "Slides 24–25"], ["setEchoChar(0)", "Shows the text as typed, like a normal JTextField.", "Slide 25"], ["JFormattedTextField", "Text box that enforces a format: DateFormat, NumberFormat, CurrencyFormat, MaskFormat.", "Slide 27"], ["showMessageDialog", "JOptionPane.showMessageDialog(parent, message): shows a message. Returns nothing.", "Slide 28"], ["showConfirmDialog", "Yes / No / Cancel. Returns an int like JOptionPane.YES_OPTION or NO_OPTION.", "Slide 29"], ["showInputDialog", "Asks for text. Returns the String typed, or null if Cancel.", "Slide 29"], ["JCheckBox", "Independent on/off box. setSelected, isSelected, setText.", "Slides 30–31"], ["JRadioButton", "Mutually exclusive choice, once placed in a ButtonGroup.", "Slide 32"], ["ButtonGroup", "Logical (not visible) group: exactly one radio button selected at a time. Still add each button to a container.", "Slide 33"], ["ImageIcon", "A picture for JButton, JRadioButton, JCheckBox, JLabel. setIcon, setSelectedIcon, setRolloverIcon.", "Slide 34"], ["Form recipe", "Frame BorderLayout; title panel (FlowLayout) NORTH; GridLayout label|field panel CENTER; button panel SOUTH.", "Slides 37–40"], ["JComboBox", "Drop-down list; only one item selected. getSelectedItem, getSelectedIndex, addItem, setEditable.", "Slides 41–43"], ["DefaultComboBoxModel", "Default data model for JComboBox; implements MutableComboBoxModel; notifies the combo box of changes.", "Slide 44"], ["JList", "Always-expanded list; single or multiple selection; no drop-down.", "Slide 46"], ["Selection modes", "SINGLE_SELECTION, SINGLE_INTERVAL_SELECTION, MULTIPLE_INTERVAL_SELECTION.", "Slide 49"], ["DefaultListModel", "Implements ListModel; stores items and automatically tells the JList when they change.", "Slide 52"], ["remove vs removeElement", "remove(int index) removes by position; removeElement(Object) removes the first match.", "Slide 56"], ["JList selection modes", "ListSelectionModel.SINGLE_SELECTION, SINGLE_INTERVAL_SELECTION (one adjacent block), MULTIPLE_INTERVAL_SELECTION (any combination, the default).", "Slide 48"], ["Nothing selected", "getSelectedIndex() → −1, getSelectedValue() → null.", "Slide 48"], ["DefaultListModel basics", "addElement, insertElementAt(entry, pos), removeElementAt(pos), removeElement(entry) → boolean, removeAllElements(), size(), contains(entry), get(pos).", "Slide 53"]]}</script>
 <script>
 (function () {
   var DATA = {};

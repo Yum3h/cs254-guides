@@ -440,6 +440,60 @@ pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
 .xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
 .xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
 
+/* course example programs */
+.ex-shots { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: flex-start; }
+.ex-shots figure { flex: 0 1 auto; }
+.ex-shots figure img { max-width: 100%; }
+.drill-link { margin: 0; font-weight: 600; }
+.drill-link a { text-decoration: none; }
+.drill-link a:hover { text-decoration: underline; }
+
+/* practice page: drills */
+.quote { margin: 0; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--r) var(--r) 0; padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.quote p, .quote ul { margin: 0; }
+.quote ul { padding-left: 1.1rem; display: grid; gap: var(--s1); }
+.quote footer { font-size: .82rem; color: var(--muted); }
+.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: var(--s2); }
+.sec-note { margin: 0; color: var(--muted); font-size: .92rem; }
+.drill { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); scroll-margin-top: 4rem; }
+.drill-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.drill-head h3 { font-size: 1.05rem; }
+.drill-score { font: 500 .78rem var(--f-mono); color: var(--muted); }
+.drill-score.full { color: var(--ok); }
+.drill-from, .drill-note { margin: 0; font-size: .85rem; color: var(--muted); }
+.drill-task { margin: 0; }
+.drill-code pre { line-height: 1.75; }
+.blank { font: inherit; font-size: inherit; line-height: 1.3; color: var(--ink); background: var(--surface); border: 1px dashed var(--accent); border-radius: 4px; padding: 0 .25ch; margin: 0; max-width: 100%; vertical-align: baseline; box-sizing: content-box; }
+textarea.blank { display: inline-block; vertical-align: top; resize: vertical; white-space: pre; overflow-x: auto; }
+.blank::placeholder { color: var(--muted); opacity: .8; }
+.blank:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-style: solid; }
+.blank.ok { border: 1px solid var(--ok); background: var(--ok-soft); }
+.blank.bad { border: 1px solid var(--bad); background: var(--bad-soft); }
+.blank.shown { border: 1px solid var(--box); }
+.drill-actions { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.drill-sum { margin: 0; font-weight: 600; }
+.drill-fb { margin: 0; padding-left: 1.6rem; display: grid; gap: var(--s1); font-size: .9rem; }
+.drill-fb li.ok::marker { color: var(--ok); font-weight: 600; }
+.drill-fb li.bad::marker { color: var(--bad); font-weight: 600; }
+.drill-fb li b { font-weight: 600; }
+.drill-fb li.ok b { color: var(--ok); }
+.drill-fb li.bad b { color: var(--bad); }
+.drill-fb code { overflow-wrap: anywhere; }
+.drill-out summary { cursor: pointer; font-size: .88rem; color: var(--accent); }
+.dprog { display: grid; gap: var(--s2); }
+.dprog-sum { margin: 0; }
+.dprog-row { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.dchip { font: 500 .8rem var(--f-mono); padding: .25rem .6rem; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); text-decoration: none; background: var(--bg); }
+.dchip span { color: var(--accent); }
+.dchip.full { border-color: var(--ok); background: var(--ok-soft); }
+.mcq-h { font-size: 1rem; margin-top: var(--s2); }
+table.ref td.mod { white-space: normal; min-width: 9rem; }
+table.ref td code { white-space: normal; overflow-wrap: anywhere; }
+.foot { padding-block: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+.exam-link { margin: 0; font-weight: 600; display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); }
+.exam-link a { text-decoration: none; }
+.exam-link a:hover { text-decoration: underline; }
+
 </style>
 
 </head>
@@ -458,6 +512,7 @@ pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
   <p class="eyebrow">CS254 Visual Programming · Lecture 1 + Lab 1</p>
   <h1>Object Oriented Programming with Java</h1>
   <p class="lede">Every slide of <em>Lecture 1-OOP</em> and both pages of <em>Lab 1: OOP</em>, in order: text, code, diagrams, screenshots and photos. Each topic opens with a plain-language explanation and ends with the original slides and a short self-check.</p>
+  <p class="exam-link"><a href="../Practice/index.html#drills-l1">Exam practice: 5 code-completion drills for this lecture</a> · <a href="#course-ex">the course example programs</a></p>
   <div class="legend">
     <span><i class="sw" style="background:var(--mark)"></i><span class="k">Red text</span> was emphasized in red on the slide</span>
     <span><span class="sn">12</span> slide number</span>
@@ -1757,6 +1812,1036 @@ class LargeWoddenBox extends WoddenBox {
 </section>
 
 <!-- ============ 11. Lab 1 ============ -->
+<section class="sec" id="course-ex" data-title="Course example programs">
+  <div class="sec-head">
+    <p class="eyebrow">Added · from OOP_Examples.zip</p>
+    <div class="sec-head-row"><h2>Course example programs</h2><label class="done"><input type="checkbox" id="done-course-ex"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>These are the example projects from the course (<code>OOP_Examples.zip</code>): the <code>OOP</code> folder with short programs for each OOP idea, and <code>AdditionalExampless</code> with the slide examples as runnable files. Every program below was compiled and run; the output shown is the real output. Open <b>Full code</b> for the file exactly as in the zip. Several are written in the exam's style (<code>// TODO</code> lines to complete), and each has a matching code-completion drill on the practice page.</div></aside>
+
+
+  <div class="slide ex" id="ex-classes">
+    <p class="added">Example · ClassesAndObjects.java</p>
+    <h3>Classes and objects: a Student class</h3>
+    <p>One class, two objects. <code>Student</code> bundles state (<code>id</code>, <code>name</code>, <code>gpa</code>) with behavior (<code>printInfo</code>); <code>main</code> creates two Student objects with different data and asks each to print itself (slides 4–8).</p>
+    <pre class="console"><span class="ttl">Output</span>ID: 2026001
+Name: Lina
+GPA: 3.45
+
+ID: 2026002
+Name: Omar
+GPA: 3.82</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">Student(String id, String name, double gpa) {
+    this.id = id;</pre></dt><dd>A constructor: same name as the class, no return type. <code>this.id</code> is the field; plain <code>id</code> is the parameter with the same name.</dd></div>
+<div><dt><pre class="java">Student s1 = new Student("2026001", "Lina", 3.45);</pre></dt><dd><code>new</code> creates an object and runs the constructor with these arguments. <code>s1</code> and <code>s2</code> are two separate objects of the same class.</dd></div>
+<div><dt><pre class="java">s1.printInfo();</pre></dt><dd>Calls the method on one object; it prints that object's own fields.</dd></div>
+<div><dt><pre class="java">static class Student {</pre></dt><dd>The class is written <em>inside</em> <code>ClassesAndObjects</code>. <code>static</code> lets <code>main</code> (a static method) create Student objects without first creating a ClassesAndObjects object.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">ClassesAndObjects.java (42 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package OOP;
+
+/**
+ *
+ * @author amani
+ */
+public class ClassesAndObjects {
+
+    static class Student {
+        String id;
+        String name;
+        double gpa;
+
+        Student(String id, String name, double gpa) {
+            this.id = id;
+            this.name = name;
+            this.gpa = gpa;
+        }
+
+        void printInfo() {
+            System.out.println("ID: " + id);
+            System.out.println("Name: " + name);
+            System.out.println("GPA: " + gpa);
+        }
+    }
+
+    public static void main(String[] args) {
+        Student s1 = new Student("2026001", "Lina", 3.45);
+        
+        Student s2 = new Student("2026002", "Omar", 3.82);
+        
+
+        s1.printInfo();
+        System.out.println();
+
+        s2.printInfo();
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l1-classes">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-encap">
+    <p class="added">Example · Encapsulation.java</p>
+    <h3>Encapsulation: a bank account</h3>
+    <p>The fields are <code>private</code>, so the only way to change the balance is through <code>deposit</code> and <code>withdraw</code>, which check the amount first (slides 46–49). <code>accountNumber</code> is also <code>final</code>: set once in the constructor, never changed, and it has a getter but no setter (read-only).</p>
+    <pre class="console"><span class="ttl">Output</span>250.0
+true
+150.0
+false
+150.0</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">private final String accountNumber;
+private double balance;</pre></dt><dd>Data hiding: code outside the class can't touch these directly.</dd></div>
+<div><dt><pre class="java">public void deposit(double amount) {
+    if (amount &gt; 0) {
+        balance += amount;</pre></dt><dd>The setter-style method protects the object: a negative deposit is refused with a message.</dd></div>
+<div><dt><pre class="java">public boolean withdraw(double amount) {
+    if (amount &lt;= 0 || amount &gt; balance) {
+        return false;
+    }</pre></dt><dd>Returns <code>true</code>/<code>false</code> so the caller knows whether it worked. 200 + 50 = 250, withdraw 100 → true and 150, withdraw 500 → false and still 150.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">Encapsulation.java (60 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package OOP;
+
+/**
+ *
+ * @author amani
+ */
+public class Encapsulation {
+
+    static class BankAccount {
+        private final String accountNumber;
+        private double balance;
+
+        BankAccount(String accountNumber, double balance) {
+            this.accountNumber = accountNumber;
+            this.balance = balance;
+        }
+
+        public String getAccountNumber() {
+            return accountNumber;
+        }
+
+        public double getBalance() {
+            return balance;
+        }
+
+        public void deposit(double amount) {
+            if (amount &gt; 0) {
+                balance += amount;
+            } else {
+                System.out.println("Invalid deposit amount.");
+            }
+        }
+
+        public boolean withdraw(double amount) {
+            if (amount &lt;= 0 || amount &gt; balance) {
+                return false;
+            }
+
+            balance -= amount;
+            return true;
+        }
+    }
+
+    public static void main(String[] args) {
+        BankAccount account = new BankAccount("A100", 200);
+
+        account.deposit(50);
+        System.out.println(account.getBalance());
+
+        System.out.println(account.withdraw(100));
+        System.out.println(account.getBalance());
+
+        System.out.println(account.withdraw(500));
+        System.out.println(account.getBalance());
+    }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-inherit">
+    <p class="added">Example · InheritanceExample.java</p>
+    <h3>Inheritance: Person and Student</h3>
+    <p><code>Student extends Person</code>: a Student IS-A Person (slides 51–58). It inherits <code>name</code> and <code>introduce()</code>, overrides <code>introduce()</code> to add the ID, and adds its own <code>study()</code>.</p>
+    <pre class="console"><span class="ttl">Output</span>My name is Ahmad
+My name is Sara, and my ID is 2026123
+Sara is studying.</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">protected String name;</pre></dt><dd><code>protected</code>: visible in the subclass, so Student can print <code>name</code> directly.</dd></div>
+<div><dt><pre class="java">Student(String name, String studentId) {
+    super(name);</pre></dt><dd><code>super(name)</code> runs Person's constructor first. It must be the first statement.</dd></div>
+<div><dt><pre class="java">@Override
+void introduce() {</pre></dt><dd>Same signature as in Person, so it replaces Person's version for Student objects. <code>@Override</code> makes the compiler check that.</dd></div>
+<div><dt><pre class="java">s.study();</pre></dt><dd>Only a Student has <code>study()</code>; a plain Person object can't call it.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">InheritanceExample.java (54 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package OOP;
+
+/**
+ *
+ * @author amani
+ */
+public class InheritanceExample {
+
+    static class Person {
+        protected String name;
+
+        Person(String name) {
+            this.name = name;
+        }
+
+        void introduce() {
+            System.out.println("My name is " + name);
+        }
+    }
+
+    static class Student extends Person {
+        private String studentId;
+
+        Student(String name, String studentId) {
+            super(name);
+            this.studentId = studentId;
+        }
+
+        @Override
+        void introduce() {
+            System.out.println(
+                "My name is " + name
+                + ", and my ID is " + studentId
+            );
+        }
+
+        void study() {
+            System.out.println(name + " is studying.");
+        }
+    }
+
+    public static void main(String[] args) {
+        Person p = new Person("Ahmad");
+        Student s = new Student("Sara", "2026123");
+
+        p.introduce();
+        s.introduce();
+        s.study();
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l1-inherit">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-poly">
+    <p class="added">Example · PolymorphismExample.java</p>
+    <h3>Polymorphism: shapes and their areas</h3>
+    <p>A <code>Shape</code> reference can point at a Circle or a Rectangle, and <code>area()</code> runs the version of the object's real class (slides 79–84). The loop over <code>Shape[]</code> never needs to know which shape it holds.</p>
+    <pre class="console"><span class="ttl">Output</span>Circle area: 28.274333882308138
+Rectangle area: 20.0
+12.566370614359172
+12.0
+78.53981633974483</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">Shape s1 = new Circle(3);</pre></dt><dd>Parent-class reference, child-class object: polymorphism.</dd></div>
+<div><dt><pre class="java">double area() {
+    return Math.PI * radius * radius;
+}</pre></dt><dd>Circle overrides Shape's <code>area()</code> (which returns 0).</dd></div>
+<div><dt><pre class="java">for (Shape shape : shapes) {
+    System.out.println(shape.area());
+}</pre></dt><dd>Dynamic method binding: the right <code>area()</code> is chosen at run time for each element.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">PolymorphismExample.java (68 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package OOP;
+
+/**
+ *
+ * @author amani
+ */
+public class PolymorphismExample {
+
+    static class Shape {
+
+        double area() {
+            return 0;
+        }
+    }
+
+    static class Circle extends Shape {
+
+        private double radius;
+
+        Circle(double radius) {
+            this.radius = radius;
+        }
+
+        @Override
+        double area() {
+            return Math.PI * radius * radius;
+        }
+    }
+
+    static class Rectangle extends Shape {
+
+        private double width;
+        private double height;
+
+        Rectangle(double width, double height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        @Override
+        double area() {
+            return width * height;
+        }
+    }
+
+    public static void main(String[] args) {
+        Shape s1 = new Circle(3);
+        Shape s2 = new Rectangle(4, 5);
+
+        System.out.println("Circle area: " + s1.area());
+        System.out.println("Rectangle area: " + s2.area());
+
+        Shape[] shapes = {
+            new Circle(2),
+            new Rectangle(3, 4),
+            new Circle(5)
+        };
+
+        for (Shape shape : shapes) {
+            System.out.println(shape.area());
+        }
+
+    }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-interface">
+    <p class="added">Example · InterfaceExample.java</p>
+    <h3>Interface + abstract class: paying employees</h3>
+    <p><code>Payable</code> is an interface with one method. <code>Employee</code> says it <code>implements Payable</code> but doesn't write <code>calculatePayment()</code>, so it must be <code>abstract</code>; the concrete <code>HourlyEmployee</code> writes both missing methods (slides 34–38, 67–73). 12 hours × 8.5 = 102.0.</p>
+    <pre class="console"><span class="ttl">Output</span>Maya
+Hourly Employee
+102.0</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">interface Payable {
+    double calculatePayment();
+}</pre></dt><dd>Interface methods have no body and are implicitly <code>public abstract</code>.</dd></div>
+<div><dt><pre class="java">static abstract class Employee implements Payable {</pre></dt><dd>Abstract: it can't be instantiated, and it may leave interface methods unwritten.</dd></div>
+<div><dt><pre class="java">@Override
+public double calculatePayment() {</pre></dt><dd><code>public</code> is required here: an interface method can't be implemented with weaker access.</dd></div>
+<div><dt><pre class="java">Employee e = new HourlyEmployee("Maya", 12, 8.5);
+System.out.println(e.name);</pre></dt><dd><code>name</code> is <code>private</code> in Employee, yet <code>main</code> reads it: all of these classes are nested inside <code>InterfaceExample</code>, and Java lets code in the same outer class see private members. From a separate file this line wouldn't compile; you'd add a getter.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">InterfaceExample.java (55 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package OOP;
+
+/**
+ *
+ * @author amani
+ */
+public class InterfaceExample {
+
+    interface Payable {
+        double calculatePayment();
+    }
+
+    static abstract class Employee implements Payable {
+        private String name;
+
+        Employee(String name) {
+            this.name = name;
+        }
+
+        abstract String getRole();
+    }
+
+    static class HourlyEmployee extends Employee {
+        private double hours;
+        private double rate;
+
+        HourlyEmployee(String name, double hours, double rate) {
+            super(name);
+            this.hours = hours;
+            this.rate = rate;
+        }
+
+        @Override
+        public double calculatePayment() {
+            return hours * rate;
+        }
+
+        @Override
+        String getRole() {
+            return "Hourly Employee";
+        }
+    }
+
+    public static void main(String[] args) {
+        Employee e = new HourlyEmployee("Maya", 12, 8.5);
+
+        System.out.println(e.name);
+        System.out.println(e.getRole());
+        System.out.println(e.calculatePayment());
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l1-interface">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-compose">
+    <p class="added">Example · CompositionExample.java</p>
+    <h3>Composition (HAS-A): a car and its engine</h3>
+    <p>A <code>Car</code> HAS-A <code>Engine</code>: the engine is a field, passed in through the constructor (slides 64–65). The car asks its engine for the horsepower instead of storing it itself.</p>
+    <pre class="console"><span class="ttl">Output</span>Model: Toyota
+Horsepower: 150</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">private Engine engine;</pre></dt><dd>The HAS-A relationship is just a field whose type is another class.</dd></div>
+<div><dt><pre class="java">"Horsepower: " + engine.getHorsepower()</pre></dt><dd>The car delegates to the engine object.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">CompositionExample.java (48 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package OOP;
+
+/**
+ *
+ * @author amani
+ */
+public class CompositionExample {
+
+    static class Engine {
+        private int horsepower;
+
+        Engine(int horsepower) {
+            this.horsepower = horsepower;
+        }
+
+        int getHorsepower() {
+            return horsepower;
+        }
+    }
+
+    static class Car {
+        private String model;
+        private Engine engine;
+
+        Car(String model, Engine engine) {
+            this.model = model;
+            this.engine = engine;
+        }
+
+        void printDetails() {
+            System.out.println("Model: " + model);
+            System.out.println(
+                "Horsepower: " + engine.getHorsepower()
+            );
+        }
+    }
+
+    public static void main(String[] args) {
+        Engine engine = new Engine(150);
+        Car car = new Car("Toyota", engine);
+
+        car.printDetails();
+    }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-static">
+    <p class="added">Example · StaticExample.java</p>
+    <h3>static fields: counting courses</h3>
+    <p><code>count</code> is shared by all Course objects (one copy for the class), so each constructor call adds 1 to the same counter. <code>DEPARTMENT</code> is <code>static final</code>: a constant (slides 15–18).</p>
+    <pre class="console"><span class="ttl">Output</span>CS101 - Programming I
+CS205 - OOP
+Computer Science
+Courses created: 2</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">static int count = 0;
+static final String DEPARTMENT = "Computer Science";</pre></dt><dd>Class variables: accessed through the class name, <code>Course.count</code>, <code>Course.DEPARTMENT</code>.</dd></div>
+<div><dt><pre class="java">count++;</pre></dt><dd>Runs inside the constructor, once per new object: after two courses it's 2.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">StaticExample.java (42 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package OOP;
+
+/**
+ *
+ * @author amani
+ */
+public class StaticExample {
+
+    static class Course {
+        static int count = 0;
+        static final String DEPARTMENT = "Computer Science";
+
+        private String code;
+        private String title;
+
+        Course(String code, String title) {
+            this.code = code;
+            this.title = title;
+            count++;
+        }
+
+       
+        void printInfo() {
+            System.out.println(code + " - " + title);
+        }
+    }
+
+    public static void main(String[] args) {
+        Course c1 = new Course("CS101", "Programming I");
+        Course c2 = new Course("CS205", "OOP");
+
+        c1.printInfo();
+        c2.printInfo();
+
+        System.out.println(Course.DEPARTMENT);
+        System.out.println("Courses created: " + Course.count);
+    }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-register">
+    <p class="added">Example · CourseRegistration.java</p>
+    <h3>Course registration (TODO style)</h3>
+    <p>Exactly the exam's code-completion style: the <code>// TODO</code> comments mark the lines you have to write. A Student keeps a <code>List&lt;Course&gt;</code>; <code>register</code> adds to it and <code>printRegistration</code> loops over it. <code>toString()</code> decides how a Course prints.</p>
+    <pre class="console"><span class="ttl">Output</span>Student: Lina
+CS201 - Data Structures (3 credits)
+CS205 - Object-Oriented Programming (3 credits)</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">private List&lt;Course&gt; courses = new ArrayList&lt;&gt;();</pre></dt><dd>An ArrayList of Course objects. <code>List</code> is the interface, <code>ArrayList</code> the class (import both from <code>java.util</code>).</dd></div>
+<div><dt><pre class="java">courses.add(course);</pre></dt><dd>TODO 1: add the course to the student's list.</dd></div>
+<div><dt><pre class="java">for(Course c: courses)
+    System.out.println(c.toString());</pre></dt><dd>TODO 2: the for-each loop prints every course. <code>println(c)</code> would also call <code>toString()</code> automatically.</dd></div>
+<div><dt><pre class="java">@Override
+public String toString() {
+    return code + " - " + title + " (" + credits + " credits)";</pre></dt><dd>Overriding <code>toString()</code> from <code>Object</code> controls the printed text: <code>CS201 - Data Structures (3 credits)</code>.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">CourseRegistration.java (80 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package OOP;
+
+/**
+ *
+ * @author amani
+ */
+import java.util.ArrayList;
+import java.util.List;
+
+public class CourseRegistration {
+
+    static class Course {
+        private String code;
+        private String title;
+        private int credits;
+
+        public Course(String code, String title, int credits) {
+            this.code = code;
+            this.title = title;
+            this.credits = credits;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public int getCredits() {
+            return credits;
+        }
+
+        @Override
+        public String toString() {
+            return code + " - " + title
+                    + " (" + credits + " credits)";
+        }
+    }
+
+    static class Student {
+        private String name;
+        private List&lt;Course&gt; courses = new ArrayList&lt;&gt;();
+
+        public Student(String name) {
+            this.name = name;
+        }
+
+        public void register(Course course) {
+            // TODO: Add the course to the student's list.
+            courses.add(course);
+        }
+
+        public void printRegistration() {
+            System.out.println("Student: " + name);
+
+            // TODO: Display all registered courses.
+            for(Course c: courses)
+                System.out.println(c.toString());
+        }
+    }
+
+    public static void main(String[] args) {
+        Course c1 = new Course("CS201", "Data Structures", 3);
+        Course c2 = new Course("CS205", "Object-Oriented Programming", 3);
+
+        Student student = new Student("Lina");
+
+        // TODO: Register both courses.
+        // TODO: Print the student's registration.
+        student.register(c1);
+        student.register(c2);
+        student.printRegistration();
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l1-register">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-hello">
+    <p class="added">Example · OOP_Examples.java</p>
+    <h3>The starter class</h3>
+    <p>The class NetBeans creates for a new project: <code>main</code> is where the program starts.</p>
+    <pre class="console"><span class="ttl">Output</span>Hello World!</pre>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">OOP_Examples.java (16 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package OOP;
+
+/**
+ *
+ * @author amani
+ */
+public class OOP_Examples {
+
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+    }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-abstract">
+    <p class="added">Example · AbstractDemo.java, Employee.java, Salary.java</p>
+    <h3>Abstract Employee and Salary (dynamic binding)</h3>
+    <p>The slides' AbstractDemo (slides 39–43) as three files. Both objects are Salary objects, so both <code>mailCheck()</code> calls run Salary's version, even through the <code>Employee</code> reference <code>e</code>. Each <code>new Salary(...)</code> first prints "Constructing an Employee" because of <code>super(...)</code>.</p>
+    <pre class="console"><span class="ttl">Output</span>Constructing an Employee
+Constructing an Employee
+Call mailCheck using Salary reference --
+Within mailCheck of Salary class 
+Mailing check to Mohd Mohtashim with salary 3600.0
+Computing salary pay for Mohd Mohtashim
+
+ Call mailCheck using Employee reference--
+Within mailCheck of Salary class 
+Mailing check to John Adams with salary 2400.0
+Computing salary pay for John Adams</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">public abstract class Employee {</pre></dt><dd>No objects of Employee can be created; it exists to be extended.</dd></div>
+<div><dt><pre class="java">super(name, address, number);
+setSalary(salary);</pre></dt><dd>Salary's constructor calls Employee's constructor first, then sets its own field through the setter (which rejects negative salaries).</dd></div>
+<div><dt><pre class="java">Employee e = new Salary("John Adams", "Boston, MA", 2, 2400.00);
+e.mailCheck();</pre></dt><dd>Employee reference, Salary object: the Salary version runs.</dd></div>
+<div><dt><pre class="java">s.computePay();</pre></dt><dd>The return value (salary/52) is calculated but never printed; only the line inside the method appears.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code (3 files): exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">AbstractDemo.java (19 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AdditionalExampless;
+/* File name : AbstractDemo.java */
+public class AbstractDemo {
+
+   public static void main(String [] args) {
+      Salary s = new Salary("Mohd Mohtashim", "Ambehta, UP", 3, 3600.00);
+      Employee e = new Salary("John Adams", "Boston, MA", 2, 2400.00);
+      System.out.println("Call mailCheck using Salary reference --");
+      s.mailCheck();
+      s.computePay();
+      System.out.println("\n Call mailCheck using Employee reference--");
+      e.mailCheck();
+      e.computePay();
+   }
+}</pre></div>
+      <div class="code"><span class="code-label">Employee.java (48 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AdditionalExampless;
+
+/* File name : Employee.java */
+public abstract class Employee {
+   private String name;
+   private String address;
+   private int number;
+
+   public Employee(String name, String address, int number) {
+      System.out.println("Constructing an Employee");
+      this.name = name;
+      this.address = address;
+      this.number = number;
+   }
+   
+   public double computePay() {
+     System.out.println("Inside Employee computePay");
+     return 0.0;
+   }
+   
+   public void mailCheck() {
+      System.out.println("Mailing a check to " + this.name + " " + this.address);
+   }
+
+   public String toString() {
+      return name + " " + address + " " + number;
+   }
+
+   public String getName() {
+      return name;
+   }
+ 
+   public String getAddress() {
+      return address;
+   }
+   
+   public void setAddress(String newAddress) {
+      address = newAddress;
+   }
+ 
+   public int getNumber() {
+      return number;
+   }
+}</pre></div>
+      <div class="code"><span class="code-label">Salary.java (35 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AdditionalExampless;
+
+/* File name : Salary.java */
+public class Salary extends Employee {
+   private double salary;   // Annual salary
+   
+   public Salary(String name, String address, int number, double salary) {
+      super(name, address, number);
+      setSalary(salary);
+   }
+   
+   public void mailCheck() {
+      System.out.println("Within mailCheck of Salary class ");
+      System.out.println("Mailing check to " + getName() + " with salary " + salary);
+   }
+ 
+   public double getSalary() {
+      return salary;
+   }
+   
+   public void setSalary(double newSalary) {
+      if(newSalary &gt;= 0.0) {
+         salary = newSalary;
+      }
+   }
+   
+   public double computePay() {
+      System.out.println("Computing salary pay for " + getName());
+      return salary/52;
+   }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-inner">
+    <p class="added">Example · My_class.java, My_class2.java</p>
+    <h3>Inner classes</h3>
+    <p>A class declared inside another class. In <code>My_class</code> the inner class is <code>private</code>, so only the outer class can use it (through <code>display_Inner()</code>; output "This is an inner class"). In <code>My_class2</code> it's <code>public</code>, so <code>main</code> creates one through an outer object, and the inner object can read the outer object's <code>private num</code> (175). This is the same idea as Lab 2's <code>Employeecar</code>.</p>
+    <pre class="console"><span class="ttl">Output</span>This is the getnum method of the inner class
+175</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">Outer_Demo2.Inner_Demo inner = outer.new Inner_Demo();</pre></dt><dd>An inner-class object needs an outer object: <code>outerObject.new Inner()</code>. Its type is written <code>Outer.Inner</code>.</dd></div>
+<div><dt><pre class="java">return num;</pre></dt><dd>Inner classes can use the outer class's private fields.</dd></div>
+<div><dt><pre class="java">private class Inner_Demo {</pre></dt><dd>A private inner class is invisible outside <code>Outer_Demo</code>, so the outer class offers a method that uses it.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code (2 files): exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">My_class.java (32 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AdditionalExampless;
+class Outer_Demo {
+   int num;
+   
+   // inner class
+   private class Inner_Demo {
+      public void print() {
+         System.out.println("This is an inner class");
+      }
+   }
+   
+   // Accessing he inner class from the method within
+   void display_Inner() {
+      Inner_Demo inner = new Inner_Demo();
+      inner.print();
+   }
+}
+   
+public class My_class {
+
+   public static void main(String args[]) {
+      // Instantiating the outer class 
+      Outer_Demo outer = new Outer_Demo();
+      
+      // Accessing the display_Inner() method.
+      outer.display_Inner();
+   }
+}</pre></div>
+      <div class="code"><span class="code-label">My_class2.java (29 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AdditionalExampless;
+class Outer_Demo2 {
+   // private variable of the outer class
+   private int num = 175;  
+   
+   // inner class
+   public class Inner_Demo {
+      public int getNum() {
+         System.out.println("This is the getnum method of the inner class");
+         return num;
+      }
+   }
+}
+
+public class My_class2 {
+
+   public static void main(String args[]) {
+      // Instantiating the outer class
+      Outer_Demo2 outer = new Outer_Demo2();
+      
+      // Instantiating the inner class
+      Outer_Demo2.Inner_Demo inner = outer.new Inner_Demo();
+      System.out.println(inner.getNum());
+   }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l1-anon">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-override">
+    <p class="added">Example · TestDog.java, Tester.java</p>
+    <h3>Overriding and super.move()</h3>
+    <p><code>Animal b = new Dog();</code> runs Dog's <code>move()</code> (dynamic binding). In <code>TestDog</code>, Dog's version ends with <code>super.move()</code>, which also runs Animal's version, so both lines print. In <code>Tester</code>, <code>a.move()</code> prints "Animals can move" and <code>b.move()</code> prints "Dogs can walk and run".</p>
+    <pre class="console"><span class="ttl">Output</span>Dogs can walk and run
+Animals can move</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">super.move();   // invokes the super class method</pre></dt><dd><code>super.method()</code> calls the parent's version from inside the override.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code (2 files): exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">TestDog.java (27 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AdditionalExampless;
+
+class Animal {
+   public void move() {
+      System.out.println("Animals can move");
+   }
+}
+
+class Dog extends Animal {
+   public void move() {
+      System.out.println("Dogs can walk and run");
+      super.move();   // invokes the super class method
+      
+   }
+}
+
+public class TestDog {
+
+   public static void main(String args[]) {
+      Animal b = new Dog();   // Animal reference but Dog object
+      b.move();   // runs the method in Dog class
+   }
+}</pre></div>
+      <div class="code"><span class="code-label">Tester.java (29 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AdditionalExampless;
+
+class Animal2 {
+   public void move() {
+      System.out.println("Animals can move");
+   }
+}
+
+class Dog2 extends Animal2 {
+   public void move() {
+      System.out.println("Dogs can walk and run");
+   }
+}
+
+public class Tester {
+
+   public static void main(String args[]) {
+      Animal2 a = new Animal2();   // Animal reference and object
+      // Dynamic Binding      
+      Animal2 b = new Dog2();   // Animal reference but Dog object
+
+      a.move();   // runs the method in Animal class
+      b.move();   // runs the method in Dog class
+   }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-anon">
+    <p class="added">Example · Tester2.java, Tester3.java, Tester4.java</p>
+    <h3>Anonymous classes</h3>
+    <p>A class with no name, written and instantiated in one expression. <code>Tester2</code> implements the <code>Software</code> interface on the spot; <code>Tester3</code> makes a one-off subclass of <code>Car</code> that overrides <code>engineType()</code>; <code>Tester4</code> passes an anonymous subclass of the abstract <code>Engine</code> straight into a method. Swing listeners are written exactly like this (Lecture 4).</p>
+    <pre class="console"><span class="ttl">Output</span>Turbo Engine
+V2 Engine
+AdditionalExampless.Car
+AdditionalExampless.Tester3$1</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">Software s = new Software() {
+    @Override
+    public void develop() {</pre></dt><dd>You can't instantiate an interface, but you can instantiate an anonymous class that implements it.</dd></div>
+<div><dt><pre class="java">System.out.println(c2.getClass().getName());</pre></dt><dd>Prints <code>AdditionalExampless.Tester3$1</code>: the compiler names the anonymous class Outer$1.</dd></div>
+<div><dt><pre class="java">v.transport(new Engine() { ... });</pre></dt><dd>The anonymous object is created right where it's needed, as an argument; this is how <code>addActionListener(new ActionListener() { ... })</code> works.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code (3 files): exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">Tester2.java (21 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AdditionalExampless;
+
+interface Software {
+   public void develop();
+}
+public class Tester2 {
+   public static void main(String args[]) {
+      Software s = new Software() {
+         @Override
+         public void develop() {
+            System.out.println("Software Developed in Java");
+         }
+      };
+      s.develop();
+      System.out.println(s.getClass().getName());
+   }
+}</pre></div>
+      <div class="code"><span class="code-label">Tester3.java (30 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AdditionalExampless;
+
+class Car {
+   public void engineType() {
+      System.out.println("Turbo Engine");
+   }
+}
+public class Tester3 {
+   public static void main(String args[]) {
+      Car c1 = new Car();
+      c1.engineType();
+      Car c2 = new Car() {
+         @Override
+         public void engineType() {
+            System.out.println("V2 Engine");
+         }
+      };
+      c2.engineType();
+      
+      System.out.println(c1.getClass().getName());
+      System.out.println(c2.getClass().getName());
+
+   }
+   
+   
+}</pre></div>
+      <div class="code"><span class="code-label">Tester4.java (25 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package AdditionalExampless;
+
+abstract class Engine {
+   public abstract void engineType();
+}
+class Vehicle {
+   public void transport(Engine e) {
+      e.engineType();
+   }
+}
+public class Tester4 {
+   public static void main(String args[]) {
+      Vehicle v = new Vehicle();
+      v.transport(new Engine() {
+         @Override
+         public void engineType() {
+            System.out.println("Turbo Engine");
+         }
+      });
+   }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l1-anon">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+</section>
+
 <section class="sec" id="lab1" data-title="Lab 1: OOP">
   <div class="sec-head">
     <p class="eyebrow">Lab 1 · Abualhaj, Amer · 2 pages</p>

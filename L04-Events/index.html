@@ -440,6 +440,60 @@ pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
 .xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
 .xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
 
+/* course example programs */
+.ex-shots { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: flex-start; }
+.ex-shots figure { flex: 0 1 auto; }
+.ex-shots figure img { max-width: 100%; }
+.drill-link { margin: 0; font-weight: 600; }
+.drill-link a { text-decoration: none; }
+.drill-link a:hover { text-decoration: underline; }
+
+/* practice page: drills */
+.quote { margin: 0; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--r) var(--r) 0; padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.quote p, .quote ul { margin: 0; }
+.quote ul { padding-left: 1.1rem; display: grid; gap: var(--s1); }
+.quote footer { font-size: .82rem; color: var(--muted); }
+.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: var(--s2); }
+.sec-note { margin: 0; color: var(--muted); font-size: .92rem; }
+.drill { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); scroll-margin-top: 4rem; }
+.drill-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.drill-head h3 { font-size: 1.05rem; }
+.drill-score { font: 500 .78rem var(--f-mono); color: var(--muted); }
+.drill-score.full { color: var(--ok); }
+.drill-from, .drill-note { margin: 0; font-size: .85rem; color: var(--muted); }
+.drill-task { margin: 0; }
+.drill-code pre { line-height: 1.75; }
+.blank { font: inherit; font-size: inherit; line-height: 1.3; color: var(--ink); background: var(--surface); border: 1px dashed var(--accent); border-radius: 4px; padding: 0 .25ch; margin: 0; max-width: 100%; vertical-align: baseline; box-sizing: content-box; }
+textarea.blank { display: inline-block; vertical-align: top; resize: vertical; white-space: pre; overflow-x: auto; }
+.blank::placeholder { color: var(--muted); opacity: .8; }
+.blank:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-style: solid; }
+.blank.ok { border: 1px solid var(--ok); background: var(--ok-soft); }
+.blank.bad { border: 1px solid var(--bad); background: var(--bad-soft); }
+.blank.shown { border: 1px solid var(--box); }
+.drill-actions { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.drill-sum { margin: 0; font-weight: 600; }
+.drill-fb { margin: 0; padding-left: 1.6rem; display: grid; gap: var(--s1); font-size: .9rem; }
+.drill-fb li.ok::marker { color: var(--ok); font-weight: 600; }
+.drill-fb li.bad::marker { color: var(--bad); font-weight: 600; }
+.drill-fb li b { font-weight: 600; }
+.drill-fb li.ok b { color: var(--ok); }
+.drill-fb li.bad b { color: var(--bad); }
+.drill-fb code { overflow-wrap: anywhere; }
+.drill-out summary { cursor: pointer; font-size: .88rem; color: var(--accent); }
+.dprog { display: grid; gap: var(--s2); }
+.dprog-sum { margin: 0; }
+.dprog-row { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.dchip { font: 500 .8rem var(--f-mono); padding: .25rem .6rem; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); text-decoration: none; background: var(--bg); }
+.dchip span { color: var(--accent); }
+.dchip.full { border-color: var(--ok); background: var(--ok-soft); }
+.mcq-h { font-size: 1rem; margin-top: var(--s2); }
+table.ref td.mod { white-space: normal; min-width: 9rem; }
+table.ref td code { white-space: normal; overflow-wrap: anywhere; }
+.foot { padding-block: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+.exam-link { margin: 0; font-weight: 600; display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); }
+.exam-link a { text-decoration: none; }
+.exam-link a:hover { text-decoration: underline; }
+
 </style>
 
 </head>
@@ -456,8 +510,9 @@ pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
 <main class="wrap">
 <header class="top">
   <p class="eyebrow">CS254 Visual Programming · Lecture 4 + Lab 4</p>
-  <h1>Event in Java, Part 1</h1>
-  <p class="lede">How a click becomes code: events, listeners, the delegation model and the ActionListener. Every slide of <em>Lecture 4 – Event</em> (29 slides) in order, with all code typed out and every diagram and screenshot, then Lab 4 with the project's answer file and a full solution. There's an event simulator to watch the source → event → listener chain happen.</p>
+  <h1>Event in Java</h1>
+  <p class="lede">How a click becomes code: events, listeners, the delegation model, the ActionListener and window events. Every slide of <em>Lecture 4 – Event</em> (35 slides) in order, with all code typed out and every diagram and screenshot, then Lab 4 with the project's answer file and a full solution. There's an event simulator to watch the source → event → listener chain happen.</p>
+  <p class="exam-link"><a href="../Practice/index.html#drills-l4">Exam practice: 4 code-completion drills for this lecture</a> · <a href="#course-ex">the course example programs</a></p>
   <div class="legend">
     <span><i class="sw" style="background:var(--mark)"></i><span class="k">Red text</span> was red on the slide</span>
     <span><span class="sn">12</span> slide number</span>
@@ -477,7 +532,7 @@ pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
   <aside class="plain"><b>In plain words</b><div>An <b>event</b> is "something happened": a click, a key press, the mouse moving. Java wraps each one in an object (an <code>ActionEvent</code>, a <code>KeyEvent</code>…). A <b>listener</b> is your object that waits for that kind of event and runs your code when it arrives. Your program doesn't decide the order things run in; the user does, by what they click. That's <b>event-driven programming</b>.</div></aside>
 
   <div class="slide">
-    <h3>Event in Java, Part 1 <span class="sn">1</span></h3>
+    <h3>Event in Java <span class="sn">1</span></h3>
     <figure><div class="plate"><img src="img/s1_event_model.png" width="434" alt="Diagram: Event Source creates an Event Object; a Listener Object registers with the Event Source and implements a Listener Interface with onEvent(EventObj); the source invokes the listener's onEvent(EventObj)"></div>
     <figcaption>The whole lecture in one picture: the <b>Event Source</b> <i>creates</i> an <b>Event Object</b>; the <b>Listener Object</b> <i>registers</i> with the source and <i>implements</i> the <b>Listener Interface</b>; the source <i>invokes</i> the listener's <code>onEvent(EventObj)</code>.</figcaption></figure>
   </div>
@@ -969,21 +1024,228 @@ public class TextFieldTest extends JFrame {
 </section>
 
 <!-- ============ 6 ============ -->
-<section class="sec" id="userform" data-title="User Information Form">
+<!-- ============ window events (new slides 27–35) ============ -->
+<section class="sec" id="window" data-title="Window events and adapters">
   <div class="sec-head">
-    <p class="eyebrow">Slides 27–29</p>
-    <div class="sec-head-row"><h2>User Information Form</h2><label class="done"><input type="checkbox" id="done-userform"> Studied</label></div>
+    <p class="eyebrow">Slides 28–36</p>
+    <div class="sec-head-row"><h2>Window events and adapters</h2><label class="done"><input type="checkbox" id="done-window"> Studied</label></div>
   </div>
-  <aside class="plain"><b>In plain words</b><div>The last three slides only show screenshots of a finished form: text fields, a password field, radio buttons, check boxes, a scrolling text area, a list and a combo box. Pressing Submit collects every value into one message. It brings Lectures 2–4 together, and it's the same idea as Lab 4. The code below is one way to build it.</div></aside>
+  <aside class="plain"><b>In plain words</b><div>A <code>WindowListener</code> hears everything that happens to a window: opened, minimised, restored, focused, unfocused, closing, closed. It has <b>seven</b> methods, and an interface forces you to write all seven. <code>WindowAdapter</code> is a ready-made class with all seven left empty, so you extend it and override only the ones you care about. Most common use: <code>windowClosing</code> to ask "Are you sure?" before the program exits.</div></aside>
 
   <div class="slide">
-    <h3>The form <span class="sn">27–28</span></h3>
-    <figure><div class="plate"><img src="img/s27_userform.jpg" width="560" loading="lazy" alt="User Information Form: Name, Password, Gender (Male, Female), Skills (Java, Python, C++), Address text area, Course List (Visual, Data Mining, Design), Department combo box showing CS, Submit and Clear buttons"></div><figcaption>Slide 27: Name, Password, Gender, Skills, Address, Course List, Department, Submit, Clear.</figcaption></figure>
-    <figure><div class="plate"><img src="img/s28_userform_dept.jpg" width="560" loading="lazy" alt="The same form with the Department combo box open showing CS, DMI, CE, EE"></div><figcaption>Slide 28: the Department drop-down holds CS, DMI, CE, EE.</figcaption></figure>
+    <h3>1. Windows Events <span class="sn">28</span></h3>
+    <div class="fig-row">
+      <div style="flex:2 1 16rem;display:grid;gap:var(--s2);min-width:0">
+        <p>Windows events in Java are triggered when a user interacts with a window, such as opening, closing, minimizing, or resizing a window. These events are handled using the <b>WindowListener</b> interface.</p>
+        <p>The interface defines methods to handle various window-related events, such as window opening, closing, activation, deactivation, and more.</p>
+      </div>
+      <div style="flex:1 1 12rem;display:grid;gap:var(--s2);min-width:0">
+        <h4>Window Events</h4>
+        <p>Triggered when a window is opened, closed, minimized, etc.</p>
+        <ul class="pts"><li><b>Source</b>: JFrame</li><li><b>Event Class</b>: WindowEvent</li><li><b>Listener Interface</b>: WindowListener, WindowAdapter</li></ul>
+      </div>
+    </div>
   </div>
 
   <div class="slide">
-    <h3>After pressing Submit <span class="sn">29</span></h3>
+    <h3>WindowAdapter <span class="sn">29</span></h3>
+    <p><b>WindowAdapter:</b><br>It is an abstract class that implements the WindowListener interface. It provides default empty implementations for all the methods of the WindowListener interface. We can extend WindowAdapter and override only the methods you need, making it convenient for handling specific window events without implementing all the methods.</p>
+    <p><b>Registering Window Listeners</b><br>To handle window events, you need to register a WindowListener or a subclass of WindowAdapter to a window component (usually a JFrame, JDialog, or JWindow). You can do this using the addWindowListener(WindowListener l) method.</p>
+    <div class="code"><pre class="java">frame.addWindowListener(new WindowAdapter() {
+    // Override window event methods as needed
+});</pre></div>
+  </div>
+
+  <div class="slide">
+    <h3>Handling Window Events in Java <span class="sn">30</span></h3>
+    <p>To handle window events in Java, you need to implement the WindowListener or WindowAdapter interface. The WindowAdapter class provides default empty implementations for all methods of the WindowListener interface, allowing us to override only the methods relevant to your application.</p>
+    <aside class="note"><b>Guide note</b><span>Strictly, you <em>implement</em> WindowListener (an interface) but <em>extend</em> WindowAdapter (a class).</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Difference Between Java Listener and Java Adapter in Event Handling <span class="sn">31</span></h3>
+    <p>In Java's event handling mechanism, both <b>listeners</b> and <b>adapters</b> are used to respond to user interactions such as button clicks, mouse movements, and keyboard events. However, they have different roles and usage.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Listener</th><th>Adapter</th></tr></thead>
+        <tbody>
+          <tr><td><b>Definition</b></td><td>An interface with multiple abstract methods that must be implemented by the class using the listener.</td><td>A convenience class that provides default (empty) implementations of listener interface methods.</td></tr>
+          <tr><td><b>Implementation</b></td><td>A class implementing a listener interface must override <b>all</b> of its methods, even if only one method is needed.</td><td>A class can extend the adapter and override <b>only the required methods</b>, avoiding unnecessary boilerplate code.</td></tr>
+          <tr><td><b>Usage</b></td><td>Used when all or most methods of an event listener interface need to be implemented.</td><td>Used when only a few methods of an event listener interface need to be implemented.</td></tr>
+          <tr><td><b>Flexibility</b></td><td>Less flexible as it requires implementing all methods.</td><td>More flexible because it provides default implementations for unused methods.</td></tr>
+          <tr><td><b>Example Interfaces</b></td><td><code>MouseListener</code>, <code>KeyListener</code>, <code>FocusListener</code></td><td><code>MouseAdapter</code>, <code>KeyAdapter</code>, <code>FocusAdapter</code></td></tr>
+          <tr><td><b>Inheritance Requirement</b></td><td>A class implementing a listener interface can extend any other class (as Java supports multiple interface implementation).</td><td>Since Java does not support multiple inheritance, a class extending an adapter class <b>cannot</b> extend another class.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Window events <span class="sn">32</span></h3>
+    <div class="code"><pre class="java">public interface <b>WindowListener</b> {
+    //Invoked when the Window is set to be the active Window.
+    public void <b>windowActivated</b>(WindowEvent event);
+    //Invoked when a window has been closed as a result of calling dispose on the Window.
+    public void <b>windowClosed</b>(WindowEvent event);
+    //Invoked when the user attempts to close the Window from the Window's system menu.
+    public void <b>windowClosing</b>(WindowEvent event);
+    //Invoked when a Window is no longer the active Window.
+    public void <b>windowDeactivated</b>(WindowEvent event);
+    //Invoked when a Window is changed from a minimized to a normal state.
+    public void <b>windowDeiconified</b>(WindowEvent event);
+    //Invoked when a Window is changed from a normal to a minimized state.
+    public void <b>windowIconified</b>(WindowEvent event);
+    //Invoked the first time a Window is made visible.
+    public void <b>windowOpened</b>(WindowEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>A <code>JFrame</code> object has this method:
+        <ul><li><code>public void addWindowListener(WindowListener wl)</code></li></ul>
+      </li>
+      <li>The abstract class <code>WindowAdapter</code> implements all <code>WindowListener</code> methods with empty bodies.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Exercise: all window events <span class="sn">33</span></h3>
+    <p>Write a Java Swing program that demonstrates the use of <b>WindowListener</b> to handle various window events such as opening, closing, minimizing, and restoring a window.</p>
+    <p><b>Instructions:</b></p>
+    <ol class="pts">
+      <li>Create a <b>JFrame</b> with the title "All Window Events Example".</li>
+      <li>Set the frame size to <b>400x300 pixels</b>.</li>
+      <li>Use <b>WindowListener</b> to detect and respond to the following events:
+        <ol>
+          <li><b>windowOpened</b> → Print "Window Opened" when the window appears.</li>
+          <li><b>windowClosing</b> → Ask the user for confirmation before closing the window.</li>
+          <li><b>windowClosed</b> → Print "Window Closed" after the window is closed.</li>
+          <li><b>windowIconified</b> → Print "Window Minimized" when minimized.</li>
+        </ol>
+        <p style="font-size:.85rem;color:var(--muted)">The new slide is cut off after item 4. The earlier version of this slide listed three more:</p>
+        <ol start="5">
+          <li><b>windowDeiconified</b> → Print "Window Restored" when restored.</li>
+          <li><b>windowActivated</b> → Print "Window Activated" when the window gains focus.</li>
+          <li><b>windowDeactivated</b> → Print "Window Deactivated" when the window loses focus.</li>
+        </ol>
+      </li>
+    </ol>
+    <details class="orig solid">
+      <summary>Added · Show a solution</summary>
+      <div class="drawer-body">
+        <div class="code"><span class="code-label">AllWindowEvents.java</span><pre class="java">import javax.swing.*;
+import java.awt.event.*;
+
+public class AllWindowEvents extends JFrame implements WindowListener {
+
+    public AllWindowEvents() {
+        super("All Window Events Example");
+        setSize(400, 300);
+        // we decide ourselves in windowClosing, so don't close automatically
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(this);
+        setVisible(true);
+    }
+
+    public void windowOpened(WindowEvent e)      { System.out.println("Window Opened"); }
+    public void windowClosed(WindowEvent e)      { System.out.println("Window Closed"); System.exit(0); }
+    public void windowIconified(WindowEvent e)   { System.out.println("Window Minimized"); }
+    public void windowDeiconified(WindowEvent e) { System.out.println("Window Restored"); }
+    public void windowActivated(WindowEvent e)   { System.out.println("Window Activated"); }
+    public void windowDeactivated(WindowEvent e) { System.out.println("Window Deactivated"); }
+
+    public void windowClosing(WindowEvent e) {
+        int choice = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to close?", "Confirm", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            dispose();          // closes the window, which then fires windowClosed
+        }
+    }
+
+    public static void main(String[] args) {
+        new AllWindowEvents();
+    }
+}</pre></div>
+        <p style="font-size:.9rem;color:var(--muted)">All seven methods are written because the class <em>implements</em> WindowListener. <code>dispose()</code> is used instead of <code>EXIT_ON_CLOSE</code> so that <code>windowClosed</code> actually runs; with EXIT_ON_CLOSE the program ends before windowClosed is called.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="slide">
+    <h3>Difference Between windowClosing and windowClosed <span class="sn">34</span></h3>
+    <p>Both <code>windowClosing()</code> and <code>windowClosed()</code> belong to the <b>WindowListener</b> interface, but they handle different stages of closing a window.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Triggered When…</th><th>Can Prevent Window from Closing?</th><th>Common Use Cases</th></tr></thead>
+        <tbody>
+          <tr><td><code>windowClosing(WindowEvent e)</code></td><td>The user clicks the <b>close (X) button</b> or calls dispose().</td><td><b>Yes</b> – You can show a confirmation dialog or cancel the close action.</td><td>Asking for user confirmation before closing.</td></tr>
+          <tr><td><code>windowClosed(WindowEvent e)</code></td><td>The window has <b>completely closed and resources are released</b>.</td><td><b>No</b> – The window is already closed when this event fires.</td><td>Logging, saving state, or cleanup operations.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="note"><b>Guide note</b><span>Clicking X fires <code>windowClosing</code>. Calling <code>dispose()</code> from code fires only <code>windowClosed</code>.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Difference Between windowDeiconified() and windowActivated() <span class="sn">35</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Triggered When…</th><th>What Happens?</th><th>Example Scenario</th></tr></thead>
+        <tbody>
+          <tr><td><code>windowDeiconified(WindowEvent e)</code></td><td>The window is <b>restored</b> after being minimized.</td><td>The window reappears from the taskbar.</td><td>Clicking the <b>minimized window</b> on the taskbar.</td></tr>
+          <tr><td><code>windowActivated(WindowEvent e)</code></td><td>The window <b>gains focus</b> (becomes the active window).</td><td>The window comes to the foreground and starts receiving input.</td><td>Clicking on the window or switching to it using <code>Alt+Tab</code>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h3>Difference Between windowIconified and windowDeactivated <span class="sn">36</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Triggered When…</th><th>What Happens?</th><th>Example Scenario</th></tr></thead>
+        <tbody>
+          <tr><td><code>windowIconified(WindowEvent e)</code></td><td>The window is <b>minimized</b> (sent to the taskbar).</td><td>The window is <b>minimized</b> and disappears from the screen but stays in the taskbar.</td><td>Clicking the <b>Minimize</b> (<code>_</code>) button or programmatically calling <code>setState(JFrame.ICONIFIED)</code>.</td></tr>
+          <tr><td><code>windowDeactivated(WindowEvent e)</code></td><td>The window <b>loses focus</b> (another window becomes active).</td><td>The window <b>loses focus</b> and is no longer the active window. It can no longer receive input until it's activated again.</td><td>Clicking on a different window or switching to another program.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="demo" id="win">
+    <div class="demo-head"><h3>Try it: which window methods fire?</h3><span class="added">Added</span></div>
+    <p class="expl" style="margin:0">This shows the typical sequence on Windows; the exact order can differ slightly between operating systems. Note that minimising also deactivates the window, and restoring also activates it.</p>
+    <div class="ctrl">
+      <button class="btn" type="button" data-w="open">setVisible(true)</button>
+      <button class="btn" type="button" data-w="min">Minimize _</button>
+      <button class="btn" type="button" data-w="restore">Click taskbar icon</button>
+      <button class="btn" type="button" data-w="other">Click another window</button>
+      <button class="btn" type="button" data-w="back">Click this window</button>
+      <button class="btn" type="button" data-w="close">Click X</button>
+    </div>
+    <div class="ctrl"><label for="winOp">default close operation
+      <select id="winOp"><option value="EXIT_ON_CLOSE">EXIT_ON_CLOSE</option><option value="DISPOSE_ON_CLOSE">DISPOSE_ON_CLOSE</option><option value="HIDE_ON_CLOSE">HIDE_ON_CLOSE</option><option value="DO_NOTHING_ON_CLOSE">DO_NOTHING_ON_CLOSE</option></select></label>
+      <span id="winState" class="chip" aria-live="polite"></span></div>
+    <div class="log" id="winLog"></div>
+  </div>
+
+  <details class="orig" data-pages="27-35"></details>
+  <div class="quiz" data-quiz="window"></div>
+</section>
+
+<section class="sec" id="userform" data-title="Extra: User Information Form">
+  <div class="sec-head">
+    <p class="eyebrow">From the earlier version of these slides · not in the new PDF</p>
+    <div class="sec-head-row"><h2>Extra: User Information Form</h2><label class="done"><input type="checkbox" id="done-userform"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>The earlier version of this lecture ended with three slides of screenshots of a finished form (the new PDF replaces them with window events): text fields, a password field, radio buttons, check boxes, a scrolling text area, a list and a combo box. Pressing Submit collects every value into one message. It brings Lectures 2–4 together, and it's the same idea as Lab 4. The code below is one way to build it.</div></aside>
+
+  <div class="slide">
+    <h3>The form</h3>
+    <figure><div class="plate"><img src="img/s27_userform.jpg" width="560" loading="lazy" alt="User Information Form: Name, Password, Gender (Male, Female), Skills (Java, Python, C++), Address text area, Course List (Visual, Data Mining, Design), Department combo box showing CS, Submit and Clear buttons"></div><figcaption>Earlier slide 27: Name, Password, Gender, Skills, Address, Course List, Department, Submit, Clear.</figcaption></figure>
+    <figure><div class="plate"><img src="img/s28_userform_dept.jpg" width="560" loading="lazy" alt="The same form with the Department combo box open showing CS, DMI, CE, EE"></div><figcaption>Earlier slide 28: the Department drop-down holds CS, DMI, CE, EE.</figcaption></figure>
+  </div>
+
+  <div class="slide">
+    <h3>After pressing Submit</h3>
     <figure><div class="plate"><img src="img/s29_userform_message.jpg" width="560" loading="lazy" alt="Form filled in: Ahmad, password, Male, Java and Python ticked, Amman, Data Mining selected, DMI; a Message dialog lists Name: Ahmad, Password: 123456, Gender: Male, Skills: Java Python, Address: Amman, Course: Data Mining, Department: DMI"></div><figcaption>The message lists Name: Ahmad · Password: 123456 · Gender: Male · Skills: Java Python · Address: Amman · Course: Data Mining · Department: DMI.</figcaption></figure>
   </div>
 
@@ -1091,11 +1353,809 @@ public class UserInfoForm extends JFrame implements ActionListener {
     </details>
   </div>
 
-  <details class="orig" data-pages="27-29"></details>
+  <details class="orig" data-imgs="img/slides/old-27.jpg|Earlier slide 27;img/slides/old-28.jpg|Earlier slide 28;img/slides/old-29.jpg|Earlier slide 29" data-label="Original earlier slides (3)"></details>
   <div class="quiz" data-quiz="userform"></div>
 </section>
 
 <!-- ============ 7 Lab 4 ============ -->
+<section class="sec" id="course-ex" data-title="Course example programs">
+  <div class="sec-head">
+    <p class="eyebrow">Added · from Lecture4_Examples.zip</p>
+    <div class="sec-head-row"><h2>Course example programs</h2><label class="done"><input type="checkbox" id="done-course-ex"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>The example project for this lecture (<code>Lecture4_Examples.zip</code>, package <code>com.mycompany.events</code>). Every program was compiled and run here. For the event examples, clicks and typing were simulated so you can see what each handler does; every caption says which action it shows. <b>Full code</b> is each file exactly as in the zip.</div></aside>
+
+
+  <div class="slide ex" id="ex-button">
+    <p class="added">Example · ButtonTest.java</p>
+    <h3>ButtonTest: one handler for two buttons</h3>
+    <p>Slides 20–22. The same program as in Lecture 3's examples (package <code>com.mycompany.events</code> this time) with one change: <code>fancyButton.setActionCommand("fancy")</code> is commented out. With no action command set, <code>getActionCommand()</code> falls back to the button's text.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/button-0.png" width="300" loading="lazy" alt="ButtonTest: one handler for two buttons: The window. The icon images aren&#x27;t in the zip, so Button 2 has an empty icon (see the Lecture 3 notes)."></div><figcaption>The window. The icon images aren't in the zip, so Button 2 has an empty icon (see the Lecture 3 notes).</figcaption></figure>
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/button-1-1.png" width="262" loading="lazy" alt="ButtonTest: one handler for two buttons: Clicking Button 2 now shows “Button 2”: no action command, so the text is used."></div><figcaption>Clicking Button 2 now shows “Button 2”: no action command, so the text is used.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">//fancyButton.setActionCommand("fancy");</pre></dt><dd>Commented out here, so Button 2's action command is its text. Button 1 still says "plain".</dd></div>
+<div><dt><pre class="java">ButtonHandler handler = new ButtonHandler();
+fancyButton.addActionListener(handler);
+plainButton.addActionListener(handler);</pre></dt><dd>The three steps from slide 11: a class that implements the listener, an object of it, and <code>addActionListener</code> on each source.</dd></div>
+<div><dt><pre class="java">private class ButtonHandler implements ActionListener {
+    public void actionPerformed(ActionEvent event) {
+        JOptionPane.showMessageDialog(ButtonTest.this,
+                "You pressed: " + event.getActionCommand());</pre></dt><dd>The handler as a private inner class. <code>ButtonTest.this</code> is the frame; plain <code>this</code> would be the handler.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">ButtonTest.java (57 lines)</span><pre class="java">package com.mycompany.events;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class ButtonTest extends JFrame {
+
+    private JButton plainButton, fancyButton;
+
+    // set up GUI
+    public ButtonTest() {
+        super("Testing Buttons");
+
+        // get content pane and set its layout
+        Container container = getContentPane();
+        container.setLayout(new FlowLayout());
+
+        // create buttons
+        plainButton = new JButton("Button 1");
+        plainButton.setActionCommand("plain");
+        container.add(plainButton);
+        Icon bug1 = new ImageIcon("java.png");
+        Icon bug2 = new ImageIcon("swing.png");
+        fancyButton = new JButton("Button 2", bug1);
+        fancyButton.setRolloverIcon(bug2);
+        //fancyButton.setActionCommand("fancy");
+        container.add(fancyButton);
+
+        // create an instance of inner class ButtonHandler
+        // to use for button event handling               
+        ButtonHandler handler = new ButtonHandler();
+        fancyButton.addActionListener(handler);
+        plainButton.addActionListener(handler);
+
+        setSize(400, 400);
+        setVisible(true);
+
+    } // end ButtonTest constructor
+
+    public static void main(String args[]) {
+        ButtonTest application = new ButtonTest();
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    // inner class for button event handling
+    private class ButtonHandler implements ActionListener {
+
+        // handle button event
+        public void actionPerformed(ActionEvent event) {
+            JOptionPane.showMessageDialog(ButtonTest.this,
+                    "You pressed: " + event.getActionCommand());
+        }
+
+    } // end private inner class ButtonHandler
+
+} // end class ButtonTest</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l4-button">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-textfield">
+    <p class="added">Example · TextFieldTest.java</p>
+    <h3>TextFieldTest: Enter in a text field is an action event</h3>
+    <p>Slides 23–26. Three text fields and a password field share one handler. Pressing Enter in any of them fires an <code>ActionEvent</code>; the handler uses <code>getSource()</code> to see which field it came from and shows the text in a dialog.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 351px)"><div class="plate"><img src="img/ex/textfield-0.png" width="325" loading="lazy" alt="TextFieldTest: Enter in a text field is an action event: textField1 (10 columns, “Hello” typed in), textField2 (as wide as its text), textField3 (20 columns, grey: not editable) and the password field showing * per character."></div><figcaption>textField1 (10 columns, “Hello” typed in), textField2 (as wide as its text), textField3 (20 columns, grey: not editable) and the password field showing <code>*</code> per character.</figcaption></figure>
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/textfield-1.png" width="262" loading="lazy" alt="TextFieldTest: Enter in a text field is an action event: Enter in textField1: a text field&#x27;s action command is its text."></div><figcaption>Enter in textField1: a text field's action command is its text.</figcaption></figure>
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/textfield-1-1.png" width="262" loading="lazy" alt="TextFieldTest: Enter in a text field is an action event: Enter in the password field: read with getPassword()."></div><figcaption>Enter in the password field: read with <code>getPassword()</code>.</figcaption></figure>
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/textfield-2-1.png" width="262" loading="lazy" alt="TextFieldTest: Enter in a text field is an action event: Enter in the uneditable field still fires: not editable isn&#x27;t the same as disabled."></div><figcaption>Enter in the uneditable field still fires: not editable isn't the same as disabled.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">textField1 = new JTextField(10);</pre></dt><dd>Width in columns (about 10 characters), no text.</dd></div>
+<div><dt><pre class="java">textField2 = new JTextField("Enter text here");</pre></dt><dd>Starting text; the field is just wide enough for it.</dd></div>
+<div><dt><pre class="java">textField3 = new JTextField("Uneditable text field", 20);
+textField3.setEditable(false);</pre></dt><dd>Text and width. <code>setEditable(false)</code> makes it read-only; it can still get focus and fire on Enter.</dd></div>
+<div><dt><pre class="java">passwordField = new JPasswordField("Hidden text");
+passwordField.setEchoChar('*');</pre></dt><dd>Every character shows as <code>*</code>.</dd></div>
+<div><dt><pre class="java">if (event.getSource() == textField1) {
+    string = "textField1: " + event.getActionCommand();</pre></dt><dd>One handler, four fields: <code>getSource()</code> says which one fired. For a text field, <code>getActionCommand()</code> is the text in it.</dd></div>
+<div><dt><pre class="java">string = "passwordField: "
+        + new String(passwordField.getPassword());</pre></dt><dd><code>getPassword()</code> returns a <code>char[]</code>; <code>new String(…)</code> turns it into a String for the dialog.</dd></div>
+<div><dt><pre class="java">JOptionPane.showMessageDialog(null, string);</pre></dt><dd>Parent <code>null</code>: the dialog is centred on the screen rather than on the frame.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">TextFieldTest.java (77 lines)</span><pre class="java">package com.mycompany.events;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class TextFieldTest extends JFrame {
+
+    private JTextField textField1, textField2, textField3;
+    private JPasswordField passwordField;
+
+    // set up GUI
+    public TextFieldTest() {
+        super("Testing JTextField and JPasswordField");
+
+        Container container = getContentPane();
+        container.setLayout(new FlowLayout());
+
+        // construct textfield with default sizing
+        textField1 = new JTextField(10);
+        container.add(textField1);
+
+        // construct textfield with default text         
+        textField2 = new JTextField("Enter text here");
+        container.add(textField2);
+        // construct textfield with default text,                 
+        textField3 = new JTextField("Uneditable text field", 20);
+        textField3.setEditable(false);
+        container.add(textField3);
+
+        // construct passwordfield with default text        
+        passwordField = new JPasswordField("Hidden text");
+        container.add(passwordField);
+        passwordField.setEchoChar('*');
+
+        // register event handlers
+        TextFieldHandler handler = new TextFieldHandler();
+        textField1.addActionListener(handler);
+        textField2.addActionListener(handler);
+        textField3.addActionListener(handler);
+        passwordField.addActionListener(handler);
+
+        setSize(325, 100);
+        setVisible(true);
+    } // end constructor TextFieldTest
+
+    public static void main(String args[]) {
+        TextFieldTest application = new TextFieldTest();
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+// private inner class for event handling
+
+    private class TextFieldHandler implements ActionListener {
+        // process textfield events
+
+        public void actionPerformed(ActionEvent event) {
+            String string = "";
+            // user pressed Enter in JTextField textField1
+            if (event.getSource() == textField1) {
+                string = "textField1: " + event.getActionCommand();
+            } // user pressed Enter in JTextField textField2
+            else if (event.getSource() == textField2) {
+                string = "textField2: " + event.getActionCommand();
+            } // user pressed Enter in JTextField textField3
+            else if (event.getSource() == textField3) {
+                string = "textField3: " + event.getActionCommand();
+            } // user pressed Enter in JTextField passwordField
+            else if (event.getSource() == passwordField) {
+                string = "passwordField: "
+                        + new String(passwordField.getPassword());
+            }
+            JOptionPane.showMessageDialog(null, string);
+        } // end method actionPerformed
+
+    } // end private inner class TextFieldHandler
+
+} // end class TextFieldTest</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l4-textfield">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-hotelev">
+    <p class="added">Example · HotelBookingEvents.java</p>
+    <h3>HotelBookingEvents: the hotel form, now working</h3>
+    <p>Lecture 3's hotel form with events added: anonymous <code>ActionListener</code>s on the two buttons (slides 16–17) and a <code>WindowAdapter</code> (slides 28–36). Book Room checks the input and shows either an error or a summary of the booking; Clear resets the form; the window greets you when it opens and asks before it closes.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/hotelev-1.png" width="262" loading="lazy" alt="HotelBookingEvents: the hotel form, now working: windowOpened: the welcome message as soon as the window appears."></div><figcaption><code>windowOpened</code>: the welcome message as soon as the window appears.</figcaption></figure>
+    <figure style="width:min(100%, 446px)"><div class="plate"><img src="img/ex/hotelev-1-0.png" width="420" loading="lazy" alt="HotelBookingEvents: the hotel form, now working: Filled in: Suite, Double Bed, breakfast and a request."></div><figcaption>Filled in: Suite, Double Bed, breakfast and a request.</figcaption></figure>
+    <figure style="width:min(100%, 367px)"><div class="plate"><img src="img/ex/hotelev-1-1.png" width="341" loading="lazy" alt="HotelBookingEvents: the hotel form, now working: Book Room with valid input: a summary built from every field."></div><figcaption>Book Room with valid input: a summary built from every field.</figcaption></figure>
+    <figure style="width:min(100%, 367px)"><div class="plate"><img src="img/ex/hotelev-2-1.png" width="341" loading="lazy" alt="HotelBookingEvents: the hotel form, now working: Book Room with empty fields: an ERROR_MESSAGE dialog, then return."></div><figcaption>Book Room with empty fields: an ERROR_MESSAGE dialog, then <code>return</code>.</figcaption></figure>
+    <figure style="width:min(100%, 312px)"><div class="plate"><img src="img/ex/hotelev-3-1.png" width="286" loading="lazy" alt="HotelBookingEvents: the hotel form, now working: “three” nights: Integer.parseInt throws NumberFormatException, which is caught."></div><figcaption>“three” nights: <code>Integer.parseInt</code> throws <code>NumberFormatException</code>, which is caught.</figcaption></figure>
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/hotelev-4-1.png" width="262" loading="lazy" alt="HotelBookingEvents: the hotel form, now working: Clicking X: windowClosing asks first. Yes → dispose(); No → the window stays."></div><figcaption>Clicking X: <code>windowClosing</code> asks first. Yes → <code>dispose()</code>; No → the window stays.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">private JTextField nameField, nightsField;
+private JComboBox&lt;String&gt; roomComboBox;</pre></dt><dd>In the Lecture 3 version these were local variables. The listeners run later and need to read them, so here they're fields.</dd></div>
+<div><dt><pre class="java">setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);</pre></dt><dd>The X button does nothing on its own; <code>windowClosing</code> decides what happens.</dd></div>
+<div><dt><pre class="java">bookButton.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {</pre></dt><dd>An anonymous class: the listener is written right where it's registered.</dd></div>
+<div><dt><pre class="java">String name = nameField.getText().trim();</pre></dt><dd><code>getText()</code> reads the field; <code>trim()</code> removes spaces at both ends, so a field of spaces counts as empty.</dd></div>
+<div><dt><pre class="java">if (name.isEmpty() || nightsText.isEmpty()) {
+    JOptionPane.showMessageDialog(
+        HotelBookingEvents.this,
+        "Please enter guest name and number of nights.",
+        "Input Error",
+        JOptionPane.ERROR_MESSAGE
+    );
+    return;
+}</pre></dt><dd>The validation pattern: show the problem, then <code>return</code> so the rest of the handler doesn't run. Inside the anonymous class <code>this</code> is the listener, so the frame is <code>HotelBookingEvents.this</code>.</dd></div>
+<div><dt><pre class="java">nights = Integer.parseInt(nightsText);</pre></dt><dd>Text to <code>int</code>. Anything that isn't a whole number throws <code>NumberFormatException</code>, caught just below.</dd></div>
+<div><dt><pre class="java">String room = (String)
+    roomComboBox.getSelectedItem();</pre></dt><dd><code>getSelectedItem()</code> returns <code>Object</code>, hence the cast.</dd></div>
+<div><dt><pre class="java">String bed = singleBed.isSelected()
+    ? "Single Bed" : "Double Bed";</pre></dt><dd><code>isSelected()</code> works on radio buttons and check boxes. <code>condition ? a : b</code> picks one of two values.</dd></div>
+<div><dt><pre class="java">roomComboBox.setSelectedIndex(0);
+bedGroup.clearSelection();
+requestsArea.setText("");
+breakfastCheckBox.setSelected(false);
+
+nameField.requestFocusInWindow();</pre></dt><dd>Clear: first room type, no bed chosen (only the ButtonGroup can unselect all), empty text, box unticked, cursor back in the name field.</dd></div>
+<div><dt><pre class="java">addWindowListener(new WindowAdapter() {</pre></dt><dd><code>WindowAdapter</code> already has all seven window methods (empty), so this class overrides only the two it needs.</dd></div>
+<div><dt><pre class="java">int choice = JOptionPane.showConfirmDialog(
+    HotelBookingEvents.this,
+    "Are you sure you want to exit?",
+    "Exit Confirmation",
+    JOptionPane.YES_NO_OPTION
+);
+
+if (choice == JOptionPane.YES_OPTION) {
+    dispose();
+}</pre></dt><dd><code>showConfirmDialog</code> returns the button pressed. <code>dispose()</code> closes and frees the window; with no windows left, the program ends.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">HotelBookingEvents.java (249 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.events;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class HotelBookingEvents extends JFrame {
+
+    private JTextField nameField, nightsField;
+    private JComboBox&lt;String&gt; roomComboBox;
+    private JRadioButton singleBed, doubleBed;
+    private ButtonGroup bedGroup;
+    private JTextArea requestsArea;
+    private JCheckBox breakfastCheckBox;
+    private JButton bookButton, clearButton;
+
+    public HotelBookingEvents() {
+
+        setTitle("Hotel Room Booking");
+        setSize(550, 520);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Main panel
+        JPanel mainPanel = new JPanel(
+            new BorderLayout(10, 10)
+        );
+        mainPanel.setBorder(
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        );
+
+        // Title
+        JLabel titleLabel = new JLabel(
+            "Hotel Room Booking",
+            SwingConstants.CENTER
+        );
+        titleLabel.setFont(
+            new Font("Arial", Font.BOLD, 20)
+        );
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+        // Form panel
+        JPanel formPanel = new JPanel(
+            new GridLayout(6, 2, 10, 15)
+        );
+
+        nameField = new JTextField();
+        nightsField = new JTextField();
+
+        String[] roomTypes = {
+            "Single", "Double", "Suite", "Deluxe"
+        };
+        roomComboBox = new JComboBox&lt;&gt;(roomTypes);
+
+        singleBed = new JRadioButton("Single Bed");
+        doubleBed = new JRadioButton("Double Bed");
+
+        bedGroup = new ButtonGroup();
+        bedGroup.add(singleBed);
+        bedGroup.add(doubleBed);
+
+        JPanel bedPanel = new JPanel(
+            new FlowLayout(FlowLayout.LEFT)
+        );
+        bedPanel.add(singleBed);
+        bedPanel.add(doubleBed);
+
+        requestsArea = new JTextArea(4, 20);
+        requestsArea.setLineWrap(true);
+        requestsArea.setWrapStyleWord(true);
+
+        JScrollPane requestsScrollPane =
+            new JScrollPane(requestsArea);
+
+        breakfastCheckBox =
+            new JCheckBox("Include Breakfast");
+
+        // Add form components
+        formPanel.add(new JLabel("Guest Name:"));
+        formPanel.add(nameField);
+
+        formPanel.add(new JLabel("Number of Nights:"));
+        formPanel.add(nightsField);
+
+        formPanel.add(new JLabel("Room Type:"));
+        formPanel.add(roomComboBox);
+
+        formPanel.add(new JLabel("Bed Preference:"));
+        formPanel.add(bedPanel);
+
+        formPanel.add(new JLabel("Special Requests:"));
+        formPanel.add(requestsScrollPane);
+
+        formPanel.add(new JLabel("Additional Services:"));
+        formPanel.add(breakfastCheckBox);
+
+        mainPanel.add(formPanel, BorderLayout.CENTER);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+
+        bookButton = new JButton("Book Room");
+        clearButton = new JButton("Clear");
+
+        buttonPanel.add(bookButton);
+        buttonPanel.add(clearButton);
+
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        add(mainPanel);
+
+        // ActionListener for Book Room
+        bookButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String name = nameField.getText().trim();
+                String nightsText = nightsField.getText().trim();
+
+                if (name.isEmpty() || nightsText.isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                        HotelBookingEvents.this,
+                        "Please enter guest name and number of nights.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+
+                int nights;
+
+                try {
+                    nights = Integer.parseInt(nightsText);
+
+                    if (nights &lt;= 0) {
+                        JOptionPane.showMessageDialog(
+                            HotelBookingEvents.this,
+                            "Number of nights must be greater than zero.",
+                            "Input Error",
+                            JOptionPane.ERROR_MESSAGE
+                        );
+                        return;
+                    }
+
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(
+                        HotelBookingEvents.this,
+                        "Please enter a valid number of nights.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+
+                if (!singleBed.isSelected()
+                        &amp;&amp; !doubleBed.isSelected()) {
+                    JOptionPane.showMessageDialog(
+                        HotelBookingEvents.this,
+                        "Please select a bed preference.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+
+                String room = (String)
+                    roomComboBox.getSelectedItem();
+
+                String bed = singleBed.isSelected()
+                    ? "Single Bed" : "Double Bed";
+
+                String breakfast = breakfastCheckBox.isSelected()
+                    ? "Yes" : "No";
+
+                String requests = requestsArea.getText().trim();
+
+                if (requests.isEmpty()) {
+                    requests = "None";
+                }
+
+                String summary =
+                    "Guest Name: " + name +
+                    "\nNumber of Nights: " + nights +
+                    "\nRoom Type: " + room +
+                    "\nBed Preference: " + bed +
+                    "\nBreakfast: " + breakfast +
+                    "\nSpecial Requests: " + requests;
+
+                JOptionPane.showMessageDialog(
+                    HotelBookingEvents.this,
+                    summary,
+                    "Booking Summary",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        });
+
+        // ActionListener for Clear
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                nameField.setText("");
+                nightsField.setText("");
+                roomComboBox.setSelectedIndex(0);
+                bedGroup.clearSelection();
+                requestsArea.setText("");
+                breakfastCheckBox.setSelected(false);
+
+                nameField.requestFocusInWindow();
+            }
+        });
+
+        // WindowListener
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+                JOptionPane.showMessageDialog(
+                    HotelBookingEvents.this,
+                    "Welcome to Hotel Booking!"
+                );
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int choice = JOptionPane.showConfirmDialog(
+                    HotelBookingEvents.this,
+                    "Are you sure you want to exit?",
+                    "Exit Confirmation",
+                    JOptionPane.YES_NO_OPTION
+                );
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    dispose();
+                }
+            }
+        });
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new HotelBookingEvents();
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l4-hotel">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-feedbackev">
+    <p class="added">Example · CustomerFeedbackEvents.java</p>
+    <h3>CustomerFeedbackEvents: every WindowListener method</h3>
+    <p>The feedback form with events. It follows the hotel version; two differences are worth a look. Submit checks the email, and the window listener is the full <code>WindowListener</code> interface, so all seven methods are written, even the ones that only print to the console.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 299px)"><div class="plate"><img src="img/ex/feedbackev-1.png" width="273" loading="lazy" alt="CustomerFeedbackEvents: every WindowListener method: windowOpened: the welcome message."></div><figcaption><code>windowOpened</code>: the welcome message.</figcaption></figure>
+    <figure style="width:min(100%, 446px)"><div class="plate"><img src="img/ex/feedbackev-1-0.png" width="420" loading="lazy" alt="CustomerFeedbackEvents: every WindowListener method: Filled in: Delivery, Satisfied, follow-up ticked."></div><figcaption>Filled in: Delivery, Satisfied, follow-up ticked.</figcaption></figure>
+    <figure style="width:min(100%, 324px)"><div class="plate"><img src="img/ex/feedbackev-1-1.png" width="298" loading="lazy" alt="CustomerFeedbackEvents: every WindowListener method: Submit Feedback: the summary dialog."></div><figcaption>Submit Feedback: the summary dialog.</figcaption></figure>
+    <figure style="width:min(100%, 296px)"><div class="plate"><img src="img/ex/feedbackev-2-1.png" width="270" loading="lazy" alt="CustomerFeedbackEvents: every WindowListener method: “omar.gju” has no @, so the email check fails."></div><figcaption>“omar.gju” has no @, so the email check fails.</figcaption></figure>
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/feedbackev-3-1.png" width="262" loading="lazy" alt="CustomerFeedbackEvents: every WindowListener method: X: the same exit confirmation as the hotel form."></div><figcaption>X: the same exit confirmation as the hotel form.</figcaption></figure>
+    </div>
+    <pre class="console"><span class="ttl">Output</span>Window activated.
+Window deactivated.</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">if (!email.contains("@")
+        || !email.contains(".")) {</pre></dt><dd>A simple email check: there must be an @ and a dot.</dd></div>
+<div><dt><pre class="java">addWindowListener(new WindowListener() {</pre></dt><dd>The interface, not the adapter: all seven methods must be implemented or the class won't compile (slide 31).</dd></div>
+<div><dt><pre class="java">@Override
+public void windowClosed(WindowEvent e) {
+    System.out.println("Feedback window closed.");
+}</pre></dt><dd><code>windowClosing</code> runs when the user clicks X; <code>windowClosed</code> runs after <code>dispose()</code> (slide 34).</dd></div>
+<div><dt><pre class="java">@Override
+public void windowIconified(WindowEvent e) {
+    System.out.println("Window minimized.");
+}</pre></dt><dd>Iconified = minimized, deiconified = restored; activated/deactivated = the window gains or loses focus (slides 35–36).</dd></div>
+</dl>
+    <aside class="note"><b>Good to know</b><span>The two console lines above are from starting the program: the frame is activated when it opens, then deactivated when the welcome dialog takes the focus. Minimizing prints “Window minimized.”, restoring prints “Window restored.”, and answering Yes to the exit question prints “Feedback window closed.”</span></aside>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">CustomerFeedbackEvents.java (261 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.events;
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class CustomerFeedbackEvents extends JFrame {
+
+    private JTextField nameField, emailField;
+    private JComboBox&lt;String&gt; serviceComboBox;
+    private JRadioButton satisfiedButton, unsatisfiedButton;
+    private ButtonGroup satisfactionGroup;
+    private JTextArea commentsArea;
+    private JCheckBox contactCheckBox;
+    private JButton submitButton, clearButton;
+
+    public CustomerFeedbackEvents() {
+
+        setTitle("Customer Feedback");
+        setSize(550, 520);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        // Main panel
+        JPanel mainPanel = new JPanel(
+            new BorderLayout(10, 10)
+        );
+        mainPanel.setBorder(
+            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+        );
+
+        // Title
+        JLabel titleLabel = new JLabel(
+            "Customer Feedback Form",
+            SwingConstants.CENTER
+        );
+        titleLabel.setFont(
+            new Font("Arial", Font.BOLD, 20)
+        );
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+        // Form panel
+        JPanel formPanel = new JPanel(
+            new GridLayout(6, 2, 10, 15)
+        );
+
+        nameField = new JTextField();
+        emailField = new JTextField();
+
+        String[] services = {
+            "Technical Support",
+            "Delivery",
+            "Customer Service",
+            "Product Quality"
+        };
+        serviceComboBox = new JComboBox&lt;&gt;(services);
+
+        satisfiedButton = new JRadioButton("Satisfied");
+        unsatisfiedButton = new JRadioButton("Unsatisfied");
+
+        satisfactionGroup = new ButtonGroup();
+        satisfactionGroup.add(satisfiedButton);
+        satisfactionGroup.add(unsatisfiedButton);
+
+        JPanel satisfactionPanel = new JPanel(
+            new FlowLayout(FlowLayout.LEFT)
+        );
+        satisfactionPanel.add(satisfiedButton);
+        satisfactionPanel.add(unsatisfiedButton);
+
+        commentsArea = new JTextArea(4, 20);
+        commentsArea.setLineWrap(true);
+        commentsArea.setWrapStyleWord(true);
+
+        JScrollPane commentsScrollPane =
+            new JScrollPane(commentsArea);
+
+        contactCheckBox =
+            new JCheckBox("Contact me for follow-up");
+
+        // Add form components
+        formPanel.add(new JLabel("Customer Name:"));
+        formPanel.add(nameField);
+
+        formPanel.add(new JLabel("Email:"));
+        formPanel.add(emailField);
+
+        formPanel.add(new JLabel("Service:"));
+        formPanel.add(serviceComboBox);
+
+        formPanel.add(new JLabel("Satisfaction:"));
+        formPanel.add(satisfactionPanel);
+
+        formPanel.add(new JLabel("Comments:"));
+        formPanel.add(commentsScrollPane);
+
+        formPanel.add(new JLabel("Contact Preference:"));
+        formPanel.add(contactCheckBox);
+
+        mainPanel.add(formPanel, BorderLayout.CENTER);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+
+        submitButton = new JButton("Submit Feedback");
+        clearButton = new JButton("Clear");
+
+        buttonPanel.add(submitButton);
+        buttonPanel.add(clearButton);
+
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        add(mainPanel);
+
+        // ActionListener for Submit Feedback
+        submitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String name = nameField.getText().trim();
+                String email = emailField.getText().trim();
+                String comments = commentsArea.getText().trim();
+
+                if (name.isEmpty() || email.isEmpty()
+                        || comments.isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                        CustomerFeedbackEvents.this,
+                        "Please complete all required fields.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+
+                if (!email.contains("@")
+                        || !email.contains(".")) {
+                    JOptionPane.showMessageDialog(
+                        CustomerFeedbackEvents.this,
+                        "Please enter a valid email address.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+
+                if (!satisfiedButton.isSelected()
+                        &amp;&amp; !unsatisfiedButton.isSelected()) {
+                    JOptionPane.showMessageDialog(
+                        CustomerFeedbackEvents.this,
+                        "Please select your satisfaction level.",
+                        "Input Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+
+                String service = (String)
+                    serviceComboBox.getSelectedItem();
+
+                String satisfaction =
+                    satisfiedButton.isSelected()
+                    ? "Satisfied" : "Unsatisfied";
+
+                String contact = contactCheckBox.isSelected()
+                    ? "Yes" : "No";
+
+                String summary =
+                    "Customer: " + name +
+                    "\nEmail: " + email +
+                    "\nService: " + service +
+                    "\nSatisfaction: " + satisfaction +
+                    "\nContact for Follow-up: " + contact +
+                    "\nComments: " + comments;
+
+                JOptionPane.showMessageDialog(
+                    CustomerFeedbackEvents.this,
+                    summary,
+                    "Feedback Submitted",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        });
+
+        // ActionListener for Clear
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                nameField.setText("");
+                emailField.setText("");
+                serviceComboBox.setSelectedIndex(0);
+                satisfactionGroup.clearSelection();
+                commentsArea.setText("");
+                contactCheckBox.setSelected(false);
+
+                nameField.requestFocusInWindow();
+            }
+        });
+
+        // WindowListener
+        addWindowListener(new WindowListener() {
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+                JOptionPane.showMessageDialog(
+                    CustomerFeedbackEvents.this,
+                    "Welcome! We value your feedback."
+                );
+            }
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int choice = JOptionPane.showConfirmDialog(
+                    CustomerFeedbackEvents.this,
+                    "Are you sure you want to exit?",
+                    "Exit Confirmation",
+                    JOptionPane.YES_NO_OPTION
+                );
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    dispose();
+                }
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                System.out.println("Feedback window closed.");
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+                System.out.println("Window minimized.");
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+                System.out.println("Window restored.");
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+                System.out.println("Window activated.");
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                System.out.println("Window deactivated.");
+            }
+        });
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new CustomerFeedbackEvents();
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l4-window">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+</section>
+
 <section class="sec" id="lab4" data-title="Lab 4: GUI with Action Listener">
   <div class="sec-head">
     <p class="eyebrow">Lab 4 · Abualhaj, Amer · plus the project file "Lab 4 Answer" (Dima Alshihan)</p>
@@ -1618,13 +2678,13 @@ public class SignUpForm extends JFrame {
 </section>
 
 <footer class="foot">
-  <span>Source: <em>Lecture 4 – Event, Part 1</em> (CS254, 29 slides), <em>Lab 4: Introduction to GUI 2 with Action Listener</em>, and the project file <em>Lab 4 Answer.txt</em>. Your "Studied" ticks are saved in this browser only.</span>
+  <span>Source: <em>Lecture 4 – Event</em> (CS254, 35 slides), <em>Lab 4: Introduction to GUI 2 with Action Listener</em>, and the project file <em>Lab 4 Answer.txt</em>. Your "Studied" ticks are saved in this browser only.</span>
   <span><a href="../index.html">All CS254 lectures ↗</a></span>
 </footer>
 
 </main>
 
-<script type="application/json" id="guide-data">{"key": "cs254-l4-done", "quizzes": {"events": [{"q": "Which package provides Java's event classes?", "o": ["java.awt.event", "java.io", "java.lang", "javax.sql"], "a": 0, "e": "Slide 2."}, {"q": "An operating-system interrupt is a…", "o": ["background event", "foreground event", "action event", "mouse event"], "a": 0, "e": "Slide 3: background events don't need user interaction."}, {"q": "In event-driven programming, what decides the order code runs in?", "o": ["The series of events that occur", "The order of methods in main", "Alphabetical order of method names", "The layout manager"], "a": 0, "e": "Slide 5."}, {"q": "A listener is…", "o": ["an object that waits for events and responds to them", "the component the user clicks", "the event's details", "a layout manager"], "a": 0, "e": "Slide 4."}], "model": [{"q": "In the delegation model, a JButton the user clicks is the…", "o": ["event source", "event object", "event listener", "event engine"], "a": 0, "e": "Slide 7."}, {"q": "Which method registers a listener for KeyEvents?", "o": ["addKeyListener()", "addActionListener()", "addKeyEvent()", "registerKey()"], "a": 0, "e": "Slide 8: addTypeListener()."}, {"q": "Which listener handles a window being closed or activated?", "o": ["WindowListener", "ContainerListener", "ActionListener", "FocusListener"], "a": 0, "e": "Slide 9."}, {"q": "In the event hierarchy, KeyEvent and MouseEvent extend…", "o": ["InputEvent", "ActionEvent", "TextEvent", "WindowEvent"], "a": 0, "e": "Slide 6."}], "action": [{"q": "How many methods does the ActionListener interface have?", "o": ["One: actionPerformed", "Two", "Five", "None"], "a": 0, "e": "Slide 12."}, {"q": "Which of these does NOT cause an ActionEvent?", "o": ["Moving the mouse over a button", "Clicking a button", "Pressing Enter in a text field", "Choosing a menu item"], "a": 0, "e": "Slide 10. Mouse movement is a MouseEvent."}, {"q": "In DoubleTextListener, the field contains \"ab\". After one click it contains…", "o": ["abab", "ab", "aabb", "ab ab"], "a": 0, "e": "Slide 15: textfield.setText(text + text)."}, {"q": "<code>new ActionListener() { public void actionPerformed(ActionEvent e) {...} }<\/code> is a…", "o": ["anonymous class", "constructor call on an interface's real class", "static method", "lambda-free compile error"], "a": 0, "e": "Slide 16."}, {"q": "What is the parameter of actionPerformed?", "o": ["An ActionEvent object", "The button's text", "An int code", "Nothing"], "a": 0, "e": "Slide 12."}], "multi": [{"q": "One listener is registered on two buttons. How does it tell which was clicked?", "o": ["e.getSource() == button1", "It can't", "e.getButtonNumber()", "By the click position"], "a": 0, "e": "Slide 18."}, {"q": "For a JTextField, <code>event.getActionCommand()<\/code> returns…", "o": ["the text in the field", "the field's variable name", "the field's index", "always null"], "a": 0, "e": "Slide 26: \"textField1: hello\"."}, {"q": "Inside an anonymous listener in MultipleButtons, what does <code>MultipleButtons.this<\/code> refer to?", "o": ["The outer JFrame", "The listener object", "button1", "The ActionEvent"], "a": 0, "e": "Slide 18."}, {"q": "Can you press Enter in the uneditable textField3 and get a dialog?", "o": ["Yes, it still fires an ActionEvent", "No, it can't get focus", "Only if setEditable(true)", "It throws an exception"], "a": 0, "e": "Slide 26 shows the \"textField3: Uneditable text field\" dialog."}], "userform": [{"q": "In the User Information Form, which component lets you tick several skills?", "o": ["JCheckBox", "JRadioButton", "JComboBox", "JLabel"], "a": 0, "e": "Slide 27: Java, Python, C++ check boxes."}, {"q": "Which component is the Department drop-down?", "o": ["JComboBox", "JList", "JTextArea", "JSlider"], "a": 0, "e": "Slide 28."}, {"q": "To clear the gender radio buttons in a ButtonGroup you call…", "o": ["genderGroup.clearSelection()", "male.setText(\"\")", "genderGroup.removeAll()", "male.setEnabled(false)"], "a": 0, "e": "ButtonGroup.clearSelection() (used in the added code)."}], "lab4": [{"q": "How do you compare the password and confirm-password text?", "o": ["pass.equals(confirm)", "pass == confirm", "pass.compare(confirm)", "pass = confirm"], "a": 0, "e": "Strings are compared with equals; == compares object references."}, {"q": "Which showMessageDialog call gives the yellow warning icon titled \"Cleared\"?", "o": ["showMessageDialog(frame, \"you pressed Clear button\", \"Cleared\", JOptionPane.WARNING_MESSAGE)", "showMessageDialog(frame, \"Cleared\")", "showWarningDialog(\"Cleared\")", "showConfirmDialog(frame, \"Cleared\")"], "a": 0, "e": "Lab 4, page 2."}, {"q": "Which three checks does Task 2 ask for?", "o": ["Required fields filled, passwords match, policy agreed", "Email format, age, country", "Username unique, password length, captcha", "None, just show the data"], "a": 0, "e": "Lab 4, Task 2."}]}, "flashcards": [["Event", "A change in the state of an object triggered by some action (click, key press, scroll…).", "Slide 2"], ["Foreground vs background events", "Foreground: need user interaction (clicks). Background: don't (OS interrupts, operation completion).", "Slide 3"], ["Listener", "An object that waits for events and responds to them. Attach it to a component.", "Slide 4"], ["Event-driven programming", "The program's flow is dictated by events, not a pre-determined order.", "Slide 5"], ["Delegation model", "Event Source (the component) → Event Object (details) → Event Listener (handles it).", "Slide 7"], ["Registering", "source.addTypeListener(listener), e.g. addActionListener, addKeyListener.", "Slide 8"], ["ActionListener", "Listens for ActionEvent: button/menu clicks, check box toggles, Enter in a text field.", "Slides 9–10"], ["actionPerformed", "The only method in ActionListener: public void actionPerformed(ActionEvent e).", "Slides 12, 14"], ["Three steps", "1. Class implements ActionListener. 2. Register: c.addActionListener(obj). 3. Write actionPerformed.", "Slide 11"], ["Inner-class listener", "private class XListener implements ActionListener inside the frame class; can use the frame's private fields.", "Slide 15"], ["Anonymous listener", "button.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) { … } });", "Slide 16"], ["getSource()", "Returns the component that fired the event. Compare with ==.", "Slides 18, 25"], ["getActionCommand()", "Button: its text. Text field: the text typed in it.", "Slides 22, 25"], ["Outer.this", "Inside an inner/anonymous class, ButtonTest.this means the outer window object.", "Slides 18, 22"], ["Event hierarchy", "EventObject → AWTEvent → ActionEvent, TextEvent, ComponentEvent → FocusEvent, WindowEvent, InputEvent → KeyEvent, MouseEvent.", "Slide 6"], ["Message types", "JOptionPane.INFORMATION_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE set the dialog icon.", "Lab 4"]]}</script>
+<script type="application/json" id="guide-data">{"key": "cs254-l4-done", "quizzes": {"events": [{"q": "Which package provides Java's event classes?", "o": ["java.awt.event", "java.io", "java.lang", "javax.sql"], "a": 0, "e": "Slide 2."}, {"q": "An operating-system interrupt is a…", "o": ["background event", "foreground event", "action event", "mouse event"], "a": 0, "e": "Slide 3: background events don't need user interaction."}, {"q": "In event-driven programming, what decides the order code runs in?", "o": ["The series of events that occur", "The order of methods in main", "Alphabetical order of method names", "The layout manager"], "a": 0, "e": "Slide 5."}, {"q": "A listener is…", "o": ["an object that waits for events and responds to them", "the component the user clicks", "the event's details", "a layout manager"], "a": 0, "e": "Slide 4."}], "model": [{"q": "In the delegation model, a JButton the user clicks is the…", "o": ["event source", "event object", "event listener", "event engine"], "a": 0, "e": "Slide 7."}, {"q": "Which method registers a listener for KeyEvents?", "o": ["addKeyListener()", "addActionListener()", "addKeyEvent()", "registerKey()"], "a": 0, "e": "Slide 8: addTypeListener()."}, {"q": "Which listener handles a window being closed or activated?", "o": ["WindowListener", "ContainerListener", "ActionListener", "FocusListener"], "a": 0, "e": "Slide 9."}, {"q": "In the event hierarchy, KeyEvent and MouseEvent extend…", "o": ["InputEvent", "ActionEvent", "TextEvent", "WindowEvent"], "a": 0, "e": "Slide 6."}], "action": [{"q": "How many methods does the ActionListener interface have?", "o": ["One: actionPerformed", "Two", "Five", "None"], "a": 0, "e": "Slide 12."}, {"q": "Which of these does NOT cause an ActionEvent?", "o": ["Moving the mouse over a button", "Clicking a button", "Pressing Enter in a text field", "Choosing a menu item"], "a": 0, "e": "Slide 10. Mouse movement is a MouseEvent."}, {"q": "In DoubleTextListener, the field contains \"ab\". After one click it contains…", "o": ["abab", "ab", "aabb", "ab ab"], "a": 0, "e": "Slide 15: textfield.setText(text + text)."}, {"q": "<code>new ActionListener() { public void actionPerformed(ActionEvent e) {...} }<\/code> is a…", "o": ["anonymous class", "constructor call on an interface's real class", "static method", "lambda-free compile error"], "a": 0, "e": "Slide 16."}, {"q": "What is the parameter of actionPerformed?", "o": ["An ActionEvent object", "The button's text", "An int code", "Nothing"], "a": 0, "e": "Slide 12."}], "multi": [{"q": "One listener is registered on two buttons. How does it tell which was clicked?", "o": ["e.getSource() == button1", "It can't", "e.getButtonNumber()", "By the click position"], "a": 0, "e": "Slide 18."}, {"q": "For a JTextField, <code>event.getActionCommand()<\/code> returns…", "o": ["the text in the field", "the field's variable name", "the field's index", "always null"], "a": 0, "e": "Slide 26: \"textField1: hello\"."}, {"q": "Inside an anonymous listener in MultipleButtons, what does <code>MultipleButtons.this<\/code> refer to?", "o": ["The outer JFrame", "The listener object", "button1", "The ActionEvent"], "a": 0, "e": "Slide 18."}, {"q": "Can you press Enter in the uneditable textField3 and get a dialog?", "o": ["Yes, it still fires an ActionEvent", "No, it can't get focus", "Only if setEditable(true)", "It throws an exception"], "a": 0, "e": "Slide 26 shows the \"textField3: Uneditable text field\" dialog."}], "userform": [{"q": "In the User Information Form, which component lets you tick several skills?", "o": ["JCheckBox", "JRadioButton", "JComboBox", "JLabel"], "a": 0, "e": "Slide 27: Java, Python, C++ check boxes."}, {"q": "Which component is the Department drop-down?", "o": ["JComboBox", "JList", "JTextArea", "JSlider"], "a": 0, "e": "Slide 28."}, {"q": "To clear the gender radio buttons in a ButtonGroup you call…", "o": ["genderGroup.clearSelection()", "male.setText(\"\")", "genderGroup.removeAll()", "male.setEnabled(false)"], "a": 0, "e": "ButtonGroup.clearSelection() (used in the added code)."}], "lab4": [{"q": "How do you compare the password and confirm-password text?", "o": ["pass.equals(confirm)", "pass == confirm", "pass.compare(confirm)", "pass = confirm"], "a": 0, "e": "Strings are compared with equals; == compares object references."}, {"q": "Which showMessageDialog call gives the yellow warning icon titled \"Cleared\"?", "o": ["showMessageDialog(frame, \"you pressed Clear button\", \"Cleared\", JOptionPane.WARNING_MESSAGE)", "showMessageDialog(frame, \"Cleared\")", "showWarningDialog(\"Cleared\")", "showConfirmDialog(frame, \"Cleared\")"], "a": 0, "e": "Lab 4, page 2."}, {"q": "Which three checks does Task 2 ask for?", "o": ["Required fields filled, passwords match, policy agreed", "Email format, age, country", "Username unique, password length, captcha", "None, just show the data"], "a": 0, "e": "Lab 4, Task 2."}], "window": [{"q": "Which window method can stop the window from closing (e.g. ask \"Are you sure?\")?", "o": ["windowClosing", "windowClosed", "windowDeactivated", "windowIconified"], "a": 0, "e": "Slide 34."}, {"q": "How many methods does WindowListener have?", "o": ["7", "3", "5", "1"], "a": 0, "e": "Slides 28 and 32."}, {"q": "Why use WindowAdapter instead of WindowListener?", "o": ["You only override the methods you need", "It's faster", "It works on JButton too", "It has more methods"], "a": 0, "e": "Slides 29 and 31."}, {"q": "A class extends WindowAdapter. Can it also extend JFrame?", "o": ["No, Java allows only one superclass", "Yes", "Only if JFrame is abstract", "Only with implements"], "a": 0, "e": "Slide 31: a class extending an adapter cannot extend another class."}, {"q": "Clicking the Minimize button fires…", "o": ["windowIconified", "windowDeiconified", "windowClosed", "windowOpened"], "a": 0, "e": "Slide 36."}, {"q": "Switching to the window with Alt+Tab fires…", "o": ["windowActivated", "windowDeiconified", "windowOpened", "windowClosing"], "a": 0, "e": "Slide 35."}, {"q": "How do you register a window listener on a frame?", "o": ["frame.addWindowListener(...)", "frame.addActionListener(...)", "frame.setWindowListener(...)", "WindowListener.add(frame)"], "a": 0, "e": "Slide 29: addWindowListener(WindowListener l), usually with new WindowAdapter() { … }."}, {"q": "Which event class is passed to every WindowListener method?", "o": ["WindowEvent", "ActionEvent", "ComponentEvent", "FrameEvent"], "a": 0, "e": "Slides 28 and 32."}]}, "flashcards": [["Event", "A change in the state of an object triggered by some action (click, key press, scroll…).", "Slide 2"], ["Foreground vs background events", "Foreground: need user interaction (clicks). Background: don't (OS interrupts, operation completion).", "Slide 3"], ["Listener", "An object that waits for events and responds to them. Attach it to a component.", "Slide 4"], ["Event-driven programming", "The program's flow is dictated by events, not a pre-determined order.", "Slide 5"], ["Delegation model", "Event Source (the component) → Event Object (details) → Event Listener (handles it).", "Slide 7"], ["Registering", "source.addTypeListener(listener), e.g. addActionListener, addKeyListener.", "Slide 8"], ["ActionListener", "Listens for ActionEvent: button/menu clicks, check box toggles, Enter in a text field.", "Slides 9–10"], ["actionPerformed", "The only method in ActionListener: public void actionPerformed(ActionEvent e).", "Slides 12, 14"], ["Three steps", "1. Class implements ActionListener. 2. Register: c.addActionListener(obj). 3. Write actionPerformed.", "Slide 11"], ["Inner-class listener", "private class XListener implements ActionListener inside the frame class; can use the frame's private fields.", "Slide 15"], ["Anonymous listener", "button.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e) { … } });", "Slide 16"], ["getSource()", "Returns the component that fired the event. Compare with ==.", "Slides 18, 25"], ["getActionCommand()", "Button: its text. Text field: the text typed in it.", "Slides 22, 25"], ["Outer.this", "Inside an inner/anonymous class, ButtonTest.this means the outer window object.", "Slides 18, 22"], ["Event hierarchy", "EventObject → AWTEvent → ActionEvent, TextEvent, ComponentEvent → FocusEvent, WindowEvent, InputEvent → KeyEvent, MouseEvent.", "Slide 6"], ["Message types", "JOptionPane.INFORMATION_MESSAGE, WARNING_MESSAGE, ERROR_MESSAGE set the dialog icon.", "Lab 4"], ["Adapter class", "Implements a listener interface with empty methods, so you override only what you need: WindowAdapter, KeyAdapter, FocusAdapter, MouseAdapter, ComponentAdapter.", "Slides 29, 31"], ["Listener vs Adapter", "Listener: interface, implement ALL methods, can still extend another class. Adapter: class, override only needed methods, uses up your one superclass.", "Slide 31"], ["WindowListener (7)", "windowOpened, windowClosing, windowClosed, windowIconified, windowDeiconified, windowActivated, windowDeactivated.", "Slides 28, 32"], ["windowClosing vs windowClosed", "Closing: user clicks X; you can cancel. Closed: already closed and released; for cleanup.", "Slide 34"], ["windowDeiconified vs windowActivated", "Deiconified: restored from minimised. Activated: gains focus (click or Alt+Tab).", "Slide 35"], ["windowIconified vs windowDeactivated", "Iconified: minimised to the taskbar. Deactivated: loses focus to another window.", "Slide 36"]], "slideMap": {"27": 28, "28": 29, "29": 30, "30": 31, "31": 32, "32": 33, "33": 34, "34": 35, "35": 36}}</script>
 <script>
 (function () {
   var DATA = {};
@@ -1866,6 +2926,46 @@ public class SignUpForm extends JFrame {
     $("l4d").selectedIndex = 0; $("l4k").selectedIndex = 0; $("l4pol").checked = false;
     dialog("Cleared", "⚠️", "you pressed Clear button");
   });
+})();
+
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = window.Guide && window.Guide.esc;
+  function logger(el) {
+    return function (t, color) { var d = document.createElement("div"); d.textContent = t; if (color) d.style.color = color; el.appendChild(d); while (el.childNodes.length > 200) el.removeChild(el.firstChild); el.scrollTop = el.scrollHeight; };
+  }
+  var C = { ev: "#9fd3ff", ok: "#7fd3ad", warn: "#f0b071", dim: "#9aa4a8", bad: "#ff8f86" };
+
+  (function () {
+    var out = logger($("winLog")), st = "hidden", stEl = $("winState");
+    var labels = { hidden: "not visible yet", active: "visible · active", inactive: "visible · not active", min: "minimised", closed: "closed", gone: "program ended" };
+    function show() { stEl.textContent = labels[st]; }
+    function ev(n) { out(n + "(WindowEvent e)", C.ev); }
+    var acts = {
+      open: function () { if (st !== "hidden") return out("// already visible", C.dim); out("frame.setVisible(true);", C.dim); ev("windowActivated"); ev("windowOpened"); st = "active"; },
+      min: function () { if (st !== "active" && st !== "inactive") return out("// window is not on screen", C.dim); ev("windowIconified"); if (st === "active") ev("windowDeactivated"); st = "min"; },
+      restore: function () { if (st !== "min") return out("// window is not minimised", C.dim); ev("windowDeiconified"); ev("windowActivated"); st = "active"; },
+      other: function () { if (st !== "active") return out("// window is not the active window", C.dim); ev("windowDeactivated"); st = "inactive"; },
+      back: function () { if (st !== "inactive") return out("// window is not on screen or already active", C.dim); ev("windowActivated"); st = "active"; },
+      close: function () {
+        if (st !== "active" && st !== "inactive") return out("// window is not on screen", C.dim);
+        ev("windowClosing");
+        var op = $("winOp").value;
+        if (op === "EXIT_ON_CLOSE") { out("EXIT_ON_CLOSE → System.exit(0): program ends, windowClosed never runs", C.warn); st = "gone"; }
+        else if (op === "DISPOSE_ON_CLOSE") { if (st === "active") ev("windowDeactivated"); ev("windowClosed"); out("window disposed", C.ok); st = "closed"; }
+        else if (op === "HIDE_ON_CLOSE") { if (st === "active") ev("windowDeactivated"); out("HIDE_ON_CLOSE → window hidden, program still running, no windowClosed", C.warn); st = "closed"; }
+        else { out("DO_NOTHING_ON_CLOSE → nothing else happens; your windowClosing code decides", C.warn); }
+      }
+    };
+    document.querySelectorAll("#win [data-w]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (st === "gone" || st === "closed") { $("winLog").innerHTML = ""; out("// new run", C.dim); st = "hidden"; }
+        acts[b.dataset.w](); show();
+      });
+    });
+    out("frame.addWindowListener(new WindowAdapter() { … all 7 methods print … });", C.dim);
+    show();
+  })();
 })();
 
 </script>

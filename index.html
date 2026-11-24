@@ -440,6 +440,60 @@ pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
 .xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
 .xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
 
+/* course example programs */
+.ex-shots { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: flex-start; }
+.ex-shots figure { flex: 0 1 auto; }
+.ex-shots figure img { max-width: 100%; }
+.drill-link { margin: 0; font-weight: 600; }
+.drill-link a { text-decoration: none; }
+.drill-link a:hover { text-decoration: underline; }
+
+/* practice page: drills */
+.quote { margin: 0; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--r) var(--r) 0; padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.quote p, .quote ul { margin: 0; }
+.quote ul { padding-left: 1.1rem; display: grid; gap: var(--s1); }
+.quote footer { font-size: .82rem; color: var(--muted); }
+.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: var(--s2); }
+.sec-note { margin: 0; color: var(--muted); font-size: .92rem; }
+.drill { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); scroll-margin-top: 4rem; }
+.drill-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.drill-head h3 { font-size: 1.05rem; }
+.drill-score { font: 500 .78rem var(--f-mono); color: var(--muted); }
+.drill-score.full { color: var(--ok); }
+.drill-from, .drill-note { margin: 0; font-size: .85rem; color: var(--muted); }
+.drill-task { margin: 0; }
+.drill-code pre { line-height: 1.75; }
+.blank { font: inherit; font-size: inherit; line-height: 1.3; color: var(--ink); background: var(--surface); border: 1px dashed var(--accent); border-radius: 4px; padding: 0 .25ch; margin: 0; max-width: 100%; vertical-align: baseline; box-sizing: content-box; }
+textarea.blank { display: inline-block; vertical-align: top; resize: vertical; white-space: pre; overflow-x: auto; }
+.blank::placeholder { color: var(--muted); opacity: .8; }
+.blank:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-style: solid; }
+.blank.ok { border: 1px solid var(--ok); background: var(--ok-soft); }
+.blank.bad { border: 1px solid var(--bad); background: var(--bad-soft); }
+.blank.shown { border: 1px solid var(--box); }
+.drill-actions { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.drill-sum { margin: 0; font-weight: 600; }
+.drill-fb { margin: 0; padding-left: 1.6rem; display: grid; gap: var(--s1); font-size: .9rem; }
+.drill-fb li.ok::marker { color: var(--ok); font-weight: 600; }
+.drill-fb li.bad::marker { color: var(--bad); font-weight: 600; }
+.drill-fb li b { font-weight: 600; }
+.drill-fb li.ok b { color: var(--ok); }
+.drill-fb li.bad b { color: var(--bad); }
+.drill-fb code { overflow-wrap: anywhere; }
+.drill-out summary { cursor: pointer; font-size: .88rem; color: var(--accent); }
+.dprog { display: grid; gap: var(--s2); }
+.dprog-sum { margin: 0; }
+.dprog-row { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.dchip { font: 500 .8rem var(--f-mono); padding: .25rem .6rem; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); text-decoration: none; background: var(--bg); }
+.dchip span { color: var(--accent); }
+.dchip.full { border-color: var(--ok); background: var(--ok-soft); }
+.mcq-h { font-size: 1rem; margin-top: var(--s2); }
+table.ref td.mod { white-space: normal; min-width: 9rem; }
+table.ref td code { white-space: normal; overflow-wrap: anywhere; }
+.foot { padding-block: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+.exam-link { margin: 0; font-weight: 600; display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); }
+.exam-link a { text-decoration: none; }
+.exam-link a:hover { text-decoration: underline; }
+
 </style>
 
 </head>
@@ -472,14 +526,31 @@ pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
 .pts-table td:last-child, .pts-table th:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .pts-table tfoot td { font-weight: 600; border-top: 2px solid var(--line); }
 .logo { background: var(--plate); border-radius: 6px; padding: .3rem .5rem; }
+.exam-card { display: grid; gap: var(--s2); padding: var(--s4) var(--s5); border-radius: var(--r); background: var(--accent); color: var(--accent-ink); text-decoration: none; }
+.exam-card:hover .exam-go { text-decoration: underline; }
+.exam-t { font-family: var(--f-display); font-size: 1.35rem; font-weight: 700; line-height: 1.2; }
+.exam-d { font-size: .95rem; max-width: 40rem; }
+.exam-go { font-weight: 600; }
 </style>
 
 <header class="top">
   <p class="eyebrow">German Jordanian University · CS254</p>
   <h1>Visual Programming Study Hub</h1>
-  <p class="lede">One guide per lecture, each with its matching lab. Every slide's text, code, diagrams and screenshots are included, with plain-language explanations, interactive demos, quizzes and flashcards.</p>
+  <p class="lede">One guide per lecture, each with its matching lab. Every slide's text, code, diagrams and screenshots are included, with plain-language explanations, interactive demos, quizzes and flashcards. Lectures 1–7 also run every example program from the course zips.</p>
   <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
 </header>
+
+<section class="sec" id="exam" data-title="Exam practice">
+  <div class="sec-head">
+    <p class="eyebrow">Lectures 1–7</p>
+    <h2>Exam practice</h2>
+  </div>
+  <a class="exam-card" href="Practice/index.html">
+    <span class="exam-t">Practice for the exam</span>
+    <span class="exam-d">Most of the marks are for code completion, so this is mostly code: 39 drills cut from the course's own example programs, plus 65 multiple-choice questions and a reference sheet laid out like the exam appendix.</span>
+    <span class="exam-go">Start practising →</span>
+  </a>
+</section>
 
 <section class="sec" id="lectures" data-title="Lectures">
   <div class="sec-head">
@@ -598,7 +669,7 @@ pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
 
 </main>
 
-<script type="application/json" id="guide-data">{"key": "cs254-hub", "lectures": [{"n": "1", "title": "Object Oriented Programming with Java", "topics": "Objects, classes, constructors, modifiers, packages, abstraction, encapsulation, inheritance, interfaces, polymorphism", "lab": "Labs 1–2", "url": "L01-OOP/index.html"}, {"n": "2", "title": "GUI: Frames, Panels and Layout", "topics": "GUI basics, AWT vs Swing, component and containment hierarchies, JFrame, JPanel, FlowLayout, BorderLayout, GridLayout · layout playground", "lab": "", "url": "L02-Frames-Panels-Layout/index.html"}, {"n": "3", "title": "GUI: Simple Components", "topics": "Component properties, JButton, JLabel, null layout, JTextField, JTextArea, JScrollPane, JPasswordField, JFormattedTextField, JOptionPane, JCheckBox, JRadioButton, ButtonGroup, JComboBox, JList · 5 live demos", "lab": "Lab 3", "url": "L03-Simple-Components/index.html"}, {"n": "4", "title": "Events", "topics": "Events, foreground vs background, event hierarchy, delegation model, ActionListener (inner, anonymous, this), getSource / getActionCommand · event simulator, Lab 4 validator", "lab": "Lab 4", "url": "L04-Events/index.html"}, {"n": "5", "title": "Other Events", "topics": "Window, key, focus, component, list-selection, document, item and change events; listeners vs adapters · key tester, window simulator, Lab 5 Search and Add (mouse and key listeners) solved and explained", "lab": "Lab 5", "url": "L05-Other-Events/index.html"}, {"n": "6", "title": "Mouse Events", "topics": "MouseListener, MouseMotionListener, MouseWheelListener, MouseEvent (x, y, button, click count), MouseAdapter, double and right click · mouse playground", "lab": "", "url": "L06-Mouse-Events/index.html"}, {"n": "7", "title": "Graphics", "topics": "paintComponent, Graphics methods, Graphics2D, shapes, colours, gradients, textures, strokes, anti-aliasing, transforms, Timer animation · drawing playground, playable Tic-Tac-Toe", "lab": "Lab 6", "url": "L07-Graphics/index.html"}, {"n": "8", "title": "MVC", "topics": "Model, View, Controller; the Employee example completed; advantages; multiple views on one model · live MVC demos", "lab": "", "url": "L08-MVC/index.html"}, {"n": "9", "title": "Other Components", "topics": "JMenuBar, JMenu, JMenuItem, check/radio items, mnemonics, accelerators, JSlider, JEditorPane, JScrollPane, JFileChooser, JColorChooser, JDialog · Student Data mock-up", "lab": "Lab 7 (Parts 1–2)", "url": "L09-Other-Components/index.html"}, {"n": "10", "title": "Tables", "topics": "JTable, TableModel, renderers, editors, TableModelListener, AbstractTableModel, fireTable… · live static, multiplication and order tables", "lab": "", "url": "L10-Tables/index.html"}, {"n": "11", "title": "Database, part 1", "topics": "JDBC components, the 8 basic steps, DriverManager, Class.forName, getConnection, closing with finally, Statement, executeQuery vs executeUpdate, ResultSet cursor and getXxx, ResultSetMetaData · live SQL database, step-through, leak simulator", "lab": "", "url": "L11-Database-1/index.html"}, {"n": "12", "title": "Database, part 2", "topics": "Properties file, Statement / PreparedStatement / CallableStatement, scrollable and updatable ResultSets, DatabaseMetaData, SQL injection, stored procedures, transactions, batch execution, error handling · live database demos, bug hunt", "lab": "", "url": "L12-Database-2/index.html"}, {"n": "13", "title": "Other Components 2", "topics": "JTree, DefaultTreeModel, DefaultMutableTreeNode, JSplitPane, JTabbedPane, JToolBar, JPopupMenu, isPopupTrigger, Action vs ActionListener · tree builder, draggable split pane, live tabs, dockable toolbar, popup and Action demos", "lab": "", "url": "L13-Other-Components-2/index.html"}, {"n": "14", "title": "MDI", "topics": "MDI, JDesktopPane, JInternalFrame, InternalFrameListener, drag modes, five ways to implement MDI (internal frames, tabs, CardLayout, dialogs, multiple frames), CardLayout · working desktop, five-ways comparison, card deck", "lab": "", "url": "L14-MDI/index.html"}, {"n": "14", "title": "Threads", "topics": "Threads and processes, extending Thread vs implementing Runnable, start/join/priority, the Event Dispatch Thread and its two rules, invokeLater, invokeAndWait, SwingWorker · thread race, freezing-window demo, invoke replay, SwingWorker demo", "lab": "", "url": "L14-Threads/index.html"}, {"n": "15", "title": "Threads (continued)", "topics": "Why Swing needs threads, Runnable vs Thread (L15 numbering), Thread constructors, EDT rules, invokeLater/invokeAndWait, SwingWorker skeleton, Runnable vs SwingWorker, JProgressBar, setProgress, PropertyChangeListener and PropertyChangeEvent · all thread demos plus a progress-bar playground", "lab": "", "url": "L15-Threads/index.html"}]}</script>
+<script type="application/json" id="guide-data">{"key": "cs254-hub", "lectures": [{"n": "1", "title": "Object Oriented Programming with Java", "topics": "Objects, classes, constructors, modifiers, packages, abstraction, encapsulation, inheritance, interfaces, polymorphism, inner and anonymous classes · every OOP example program run", "lab": "Labs 1–2", "url": "L01-OOP/index.html"}, {"n": "2", "title": "GUI: Frames, Panels and Layout", "topics": "GUI basics, AWT vs Swing, component and containment hierarchies, JFrame, JPanel, FlowLayout, BorderLayout, GridLayout · layout playground, the four layout example programs", "lab": "", "url": "L02-Frames-Panels-Layout/index.html"}, {"n": "3", "title": "GUI: Simple Components", "topics": "Component properties, JButton, JLabel, null layout, JTextField, JTextArea, JScrollPane, JPasswordField, JOptionPane, JCheckBox, JRadioButton, ButtonGroup, JComboBox, JList · live demos, hotel and feedback forms", "lab": "Lab 3", "url": "L03-Simple-Components/index.html"}, {"n": "4", "title": "Events", "topics": "Event hierarchy, delegation model, ActionListener (inner, anonymous, this), getSource / getActionCommand, window events, WindowListener vs WindowAdapter · event and window simulators, Lab 4 validator", "lab": "Lab 4", "url": "L04-Events/index.html"}, {"n": "5", "title": "Mouse and Key Events", "topics": "MouseListener, MouseMotionListener, MouseWheelListener, MouseEvent, MouseAdapter and MouseInputAdapter, double and right click, KeyListener, key codes vs typed characters, modifiers · mouse playground, key tester, Lab 5 solved", "lab": "Lab 5", "url": "L05-Mouse-Key-Events/index.html"}, {"n": "6", "title": "Graphics", "topics": "paintComponent, Graphics methods, Graphics2D, shapes, colours, gradients, textures, strokes, anti-aliasing, transforms, Timer animation, interactive drawing · drawing playground, playable Tic-Tac-Toe", "lab": "Lab 6", "url": "L06-Graphics/index.html"}, {"n": "7", "title": "Other Events", "topics": "Focus, component, list-selection, document, item, change and container events · focus and list testers, every listener in one table", "lab": "", "url": "L07-Other-Events/index.html"}, {"n": "8", "title": "MVC", "topics": "Model, View, Controller; the Employee example completed; advantages; multiple views on one model · live MVC demos", "lab": "", "url": "L08-MVC/index.html"}, {"n": "9", "title": "Other Components", "topics": "JMenuBar, JMenu, JMenuItem, check/radio items, mnemonics, accelerators, JSlider, JEditorPane, JScrollPane, JFileChooser, JColorChooser, JDialog · Student Data mock-up", "lab": "Lab 7 (Parts 1–2)", "url": "L09-Other-Components/index.html"}, {"n": "10", "title": "Tables", "topics": "JTable, TableModel, renderers, editors, TableModelListener, AbstractTableModel, fireTable… · live static, multiplication and order tables", "lab": "", "url": "L10-Tables/index.html"}, {"n": "11", "title": "Database, part 1", "topics": "JDBC components, the 8 basic steps, DriverManager, Class.forName, getConnection, closing with finally, Statement, executeQuery vs executeUpdate, ResultSet cursor and getXxx, ResultSetMetaData · live SQL database, step-through, leak simulator", "lab": "", "url": "L11-Database-1/index.html"}, {"n": "12", "title": "Database, part 2", "topics": "Properties file, Statement / PreparedStatement / CallableStatement, scrollable and updatable ResultSets, DatabaseMetaData, SQL injection, stored procedures, transactions, batch execution, error handling · live database demos, bug hunt", "lab": "", "url": "L12-Database-2/index.html"}, {"n": "13", "title": "Other Components 2", "topics": "JTree, DefaultTreeModel, DefaultMutableTreeNode, JSplitPane, JTabbedPane, JToolBar, JPopupMenu, isPopupTrigger, Action vs ActionListener · tree builder, draggable split pane, live tabs, dockable toolbar, popup and Action demos", "lab": "", "url": "L13-Other-Components-2/index.html"}, {"n": "14", "title": "MDI", "topics": "MDI, JDesktopPane, JInternalFrame, InternalFrameListener, drag modes, five ways to implement MDI (internal frames, tabs, CardLayout, dialogs, multiple frames), CardLayout · working desktop, five-ways comparison, card deck", "lab": "", "url": "L14-MDI/index.html"}, {"n": "14", "title": "Threads", "topics": "Threads and processes, extending Thread vs implementing Runnable, start/join/priority, the Event Dispatch Thread and its two rules, invokeLater, invokeAndWait, SwingWorker · thread race, freezing-window demo, invoke replay, SwingWorker demo", "lab": "", "url": "L14-Threads/index.html"}, {"n": "15", "title": "Threads (continued)", "topics": "Why Swing needs threads, Runnable vs Thread (L15 numbering), Thread constructors, EDT rules, invokeLater/invokeAndWait, SwingWorker skeleton, Runnable vs SwingWorker, JProgressBar, setProgress, PropertyChangeListener and PropertyChangeEvent · all thread demos plus a progress-bar playground", "lab": "", "url": "L15-Threads/index.html"}]}</script>
 <script>
 (function () {
   var DATA = {};

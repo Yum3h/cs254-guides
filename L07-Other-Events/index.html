@@ -1,0 +1,2657 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>CS254 Other Events Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap">
+<style>
+/* Layout: one reading column (~46rem) under a sticky study bar; each topic is a section
+   with slide-numbered blocks, inline figures, plain-language boxes, an "original slides"
+   drawer and a self-check quiz. Shared by every CS254 lecture guide. */
+:root {
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --ink: #17232a;
+  --muted: #56676f;
+  --line: #d6e0e4;
+  --accent: #1d5f6e;        /* the teal of the lecture slide headings */
+  --accent-ink: #ffffff;
+  --accent-soft: #e2eef1;
+  --mark: #b0261c;          /* the red the slides use for emphasis */
+  --mark-soft: #fbe9e7;
+  --box: #4a7db4;
+  --code-bg: #eef3f5;
+  --c-kw: #1d4fa3;
+  --c-str: #1c7a5a;
+  --c-com: #6c7d85;
+  --c-num: #a2560f;
+  --ok: #1f7a4a;
+  --ok-soft: #e3f3ea;
+  --bad: #b0261c;
+  --bad-soft: #fbe9e7;
+  --console-bg: #0d0d0d;
+  --console-ink: #d9d9d9;
+  --plate: #ffffff;
+  --win-bg: #eceff1;        /* mock Swing window */
+  --win-bar: #dfe5e8;
+  --win-ink: #1c2328;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --s1: .25rem; --s2: .5rem; --s3: .75rem; --s4: 1rem; --s5: 1.5rem; --s6: 2rem; --s7: 3rem;
+  --r: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+    --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+    --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+    --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+    --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1517; --surface: #152024; --ink: #e2eaed; --muted: #93a4ab; --line: #26363c;
+  --accent: #72b9c9; --accent-ink: #0e1517; --accent-soft: #193036; --mark: #f08c80; --mark-soft: #3a1f1c;
+  --box: #5b8fc7; --code-bg: #10191c; --c-kw: #8db8ff; --c-str: #7fd3ad; --c-com: #7f9198; --c-num: #f0b071;
+  --ok: #63cf93; --ok-soft: #173326; --bad: #f08c80; --bad-soft: #3a1f1c; --plate: #f2f4f5;
+  --win-bg: #e6eaec; --win-bar: #d3dadd; --win-ink: #1c2328;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 var(--s7);
+}
+.wrap { max-width: 46rem; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.5rem, 4.6vw, 1.9rem); font-weight: 700; color: var(--accent); }
+h3 { font-size: 1.2rem; font-weight: 600; }
+h4 { margin: 0; font-size: 1rem; }
+p { margin: 0; }
+a { color: var(--accent); }
+code, pre, kbd { font-family: var(--f-mono); }
+:not(pre) > code { font-size: .88em; background: var(--code-bg); padding: .08em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.k { color: var(--mark); font-style: normal; }
+.k-b { color: var(--mark); font-weight: 600; }
+.acc { color: var(--accent); }
+ul.pts, ol.pts { margin: 0; padding-left: 1.2rem; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); }
+ul.pts li, ol.pts li { min-width: 0; }
+ol.pts { padding-left: 1.4rem; }
+ul.pts ul, ol.pts ul, ul.pts ol { margin-top: var(--s1); padding-left: 1.1rem; display: grid; gap: var(--s1); }
+ul.pts ul { list-style: "– "; }
+ul.pts ul ul { list-style: "· "; font-size: .95em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* study bar */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  margin-inline: -16px; padding: var(--s2) 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.bar-in { max-width: 46rem; margin-inline: auto; display: flex; align-items: center; gap: var(--s2) var(--s3); flex-wrap: wrap; }
+.bar-tag { font-family: var(--f-mono); font-size: .78rem; font-weight: 600; letter-spacing: .04em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.bar-tag:hover { text-decoration: underline; }
+.bar select {
+  flex: 1 1 12rem; min-width: 0; font: inherit; font-size: .9rem; padding: .35rem .5rem;
+  border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink);
+}
+.prog { display: flex; align-items: center; gap: var(--s2); font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog-track { width: 4.5rem; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.sr { position: absolute; left: -9999px; }
+
+/* header */
+.top { padding-block: var(--s6) var(--s5); display: grid; gap: var(--s4); }
+.eyebrow { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { color: var(--muted); max-width: 40rem; }
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: .85rem; color: var(--muted); }
+.legend > span { display: inline-flex; align-items: center; gap: .4rem; }
+.sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.toc { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: var(--s1) var(--s4); padding: 0; margin: 0; list-style: none; counter-reset: t; }
+.toc a { display: flex; gap: var(--s2); padding: .3rem 0; text-decoration: none; color: var(--ink); border-bottom: 1px dashed var(--line); font-size: .95rem; }
+.toc a::before { counter-increment: t; content: counter(t, decimal-leading-zero); font-family: var(--f-mono); font-size: .75rem; color: var(--muted); padding-top: .2rem; }
+.toc a.is-done { color: var(--muted); }
+.toc a.is-done::after { content: "✓"; margin-left: auto; color: var(--ok); }
+.pager { display: flex; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; font-size: .9rem; }
+.pager a { text-decoration: none; border: 1px solid var(--line); border-radius: 6px; padding: .35rem .7rem; background: var(--surface); }
+.pager a:hover { border-color: var(--accent); }
+
+/* sections */
+.sec { padding-block: var(--s6); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s5); }
+.sec-head { display: grid; gap: var(--s2); }
+.sec-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s3); flex-wrap: wrap; }
+.done { display: inline-flex; align-items: center; gap: .4rem; font-size: .85rem; color: var(--muted); cursor: pointer; user-select: none;
+  border: 1px solid var(--line); border-radius: 99px; padding: .2rem .7rem .2rem .5rem; background: var(--surface); }
+.done input { accent-color: var(--accent); width: 1rem; height: 1rem; margin: 0; }
+.done:has(input:checked) { color: var(--ok); border-color: var(--ok); }
+
+.slide { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); min-width: 0; }
+.slide h3 { display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap; }
+.sn { font-family: var(--f-mono); font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .35rem; white-space: nowrap; font-weight: 600; }
+.divider { font-family: var(--f-display); font-size: 1.05rem; color: var(--muted); display: flex; gap: var(--s2); align-items: baseline; flex-wrap: wrap; }
+
+/* plain-language box */
+.plain { background: var(--accent-soft); border-radius: var(--r); padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.plain > b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.plain ul { margin: 0; padding-left: 1.1rem; display: grid; gap: var(--s1); }
+
+/* figures */
+figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s2); justify-items: start; min-width: 0; }
+figure .plate { background: var(--plate); border: 1px solid var(--line); border-radius: var(--r); padding: var(--s3); max-width: 100%; overflow-x: auto; }
+figure img { display: block; height: auto; }
+figcaption { font-size: .82rem; color: var(--muted); }
+.fig-row { display: flex; flex-wrap: wrap; gap: var(--s4); align-items: flex-start; }
+.fig-row > * { min-width: 0; }
+
+/* code */
+.code { position: relative; min-width: 0; }
+.code-label { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-bottom: .25rem; display: block; }
+pre.java, pre.console, pre.sql, pre.plain-pre {
+  margin: 0; padding: var(--s3) var(--s4); border-radius: var(--r); overflow-x: auto;
+  font-size: .84rem; line-height: 1.55; tab-size: 3;
+}
+pre.java, pre.sql, pre.plain-pre { background: var(--code-bg); border: 1px solid var(--line); color: var(--ink); }
+pre.console { background: var(--console-bg); color: var(--console-ink); border: 1px solid #000; }
+pre.console .ttl { display: block; color: #9aa4a8; font-size: .72rem; border-bottom: 1px solid #333; margin: -.2rem 0 .4rem; padding-bottom: .25rem; }
+.tk-kw { color: var(--c-kw); font-weight: 600; }
+.tk-str { color: var(--c-str); }
+.tk-com { color: var(--c-com); font-style: italic; }
+.tk-num { color: var(--c-num); }
+.copy {
+  position: absolute; top: .4rem; right: .4rem; font: 500 .72rem var(--f-body); padding: .2rem .55rem;
+  border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); cursor: pointer;
+}
+.code:has(.code-label) .copy { top: 1.65rem; }
+.code > pre { padding-top: 1.9rem; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.callout { display: flex; gap: var(--s2); align-items: flex-start; font-size: .9rem; color: var(--mark); }
+.callout::before { content: "↳"; font-family: var(--f-mono); }
+.wont { display: inline-block; font-weight: 700; color: var(--mark); font-size: 1.05rem; }
+
+/* notes */
+.note { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s3) var(--s4); font-size: .92rem; display: grid; gap: var(--s1); }
+.note b:first-child { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.added { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+tr:last-child td { border-bottom: 0; }
+td.mod { font-family: var(--f-mono); font-weight: 600; color: var(--accent); white-space: nowrap; }
+td.on { white-space: nowrap; }
+td code { white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.chip { font: 500 .82rem var(--f-body); padding: .25rem .7rem; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.access td.y { color: var(--ok); font-weight: 600; text-align: center; }
+.access td.n { color: var(--muted); text-align: center; }
+.access th:not(:first-child) { text-align: center; }
+
+.dg { max-width: 100%; height: auto; display: block; }
+.dg text { font-family: var(--f-body); }
+
+/* original slides drawer */
+details.orig { border: 1px dashed var(--line); border-radius: var(--r); }
+details.orig > summary { cursor: pointer; padding: var(--s2) var(--s3); font-size: .88rem; color: var(--muted); list-style: none; display: flex; gap: var(--s2); align-items: center; }
+details.orig > summary::-webkit-details-marker { display: none; }
+details.orig > summary::before { content: "▸"; font-size: .8rem; transition: transform .2s; }
+details.orig[open] > summary::before { transform: rotate(90deg); }
+details.orig.solid { border-style: solid; }
+.drawer-body { padding: 0 var(--s3) var(--s3); display: grid; gap: var(--s3); }
+.orig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: var(--s3); padding: 0 var(--s3) var(--s3); }
+.orig-grid figure img { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--plate); }
+
+/* interactive demos */
+.demo { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s3); min-width: 0; }
+.demo-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.demo-head h3 { font-size: 1.05rem; }
+.ctrl { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: center; font-size: .88rem; }
+.ctrl label { display: inline-flex; align-items: center; gap: .4rem; flex-wrap: wrap; max-width: 100%; }
+.ctrl select { max-width: 100%; min-width: 0; }
+.demo > * { min-width: 0; }
+.ctrl input[type="range"] { accent-color: var(--accent); }
+.ctrl select, .ctrl input[type="text"], .ctrl input[type="number"] { font: inherit; padding: .25rem .4rem; border: 1px solid var(--line); border-radius: 5px; background: var(--bg); color: var(--ink); }
+.log { font-family: var(--f-mono); font-size: .78rem; background: var(--console-bg); color: var(--console-ink); border-radius: 6px; padding: var(--s2) var(--s3); height: 9.5rem; overflow: auto; }
+.log div { white-space: pre; }
+.win { color-scheme: light; background: var(--win-bg); color: var(--win-ink); border: 1px solid #9aa7ad; border-radius: 6px; overflow: hidden; max-width: 100%; font-family: system-ui, "Segoe UI", sans-serif; font-size: .85rem; }
+.win-bar { background: var(--win-bar); padding: .25rem .5rem; display: flex; justify-content: space-between; align-items: center; font-size: .78rem; border-bottom: 1px solid #b7c1c5; }
+.win-bar i { font-style: normal; letter-spacing: .3em; color: #556; }
+.win-body { padding: .5rem; }
+.jbtn { background: linear-gradient(#fdfdfd, #e3e7ea); border: 1px solid #8f9ba1; border-radius: 3px; padding: .25rem .6rem; color: var(--win-ink); font: inherit; font-size: .82rem; white-space: nowrap; }
+
+/* quiz */
+.quiz { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; gap: var(--s4); }
+.quiz-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.quiz-head h3 { font-size: 1.05rem; }
+.score { font-size: .82rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.q { display: grid; gap: var(--s2); }
+.q-text { font-weight: 500; }
+.q-text code { font-weight: 400; }
+.opts { display: grid; gap: var(--s2); }
+.opt { text-align: left; font: inherit; font-size: .93rem; padding: .5rem .75rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.opt code { font-size: .88em; }
+.opt, .q-text, .expl, td { overflow-wrap: anywhere; }
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.opt.right { border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-soft); color: var(--ink); }
+.expl { font-size: .88rem; color: var(--muted); }
+.btn { font: 500 .85rem var(--f-body); padding: .4rem .9rem; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); }
+
+/* flashcards */
+.fc { display: grid; gap: var(--s3); }
+.card {
+  min-height: 11rem; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface);
+  padding: var(--s5); display: grid; place-items: center; text-align: center; cursor: pointer; user-select: none;
+}
+.card .face-term { font-family: var(--f-display); font-size: 1.6rem; font-weight: 700; color: var(--accent); overflow-wrap: anywhere; }
+.card .face-def { font-size: 1rem; max-width: 34rem; }
+.card .face-src { font-family: var(--f-mono); font-size: .72rem; color: var(--muted); margin-top: var(--s3); display: block; }
+.fc-ctrl { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; }
+.fc-count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.foot { padding-top: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); display: grid; gap: var(--s3); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* JDBC guides: step-through code, SQL console, component chain, connection pool */
+pre .ln { display: inline-block; min-width: 100%; border-radius: 3px; }
+pre .ln.on { background: color-mix(in srgb, var(--accent) 17%, transparent); box-shadow: inset 3px 0 var(--accent); }
+pre .ln.dim { opacity: .45; }
+.sql-in { width: 100%; min-height: 6.5rem; font: .84rem/1.5 var(--f-mono); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: 6px; background: var(--code-bg); color: var(--ink); resize: vertical; }
+.grid-out { overflow-x: auto; background: #fff; color-scheme: light; max-height: 20rem; }
+.grid-out .expl { padding: var(--s2) var(--s3); color: #4a5a61; }
+.java-line { font: .8rem/1.5 var(--f-mono); background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); min-height: 2.4rem; }
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.chain .arr { font: .72rem var(--f-mono); color: var(--muted); }
+.chain button { font: 600 .85rem var(--f-body); padding: .45rem .75rem; border-radius: 6px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.chain button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+.chain button.lit { border-color: var(--ok); }
+.chain-info { border-left: 3px solid var(--accent); padding: var(--s1) var(--s3); display: grid; gap: var(--s1); font-size: .93rem; min-height: 5rem; }
+.pool { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; font-size: .85rem; }
+.pool i { width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 2px solid var(--ok); background: var(--ok-soft); display: inline-grid; place-items: center; font-style: normal; font: 600 .7rem var(--f-mono); color: var(--ok); }
+.pool i.used { border-color: var(--bad); background: var(--bad-soft); color: var(--bad); }
+.pool i.busy { border-color: var(--box); background: var(--accent-soft); color: var(--box); }
+.sorter { display: grid; gap: var(--s2); }
+.sort-row { display: flex; flex-wrap: wrap; gap: var(--s2); align-items: center; justify-content: space-between; border: 1px solid var(--line); border-radius: 6px; padding: var(--s2) var(--s3); background: var(--bg); }
+.sort-row code { white-space: normal; }
+.sort-row .acts { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.sort-row .res { flex-basis: 100%; font-size: .85rem; }
+.sort-row.right { border-color: var(--ok); background: var(--ok-soft); }
+.sort-row.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.log.wrap div { white-space: pre-wrap; overflow-wrap: anywhere; }
+pre.pickable .ln { cursor: pointer; }
+pre.pickable .ln:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+pre .ln.pick { background: color-mix(in srgb, var(--mark) 16%, transparent); }
+pre .ln.hit { background: color-mix(in srgb, var(--ok) 22%, transparent); box-shadow: inset 3px 0 var(--ok); }
+pre .ln.miss { background: color-mix(in srgb, var(--mark) 22%, transparent); box-shadow: inset 3px 0 var(--mark); }
+pre .ln.nope { background: color-mix(in srgb, var(--muted) 20%, transparent); }
+.bug-x { font-size: .9rem; border-left: 3px solid var(--line); padding: var(--s1) var(--s3); }
+.bug-x.hit { border-color: var(--ok); } .bug-x.miss { border-color: var(--mark); }
+.res-ok { color: var(--ok); font-weight: 600; } .res-bad { color: var(--bad); font-weight: 600; }
+
+/* L13: Swing component mock-ups (inside .win, always light) */
+.tree-view { background: #fff; padding: .4rem .3rem; font: 13px system-ui, "Segoe UI", sans-serif; color: #1c2328; min-height: 6rem; overflow-x: auto; }
+.tv-row { display: flex; align-items: center; white-space: nowrap; line-height: 1.6; }
+.tv-guide { font: 13px/1.6 ui-monospace, Menlo, Consolas, monospace; color: #8b98a0; white-space: pre; }
+.tv-tog { width: 1.1rem; flex: none; border: 0; background: none; padding: 0; font-size: .72rem; color: #3c4a52; cursor: pointer; }
+.tv-tog.none { visibility: hidden; }
+.tv-ico { width: 16px; height: 14px; margin-right: .3rem; flex: none; }
+.tv-lbl { padding: 0 .3rem; border-radius: 2px; cursor: pointer; border: 1px solid transparent; }
+.tv-lbl.sel { background: #b8cfe5; border-color: #6d8fb5; }
+.tv-lbl.fresh { background: #fff2b3; }
+.tv-hline { border-top: 1px solid #8b98a0; margin: .1rem 0; }
+.sp-frame { display: flex; flex-direction: column; height: 18rem; background: var(--win-bg); }
+.sp { display: flex; flex: 1; min-height: 0; min-width: 0; }
+.sp.vert { flex-direction: column; }
+#sp2 { height: 100%; }
+.sp-a, .sp-b { overflow: auto; background: #fff; min-width: 0; min-height: 0; }
+.sp-a { flex: none; }
+.sp-b { flex: 1; }
+.sp-div { flex: none; background: #d5dde1; border: 1px solid #a9b4ba; display: flex; gap: 3px; cursor: col-resize; touch-action: none; }
+.sp:not(.vert) > .sp-div { flex-direction: column; align-items: center; padding-top: 3px; }
+.sp.vert > .sp-div { flex-direction: row; align-items: center; padding-left: 3px; cursor: row-resize; }
+.sp-div:focus-visible { outline: 2px solid #2a6ebb; }
+.sp-arrow { font-size: 9px; line-height: 1; padding: 1px; border: 0; background: none; color: #24323a; cursor: pointer; }
+.jlist { list-style: none; margin: 0; padding: 2px 0; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jlist li { padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+.jlist li.sel { background: #b8cfe5; }
+.pic { display: grid; place-items: center; }
+.ok-cyan { background: #00ffff; border: 1px solid #6b7b82; font: 600 13px system-ui, sans-serif; padding: .35rem; color: #1c2328; cursor: pointer; }
+.jtp { display: flex; flex-direction: column; height: 13rem; background: var(--win-bg); font: 12px system-ui, sans-serif; color: #1c2328; padding: 4px; }
+.jtp.pos-BOTTOM { flex-direction: column-reverse; }
+.jtp.pos-LEFT { flex-direction: row; }
+.jtp.pos-RIGHT { flex-direction: row-reverse; }
+.jtp-tabs { display: flex; flex-wrap: wrap; gap: 2px; min-width: 0; }
+.jtp.pos-LEFT .jtp-tabs, .jtp.pos-RIGHT .jtp-tabs { flex-direction: column; flex-wrap: nowrap; overflow: auto; max-width: 45%; }
+.jtp.scroll:not(.pos-LEFT):not(.pos-RIGHT) .jtp-tabs { flex-wrap: nowrap; overflow-x: auto; }
+.jtp-tab { border: 1px solid #9aa7ad; background: #dfe5e8; padding: 2px 9px; cursor: pointer; white-space: nowrap; font: inherit; color: inherit; }
+.jtp-tab.sel { background: #fff; font-weight: 600; }
+.jtp-page { flex: 1; border: 1px solid #9aa7ad; background: #eceff1; min-height: 0; min-width: 0; overflow: auto; }
+.jtp-empty { padding: .5rem; color: #7a868c; }
+.bl3 { display: grid; grid-template: auto 1fr auto / auto 1fr auto; height: 100%; gap: 2px; padding: 2px; }
+.bl3 .jbtn { font-weight: 600; }
+.tl-frame { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto; height: 14rem; background: var(--win-bg); }
+.tl-frame.drop { outline: 2px dashed #2a6ebb; outline-offset: -4px; }
+.tl-frame[data-dock="NORTH"] > .tl-bar { grid-area: 1 / 1 / 2 / 4; }
+.tl-frame[data-dock="SOUTH"] > .tl-bar { grid-area: 3 / 1 / 4 / 4; }
+.tl-frame[data-dock="WEST"] > .tl-bar { grid-area: 1 / 1 / 4 / 2; }
+.tl-frame[data-dock="EAST"] > .tl-bar { grid-area: 1 / 3 / 4 / 4; }
+.tl-center { grid-area: 2 / 2 / 3 / 3; background: #fff; margin: 4px; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tl-bar { display: flex; align-items: center; gap: 2px; padding: 2px; background: #e3e8eb; border: 1px solid #b6c0c5; }
+.tl-bar.vertical { flex-direction: column; }
+.tl-grip { width: 9px; align-self: stretch; min-height: 1.6rem; background-image: radial-gradient(#7d8a91 1px, transparent 1.3px); background-size: 4px 4px; cursor: grab; touch-action: none; }
+.tl-bar.vertical .tl-grip { width: auto; min-height: 9px; height: 9px; min-width: 1.6rem; }
+.tl-btn { min-width: 1.9rem; height: 1.9rem; border: 1px solid transparent; background: none; border-radius: 3px; cursor: pointer; font: 14px system-ui, sans-serif; color: #24323a; padding: 0 .35rem; }
+.tl-btn:hover:not(:disabled) { border-color: #8f9ba1; background: #f4f6f7; }
+.tl-btn:disabled { color: #a9b2b7; cursor: default; }
+.tl-sep { width: 1px; align-self: stretch; background: #9aa7ad; margin: 2px 4px; }
+.tl-bar.vertical .tl-sep { width: auto; height: 1px; margin: 4px 2px; }
+.tl-floatwin { max-width: 16rem; }
+.pp-area { position: relative; background: #fff; min-height: 9rem; padding: .2rem; outline: none; }
+.pp-area:focus-visible { outline: 2px solid #2a6ebb; }
+.jpopup { position: absolute; z-index: 5; background: #f4f6f7; border: 1px solid #8f9ba1; box-shadow: 2px 2px 6px rgba(0, 0, 0, .25); padding: 2px 0; min-width: 8rem; font: 12px system-ui, sans-serif; color: #1c2328; }
+.jpopup button { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; text-align: left; border: 0; background: none; padding: 3px 12px; font: inherit; color: inherit; cursor: pointer; }
+.jpopup button:hover:not(:disabled), .jpopup button:focus-visible { background: #b8cfe5; outline: none; }
+.jpopup button:disabled { color: #a9b2b7; cursor: default; }
+.jpopup hr { border: 0; border-top: 1px solid #b6c0c5; margin: 2px 0; }
+.jpopup kbd { font: 11px system-ui, sans-serif; color: #56676f; }
+.ac-frame { background: var(--win-bg); outline: none; position: relative; }
+.ac-frame:focus-visible { outline: 2px solid #2a6ebb; }
+.ac-menubar { position: relative; background: #e3e8eb; border-bottom: 1px solid #b6c0c5; padding: 1px 2px; }
+.ac-menu { border: 0; background: none; padding: 2px 8px; font: 12px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.ac-menu[aria-expanded="true"] { background: #b8cfe5; }
+.ac-drop { top: 100%; left: 2px; }
+.ac-area { position: relative; background: #fff; margin: 4px; min-height: 7rem; padding: .5rem; font: 12px system-ui, sans-serif; color: #56676f; }
+.tv-row { align-items: stretch; }
+.tv-row > .tv-tog, .tv-row > .tv-ico, .tv-row > .tv-lbl { align-self: center; }
+.tv-g { display: inline-block; width: 16px; flex: none; }
+.tv-g.pipe { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat; }
+.tv-g.tee { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 100% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+.tv-g.elbow { background: linear-gradient(#8b98a0, #8b98a0) 7px 0 / 1px 50% no-repeat, linear-gradient(#8b98a0, #8b98a0) 7px 50% / 9px 1px no-repeat; }
+
+/* L14 MDI: desktop pane, internal frames, card deck */
+.dsk { position: relative; height: 20rem; background: #5d7d8f; overflow: hidden; }
+.jif { position: absolute; display: flex; flex-direction: column; background: #eceff1; border: 1px solid #44525a; box-shadow: 2px 3px 8px rgba(0, 0, 0, .35); }
+.jif-bar { display: flex; align-items: center; gap: 3px; padding: 2px 4px; background: #c5ced3; font: 600 12px system-ui, sans-serif; color: #1c2328; cursor: move; user-select: none; touch-action: none; }
+.jif.sel { border-color: #1d4f8a; }
+.jif.sel .jif-bar { background: #8fb3d9; }
+.jif-bar span { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jif-bar button { width: 18px; height: 16px; padding: 0; font: 11px/1 system-ui, sans-serif; border: 1px solid #6b7b82; background: #f4f6f7; color: #1c2328; cursor: pointer; flex: none; }
+.jif textarea { flex: 1; resize: none; border: 0; border-top: 1px solid #9aa7ad; font: 12px ui-monospace, Menlo, Consolas, monospace; padding: 4px; background: #fff; color: #1c2328; min-height: 0; width: 100%; }
+.jif-rs { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; cursor: nwse-resize; touch-action: none; background: linear-gradient(135deg, transparent 55%, #6b7b82 55%, #6b7b82 62%, transparent 62%, transparent 78%, #6b7b82 78%, #6b7b82 85%, transparent 85%); }
+.jif-icon { position: absolute; bottom: 4px; display: flex; align-items: center; gap: 4px; width: 8.5rem; padding: 2px 4px; background: #c5ced3; border: 1px solid #44525a; font: 600 11px system-ui, sans-serif; color: #1c2328; cursor: pointer; }
+.jif-icon span { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dsk-outline { position: absolute; border: 2px dashed #fff; pointer-events: none; }
+.cards { background: var(--win-bg); padding: .6rem; font: 13px system-ui, sans-serif; color: #1c2328; }
+.card-page { background: #fff; border: 1px solid #b6c0c5; padding: .7rem; min-height: 9rem; display: grid; gap: .4rem; align-content: start; }
+.card-page h4 { font: 600 14px system-ui, sans-serif; }
+.card-page .tag { font: 11px ui-monospace, monospace; color: #7a868c; }
+.ways-host { position: relative; background: var(--win-bg); color: #1c2328; font: 12px system-ui, sans-serif; min-height: 15rem; padding: .5rem; color-scheme: light; }
+.ways-host pre { margin: 0; white-space: pre-wrap; font: 12px ui-monospace, monospace; }
+.dlg-scrim { position: absolute; inset: 0; background: rgba(0, 0, 0, .28); display: grid; place-items: center; }
+
+/* Threads: lanes, progress bar, frozen window */
+.lanes { display: grid; gap: 4px; font: 12px var(--f-mono); }
+.lane { display: grid; grid-template-columns: minmax(0, 9.5rem) 7.5rem minmax(0, 1fr); gap: .5rem; align-items: center; }
+.lane > b { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lane .st { font-size: 11px; padding: 1px 6px; border-radius: 99px; border: 1px solid var(--line); text-align: center; color: var(--muted); }
+.lane .st.RUNNABLE { color: var(--ok); border-color: var(--ok); }
+.lane .st.TIMED_WAITING, .lane .st.WAITING { color: var(--c-num); border-color: var(--c-num); }
+.lane .st.TERMINATED { color: var(--bad); border-color: var(--bad); }
+.lane .ticks { display: flex; gap: 2px; overflow: hidden; min-width: 0; justify-content: flex-end; }
+.tick { width: 1.15rem; height: 1.15rem; border-radius: 3px; display: grid; place-items: center; font-size: 10px; background: var(--accent-soft); color: var(--accent); flex: none; }
+@media (max-width: 520px) { .lane { grid-template-columns: minmax(0, 1fr) 7rem; } .lane .ticks { grid-column: 1 / -1; justify-content: flex-start; } }
+.jprog { position: relative; height: 18px; border: 1px solid #6b7b82; background: #fff; border-radius: 2px; overflow: hidden; }
+.jprog i { position: absolute; top: 0; bottom: 0; left: 0; background: #5b8fc7; }
+.jprog span { position: absolute; inset: 0; display: grid; place-items: center; font: 600 11px system-ui, sans-serif; color: #1c2328; }
+.jprog.ind i { width: 30% !important; animation: jprog-ind 1.2s linear infinite; }
+@keyframes jprog-ind { from { left: -30%; } to { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .jprog.ind i { animation: none; width: 100% !important; opacity: .45; } }
+.win.frozen .win-body { filter: grayscale(.7) brightness(.9); }
+.win .win-bar .nr { color: #b0261c; font-weight: 600; }
+.win-body .row { display: flex; gap: .4rem; flex-wrap: wrap; align-items: center; }
+.win-body textarea { width: 100%; min-height: 4.5rem; font: 12px ui-monospace, monospace; border: 1px solid #9aa7ad; background: #fff; color: #1c2328; padding: 4px; resize: none; }
+.verdict { font: 600 .8rem var(--f-body); padding: .1rem .5rem; border-radius: 99px; }
+.verdict.ok { background: var(--ok-soft); color: var(--ok); }
+.verdict.bad { background: var(--bad-soft); color: var(--bad); }
+.jbtn:disabled { color: #9aa4a8; cursor: default; }
+
+/* Your lab answers */
+.mine { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .05em; text-transform: uppercase; color: var(--ok); font-weight: 600; }
+.slide.answer { border-left: 3px solid var(--ok); padding-left: var(--s4); }
+.xpl { display: grid; gap: var(--s3); margin: 0; }
+.xpl > div { display: grid; gap: var(--s1); min-width: 0; }
+.xpl dt { min-width: 0; }
+.xpl dt pre.java { font-size: .76rem; padding: .35rem .6rem; }
+.xpl dd { margin: 0; font-size: .93rem; padding-left: var(--s3); border-left: 2px solid var(--line); min-width: 0; }
+
+/* course example programs */
+.ex-shots { display: flex; flex-wrap: wrap; gap: var(--s3); align-items: flex-start; }
+.ex-shots figure { flex: 0 1 auto; }
+.ex-shots figure img { max-width: 100%; }
+.drill-link { margin: 0; font-weight: 600; }
+.drill-link a { text-decoration: none; }
+.drill-link a:hover { text-decoration: underline; }
+
+/* practice page: drills */
+.quote { margin: 0; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 var(--r) var(--r) 0; padding: var(--s3) var(--s4); display: grid; gap: var(--s2); font-size: .95rem; }
+.quote p, .quote ul { margin: 0; }
+.quote ul { padding-left: 1.1rem; display: grid; gap: var(--s1); }
+.quote footer { font-size: .82rem; color: var(--muted); }
+.steps { margin: 0; padding-left: 1.3rem; display: grid; gap: var(--s2); }
+.sec-note { margin: 0; color: var(--muted); font-size: .92rem; }
+.drill { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: var(--s4); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s3); scroll-margin-top: 4rem; }
+.drill-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); flex-wrap: wrap; }
+.drill-head h3 { font-size: 1.05rem; }
+.drill-score { font: 500 .78rem var(--f-mono); color: var(--muted); }
+.drill-score.full { color: var(--ok); }
+.drill-from, .drill-note { margin: 0; font-size: .85rem; color: var(--muted); }
+.drill-task { margin: 0; }
+.drill-code pre { line-height: 1.75; }
+.blank { font: inherit; font-size: inherit; line-height: 1.3; color: var(--ink); background: var(--surface); border: 1px dashed var(--accent); border-radius: 4px; padding: 0 .25ch; margin: 0; max-width: 100%; vertical-align: baseline; box-sizing: content-box; }
+textarea.blank { display: inline-block; vertical-align: top; resize: vertical; white-space: pre; overflow-x: auto; }
+.blank::placeholder { color: var(--muted); opacity: .8; }
+.blank:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-style: solid; }
+.blank.ok { border: 1px solid var(--ok); background: var(--ok-soft); }
+.blank.bad { border: 1px solid var(--bad); background: var(--bad-soft); }
+.blank.shown { border: 1px solid var(--box); }
+.drill-actions { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.drill-sum { margin: 0; font-weight: 600; }
+.drill-fb { margin: 0; padding-left: 1.6rem; display: grid; gap: var(--s1); font-size: .9rem; }
+.drill-fb li.ok::marker { color: var(--ok); font-weight: 600; }
+.drill-fb li.bad::marker { color: var(--bad); font-weight: 600; }
+.drill-fb li b { font-weight: 600; }
+.drill-fb li.ok b { color: var(--ok); }
+.drill-fb li.bad b { color: var(--bad); }
+.drill-fb code { overflow-wrap: anywhere; }
+.drill-out summary { cursor: pointer; font-size: .88rem; color: var(--accent); }
+.dprog { display: grid; gap: var(--s2); }
+.dprog-sum { margin: 0; }
+.dprog-row { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.dchip { font: 500 .8rem var(--f-mono); padding: .25rem .6rem; border: 1px solid var(--line); border-radius: 999px; color: var(--ink); text-decoration: none; background: var(--bg); }
+.dchip span { color: var(--accent); }
+.dchip.full { border-color: var(--ok); background: var(--ok-soft); }
+.mcq-h { font-size: 1rem; margin-top: var(--s2); }
+table.ref td.mod { white-space: normal; min-width: 9rem; }
+table.ref td code { white-space: normal; overflow-wrap: anywhere; }
+.foot { padding-block: var(--s6); color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+.exam-link { margin: 0; font-weight: 600; display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); }
+.exam-link a { text-decoration: none; }
+.exam-link a:hover { text-decoration: underline; }
+
+</style>
+
+</head>
+<body>
+<div class="bar" role="navigation" aria-label="Study bar">
+  <div class="bar-in">
+    <a class="bar-tag" href="../index.html" title="All CS254 lectures">CS254 · L7 ↗</a>
+    <label for="jump" class="sr">Jump to section</label>
+    <select id="jump"><option value="">Jump to…</option></select>
+    <div class="prog" aria-live="polite"><div class="prog-track"><div class="prog-fill" id="progFill"></div></div><span id="progText">0 / 0</span></div>
+  </div>
+</div>
+
+<main class="wrap">
+<header class="top">
+  <p class="eyebrow">CS254 Visual Programming · Lecture 7</p>
+  <h1>Other Events</h1>
+  <p class="lede">Focus, component, list-selection, document, item, change and container events. Every slide of <em>Lecture 7 – Other Events</em> (14 slides) in order, with all code typed out, plus live testers to move focus, pick list items and toggle check boxes and see exactly which methods fire. The last section puts every listener from Lectures 4, 5 and 7 in one table.</p>
+  <p class="exam-link"><a href="../Practice/index.html#drills-l7">Exam practice: 7 code-completion drills for this lecture</a> · <a href="#course-ex">the course example programs</a></p>
+  <div class="legend">
+    <span><span class="sn">12</span> slide number</span>
+    <span><i class="sw" style="background:var(--accent-soft);outline:1px solid var(--accent)"></i>In plain words</span>
+    <span><span class="added">Added</span> not on the slides</span>
+  </div>
+  <nav aria-label="Contents"><ol class="toc" id="toc"></ol></nav>
+</header>
+
+<section class="sec" id="focus" data-title="Focus and component events">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 1–4</p>
+    <div class="sec-head-row"><h2>Focus and component events</h2><label class="done"><input type="checkbox" id="done-focus"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div><b>Focus</b> is "where the keyboard is pointing". When you click into a text field it <em>gains</em> focus; when you click elsewhere it <em>loses</em> it. Use it to highlight the active field or to validate a field when the user leaves it. <b>Component events</b> fire when a component is resized, moved, shown or hidden.</div></aside>
+
+  <div class="slide">
+    <h3>Other Events <span class="sn">1</span></h3>
+    <p style="font-size:.85rem;color:var(--muted)">Slides adapted from slides of Marty Stepp based on materials by M. Ernst, S. Reges, D. Notkin, R. Mercer, Wikipedia — <a href="http://www.cs.washington.edu/331/" target="_blank" rel="noopener">http://www.cs.washington.edu/331/</a><br>And Bob Myers Florida State University — <a href="https://www.cs.fsu.edu/~myers/cgs3416/" target="_blank" rel="noopener">https://www.cs.fsu.edu/~myers/cgs3416/</a></p>
+  </div>
+
+  <div class="slide">
+    <h3>Focus events <span class="sn">2</span></h3>
+    <div class="code"><pre class="java">public interface <b>FocusListener</b> {
+    public void <b>focusGained</b>(FocusEvent event);
+    public void <b>focusLost</b>(FocusEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li><b>focus</b>: The current target of keyboard input.
+        <ul><li>A <em>focus event</em> occurs when the keyboard cursor enters or exits a component, signifying the start/end of typing on that control.</li></ul>
+      </li>
+      <li>Many AWT/Swing components have this method:
+        <ul><li><code>public void addFocusListener(FocusListener kl)</code></li></ul>
+      </li>
+      <li>The abstract class <code>FocusAdapter</code> implements all <code>FocusListener</code> methods with empty bodies.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>Focus Event example <span class="sn">3</span></h3>
+    <div class="code"><pre class="java">import java.awt.*;
+import java.awt.event.*;
+class TextFieldFocusEvent extends Frame implements FocusListener
+{
+    TextField t1,t2;
+
+    public TextFieldFocusEvent()
+    {
+        createAndShowGUI();
+    }
+
+    private void createAndShowGUI()
+    {
+        setTitle("FocusListener for TextField");
+        setLayout(new FlowLayout());
+
+        // Create 2 textfields
+        t1=new TextField(20);
+        t2=new TextField(20);
+
+        // Add them
+        add(t1);
+        add(t2);
+
+        // Add FocusListeners
+        t1.addFocusListener(this);
+        t2.addFocusListener(this);
+
+        setSize(400,400);
+        setVisible(true);
+    }
+
+    public void focusGained(FocusEvent fe)
+    {
+        // Get what textfield got focus
+        TextField t=(TextField)fe.getSource();
+        t.setBackground(Color.LIGHT_GRAY);
+    }
+
+    public void focusLost(FocusEvent fe)
+    {
+        // Get what textfield lost focus
+        TextField t=(TextField)fe.getSource();
+        t.setBackground(Color.WHITE);
+    }
+
+    public static void main(String args[])
+    {
+        new TextFieldFocusEvent();
+    }
+}</pre></div>
+    <aside class="note"><b>Guide note</b><span>This example uses AWT (<code>Frame</code>, <code>TextField</code>, no J). The Swing version is the same with <code>JFrame</code> and <code>JTextField</code>. <code>(TextField) fe.getSource()</code> is a <em>cast</em>: getSource() returns an Object, so you tell Java it's really a TextField.</span></aside>
+  </div>
+
+  <div class="demo" id="fd">
+    <div class="demo-head"><h3>Try it: focusGained / focusLost</h3><span class="added">Added</span></div>
+    <div class="win" style="max-width:24rem"><div class="win-bar"><span>FocusListener for TextField</span><i>–□×</i></div>
+      <div class="win-body" style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <label class="sr" for="fd1">t1</label><input id="fd1" type="text" placeholder="t1" style="flex:1 1 8rem;min-width:0;font:inherit;border:1px solid #8f9ba1;padding:.15rem .3rem;background:#fff;color:#1c2328">
+        <label class="sr" for="fd2">t2</label><input id="fd2" type="text" placeholder="t2" style="flex:1 1 8rem;min-width:0;font:inherit;border:1px solid #8f9ba1;padding:.15rem .3rem;background:#fff;color:#1c2328">
+      </div>
+    </div>
+    <div class="log" id="fdLog" style="height:6rem"></div>
+  </div>
+
+  <div class="slide">
+    <h3>Component events <span class="sn">4</span></h3>
+    <div class="code"><pre class="java">public interface <b>ComponentListener</b> {
+    public void <b>componentHidden</b>(ComponentEvent event);
+    public void <b>componentMoved</b>(ComponentEvent event);
+    public void <b>componentResized</b>(ComponentEvent event);
+    public void <b>componentShown</b>(ComponentEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>These events occur when a layout manager reshapes a component or when it is set to be visible or invisible.</li>
+      <li>Many AWT/Swing components have this method:
+        <ul><li><code>public void addComponentListener(ComponentListener cl)</code></li></ul>
+      </li>
+      <li>The abstract class <code>ComponentAdapter</code> implements all <code>ComponentListener</code> methods with empty bodies.</li>
+    </ul>
+    <p class="added">Added · Example</p>
+    <div class="code"><pre class="java">frame.addComponentListener(new ComponentAdapter() {
+    public void componentResized(ComponentEvent e) {
+        frame.setTitle("Size: " + frame.getWidth() + " x " + frame.getHeight());
+    }
+});</pre></div>
+  </div>
+
+  <details class="orig" data-pages="1-4"></details>
+
+  <div class="quiz" data-quiz="focus"></div>
+</section>
+
+<section class="sec" id="listsel" data-title="JList selection events">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 5–8</p>
+    <div class="sec-head-row"><h2>JList selection events</h2><label class="done"><input type="checkbox" id="done-listsel"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div>A JList doesn't fire ActionEvents. It fires a <code>ListSelectionEvent</code> whenever the selection changes, and you handle it in <code>valueChanged</code>. One click can fire several events in a row while the selection is "adjusting", so wrap your code in <code>if (!e.getValueIsAdjusting())</code> to run it once, on the final value.</div></aside>
+
+  <div class="slide">
+    <h3>JList select event <span class="sn">5</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 18rem"><pre class="java">public interface <b>ListSelectionListener</b> {
+    public void <b>valueChanged</b>(ListSelectionEvent event);
+}</pre></div>
+      <figure style="flex:0 1 7rem"><div class="plate"><img src="img/s25_jlist.png" width="109" alt="JList with January, February, March (selected), April"></div></figure>
+    </div>
+    <ul class="pts">
+      <li>These events occur when a user changes the element(s) selected within a <code>JList</code>.</li>
+      <li>The <code>JList</code> component has this method:
+        <ul><li><code>public void addListSelectionListener(ListSelectionListener lsl)</code></li></ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <h3>ListSelectionListener Interface <span class="sn">6</span></h3>
+    <ul class="pts">
+      <li><code><b>public void</b> valueChanged(ListSelectionEvent evt)</code></li>
+      <li>This method is automatically called by the runtime system every time the selection is changed. It is not executed if the selection is unchanged, for example if the user clicks in an item that is already selected</li>
+      <li>The body of this method has to contain the code that should be executed in response to the selection.</li>
+    </ul>
+    <h4>ListSelectionEvent</h4>
+    <ul class="pts">
+      <li><code>getFirstIndex()</code> returns the position of the first (top-most) entry, the selection mode of which might have changed (from selected to non-selected or vice versa). 'Might' refers to the fact that the section state might be the same as before. For example if entries 5 to 8 were selected and the user now selects 5 to 10 then the first selected index remains unchanged. Which entries are selected can be found by using method <code>getSelectedIndices</code> of class JList.</li>
+      <li><code>getLastIndex()</code> returns the position of the last (bottom-most) entry, the selection mode of which might have changed. See also <code>getFirstIndex()</code>.</li>
+      <li><code>getIsAdjusting</code> – changing the selection in a list triggers a series of actions, each of which generates a list selection event. For example previously selected entries become unselected before new ones become selected. Usually, one would prefer this series of events to be completed before the application reacts to the change. For such a rapid series of events all but the last one return true as a result of <code>getIsAdjusting</code>. Only the last one returns false as a result of <code>getIsAdjusting</code>. This can be used to wait for the end of the series of adjustments before taking further action.</li>
+      <li>At the moment, <code>ListSelectionEvent</code> supports only the selection modes <code>SINGLE_SELECTION</code> and <code>SINGLE_INTERVAL_SELECTION</code>.</li>
+    </ul>
+    <aside class="note"><b>Guide note</b><span>The real method name is <code>getValueIsAdjusting()</code>, as the code on slide 8 uses.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>JList example <span class="sn">7–8</span></h3>
+    <div class="code"><pre class="java">import SimpleFrame.SimpleFrame;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+public class ListTransferFrame extends SimpleFrame
+{
+   private JList leftList, rightList;
+   private DefaultListModel rightListModel;
+   JButton transferButton;
+   String[] entries = {"Schleswig-Holstein", "Niedersachsen", "Hamburg",
+                       "Bremen", "Mecklenburg-Vorpommern", "Brandenburg", "Berlin",
+                       "Nordrhein-Westfalen","Hessen","Sachsen-Anhalt",
+                       "Rheinland-Pfalz","Thüringen","Sachsen","Saarland",
+                       "Bayern","Baden-Württemberg"};
+
+   public ListTransferFrame()
+   {
+      this.setSize(400,300);
+      leftList = new JList(entries);
+      rightListModel = new DefaultListModel();
+      rightList = new JList(rightListModel);
+      leftList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      TransferListener selLis = new TransferListener();
+      leftList.addListSelectionListener(selLis);
+      JPanel listPanel = new JPanel();
+      listPanel.setLayout(new GridLayout(1,2));
+      JScrollPane leftScrollPane = new JScrollPane(leftList);
+      JScrollPane rightScrollPane = new JScrollPane(rightList);
+      listPanel.add(leftScrollPane);
+      listPanel.add(rightScrollPane);
+      this.getContentPane().add(listPanel,BorderLayout.CENTER);
+   }
+
+   public static void main(String[] args)
+   {
+      ListTransferFrame LLF = new ListTransferFrame();
+      LLF.showIt("List Transfer Frame");
+   }
+
+   //Listener as internal class
+   class TransferListener implements ListSelectionListener{
+      public TransferListener(){}
+
+      public void valueChanged(ListSelectionEvent evt){
+         if(!evt.getValueIsAdjusting())
+         {
+            String sel = (String)leftList.getSelectedValue();
+            if(rightListModel.contains(sel))
+            {
+               rightListModel.removeElement(sel);
+            }
+            else
+            {
+               rightListModel.addElement(sel);
+            }//ifelse
+         }//if
+      }//valueChanged
+   }//internal class
+}</pre></div>
+    <figure><div class="plate"><img src="img/s28_list_transfer.png" width="325" loading="lazy" alt="List Transfer Frame: left list of the 16 German states with Thüringen selected; right list contains Brandenburg, Nordrhein-Westfalen, Niedersachsen, Hamburg, Rheinland-Pfalz, Hessen"></div><figcaption>Selecting a state on the left adds it to the right list; selecting it again removes it.</figcaption></figure>
+    <aside class="note"><b>Guide note</b><span>On the slide "Thüringen" and "Baden-Württemberg" print as garbled characters (an encoding problem); they're fixed above. The slide's first line reads "Import SimpleFrame.SimpleFrame;" with a capital I, which won't compile. <code>SimpleFrame</code> is the course helper class from Lecture 2.</span></aside>
+  </div>
+
+  <div class="demo" id="lt">
+    <div class="demo-head"><h3>Try it: ListTransferFrame</h3><span class="added">Added</span></div>
+    <div class="win" style="max-width:26rem"><div class="win-bar"><span>List Transfer Frame</span><i>–□×</i></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#9aa7ad">
+        <div id="ltLeft" role="listbox" aria-label="States" style="background:#fff;height:10rem;overflow:auto"></div>
+        <div id="ltRight" role="listbox" aria-label="Chosen states" style="background:#fff;height:10rem;overflow:auto"></div>
+      </div>
+    </div>
+    <div class="log" id="ltLog" style="height:6rem"></div>
+  </div>
+
+  <details class="orig" data-pages="5-8"></details>
+
+  <div class="quiz" data-quiz="listsel"></div>
+</section>
+
+<section class="sec" id="more" data-title="Document, item and change events">
+  <div class="sec-head">
+    <p class="eyebrow">Slides 9–13</p>
+    <div class="sec-head-row"><h2>Document, item and change events</h2><label class="done"><input type="checkbox" id="done-more"> Studied</label></div>
+  </div>
+
+  <aside class="plain"><b>In plain words</b><div><ul><li><b>DocumentListener</b>: runs on <em>every</em> change to a text field's text (typing, deleting, pasting), not just on Enter. Good for live character counters or live validation.</li><li><b>ItemListener</b>: runs when a check box or combo-box item becomes selected or deselected. <code>getStateChange()</code> tells you which.</li><li><b>ChangeListener</b>: runs when a slider, spinner or tabbed pane changes value.</li></ul></div></aside>
+
+  <div class="slide">
+    <h3>Document events <span class="sn">9</span></h3>
+    <div class="fig-row">
+      <div class="code" style="flex:2 1 18rem"><pre class="java">public interface <b>DocumentListener</b> {
+    public void <b>changedUpdate</b>(DocumentEvent event);
+    public void <b>insertUpdate</b>(DocumentEvent event);
+    public void <b>removeUpdate</b>(DocumentEvent event);
+}</pre></div>
+      <figure style="flex:0 1 6rem"><div class="plate"><img src="img/s29_document.png" width="80" alt="An icon of a stack of documents"></div></figure>
+    </div>
+    <ul class="pts">
+      <li>These events occur when the contents of a text component (e.g. <code>JTextField</code> or <code>JTextArea</code>) change.</li>
+      <li>Such components have this method:
+        <ul><li><code>public Document getDocument()</code></li></ul>
+      </li>
+      <li>And a <code>Document</code> object has this method:
+        <ul><li><code>public void addDocumentListener(DocumentListener cl)</code></li></ul>
+      </li>
+      <li>And yes, there is a <code>DocumentAdapter</code>.</li>
+    </ul>
+    <aside class="note"><b>Guide note</b><span>Standard Java has no <code>DocumentAdapter</code> class (the slide's joke comes from the original source). You write all three methods, usually leaving <code>changedUpdate</code> empty.</span></aside>
+  </div>
+
+  <div class="slide">
+    <h3>Document events <span class="sn">10</span></h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>Triggered When</th><th>Common for</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><code>insertUpdate</code></td><td><b>Text is inserted</b> into the document</td><td>Plain and styled documents</td><td>Called when characters are added.</td></tr>
+          <tr><td><code>removeUpdate</code></td><td><b>Text is removed</b> from the document</td><td>Plain and styled documents</td><td>Called when characters are deleted.</td></tr>
+          <tr><td><code>changedUpdate</code></td><td><b>Attributes or styles change</b> (but not text content)</td><td><b>Styled documents only</b> (<code>JTextPane</code>, <code>JEditorPane</code>)</td><td><em>Never called</em> for <code>PlainDocument</code> used in <code>JTextField</code> or <code>JTextArea</code>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="added">Added · Example: a live character counter</p>
+    <div class="code"><pre class="java">JTextField field = new JTextField(20);
+JLabel counter = new JLabel("0 characters");
+
+field.getDocument().addDocumentListener(new DocumentListener() {
+    public void insertUpdate(DocumentEvent e)  { update(); }
+    public void removeUpdate(DocumentEvent e)  { update(); }
+    public void changedUpdate(DocumentEvent e) { }          // never called for a JTextField
+    private void update() {
+        counter.setText(field.getText().length() + " characters");
+    }
+});</pre></div>
+  </div>
+
+  <div class="demo" id="dd">
+    <div class="demo-head"><h3>Try it: DocumentListener vs ActionListener</h3><span class="added">Added</span></div>
+    <label for="ddIn" class="expl">Type, delete, paste, then press Enter.</label>
+    <input id="ddIn" type="text" autocomplete="off" style="font:inherit;padding:.4rem .6rem;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)">
+    <div class="log" id="ddLog" style="height:7rem"></div>
+  </div>
+
+  <div class="slide">
+    <h3>Item events <span class="sn">11–12</span></h3>
+    <div class="code"><pre class="java">public interface <b>ItemListener</b> {
+    public void <b>itemStateChanged</b>(ItemEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>These events occur when an item has been selected or deselected by the user.
+        <ul><li><code>public void addItemListener(ItemListener il)</code></li></ul>
+      </li>
+      <li>Used with <code>JCheckBox</code>, <code>JComboBox</code>.</li>
+    </ul>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Member</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>Object</code></td><td><code>getItem()</code></td><td>Returns the item affected by the event.</td></tr>
+          <tr><td><code>int</code></td><td><code>getStateChange()</code></td><td>Returns the type of state change (selected or deselected).</td></tr>
+          <tr><td><code>object</code></td><td><code>getSource()</code></td><td>Returns the object on which the event occurred</td></tr>
+          <tr><td><code>static int</code></td><td><code>DESELECTED</code></td><td>This state-change-value indicates that a selected item was deselected.</td></tr>
+          <tr><td><code>static int</code></td><td><code>SELECTED</code></td><td>This state-change value indicates that an item was selected.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <aside class="note"><b>Guide note</b><span>Changing a JComboBox fires <b>two</b> ItemEvents: DESELECTED for the old item, then SELECTED for the new one. That's why the Lab 5 code checks <code>e.getStateChange() == ItemEvent.SELECTED</code>.</span></aside>
+  </div>
+
+  <div class="demo" id="it">
+    <div class="demo-head"><h3>Try it: ItemEvents from a check box and a combo box</h3><span class="added">Added</span></div>
+    <div class="ctrl">
+      <label><input type="checkbox" id="itCb"> Subscribe</label>
+      <label for="itCombo">Country <select id="itCombo"><option>Jordan</option><option>Qatar</option><option>Oman</option><option>Palestine</option><option>UK</option></select></label>
+    </div>
+    <div class="log" id="itLog" style="height:7rem"></div>
+  </div>
+
+  <div class="slide">
+    <h3>Change events <span class="sn">13</span></h3>
+    <div class="code"><pre class="java">public interface <b>ChangeListener</b> {
+    public void <b>stateChanged</b>(ChangeEvent event);
+}</pre></div>
+    <ul class="pts">
+      <li>These events occur when some kind of state of a given component changes. Not used by all components, but essential for some.</li>
+      <li><code>JSpinner</code>, <code>JSlider</code>, <code>JTabbedPane</code>, <code>JColorChooser</code>, <code>JViewPort</code>, and other components have this method:
+        <ul><li><code>public void addChangeListener(ChangeListener cl)</code></li></ul>
+      </li>
+    </ul>
+    <div class="fig-row" style="align-items:center">
+      <figure><div class="plate"><img src="img/s33_spinner.png" width="67" loading="lazy" alt="A JSpinner showing 10"></div><figcaption>JSpinner</figcaption></figure>
+      <figure><div class="plate"><img src="img/s33_slider.png" width="250" loading="lazy" alt="A JSlider labelled Frames Per Second from 0 to 30"></div><figcaption>JSlider</figcaption></figure>
+      <figure><div class="plate"><img src="img/s33_tabs.png" width="384" loading="lazy" alt="A JTabbedPane with tabs System, Audio, Networking, Video, Help"></div><figcaption>JTabbedPane</figcaption></figure>
+    </div>
+    <p class="added">Added · Example (as in Lab 7: a slider updating a label)</p>
+    <div class="code"><pre class="java">JSlider slider = new JSlider(0, 50, 25);
+JLabel label = new JLabel("midterm exam mark: 25");
+slider.addChangeListener(new ChangeListener() {
+    public void stateChanged(ChangeEvent e) {
+        label.setText("midterm exam mark: " + slider.getValue());
+    }
+});</pre></div>
+    <div class="demo" style="margin-top:.25rem">
+      <div class="ctrl"><label for="chSl">JSlider <input type="range" id="chSl" min="0" max="50" value="25"></label><span id="chLbl">midterm exam mark: 25</span></div>
+      <div class="log" id="chLog" style="height:4.5rem"></div>
+    </div>
+  </div>
+
+  <details class="orig" data-pages="9-13"></details>
+
+  <div class="quiz" data-quiz="more"></div>
+</section>
+
+<section class="sec" id="container" data-title="ContainerListener">
+  <div class="sec-head">
+    <p class="eyebrow">Slide 14</p>
+    <div class="sec-head-row"><h2>ContainerListener</h2><label class="done"><input type="checkbox" id="done-container"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>A <code>ContainerListener</code> hears a <em>container</em> (a <code>JPanel</code>, a frame's content pane) when its list of children changes: a component is <code>add</code>ed or <code>remove</code>d. It's how a shopping-cart panel can update its item count the moment an item row appears or disappears, without the "Add" button's code having to know about the counter. Register it with <code>panel.addContainerListener(...)</code>; <code>ContainerAdapter</code> exists if you need only one of the two methods. <code>e.getChild()</code> gives the component that was added or removed.</div></aside>
+
+  <div class="slide">
+    <h3>ContainerListener <span class="sn">14</span></h3>
+    <ul class="pts">
+      <li>Used to detect changes in a container when components are added or removed.</li>
+      <li>Commonly used with containers such as JPanel and JFrame.</li>
+      <li>Two event-handling methods:
+        <ul>
+          <li><code>componentAdded(ContainerEvent e)</code>: Called when a component is added.</li>
+          <li><code>componentRemoved(ContainerEvent e)</code>: Called when a component is removed.</li>
+        </ul>
+      </li>
+      <li>Useful for dynamically updated interfaces, such as shopping carts and dashboards.</li>
+    </ul>
+  </div>
+
+  <div class="slide">
+    <p class="added">Added · The pattern in code</p>
+    <div class="code"><pre class="java">JPanel cart = new JPanel();
+JLabel count = new JLabel("Items: 0");
+
+cart.addContainerListener(new ContainerListener() {
+    public void componentAdded(ContainerEvent e) {
+        count.setText("Items: " + cart.getComponentCount());
+    }
+    public void componentRemoved(ContainerEvent e) {
+        count.setText("Items: " + cart.getComponentCount());
+    }
+});
+
+cart.add(new JLabel("Apple"));   // fires componentAdded
+cart.remove(0);                  // fires componentRemoved
+cart.revalidate();               // re-run the layout after adding/removing
+cart.repaint();</pre></div>
+    <p style="font-size:.9rem;color:var(--muted)">The event fires on the <code>add</code> or <code>remove</code> call itself. After changing a visible container, call <code>revalidate()</code> and <code>repaint()</code> so the layout and the screen catch up. Imports: <code>java.awt.event.ContainerListener</code> and <code>java.awt.event.ContainerEvent</code>.</p>
+  </div>
+
+  <details class="orig" data-pages="14-14"></details>
+  <div class="quiz" data-quiz="container"></div>
+</section>
+
+<section class="sec" id="course-ex" data-title="Course example programs">
+  <div class="sec-head">
+    <p class="eyebrow">Added · from Lecture7_Examples.zip</p>
+    <div class="sec-head-row"><h2>Course example programs</h2><label class="done"><input type="checkbox" id="done-course-ex"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>The example project for this lecture (<code>Lecture7_Examples.zip</code>, package <code>com.mycompany.otherevents</code>). Every program was compiled and run here; clicks, typing, selections and resizes were simulated, and each caption says what was done. <b>Full code</b> is each file exactly as in the zip.</div></aside>
+
+
+  <div class="slide ex" id="ex-focus">
+    <p class="added">Example · TextFieldFocusEvent.java</p>
+    <h3>TextFieldFocusEvent: highlight the field with the focus</h3>
+    <p>Slide 3, in Swing (the slide uses AWT's <code>Frame</code> and <code>TextField</code>). The frame implements <code>FocusListener</code> and listens to both fields: the field with the keyboard focus turns light grey, and the one that loses it goes back to white.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 426px)"><div class="plate"><img src="img/ex/focus-0.png" width="400" loading="lazy" alt="TextFieldFocusEvent: highlight the field with the focus: When the window opens, the first field gets the focus."></div><figcaption>When the window opens, the first field gets the focus.</figcaption></figure>
+    <figure style="width:min(100%, 426px)"><div class="plate"><img src="img/ex/focus-1-0.png" width="400" loading="lazy" alt="TextFieldFocusEvent: highlight the field with the focus: After clicking into the second field."></div><figcaption>After clicking into the second field.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">public class TextFieldFocusEvent extends JFrame implements FocusListener {</pre></dt><dd>FocusListener has two methods, <code>focusGained</code> and <code>focusLost</code>; the frame writes both.</dd></div>
+<div><dt><pre class="java">t1.addFocusListener(this);
+t2.addFocusListener(this);</pre></dt><dd>One listener, the frame, for both fields.</dd></div>
+<div><dt><pre class="java">JTextField t = (JTextField) fe.getSource();
+t.setBackground(Color.LIGHT_GRAY);</pre></dt><dd><code>getSource()</code> says which field gained the focus.</dd></div>
+<div><dt><pre class="java">setDefaultCloseOperation(EXIT_ON_CLOSE);</pre></dt><dd>Inside a JFrame subclass the constant can be written without <code>JFrame.</code>: it's inherited.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">TextFieldFocusEvent.java (48 lines)</span><pre class="java">package com.mycompany.otherevents;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class TextFieldFocusEvent extends JFrame implements FocusListener {
+
+    JTextField t1, t2;
+
+    public TextFieldFocusEvent() {
+        createAndShowGUI();
+    }
+
+    private void createAndShowGUI() {
+        setTitle("FocusListener for TextField");
+        setLayout(new FlowLayout());
+
+        // Create 2 textfields
+        t1 = new JTextField(20);
+        t2 = new JTextField(20);
+        // Add them
+        add(t1);
+        add(t2);
+        // Add FocusListeners
+        t1.addFocusListener(this);
+        t2.addFocusListener(this);
+        setSize(400, 400);
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    public void focusGained(FocusEvent fe) {
+        // Get what textfield got focus
+        JTextField t = (JTextField) fe.getSource();
+        t.setBackground(Color.LIGHT_GRAY);
+    }
+
+    public void focusLost(FocusEvent fe) {
+        // Get what textfield lost focus
+        JTextField t = (JTextField) fe.getSource();
+        t.setBackground(Color.WHITE);
+    }
+
+    public static void main(String args[]) {
+        new TextFieldFocusEvent();
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l7-focus">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-compdemo">
+    <p class="added">Example · ListenerDemo.java</p>
+    <h3>ListenerDemo: ComponentListener in action</h3>
+    <p>A <code>ComponentListener</code> hears when a component is resized, moved, shown or hidden (slide 4). The same <code>CustomComponentListener</code> object is added to a label (inside a scroll pane) and to the panel holding it. The check box hides and shows the label, and the status line names the component and what happened to it.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 286px)"><div class="plate"><img src="img/ex/compdemo-0.png" width="260" loading="lazy" alt="ListenerDemo: ComponentListener in action: At the start: laying out the window resized the label."></div><figcaption>At the start: laying out the window resized the label.</figcaption></figure>
+    <figure style="width:min(100%, 286px)"><div class="plate"><img src="img/ex/compdemo-1-0.png" width="260" loading="lazy" alt="ListenerDemo: ComponentListener in action: “Label visible” unticked: setVisible(false) fires componentHidden."></div><figcaption>“Label visible” unticked: <code>setVisible(false)</code> fires <code>componentHidden</code>.</figcaption></figure>
+    <figure style="width:min(100%, 286px)"><div class="plate"><img src="img/ex/compdemo-2-0.png" width="260" loading="lazy" alt="ListenerDemo: ComponentListener in action: Ticked again: componentShown."></div><figcaption>Ticked again: <code>componentShown</code>.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">class CustomComponentListener implements ComponentListener {</pre></dt><dd>All four methods: <code>componentResized</code>, <code>componentMoved</code>, <code>componentShown</code>, <code>componentHidden</code>.</dd></div>
+<div><dt><pre class="java">msgLabel.addComponentListener(c);
+controlPanel.addComponentListener(c);</pre></dt><dd>One listener on two components; <code>e.getComponent()</code> tells them apart.</dd></div>
+<div><dt><pre class="java">statusLabel.setText("Status: " + e.getComponent().getClass().getSimpleName() + " " + action);</pre></dt><dd><code>getClass().getSimpleName()</code> gives the class name: JLabel or JPanel.</dd></div>
+<div><dt><pre class="java">checkbox.addItemListener(new ItemListener() {
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        msgLabel.setVisible(checkbox.isSelected());</pre></dt><dd>The check box controls the label's visibility; the component events follow from that.</dd></div>
+<div><dt><pre class="java">SwingUtilities.invokeLater(() -&gt; {
+    ListenerDemo demo = new ListenerDemo();
+    demo.showComponentListenerDemo();
+});</pre></dt><dd>Builds the GUI on Swing's event thread, the recommended way (most course examples skip it). <code>() -&gt; { … }</code> is a lambda for a Runnable.</dd></div>
+<div><dt><pre class="java">if (result == JOptionPane.YES_OPTION) {
+    source.dispose();
+    System.exit(0);
+}</pre></dt><dd>With <code>DO_NOTHING_ON_CLOSE</code>, the window only closes if you answer Yes.</dd></div>
+</dl>
+    <aside class="note"><b>Good to know</b><span><code>ListenerDemo</code> isn't a JFrame subclass: it keeps a <code>JFrame</code> in a field (<code>mainFrame</code>) and builds the window in <code>prepareGUI</code>. Both styles work.</span></aside>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">ListenerDemo.java (124 lines)</span><pre class="java">package com.mycompany.otherevents;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class ListenerDemo {
+
+    private JFrame mainFrame;
+    private JLabel headerLabel;
+    private JLabel statusLabel;
+    private JPanel controlPanel;
+
+    public ListenerDemo() {
+        prepareGUI();
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -&gt; {
+            ListenerDemo demo = new ListenerDemo();
+            demo.showComponentListenerDemo();
+        });
+    }
+
+    private void prepareGUI() {
+        mainFrame = new JFrame("Java AWT Examples");
+        mainFrame.setSize(400, 400);
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainFrame.setLayout(new GridLayout(3, 1));
+
+        mainFrame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent) {
+                JFrame source = (JFrame) windowEvent.getSource();
+                int result = JOptionPane.showConfirmDialog(
+                    source,
+                    "Are you sure you want to exit?",
+                    "Confirm Exit",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (result == JOptionPane.YES_OPTION) {
+                    source.dispose();
+                    System.exit(0);
+                }
+            }
+        });
+
+        headerLabel = new JLabel("", SwingConstants.CENTER);
+        statusLabel = new JLabel("Status: Ready", SwingConstants.CENTER);
+        statusLabel.setPreferredSize(new Dimension(350, 50));
+
+        controlPanel = new JPanel();
+        controlPanel.setLayout(new FlowLayout());
+
+        mainFrame.add(headerLabel);
+        mainFrame.add(controlPanel);
+        mainFrame.add(statusLabel);
+
+        mainFrame.setVisible(true);
+    }
+
+    private void showComponentListenerDemo() {
+        headerLabel.setText("Listener in action: ComponentListener");
+
+        // Create message label
+        JLabel msgLabel = new JLabel("Welcome to Component Listener", SwingConstants.CENTER);
+        msgLabel.setOpaque(true);
+        msgLabel.setBackground(Color.LIGHT_GRAY);
+        msgLabel.setPreferredSize(new Dimension(250, 50));
+
+        // Put label in scroll pane
+        JScrollPane scrollPane = new JScrollPane(msgLabel);
+        scrollPane.setPreferredSize(new Dimension(300, 100));
+        scrollPane.setBackground(Color.MAGENTA);
+
+        // Checkbox with anonymous inner class
+        JCheckBox checkbox = new JCheckBox("Label visible", true);
+        checkbox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                msgLabel.setVisible(checkbox.isSelected());
+            }
+        });
+
+        // Component listener
+        CustomComponentListener c = new CustomComponentListener();
+        msgLabel.addComponentListener(c);
+        controlPanel.addComponentListener(c);
+
+        // Add components to panel
+        controlPanel.add(scrollPane);
+        controlPanel.add(checkbox);
+
+        mainFrame.setVisible(true);
+    }
+
+    // Inner class to listen to component events
+    class CustomComponentListener implements ComponentListener {
+        @Override
+        public void componentResized(ComponentEvent e) {
+            updateStatus(e, "resized");
+        }
+
+        @Override
+        public void componentMoved(ComponentEvent e) {
+            updateStatus(e, "moved");
+        }
+
+        @Override
+        public void componentShown(ComponentEvent e) {
+            updateStatus(e, "shown");
+        }
+
+        @Override
+        public void componentHidden(ComponentEvent e) {
+            updateStatus(e, "hidden");
+        }
+
+        private void updateStatus(ComponentEvent e, String action) {
+            statusLabel.setText("Status: " + e.getComponent().getClass().getSimpleName() + " " + action);
+        }
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l7-component">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-drawapp">
+    <p class="added">Example · DrawingApplication.java</p>
+    <h3>DrawingApplication: a size label, and why getGraphics() drawings vanish</h3>
+    <p>A <code>ComponentListener</code> on the drawing panel keeps a label up to date with the panel's size. The drawing itself is done straight onto the screen with <code>getGraphics()</code> in <code>mouseDragged</code>, and the second screenshot shows the weakness of that.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 386px)"><div class="plate"><img src="img/ex/drawapp-0.png" width="360" loading="lazy" alt="DrawingApplication: a size label, and why getGraphics() drawings vanish: A line drawn by dragging; the label shows the panel&#x27;s size."></div><figcaption>A line drawn by dragging; the label shows the panel's size.</figcaption></figure>
+    <figure style="width:min(100%, 386px)"><div class="plate"><img src="img/ex/drawapp-1-0.png" width="360" loading="lazy" alt="DrawingApplication: a size label, and why getGraphics() drawings vanish: After resizing the window: componentResized updated the label, and the line is gone. Nothing stored it, so the repaint wiped it."></div><figcaption>After resizing the window: <code>componentResized</code> updated the label, and the line is gone. Nothing stored it, so the repaint wiped it.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">drawingPanel.addComponentListener(new ComponentListener() {
+    public void componentResized(ComponentEvent e) {
+        updateSize();
+    }</pre></dt><dd><code>componentResized</code> runs whenever the panel's size changes, including when the window first appears.</dd></div>
+<div><dt><pre class="java">public void componentMoved(ComponentEvent e) {
+    // Not needed in this example
+}</pre></dt><dd>It's the interface, so the unused methods stay, empty. <code>ComponentAdapter</code> avoids that (next example).</dd></div>
+<div><dt><pre class="java">Graphics g = getGraphics();
+g.setColor(Color.BLUE);
+g.drawLine(x, y, e.getX(), e.getY());</pre></dt><dd><code>getGraphics()</code> draws on the screen at once, but the line isn't stored anywhere: the next <code>paintComponent</code> (after a resize, or minimise and restore) paints the white background over it.</dd></div>
+<div><dt><pre class="java">g.dispose();</pre></dt><dd>A Graphics you asked for yourself should be disposed; the one Swing passes to <code>paintComponent</code> should not.</dd></div>
+<div><dt><pre class="java">class DrawingPanel extends JPanel {</pre></dt><dd>A second, non-public class in the same file.</dd></div>
+</dl>
+    <aside class="note"><b>Good to know</b><span>Because these lines exist only on the screen, these two screenshots were taken from the screen itself rather than by asking the window to paint.</span></aside>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">DrawingApplication.java (94 lines)</span><pre class="java">package com.mycompany.otherevents;
+ 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+
+public class DrawingApplication extends JFrame {
+
+    private DrawingPanel drawingPanel;
+    private JLabel sizeLabel;
+
+    public DrawingApplication() {
+
+        setTitle("Simple Drawing Application");
+        setSize(600, 450);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        drawingPanel = new DrawingPanel();
+
+        sizeLabel = new JLabel("", JLabel.CENTER);
+
+        add(drawingPanel, BorderLayout.CENTER);
+        add(sizeLabel, BorderLayout.SOUTH);
+
+        // Detect changes to the drawing panel
+        drawingPanel.addComponentListener(new ComponentListener() {
+
+            public void componentResized(ComponentEvent e) {
+                updateSize();
+            }
+
+            public void componentMoved(ComponentEvent e) {
+                // Not needed in this example
+            }
+
+            public void componentShown(ComponentEvent e) {
+                updateSize();
+            }
+
+            public void componentHidden(ComponentEvent e) {
+                // Not needed in this example
+            }
+        });
+
+        setVisible(true);
+    }
+
+    private void updateSize() {
+
+        sizeLabel.setText(
+            "Drawing Area: " + drawingPanel.getWidth()
+            + " x " + drawingPanel.getHeight()
+        );
+    }
+
+    public static void main(String[] args) {
+        new DrawingApplication();
+    }
+}
+
+class DrawingPanel extends JPanel {
+
+    private int x = -1;
+    private int y = -1;
+
+    public DrawingPanel() {
+
+        setBackground(Color.WHITE);
+
+        addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                x = e.getX();
+                y = e.getY();
+            }
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseDragged(MouseEvent e) {
+
+                Graphics g = getGraphics();
+
+                g.setColor(Color.BLUE);
+                g.drawLine(x, y, e.getX(), e.getY());
+
+                x = e.getX();
+                y = e.getY();
+
+                g.dispose();
+            }
+        });
+    }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-rdraw">
+    <p class="added">Example · ResizableDrawingApplication.java</p>
+    <h3>ResizableDrawingApplication: a drawing that survives resizing</h3>
+    <p>The fix for the previous example. Lines go into a <code>BufferedImage</code>, <code>paintComponent</code> copies that image to the screen, and a <code>ComponentAdapter</code> makes a new image of the new size (copying the old drawing into it) when the panel is resized.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 386px)"><div class="plate"><img src="img/ex/rdraw-0.png" width="360" loading="lazy" alt="ResizableDrawingApplication: a drawing that survives resizing: The same line and the same resize as before: this time the drawing stays."></div><figcaption>The same line and the same resize as before: this time the drawing stays.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">addComponentListener(new ComponentAdapter() {
+    public void componentResized(ComponentEvent e) {
+        resizeDrawingImage();
+    }
+});</pre></dt><dd><code>ComponentAdapter</code>: write only the method you need.</dd></div>
+<div><dt><pre class="java">g2.drawImage(drawingImage, 0, 0, null);</pre></dt><dd>In <code>resizeDrawingImage</code>: copies the old drawing into the new image.</dd></div>
+<div><dt><pre class="java">if (getWidth() &lt;= 0 || getHeight() &lt;= 0) {
+    return;
+}</pre></dt><dd>A BufferedImage can't be 0 × 0, so wait until the panel has a real size.</dd></div>
+<div><dt><pre class="java">g2.setStroke(new BasicStroke(3));</pre></dt><dd>A 3-pixel-wide line.</dd></div>
+<div><dt><pre class="java">drawingPanel.clearDrawing();</pre></dt><dd>The Clear Drawing button paints the image white and repaints.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">ResizableDrawingApplication.java (177 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.otherevents;
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+
+public class ResizableDrawingApplication extends JFrame {
+
+    private ResizableDrawingPanel drawingPanel;
+
+    public ResizableDrawingApplication() {
+
+        setTitle("Resizable Drawing Application");
+        setSize(600, 450);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        drawingPanel = new ResizableDrawingPanel();
+
+        JButton clearButton = new JButton("Clear Drawing");
+
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                drawingPanel.clearDrawing();
+            }
+        });
+
+        add(drawingPanel, BorderLayout.CENTER);
+        add(clearButton, BorderLayout.SOUTH);
+
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new ResizableDrawingApplication();
+    }
+}
+
+class ResizableDrawingPanel extends JPanel {
+
+    private BufferedImage drawingImage;
+    private int x = -1;
+    private int y = -1;
+
+    public ResizableDrawingPanel() {
+
+        setBackground(Color.WHITE);
+
+        addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                x = e.getX();
+                y = e.getY();
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                x = -1;
+                y = -1;
+            }
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            public void mouseDragged(MouseEvent e) {
+
+                if (drawingImage == null) {
+                    return;
+                }
+
+                Graphics2D g2 = drawingImage.createGraphics();
+
+                g2.setColor(Color.BLUE);
+                g2.setStroke(new BasicStroke(3));
+                g2.drawLine(x, y, e.getX(), e.getY());
+
+                g2.dispose();
+
+                x = e.getX();
+                y = e.getY();
+
+                repaint();
+            }
+        });
+
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                resizeDrawingImage();
+            }
+        });
+    }
+
+    protected void paintComponent(Graphics g) {
+
+        super.paintComponent(g);
+
+        if (drawingImage == null) {
+            createDrawingImage();
+        }
+
+        if (drawingImage != null) {
+            g.drawImage(drawingImage, 0, 0, null);
+        }
+    }
+
+    private void createDrawingImage() {
+
+        if (getWidth() &lt;= 0 || getHeight() &lt;= 0) {
+            return;
+        }
+
+        drawingImage = new BufferedImage(
+            getWidth(), getHeight(),
+            BufferedImage.TYPE_INT_RGB
+        );
+
+        Graphics2D g2 = drawingImage.createGraphics();
+
+        g2.setColor(Color.WHITE);
+        g2.fillRect(0, 0, getWidth(), getHeight());
+
+        g2.dispose();
+    }
+
+    private void resizeDrawingImage() {
+
+        if (drawingImage == null) {
+            return;
+        }
+
+        int newWidth = getWidth();
+        int newHeight = getHeight();
+
+        if (newWidth &lt;= 0 || newHeight &lt;= 0) {
+            return;
+        }
+
+        BufferedImage newImage = new BufferedImage(
+            newWidth, newHeight,
+            BufferedImage.TYPE_INT_RGB
+        );
+
+        Graphics2D g2 = newImage.createGraphics();
+
+        g2.setColor(Color.WHITE);
+        g2.fillRect(0, 0, newWidth, newHeight);
+
+        g2.drawImage(drawingImage, 0, 0, null);
+
+        g2.dispose();
+
+        drawingImage = newImage;
+
+        repaint();
+    }
+
+    public void clearDrawing() {
+
+        if (drawingImage != null) {
+
+            Graphics2D g2 = drawingImage.createGraphics();
+
+            g2.setColor(Color.WHITE);
+            g2.fillRect(0, 0,
+                drawingImage.getWidth(),
+                drawingImage.getHeight());
+
+            g2.dispose();
+
+            repaint();
+        }
+    }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-listtest">
+    <p class="added">Example · ListTest.java</p>
+    <h3>ListTest: pick a colour from a JList</h3>
+    <p>Choose a colour in the list and the window's background changes to it (slides 5–6). The <code>ListSelectionListener</code> is an anonymous inner class.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 376px)"><div class="plate"><img src="img/ex/listtest-0.png" width="350" loading="lazy" alt="ListTest: pick a colour from a JList: Five rows visible at once; the rest scroll."></div><figcaption>Five rows visible at once; the rest scroll.</figcaption></figure>
+    <figure style="width:min(100%, 376px)"><div class="plate"><img src="img/ex/listtest-1-0.png" width="350" loading="lazy" alt="ListTest: pick a colour from a JList: “Blue” selected."></div><figcaption>“Blue” selected.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">colorList = new JList(colorNames);
+colorList.setVisibleRowCount(5);</pre></dt><dd>A list built from a String array, showing 5 rows at a time.</dd></div>
+<div><dt><pre class="java">colorList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);</pre></dt><dd>One item at a time (the default allows several).</dd></div>
+<div><dt><pre class="java">container.add(new JScrollPane(colorList));</pre></dt><dd>A JList doesn't scroll by itself: wrap it in a JScrollPane.</dd></div>
+<div><dt><pre class="java">public void valueChanged(ListSelectionEvent event) {
+    container.setBackground(
+            colors[colorList.getSelectedIndex()]);</pre></dt><dd><code>valueChanged</code> is the listener's only method. The selected index picks the matching Color from the parallel array.</dd></div>
+</dl>
+    <aside class="note"><b>Good to know</b><span><code>JList</code> is used without <code>&lt;String&gt;</code> (a raw type), so the compiler prints a note about unchecked operations. Harmless; <code>JList&lt;String&gt;</code> removes it.</span></aside>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">ListTest.java (61 lines)</span><pre class="java">package com.mycompany.otherevents;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+public class ListTest extends JFrame {
+
+    private JList colorList;
+    private Container container;
+
+    private final String colorNames[] = {"Black", "Blue", "Cyan",
+        "Dark Gray", "Gray", "Green", "Light Gray", "Magenta",
+        "Orange", "Pink", "Red", "White", "Yellow"};
+
+    private final Color colors[] = {Color.BLACK, Color.BLUE, Color.CYAN,
+        Color.DARK_GRAY, Color.GRAY, Color.GREEN, Color.LIGHT_GRAY,
+        Color.MAGENTA, Color.ORANGE, Color.PINK, Color.RED, Color.WHITE,
+        Color.YELLOW};
+
+    // set up GUI
+    public ListTest() {
+        super("List Test");
+
+        // get content pane and set its layout
+        container = getContentPane();
+        container.setLayout(new FlowLayout());
+
+        // create a list with items in colorNames array
+        colorList = new JList(colorNames);
+        colorList.setVisibleRowCount(5);
+
+        // do not allow multiple selections                               
+        colorList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // add a JScrollPane containing JList to content pane
+        container.add(new JScrollPane(colorList));
+        colorList.addListSelectionListener(
+                new ListSelectionListener() {  // anonymous inner class 
+
+            // handle list selection events
+            public void valueChanged(ListSelectionEvent event) {
+                container.setBackground(
+                        colors[colorList.getSelectedIndex()]);
+            }
+
+        } // end anonymous inner class
+
+        ); // end call to addListSelectionListener
+
+        setSize(350, 150);
+        setVisible(true);
+
+    } // end ListTest constructor
+
+    public static void main(String args[]) {
+        ListTest application = new ListTest();
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+} // end class ListTest</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l7-list">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-transfer">
+    <p class="added">Example · ListTransferFrame.java</p>
+    <h3>ListTransferFrame: move names between two lists</h3>
+    <p>Slides 7–8. Clicking a name in the left list adds it to the right list; clicking a name that's already on the right removes it. The right list shows a <code>DefaultListModel</code>, so changing the model changes the list.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/transfer-0.png" width="300" loading="lazy" alt="ListTransferFrame: move names between two lists: Hamburg, Berlin and Bayern clicked one after another."></div><figcaption>Hamburg, Berlin and Bayern clicked one after another.</figcaption></figure>
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/transfer-1-0.png" width="300" loading="lazy" alt="ListTransferFrame: move names between two lists: Hamburg clicked again: it&#x27;s already on the right, so it&#x27;s removed."></div><figcaption>Hamburg clicked again: it's already on the right, so it's removed.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">rightListModel = new DefaultListModel();
+rightList = new JList(rightListModel);</pre></dt><dd>The right list is built on a model you keep a reference to.</dd></div>
+<div><dt><pre class="java">class TransferListener implements ListSelectionListener {</pre></dt><dd>An inner class, so it can use <code>leftList</code> and <code>rightListModel</code>.</dd></div>
+<div><dt><pre class="java">if (!evt.getValueIsAdjusting()) {</pre></dt><dd>While the selection is still changing (mouse held down), events come with <code>getValueIsAdjusting()</code> true; this waits for the final one.</dd></div>
+<div><dt><pre class="java">String sel = (String) leftList.getSelectedValue();</pre></dt><dd>The selected item, as an Object from a raw JList, hence the cast.</dd></div>
+<div><dt><pre class="java">if (rightListModel.contains(sel)) {
+    rightListModel.removeElement(sel);
+} else {
+    rightListModel.addElement(sel);
+}</pre></dt><dd><code>contains</code>, <code>removeElement</code>, <code>addElement</code>: DefaultListModel methods from Lecture 3 (slides 55–57).</dd></div>
+</dl>
+    <aside class="note"><b>Good to know</b><span>In the zip two names read “Th¨uringen” and “Baden-W¨urttemberg”: the umlauts were copied from a PDF as two characters. (The slide has Thüringen.) <code>transferButton</code> is declared but never used.</span></aside>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">ListTransferFrame.java (63 lines)</span><pre class="java">package com.mycompany.otherevents;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+
+public class ListTransferFrame extends JFrame{
+
+    private JList leftList, rightList;
+    private DefaultListModel rightListModel;
+    JButton transferButton;
+    String[] entries = {"Schleswig-Holstein", "Niedersachsen", "Hamburg",
+        "Bremen", "Mecklenburg-Vorpommern", "Brandenburg", "Berlin",
+        "Nordrhein-Westfalen", "Hessen", "Sachsen-Anhalt",
+        "Rheinland-Pfalz", "Th¨uringen", "Sachsen", "Saarland",
+        "Bayern", "Baden-W¨urttemberg"};
+
+    public ListTransferFrame() {
+        this.setSize(400, 300);
+        leftList = new JList(entries);
+
+        rightListModel = new DefaultListModel();
+        rightList = new JList(rightListModel);
+        leftList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        TransferListener selLis = new TransferListener();
+        leftList.addListSelectionListener(selLis);
+
+        JPanel listPanel = new JPanel();
+        listPanel.setLayout(new GridLayout(1, 2));
+        JScrollPane leftScrollPane = new JScrollPane(leftList);
+        JScrollPane rightScrollPane = new JScrollPane(rightList);
+        listPanel.add(leftScrollPane);
+        listPanel.add(rightScrollPane);
+        this.getContentPane().add(listPanel, BorderLayout.CENTER);
+    }
+
+    public static void main(String[] args) {
+        ListTransferFrame LLF = new ListTransferFrame();
+        LLF.setTitle("List Transfer Frame");
+        LLF.setVisible(true);
+        LLF.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+//Listener as internal class
+    class TransferListener implements ListSelectionListener {
+
+        public TransferListener() {
+        }
+
+        public void valueChanged(ListSelectionEvent evt) {
+            if (!evt.getValueIsAdjusting()) {
+                String sel = (String) leftList.getSelectedValue();
+                if (rightListModel.contains(sel)) {
+                    rightListModel.removeElement(sel);
+                } else {
+                    rightListModel.addElement(sel);
+                }//ifelse
+            }//if
+        }//valueChanged
+
+    }//internal class
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l7-transfer">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-doc">
+    <p class="added">Example · DocumentEventDemo.java</p>
+    <h3>DocumentEventDemo: logging every change to a text field</h3>
+    <p>Slides 9–10. A <code>DocumentListener</code> on the text field's <em>Document</em> writes a line to a text area for every insertion and removal. The listener goes on <code>textField.getDocument()</code>, not on the field.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 456px)"><div class="plate"><img src="img/ex/doc-0.png" width="430" loading="lazy" alt="DocumentEventDemo: logging every change to a text field: After typing “Hello” and pressing Backspace once. The program never sets a size, so its window opens tiny; it was resized to 430 × 330 for this screenshot."></div><figcaption>After typing “Hello” and pressing Backspace once. The program never sets a size, so its window opens tiny; it was resized to 430 × 330 for this screenshot.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">textField.getDocument().addDocumentListener(new MyDocumentListener());</pre></dt><dd>Text components keep their text in a Document, and the Document fires the events.</dd></div>
+<div><dt><pre class="java">textField.getDocument().putProperty("name", "Text Field");</pre></dt><dd>Stores a name on the document; <code>updateLog</code> reads it back with <code>getProperty("name")</code>.</dd></div>
+<div><dt><pre class="java">public void changedUpdate(DocumentEvent e) {
+    //Plain text components do not fire these events
+}</pre></dt><dd><code>changedUpdate</code> is for style changes in styled text; JTextField and JTextArea never call it (slide 10).</dd></div>
+<div><dt><pre class="java">int changeLength = e.getLength();</pre></dt><dd>How many characters were inserted or removed. Pasting inserts several at once.</dd></div>
+<div><dt><pre class="java">+ ((changeLength == 1) ? " " : "s ")</pre></dt><dd>“character” or “characters”.</dd></div>
+</dl>
+    <aside class="note"><b>Good to know</b><span>The log says “inserted intoText Field”: the code joins <code>action</code> and the name with no space between them.</span></aside>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">DocumentEventDemo.java (60 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.otherevents;
+
+import javax.swing.text.Document;
+import javax.swing.*;
+import javax.swing.event.*;
+
+public class DocumentEventDemo extends JFrame {
+
+    JTextField textField;
+    JTextArea displayArea;
+
+    public DocumentEventDemo() {
+        textField = new JTextField(20);
+        displayArea = new JTextArea();
+        textField.getDocument().addDocumentListener(new MyDocumentListener());
+        textField.getDocument().putProperty("name", "Text Field");
+
+        JPanel panel = new JPanel();
+        panel.add(textField);
+        panel.add(displayArea);
+        this.add(panel);
+    }
+
+    public static void main(String args[]) {
+        DocumentEventDemo application = new DocumentEventDemo();
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        application.setVisible(true);
+    }
+
+    class MyDocumentListener implements DocumentListener {
+
+        String newline = "\n";
+
+        public void insertUpdate(DocumentEvent e) {
+            updateLog(e, "inserted into");
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            updateLog(e, "removed from");
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+            //Plain text components do not fire these events
+        }
+
+        public void updateLog(DocumentEvent e, String action) {
+            Document doc = (Document) e.getDocument();
+            int changeLength = e.getLength();
+            displayArea.append(
+                    changeLength + " character"
+                    + ((changeLength == 1) ? " " : "s ")
+                    + action + doc.getProperty("name") + "." + newline
+                    + "  Text length = " + doc.getLength() + newline);
+        }
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l7-doc">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-search">
+    <p class="added">Example · SearchListenerExample.java</p>
+    <h3>SearchListenerExample: search as you type</h3>
+    <p>Every insertion or removal in the field re-counts the products that contain any of the typed words.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/search-0.png" width="300" loading="lazy" alt="SearchListenerExample: search as you type: At the start."></div><figcaption>At the start.</figcaption></figure>
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/search-1-0.png" width="300" loading="lazy" alt="SearchListenerExample: search as you type: “mo”: Mouse and Monitor."></div><figcaption>“mo”: Mouse and Monitor.</figcaption></figure>
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/search-2-0.png" width="300" loading="lazy" alt="SearchListenerExample: search as you type: “key lap”: one matching word is enough, so Keyboard and Laptop."></div><figcaption>“key lap”: one matching word is enough, so Keyboard and Laptop.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">searchField.getDocument().addDocumentListener(
+    new DocumentListener() {
+        public void insertUpdate(DocumentEvent e) {
+            searchProducts();
+        }</pre></dt><dd>All three methods call the same search, so the count updates while you type or delete.</dd></div>
+<div><dt><pre class="java">String search = searchField.getText().toLowerCase().trim();
+String[] words = search.split("\\s+");</pre></dt><dd>Lower case for a case-insensitive match; <code>split("\\s+")</code> breaks the text into words at runs of spaces.</dd></div>
+<div><dt><pre class="java">if (product.contains(words[j])) {
+    count++;
+    break;
+}</pre></dt><dd>Count the product once, as soon as one word matches.</dd></div>
+</dl>
+    <aside class="note"><b>Good to know</b><span>Delete all the text and it reports 5 matches: splitting an empty String gives one empty word, and every product “contains” the empty String.</span></aside>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">SearchListenerExample.java (89 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.otherevents;
+
+
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class SearchListenerExample extends JFrame {
+
+    private JTextField searchField;
+    private JLabel resultLabel;
+
+    private String[] products = {
+        "Laptop",
+        "Mouse",
+        "Keyboard",
+        "Monitor",
+        "Headphones"
+    };
+
+    public SearchListenerExample() {
+
+        setTitle("Product Search");
+        setSize(400, 220);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(3, 1, 10, 10));
+
+        searchField = new JTextField();
+        resultLabel = new JLabel("Enter a product name", JLabel.CENTER);
+
+        add(new JLabel("Search for a product:", JLabel.CENTER));
+        add(searchField);
+        add(resultLabel);
+
+        // DocumentListener
+        searchField.getDocument().addDocumentListener(
+            new DocumentListener() {
+
+                public void insertUpdate(DocumentEvent e) {
+                    searchProducts();
+                }
+
+                public void removeUpdate(DocumentEvent e) {
+                    searchProducts();
+                }
+
+                public void changedUpdate(DocumentEvent e) {
+                    searchProducts();
+                }
+            }
+        );
+
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void searchProducts() {
+
+    String search = searchField.getText().toLowerCase().trim();
+
+    String[] words = search.split("\\s+");
+
+    int count = 0;
+
+    for (int i = 0; i &lt; products.length; i++) {
+
+        String product = products[i].toLowerCase();
+
+        for (int j = 0; j &lt; words.length; j++) {
+
+            if (product.contains(words[j])) {
+                count++;
+                break;
+            }
+        }
+    }
+
+    resultLabel.setText(count + " matching product(s) found");
+}
+
+    public static void main(String[] args) {
+        new SearchListenerExample();
+    }
+}</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-check">
+    <p class="added">Example · CheckBoxTest.java</p>
+    <h3>CheckBoxTest: bold and italic check boxes</h3>
+    <p>Slides 11–12. Two check boxes share one <code>ItemListener</code>, a private inner class that rebuilds the text field's font from both boxes.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 301px)"><div class="plate"><img src="img/ex/check-0.png" width="275" loading="lazy" alt="CheckBoxTest: bold and italic check boxes: Plain."></div><figcaption>Plain.</figcaption></figure>
+    <figure style="width:min(100%, 301px)"><div class="plate"><img src="img/ex/check-1-0.png" width="275" loading="lazy" alt="CheckBoxTest: bold and italic check boxes: Bold and Italic both ticked."></div><figcaption>Bold and Italic both ticked.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">bold.addItemListener(handler);
+italic.addItemListener(handler);</pre></dt><dd>Check boxes fire item events when ticked or unticked.</dd></div>
+<div><dt><pre class="java">valBold = bold.isSelected() ? Font.BOLD : Font.PLAIN;</pre></dt><dd>Remember this box's part of the style.</dd></div>
+<div><dt><pre class="java">field.setFont(new Font("Serif", valBold + valItalic, 14));</pre></dt><dd>Styles add up: <code>BOLD + ITALIC</code> is bold italic, and <code>PLAIN</code> is 0.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">CheckBoxTest.java (69 lines)</span><pre class="java">package com.mycompany.otherevents;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class CheckBoxTest extends JFrame {
+
+    private JTextField field;
+    private JCheckBox bold, italic;
+
+    // set up GUI
+    public CheckBoxTest() {
+        super("JCheckBox Test");
+
+        // get content pane and set its layout
+        Container container = getContentPane();
+        container.setLayout(new FlowLayout());
+        field = new JTextField("Watch the font style change", 20);
+        field.setFont(new Font("Serif", Font.PLAIN, 14));
+        container.add(field);
+        // create checkbox objects
+        bold = new JCheckBox("Bold");
+        container.add(bold);
+
+        italic = new JCheckBox("Italic");
+        container.add(italic);
+
+        // register listeners for JCheckBoxes           
+        CheckBoxHandler handler = new CheckBoxHandler();
+        bold.addItemListener(handler);
+        italic.addItemListener(handler);
+
+        setSize(275, 100);
+        setVisible(true);
+
+    } // end CheckBoxText constructor
+
+    public static void main(String args[]) {
+        CheckBoxTest application = new CheckBoxTest();
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    // private inner class for ItemListener event handling
+
+    private class CheckBoxHandler implements ItemListener {
+
+        private int valBold = Font.PLAIN;
+        private int valItalic = Font.PLAIN;
+
+        // respond to checkbox events
+        public void itemStateChanged(ItemEvent event) {
+            // process bold checkbox events
+            if (event.getSource() == bold) {
+                valBold = bold.isSelected() ? Font.BOLD : Font.PLAIN;
+            }
+
+            // process italic checkbox events
+            if (event.getSource() == italic) {
+                valItalic = italic.isSelected() ? Font.ITALIC : Font.PLAIN;
+            }
+
+            // set text field font
+            field.setFont(new Font("Serif", valBold + valItalic, 14));
+
+        } // end method itemStateChanged
+
+    } // end private inner class CheckBoxHandler
+
+} // end class CheckBoxTest</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l7-item">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+  <div class="slide ex" id="ex-radio">
+    <p class="added">Example · RadioButtonTest.java</p>
+    <h3>RadioButtonTest: one font per radio button</h3>
+    <p>Four radio buttons in a <code>ButtonGroup</code>. Each button gets its own handler object that holds the font to use, so the handler needs no <code>if</code>.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/radio-0.png" width="300" loading="lazy" alt="RadioButtonTest: one font per radio button: Bold/Italic chosen. The 25-column field is wider than the 300 px window, so FlowLayout centres it and both ends are cut off."></div><figcaption>Bold/Italic chosen. The 25-column field is wider than the 300 px window, so FlowLayout centres it and both ends are cut off.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">plainButton = new JRadioButton("Plain", true);</pre></dt><dd>The second argument selects it at the start.</dd></div>
+<div><dt><pre class="java">radioGroup = new ButtonGroup();
+radioGroup.add(plainButton);</pre></dt><dd>Only one button in the group can be selected.</dd></div>
+<div><dt><pre class="java">boldItalicFont = new Font("Serif", Font.BOLD + Font.ITALIC, 14);</pre></dt><dd>Bold italic.</dd></div>
+<div><dt><pre class="java">plainButton.addItemListener(new RadioButtonHandler(plainFont));</pre></dt><dd>A new handler for each button, each built with its own font.</dd></div>
+<div><dt><pre class="java">public void itemStateChanged(ItemEvent event) {
+    field.setFont(font);
+}</pre></dt><dd>Selecting a button first deselects the old one, which fires an event too (setting the old font), and then the new one's event sets the new font. Checking <code>getStateChange() == ItemEvent.SELECTED</code> would skip the first.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">RadioButtonTest.java (90 lines)</span><pre class="java">package com.mycompany.otherevents;
+// Fig. 13.12: RadioButtonTest.java
+// Creating radio buttons using ButtonGroup and JRadioButton.
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class RadioButtonTest extends JFrame {
+
+    private JTextField field;
+    private Font plainFont, boldFont, italicFont, boldItalicFont;
+    private JRadioButton plainButton, boldButton, italicButton,
+            boldItalicButton;
+    private ButtonGroup radioGroup;
+
+    // create GUI and fonts
+    public RadioButtonTest() {
+        super("RadioButton Test");
+
+        // get content pane and set its layout
+        Container container = getContentPane();
+        container.setLayout(new FlowLayout());
+
+        // set up JTextField
+        field = new JTextField("Watch the font style change", 25);
+        container.add(field);
+
+        // create radio buttons
+        plainButton = new JRadioButton("Plain", true);
+        container.add(plainButton);
+
+        boldButton = new JRadioButton("Bold", false);
+        container.add(boldButton);
+
+        italicButton = new JRadioButton("Italic", false);
+        container.add(italicButton);
+
+        boldItalicButton = new JRadioButton("Bold/Italic", false);
+        container.add(boldItalicButton);
+
+        // create logical relationship between JRadioButtons
+        radioGroup = new ButtonGroup();
+        radioGroup.add(plainButton);
+        radioGroup.add(boldButton);
+        radioGroup.add(italicButton);
+        radioGroup.add(boldItalicButton);
+
+        // create font objects
+        plainFont = new Font("Serif", Font.PLAIN, 14);
+        boldFont = new Font("Serif", Font.BOLD, 14);
+        italicFont = new Font("Serif", Font.ITALIC, 14);
+        boldItalicFont = new Font("Serif", Font.BOLD + Font.ITALIC, 14);
+        field.setFont(plainFont);  // set initial font
+
+        // register events for JRadioButtons                               
+        plainButton.addItemListener(new RadioButtonHandler(plainFont));
+        boldButton.addItemListener(new RadioButtonHandler(boldFont));
+        italicButton.addItemListener(
+                new RadioButtonHandler(italicFont));
+        boldItalicButton.addItemListener(
+                new RadioButtonHandler(boldItalicFont));
+
+        setSize(300, 100);
+        setVisible(true);
+
+    } // end RadioButtonTest constructor
+
+    public static void main(String args[]) {
+        RadioButtonTest application = new RadioButtonTest();
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    // private inner class to handle radio button events
+    private class RadioButtonHandler implements ItemListener {
+
+        private Font font;
+
+        public RadioButtonHandler(Font f) {
+            font = f;
+        }
+
+        // handle radio button events
+        public void itemStateChanged(ItemEvent event) {
+            field.setFont(font);
+        }
+
+    } // end private inner class RadioButtonHandler
+
+} // end class RadioButtonTest </pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-combo">
+    <p class="added">Example · ComboBoxTest.java</p>
+    <h3>ComboBoxTest: an icon picker</h3>
+    <p>Choosing a file name in the combo box shows that icon and name in the label. The zip's <code>1.png</code>–<code>4.png</code> are Java logo pictures, so these screenshots use stand-in icons with the same names.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 376px)"><div class="plate"><img src="img/ex/combo-0.png" width="350" loading="lazy" alt="ComboBoxTest: an icon picker: At the start: icon 1, no text."></div><figcaption>At the start: icon 1, no text.</figcaption></figure>
+    <figure style="width:min(100%, 376px)"><div class="plate"><img src="img/ex/combo-1-0.png" width="350" loading="lazy" alt="ComboBoxTest: an icon picker: “3.png” chosen: icon 3 and its name."></div><figcaption>“3.png” chosen: icon 3 and its name.</figcaption></figure>
+    </div>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">imagesComboBox.setMaximumRowCount(3);</pre></dt><dd>The drop-down shows 3 items, then scrolls.</dd></div>
+<div><dt><pre class="java">if (event.getStateChange() == ItemEvent.SELECTED) {</pre></dt><dd>Changing the choice fires two item events: DESELECTED for the old item and SELECTED for the new one. Only the second matters here.</dd></div>
+<div><dt><pre class="java">label.setIcon(icons[imagesComboBox.getSelectedIndex()]);
+label.setText(names[imagesComboBox.getSelectedIndex()]);</pre></dt><dd>The selected index links the combo box to the parallel arrays of icons and names.</dd></div>
+<div><dt><pre class="java">String names[] = {"1.png", "2.png", "3.png", "4.png"};</pre></dt><dd>A local variable used inside the anonymous class. That's allowed because it's never reassigned (effectively final).</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">ComboBoxTest.java (62 lines)</span><pre class="java">package com.mycompany.otherevents;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class ComboBoxTest extends JFrame {
+
+    private JComboBox imagesComboBox;
+    private JLabel label;
+
+    private Icon icons[] = {new ImageIcon("1.png"),
+        new ImageIcon("2.png"), new ImageIcon("3.png"),
+        new ImageIcon("4.png")};
+
+    // set up GUI
+    public ComboBoxTest() {
+        super("Testing JComboBox");
+        String names[] = {"1.png", "2.png", "3.png", "4.png"};
+
+        // get content pane and set its layout
+        Container container = getContentPane();
+        container.setLayout(new FlowLayout());
+
+        // set up JComboBox and register its event handler
+        imagesComboBox = new JComboBox(names);
+        imagesComboBox.setMaximumRowCount(3);
+        imagesComboBox.addItemListener(
+                new ItemListener() {  // anonymous inner class 
+
+            // handle JComboBox event
+            public void itemStateChanged(ItemEvent event) {
+                // determine whether check box selected
+                if (event.getStateChange() == ItemEvent.SELECTED) {
+                    label.setIcon(icons[imagesComboBox.getSelectedIndex()]);
+                    label.setText(names[imagesComboBox.getSelectedIndex()]);
+
+                   // label.setText(imagesComboBox.getSelectedItem().toString());
+                }
+            }
+
+        } // end anonymous inner class
+
+        ); // end call to addItemListener                           
+
+        container.add(imagesComboBox);
+
+        // set up JLabel to display ImageIcons
+        label = new JLabel(icons[0]);
+        container.add(label);
+
+        setSize(350, 100);
+        setVisible(true);
+
+    } // end ComboBoxTest constructor
+
+    public static void main(String args[]) {
+        ComboBoxTest application = new ComboBoxTest();
+        application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+} // end class ComboBoxTest</pre></div>
+    </div></details>
+  </div>
+
+  <div class="slide ex" id="ex-cart">
+    <p class="added">Example · ShoppingCartExample.java</p>
+    <h3>ShoppingCartExample: a ContainerListener keeps the count</h3>
+    <p>Slide 14's shopping cart. Add Product asks for a product in an input dialog with a drop-down and adds a label for it to <code>cartPanel</code>; Remove Last Product removes the last label. The buttons never touch the counter: a <code>ContainerListener</code> on <code>cartPanel</code> updates it after every add or remove and prints a line to the console.</p>
+    <div class="ex-shots">
+    <figure style="width:min(100%, 288px)"><div class="plate"><img src="img/ex/cart-1.png" width="262" loading="lazy" alt="ShoppingCartExample: a ContainerListener keeps the count: Add Product: showInputDialog with an array of choices gives a drop-down."></div><figcaption>Add Product: <code>showInputDialog</code> with an array of choices gives a drop-down.</figcaption></figure>
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/cart-1-0.png" width="300" loading="lazy" alt="ShoppingCartExample: a ContainerListener keeps the count: After adding Keyboard, Laptop and Monitor."></div><figcaption>After adding Keyboard, Laptop and Monitor.</figcaption></figure>
+    <figure style="width:min(100%, 326px)"><div class="plate"><img src="img/ex/cart-2-0.png" width="300" loading="lazy" alt="ShoppingCartExample: a ContainerListener keeps the count: After Remove Last Product: Monitor is gone and the count says 2."></div><figcaption>After Remove Last Product: Monitor is gone and the count says 2.</figcaption></figure>
+    </div>
+    <pre class="console"><span class="ttl">Output</span>Product added to cart
+Product added to cart
+Product added to cart
+Product removed from cart</pre>
+    <h4>Key lines</h4>
+    <dl class="xpl">
+<div><dt><pre class="java">cartPanel.setLayout(new BoxLayout(
+    cartPanel, BoxLayout.Y_AXIS
+));</pre></dt><dd>BoxLayout puts components in one column (<code>Y_AXIS</code>) or one row (<code>X_AXIS</code>). Its constructor needs the panel it will lay out.</dd></div>
+<div><dt><pre class="java">cartPanel.addContainerListener(new ContainerListener() {
+    public void componentAdded(ContainerEvent e) {
+        updateCount();</pre></dt><dd><code>componentAdded</code> and <code>componentRemoved</code> run after every add or remove on this panel.</dd></div>
+<div><dt><pre class="java">String product = (String) JOptionPane.showInputDialog(
+    ShoppingCartExample.this,
+    "Select a product:",
+    "Add Product",
+    JOptionPane.QUESTION_MESSAGE,
+    null,
+    products,
+    products[0]
+);</pre></dt><dd>The seven-argument <code>showInputDialog</code>: parent, message, title, message type, icon (null = the default), the choices, the starting choice. It returns the chosen item, or null for Cancel.</dd></div>
+<div><dt><pre class="java">cartPanel.add(productLabel);
+cartPanel.revalidate();
+cartPanel.repaint();</pre></dt><dd>After adding or removing while the window is showing: <code>revalidate()</code> re-runs the layout, <code>repaint()</code> redraws.</dd></div>
+<div><dt><pre class="java">int count = cartPanel.getComponentCount();
+if (count &gt; 0) {
+    cartPanel.remove(count - 1);</pre></dt><dd><code>getComponentCount()</code> and <code>remove(index)</code>: the last component is at <code>count - 1</code>.</dd></div>
+</dl>
+    <details class="orig solid"><summary>Full code: exactly as in the zip</summary><div class="drawer-body">
+      <div class="code"><span class="code-label">ShoppingCartExample.java (117 lines)</span><pre class="java">/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.mycompany.otherevents;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class ShoppingCartExample extends JFrame {
+
+    private JPanel cartPanel;
+    private JLabel countLabel;
+
+    public ShoppingCartExample() {
+
+        setTitle("Shopping Cart");
+        setSize(450, 350);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(10, 10));
+
+        // Panel containing shopping cart products
+        cartPanel = new JPanel();
+        cartPanel.setLayout(new BoxLayout(
+            cartPanel, BoxLayout.Y_AXIS
+        ));
+
+        // ContainerListener
+        cartPanel.addContainerListener(new ContainerListener() {
+
+            public void componentAdded(ContainerEvent e) {
+                updateCount();
+                System.out.println("Product added to cart");
+            }
+
+            public void componentRemoved(ContainerEvent e) {
+                updateCount();
+                System.out.println("Product removed from cart");
+            }
+        });
+
+        countLabel = new JLabel("Products in cart: 0");
+
+        JButton addButton = new JButton("Add Product");
+        JButton removeButton = new JButton("Remove Last Product");
+
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                String[] products = {
+                    "Laptop",
+                    "Mouse",
+                    "Keyboard",
+                    "Headphones",
+                    "Monitor"
+                };
+
+                String product = (String) JOptionPane.showInputDialog(
+                    ShoppingCartExample.this,
+                    "Select a product:",
+                    "Add Product",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    products,
+                    products[0]
+                );
+
+                if (product != null) {
+                    JLabel productLabel = new JLabel(product);
+
+                    productLabel.setBorder(
+                        BorderFactory.createEmptyBorder(5, 10, 5, 10)
+                    );
+
+                    cartPanel.add(productLabel);
+                    cartPanel.revalidate();
+                    cartPanel.repaint();
+                }
+            }
+        });
+
+        removeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                int count = cartPanel.getComponentCount();
+
+                if (count &gt; 0) {
+                    cartPanel.remove(count - 1);
+                    cartPanel.revalidate();
+                    cartPanel.repaint();
+                }
+            }
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(addButton);
+        buttonPanel.add(removeButton);
+
+        add(countLabel, BorderLayout.NORTH);
+        add(new JScrollPane(cartPanel), BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    private void updateCount() {
+        countLabel.setText(
+            "Products in cart: " + cartPanel.getComponentCount()
+        );
+    }
+
+    public static void main(String[] args) {
+        new ShoppingCartExample();
+    }
+}</pre></div>
+    </div></details>
+    <p class="drill-link"><a href="../Practice/index.html#d-l7-container">Practise this program as a code-completion drill →</a></p>
+  </div>
+
+</section>
+
+<section class="sec" id="cheat" data-title="All listeners at a glance">
+  <div class="sec-head">
+    <p class="eyebrow">Added · Lectures 4, 5 and 7 in one table</p>
+    <div class="sec-head-row"><h2>All listeners at a glance</h2><label class="done"><input type="checkbox" id="done-cheat"> Studied</label></div>
+  </div>
+  <aside class="plain"><b>In plain words</b><div>Every event type follows the same pattern from Lecture 4: an <code>XxxEvent</code> object, an <code>XxxListener</code> interface, and an <code>addXxxListener</code> method on the component (the one exception: a DocumentListener goes on the text component's <em>document</em>). Only the method names inside the interface change. When an interface has several methods and you need just one, extend the matching <code>XxxAdapter</code> class instead. In the exam the appendix gives you these names; what you need is to know <em>which one fits the situation</em>.</div></aside>
+  <div class="chips" role="group" aria-label="Filter by package" data-filter-for="lsTable">
+    <button class="chip" aria-pressed="true" data-f="all">All</button>
+    <button class="chip" aria-pressed="false" data-f="awt">java.awt.event</button>
+    <button class="chip" aria-pressed="false" data-f="swing">javax.swing.event</button>
+    <button class="chip" aria-pressed="false" data-f="adapter">Has an adapter</button>
+  </div>
+  <div class="tbl-wrap">
+    <table id="lsTable">
+      <thead><tr><th>Listener</th><th>Method(s) you write</th><th>Register with</th><th>Typical source</th><th>Adapter</th><th>Where</th></tr></thead>
+      <tbody>
+        <tr data-on="awt"><td class="mod">ActionListener</td><td><code>actionPerformed</code></td><td><code>addActionListener</code></td><td>JButton, JTextField (Enter), JRadioButton, JCheckBox, JComboBox, JMenuItem</td><td>–</td><td>L4 slides 10–26</td></tr>
+        <tr data-on="awt adapter"><td class="mod">WindowListener</td><td><code>windowOpened</code>, <code>windowClosing</code>, <code>windowClosed</code>, <code>windowIconified</code>, <code>windowDeiconified</code>, <code>windowActivated</code>, <code>windowDeactivated</code></td><td><code>addWindowListener</code></td><td>JFrame, JDialog, JWindow</td><td>WindowAdapter</td><td>L4 slides 28–36</td></tr>
+        <tr data-on="awt adapter"><td class="mod">MouseListener</td><td><code>mouseClicked</code>, <code>mousePressed</code>, <code>mouseReleased</code>, <code>mouseEntered</code>, <code>mouseExited</code></td><td><code>addMouseListener</code></td><td>any component (JButton, JLabel, JPanel…)</td><td>MouseAdapter</td><td>L5 slides 2–5, 19–31</td></tr>
+        <tr data-on="awt adapter"><td class="mod">MouseMotionListener</td><td><code>mouseMoved</code>, <code>mouseDragged</code></td><td><code>addMouseMotionListener</code></td><td>any component</td><td>MouseMotionAdapter (or MouseAdapter)</td><td>L5 slides 3, 6, 22–24</td></tr>
+        <tr data-on="awt adapter"><td class="mod">MouseWheelListener</td><td><code>mouseWheelMoved</code></td><td><code>addMouseWheelListener</code></td><td>any component</td><td>MouseAdapter</td><td>L5 slide 7</td></tr>
+        <tr data-on="swing"><td class="mod">MouseInputListener</td><td><code>all of MouseListener + MouseMotionListener</code></td><td><code>addMouseListener + addMouseMotionListener</code></td><td>any component</td><td>MouseInputAdapter</td><td>L5 slides 23–24</td></tr>
+        <tr data-on="awt adapter"><td class="mod">KeyListener</td><td><code>keyPressed</code>, <code>keyReleased</code>, <code>keyTyped</code></td><td><code>addKeyListener</code></td><td>JTextField, JTextArea (any focusable component)</td><td>KeyAdapter</td><td>L5 slides 9–18</td></tr>
+        <tr data-on="awt adapter"><td class="mod">FocusListener</td><td><code>focusGained</code>, <code>focusLost</code></td><td><code>addFocusListener</code></td><td>text fields, any focusable component</td><td>FocusAdapter</td><td>L7 slides 2–3</td></tr>
+        <tr data-on="awt adapter"><td class="mod">ComponentListener</td><td><code>componentResized</code>, <code>componentMoved</code>, <code>componentShown</code>, <code>componentHidden</code></td><td><code>addComponentListener</code></td><td>any component, JFrame</td><td>ComponentAdapter</td><td>L7 slide 4</td></tr>
+        <tr data-on="swing"><td class="mod">ListSelectionListener</td><td><code>valueChanged</code></td><td><code>addListSelectionListener</code></td><td>JList</td><td>–</td><td>L7 slides 5–8</td></tr>
+        <tr data-on="swing"><td class="mod">DocumentListener</td><td><code>insertUpdate</code>, <code>removeUpdate</code>, <code>changedUpdate</code></td><td><code>getDocument().addDocumentListener</code></td><td>JTextField, JTextArea</td><td>–</td><td>L7 slides 9–10</td></tr>
+        <tr data-on="awt"><td class="mod">ItemListener</td><td><code>itemStateChanged</code></td><td><code>addItemListener</code></td><td>JCheckBox, JRadioButton, JComboBox</td><td>–</td><td>L7 slides 11–12</td></tr>
+        <tr data-on="swing"><td class="mod">ChangeListener</td><td><code>stateChanged</code></td><td><code>addChangeListener</code></td><td>JSlider, JSpinner, JTabbedPane</td><td>–</td><td>L7 slide 13</td></tr>
+        <tr data-on="awt adapter"><td class="mod">ContainerListener</td><td><code>componentAdded</code>, <code>componentRemoved</code></td><td><code>addContainerListener</code></td><td>JPanel, a frame's content pane</td><td>ContainerAdapter</td><td>L7 slide 14</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="review" data-title="Flashcards">
+  <div class="sec-head">
+    <p class="eyebrow">All of Lecture 7</p>
+    <div class="sec-head-row"><h2>Flashcards</h2><label class="done"><input type="checkbox" id="done-review"> Studied</label></div>
+  </div>
+  <p class="lede">Tap the card to flip it. Each answer names the slide it comes from.</p>
+  <div class="fc">
+    <div class="card" id="card" tabindex="0" role="button" aria-label="Flashcard, press to flip"></div>
+    <div class="fc-ctrl">
+      <button class="btn" id="fcPrev">Previous</button>
+      <button class="btn solid" id="fcFlip">Flip</button>
+      <button class="btn" id="fcNext">Next</button>
+      <button class="btn" id="fcShuffle">Shuffle</button>
+      <span class="fc-count" id="fcCount"></span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script type="application/json" id="guide-data">{"key": "cs254-l7oe-done", "quizzes": {"focus": [{"q": "Focus is…", "o": ["the current target of keyboard input", "the window size", "the selected list item", "the mouse position"], "a": 0, "e": "Slide 2."}, {"q": "In the focus example, what happens to a text field when it gains focus?", "o": ["Its background becomes LIGHT_GRAY", "Its text is cleared", "It becomes disabled", "It turns red"], "a": 0, "e": "Slide 3."}, {"q": "When does a ComponentEvent occur?", "o": ["When a component is resized, moved, shown or hidden", "When a key is pressed", "When text changes", "When a list selection changes"], "a": 0, "e": "Slide 4."}], "listsel": [{"q": "Which method do you write in a ListSelectionListener?", "o": ["valueChanged", "actionPerformed", "itemStateChanged", "stateChanged"], "a": 0, "e": "Slide 5."}, {"q": "Why check <code>!evt.getValueIsAdjusting()<\/code>?", "o": ["To react once, after the series of selection changes finishes", "To check if the list is editable", "To prevent a crash on empty lists", "To allow multiple selection"], "a": 0, "e": "Slide 6."}, {"q": "Is valueChanged called if the user clicks an item that's already selected?", "o": ["No", "Yes, every click", "Only with SINGLE_SELECTION", "Only on double-click"], "a": 0, "e": "Slide 6."}, {"q": "In ListTransferFrame, selecting a state already in the right list…", "o": ["removes it from the right list", "adds it twice", "does nothing", "clears both lists"], "a": 0, "e": "Slide 8: contains → removeElement, else addElement."}], "more": [{"q": "Which DocumentListener method is never called for a JTextField?", "o": ["changedUpdate", "insertUpdate", "removeUpdate", "All are called"], "a": 0, "e": "Slide 10."}, {"q": "How do you attach a DocumentListener to a JTextField?", "o": ["field.getDocument().addDocumentListener(...)", "field.addDocumentListener(...)", "field.addActionListener(...)", "new Document(field)"], "a": 0, "e": "Slide 9."}, {"q": "ItemListener is used with…", "o": ["JCheckBox and JComboBox", "JFrame", "JTextArea", "JLabel"], "a": 0, "e": "Slide 11."}, {"q": "Which method tells you whether an item was selected or deselected?", "o": ["getStateChange()", "getItem()", "getSource()", "isAdjusting()"], "a": 0, "e": "Slide 12: compare with ItemEvent.SELECTED / DESELECTED."}, {"q": "Which listener does a JSlider use?", "o": ["ChangeListener", "ActionListener", "ItemListener", "DocumentListener"], "a": 0, "e": "Slide 13."}], "container": [{"q": "A ContainerListener tells you when…", "o": ["a component is added to or removed from a container", "a container is resized", "the mouse enters a panel", "a list selection changes"], "a": 0, "e": "Slide 14. Resizing is ComponentListener (slide 4)."}, {"q": "Which two methods does ContainerListener have?", "o": ["componentAdded and componentRemoved", "componentShown and componentHidden", "insertUpdate and removeUpdate", "itemAdded and itemRemoved"], "a": 0, "e": "Slide 14: componentAdded(ContainerEvent e), componentRemoved(ContainerEvent e)."}, {"q": "Which use does slide 14 give for ContainerListener?", "o": ["Shopping carts and dashboards", "Password checking", "Drawing shapes", "Closing windows"], "a": 0, "e": "Slide 14: dynamically updated interfaces."}]}, "flashcards": [["Adapter class", "Implements a listener interface with empty methods, so you override only what you need: WindowAdapter, KeyAdapter, FocusAdapter, MouseAdapter, ComponentAdapter.", "Slides 5, 7"], ["FocusListener", "focusGained, focusLost. Focus = current target of keyboard input.", "Slide 2"], ["ComponentListener", "componentHidden, componentMoved, componentResized, componentShown.", "Slide 4"], ["ListSelectionListener", "valueChanged(ListSelectionEvent). Check !getValueIsAdjusting() to react once.", "Slides 5–6"], ["DocumentListener", "insertUpdate, removeUpdate, changedUpdate (styled docs only). Via getDocument().addDocumentListener.", "Slides 9–10"], ["ItemListener", "itemStateChanged(ItemEvent). getStateChange() == ItemEvent.SELECTED or DESELECTED. JCheckBox, JComboBox.", "Slides 11–12"], ["ChangeListener", "stateChanged(ChangeEvent). JSlider, JSpinner, JTabbedPane, JColorChooser.", "Slide 13"], ["Lambda listener", "deptList.addListSelectionListener(e -> { … }); works for any one-method listener interface.", "Lab 5"], ["ContainerListener", "componentAdded(ContainerEvent e), componentRemoved(ContainerEvent e). Hears a JPanel/JFrame when children are added or removed. e.getChild() is the component.", "Slide 14"]]}</script>
+<script>
+(function () {
+  var DATA = {};
+  try { DATA = JSON.parse(document.getElementById("guide-data").textContent); } catch (e) {}
+  var KEY = DATA.key || "cs254-guide";
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+
+  // ---------- Java / SQL highlighting ----------
+  var JKW = {};
+  "abstract boolean break byte case catch char class continue default do double else enum extends final finally float for if implements import instanceof int interface long native new package private protected public return short static super switch synchronized this throw throws try void volatile while true false null".split(" ").forEach(function (k) { JKW[k] = 1; });
+  var JRE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])')|(@\w+)|(\b\d+(?:\.\d+)?[fFdDL]?\b)|([A-Za-z_]\w*)/g;
+  var SKW = {};
+  "select from where insert into values update set delete create table drop alter add primary key foreign references not null and or order by group having as join inner left right on distinct like in between is int integer varchar char text date float double decimal auto_increment unique default database use count sum avg min max limit asc desc constraint".split(" ").forEach(function (k) { SKW[k] = 1; });
+  var SRE = /(--[^\n]*)|('(?:''|[^'])*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)/g;
+  function hl(src, re, kw, ci) {
+    var out = "", last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index));
+      if (m[1]) out += '<span class="tk-com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="tk-str">' + esc(m[2]) + "</span>";
+      else if (re === JRE && m[3]) out += '<span class="tk-com">' + esc(m[3]) + "</span>";
+      else {
+        var num = re === JRE ? m[4] : m[3], word = re === JRE ? m[5] : m[4];
+        if (num) out += '<span class="tk-num">' + esc(num) + "</span>";
+        else out += kw[ci ? word.toLowerCase() : word] ? '<span class="tk-kw">' + word + "</span>" : esc(word);
+      }
+      last = re.lastIndex;
+    }
+    return out + esc(src.slice(last));
+  }
+  document.querySelectorAll("pre.java, pre.sql, pre.plain-pre").forEach(function (pre) {
+    var src = pre.textContent;
+    if (pre.classList.contains("java")) pre.innerHTML = hl(src, JRE, JKW, false);
+    else if (pre.classList.contains("sql")) pre.innerHTML = hl(src, SRE, SKW, true);
+    var wrap = pre.parentElement;
+    if (!wrap.classList.contains("code")) return;
+    var b = document.createElement("button");
+    b.className = "copy"; b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", function () {
+      function done(t) { b.textContent = t; setTimeout(function () { b.textContent = "Copy"; }, 1400); }
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = getSelection(); s.removeAllRanges(); s.addRange(r); done("Selected");
+      }
+      try { navigator.clipboard.writeText(pre.textContent).then(function () { done("Copied"); }, fallback); } catch (e) { fallback(); }
+    });
+    wrap.appendChild(b);
+  });
+
+  // ---------- original slide drawers ----------
+  var MAP = DATA.slideMap || {};
+  var LABEL = DATA.pageLabel || "Slide";
+  function slideNo(p) { return MAP[p] != null ? MAP[p] : p; }
+  function pad(p) { return (p < 10 ? "0" : "") + p; }
+  document.querySelectorAll("details.orig[data-pages], details.orig[data-imgs]").forEach(function (d) {
+    var items = [], label;
+    if (d.dataset.pages) {
+      var r = d.dataset.pages.split("-").map(Number); if (r.length === 1) r[1] = r[0];
+      for (var p = r[0]; p <= r[1]; p++) items.push({ src: "img/slides/p" + pad(p) + ".jpg", cap: LABEL + " " + slideNo(p) });
+      var a = slideNo(r[0]), z = slideNo(r[1]);
+      label = "Original " + LABEL.toLowerCase() + "s " + (a === z ? a : a + "–" + z) + " (" + items.length + ")";
+    } else {
+      d.dataset.imgs.split(";").forEach(function (s) { var x = s.split("|"); items.push({ src: x[0].trim(), cap: (x[1] || "").trim() }); });
+      label = d.dataset.label || "Original pages (" + items.length + ")";
+    }
+    var s = document.createElement("summary"); s.textContent = label; d.appendChild(s);
+    var grid = document.createElement("div"); grid.className = "orig-grid"; d.appendChild(grid);
+    d.addEventListener("toggle", function () {
+      if (!d.open || grid.childElementCount) return;
+      items.forEach(function (it) {
+        var f = document.createElement("figure");
+        f.innerHTML = '<img loading="lazy" alt="' + esc(it.cap) + ' of the original PDF" src="' + it.src + '"><figcaption>' + esc(it.cap) + "</figcaption>";
+        grid.appendChild(f);
+      });
+    });
+  });
+
+  // ---------- filter chips (any table with data-filter-for) ----------
+  document.querySelectorAll(".chips[data-filter-for]").forEach(function (group) {
+    var chips = group.querySelectorAll(".chip"), table = document.getElementById(group.dataset.filterFor);
+    chips.forEach(function (c) {
+      c.addEventListener("click", function () {
+        chips.forEach(function (x) { x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
+        var f = c.dataset.f;
+        table.querySelectorAll("tbody tr").forEach(function (tr) { tr.hidden = !(f === "all" || (" " + tr.dataset.on + " ").indexOf(" " + f + " ") > -1); });
+      });
+    });
+  });
+
+  // ---------- quizzes ----------
+  var Q = DATA.quizzes || {};
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  document.querySelectorAll(".quiz[data-quiz]").forEach(function (box) {
+    var set = Q[box.dataset.quiz] || [];
+    if (!set.length) { box.hidden = true; return; }
+    function render() {
+      var right = 0, answered = 0;
+      box.innerHTML = '<div class="quiz-head"><h3>Check yourself</h3><span class="score"></span></div>';
+      var score = box.querySelector(".score");
+      function upd() { score.textContent = answered ? right + " / " + answered + " correct" : set.length + " question" + (set.length > 1 ? "s" : ""); }
+      upd();
+      set.forEach(function (item, qi) {
+        var q = document.createElement("div"); q.className = "q";
+        q.innerHTML = '<p class="q-text">' + (qi + 1) + ". " + item.q + '</p><div class="opts"></div><p class="expl" hidden></p>';
+        var opts = q.querySelector(".opts"), ex = q.querySelector(".expl");
+        shuffle(item.o.map(function (_, i) { return i; })).forEach(function (oi) {
+          var b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.innerHTML = item.o[oi];
+          if (oi === item.a) b.dataset.c = "1";
+          b.addEventListener("click", function () {
+            answered++; if (oi === item.a) right++;
+            opts.querySelectorAll(".opt").forEach(function (x) { x.disabled = true; });
+            b.classList.add(oi === item.a ? "right" : "wrong");
+            if (oi !== item.a) opts.querySelector('[data-c="1"]').classList.add("right");
+            ex.innerHTML = (oi === item.a ? "Correct. " : "Not quite. ") + item.e; ex.hidden = false; upd();
+          });
+          opts.appendChild(b);
+        });
+        box.appendChild(q);
+      });
+      var r = document.createElement("button"); r.className = "btn"; r.type = "button"; r.textContent = "Reset and reshuffle";
+      r.style.justifySelf = "start"; r.addEventListener("click", render); box.appendChild(r);
+    }
+    render();
+  });
+
+  // ---------- flashcards ----------
+  var FC = DATA.flashcards || [];
+  var card = document.getElementById("card");
+  if (card && FC.length) {
+    var order = FC.map(function (_, i) { return i; }), pos = 0, flipped = false, count = document.getElementById("fcCount");
+    var show = function () {
+      var c = FC[order[pos]];
+      card.innerHTML = flipped
+        ? '<div><p class="face-def">' + c[1] + '</p><span class="face-src">' + c[2] + "</span></div>"
+        : '<div><p class="face-term">' + c[0] + '</p><span class="face-src">tap to flip</span></div>';
+      count.textContent = (pos + 1) + " / " + FC.length;
+    };
+    var flip = function () { flipped = !flipped; show(); };
+    var go = function (d) { pos = (pos + d + FC.length) % FC.length; flipped = false; show(); };
+    card.addEventListener("click", flip);
+    card.addEventListener("keydown", function (e) {
+      if (e.key === " " || e.key === "Enter") { e.preventDefault(); flip(); }
+      else if (e.key === "ArrowRight") go(1); else if (e.key === "ArrowLeft") go(-1);
+    });
+    document.getElementById("fcFlip").addEventListener("click", flip);
+    document.getElementById("fcNext").addEventListener("click", function () { go(1); });
+    document.getElementById("fcPrev").addEventListener("click", function () { go(-1); });
+    document.getElementById("fcShuffle").addEventListener("click", function () { shuffle(order); pos = 0; flipped = false; show(); });
+    show();
+  }
+
+  // ---------- contents, jump menu, progress ----------
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+  var toc = document.getElementById("toc"), jump = document.getElementById("jump");
+  var state = load();
+  secs.forEach(function (s) {
+    if (toc) { var li = document.createElement("li"); li.innerHTML = '<a href="#' + s.id + '">' + esc(s.dataset.title) + "</a>"; toc.appendChild(li); }
+    if (jump) { var o = document.createElement("option"); o.value = s.id; o.textContent = s.dataset.title; jump.appendChild(o); }
+    var cb = s.querySelector(".done input");
+    if (cb) {
+      cb.checked = !!state[s.id];
+      cb.addEventListener("change", function () { state[s.id] = cb.checked; save(state); prog(); });
+    }
+  });
+  if (jump) jump.addEventListener("change", function () {
+    var t = document.getElementById(jump.value);
+    if (t) t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    jump.value = "";
+  });
+  function prog() {
+    var n = 0;
+    secs.forEach(function (s, i) {
+      var on = !!state[s.id]; if (on) n++;
+      if (toc && toc.children[i]) toc.children[i].firstChild.classList.toggle("is-done", on);
+    });
+    var t = document.getElementById("progText"), f = document.getElementById("progFill");
+    if (t) t.textContent = n + " / " + secs.length + " studied";
+    if (f) f.style.width = (secs.length ? 100 * n / secs.length : 0) + "%";
+  }
+  prog();
+  window.Guide = { esc: esc, shuffle: shuffle, java: function (s) { return hl(s, JRE, JKW, false); }, sql: function (s) { return hl(s, SRE, SKW, true); } };
+})();
+
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = window.Guide && window.Guide.esc;
+  function logger(el) {
+    return function (t, color) { var d = document.createElement("div"); d.textContent = t; if (color) d.style.color = color; el.appendChild(d); while (el.childNodes.length > 200) el.removeChild(el.firstChild); el.scrollTop = el.scrollHeight; };
+  }
+  var C = { ev: "#9fd3ff", ok: "#7fd3ad", warn: "#f0b071", dim: "#9aa4a8", bad: "#ff8f86" };
+
+  (function () {
+    var out = logger($("fdLog"));
+    ["fd1", "fd2"].forEach(function (id, i) {
+      var f = $(id), name = "t" + (i + 1);
+      f.addEventListener("focus", function () { f.style.background = "#d3d3d3"; out("focusGained → " + name + ".setBackground(Color.LIGHT_GRAY)", C.ev); });
+      f.addEventListener("blur", function () { f.style.background = "#fff"; out("focusLost   → " + name + ".setBackground(Color.WHITE)", C.dim); });
+    });
+    out("// click t1, then t2, then outside the window", C.dim);
+  })();
+
+  (function () {
+    var states = ["Schleswig-Holstein", "Niedersachsen", "Hamburg", "Bremen", "Mecklenburg-Vorpommern", "Brandenburg", "Berlin", "Nordrhein-Westfalen", "Hessen", "Sachsen-Anhalt", "Rheinland-Pfalz", "Thüringen", "Sachsen", "Saarland", "Bayern", "Baden-Württemberg"];
+    var right = [], sel = -1, out = logger($("ltLog"));
+    function row(t, on) { var d = document.createElement("div"); d.textContent = t; d.setAttribute("role", "option"); d.setAttribute("aria-selected", on); Object.assign(d.style, { padding: "1px 6px", cursor: "default", background: on ? "#b8cfe5" : "transparent", color: "#1c2328", fontSize: ".85rem" }); return d; }
+    function draw() {
+      var L = $("ltLeft"), R = $("ltRight"); L.innerHTML = ""; R.innerHTML = "";
+      states.forEach(function (s, i) {
+        var d = row(s, i === sel);
+        d.addEventListener("click", function () {
+          if (i === sel) { out("// clicked the already-selected item → valueChanged NOT called", C.dim); return; }
+          sel = i;
+          out("valueChanged  (getValueIsAdjusting() == true, ignored)", C.dim);
+          out("valueChanged  (getValueIsAdjusting() == false)", C.ev);
+          if (right.indexOf(s) > -1) { right.splice(right.indexOf(s), 1); out('  rightListModel.removeElement("' + s + '")', C.warn); }
+          else { right.push(s); out('  rightListModel.addElement("' + s + '")', C.ok); }
+          draw();
+        });
+        L.appendChild(d);
+      });
+      right.forEach(function (s) { R.appendChild(row(s, false)); });
+    }
+    draw();
+  })();
+
+  (function () {
+    var inp = $("ddIn"), out = logger($("ddLog")), prev = "";
+    inp.addEventListener("input", function () {
+      var now = inp.value, a = 0;
+      while (a < prev.length && a < now.length && prev[a] === now[a]) a++;
+      var b = 0;
+      while (b < prev.length - a && b < now.length - a && prev[prev.length - 1 - b] === now[now.length - 1 - b]) b++;
+      var removed = prev.length - a - b, inserted = now.length - a - b;
+      if (removed > 0) out("removeUpdate  offset=" + a + " length=" + removed, C.warn);
+      if (inserted > 0) out("insertUpdate  offset=" + a + " length=" + inserted + '  "' + now.substr(a, inserted) + '"', C.ok);
+      prev = now;
+    });
+    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); out('actionPerformed  getActionCommand() = "' + inp.value + '"', C.ev); } });
+    out("// changedUpdate never fires for a JTextField (PlainDocument)", C.dim);
+  })();
+
+  (function () {
+    var out = logger($("itLog")), combo = $("itCombo"), last = combo.value;
+    $("itCb").addEventListener("change", function () {
+      out("itemStateChanged  source=checkBox  getStateChange()=" + (this.checked ? "ItemEvent.SELECTED" : "ItemEvent.DESELECTED"), this.checked ? C.ok : C.warn);
+    });
+    combo.addEventListener("change", function () {
+      out('itemStateChanged  source=comboBox  getItem()="' + last + '"  DESELECTED', C.warn);
+      out('itemStateChanged  source=comboBox  getItem()="' + combo.value + '"  SELECTED', C.ok);
+      last = combo.value;
+    });
+  })();
+
+  (function () {
+    var out = logger($("chLog")), sl = $("chSl"), t = null;
+    sl.addEventListener("input", function () {
+      $("chLbl").textContent = "midterm exam mark: " + sl.value;
+      clearTimeout(t); t = setTimeout(function () { out("stateChanged  slider.getValue() = " + sl.value, C.ev); }, 60);
+    });
+  })();
+})();
+
+</script>
+</body>
+</html>
